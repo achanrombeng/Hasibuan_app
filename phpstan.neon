@@ -1,0 +1,25 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+
+    # Level 5 for now, can increase later
+    level: 5
+
+    ignoreErrors:
+        # Ignore generic types for relationships (Laravel-specific)
+        - '#return type with generic class .* does not specify its types#'
+        - '#uses generic trait .* but does not specify its types#'
+        # Ignore scope method types (Laravel convention)
+        - '#Method .+::scope.+\(\) has no return type specified#'
+        - '#Method .+::scope.+\(\) has parameter \$query with no type specified#'
+        # Ignore array value types in PHPDoc
+        - '#has PHPDoc tag @property for property .+ with no value type specified in iterable type array#'
+        - '#return type has no value type specified in iterable type array#'
+
+    excludePaths:
+        - app/Http/Middleware/
+
+    reportUnmatchedIgnoredErrors: false

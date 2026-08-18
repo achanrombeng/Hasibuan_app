@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(php artisan:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(ls \"C:\\\\Users\\\\Rani\\\\ronica\\\\ronica\\\\lang\"\" 2>nul || echo \"No lang directory \")",
+      "Bash(wc:*)",
+      "WebSearch",
+      "Bash(npm run types:*)",
+      "Bash(test:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx tsc:*)",
+      "Bash(./node_modules/.bin/tsc:*)",
+      "Bash(npx:*)",
+      "Bash(ls:*)",
+      "Bash(./vendor/bin/pint:*)",
+      "Bash(php -l:*)",
+      "Bash(composer require:*)",
+      "Bash(composer show:*)",
+      "Bash(php vendor/bin/pest:*)",
+      "Bash(rm -f C:/Users/Rani/ronica/ronica/app/Actions/Product/GenerateProductContentAction.php C:/Users/Rani/ronica/ronica/app/Http/Requests/Admin/GenerateAiContentRequest.php C:/Users/Rani/ronica/ronica/config/ai.php)",
+      "Bash(rm -rf \"C:/Users/Rani/ronica/ronica/app/Services/AI/\")"
+    ]
+  }
+}

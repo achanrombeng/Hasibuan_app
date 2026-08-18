@@ -1,0 +1,24 @@
+
+> build
+> vite build
+
+vite v7.1.5 building for production...
+[plugin @laravel/vite-plugin-wayfinder] Types generated for actions, routes, form variants
+transforming...
+✓ 426 modules transformed.
+✗ Build failed in 7.40s
+error during build:
+[vite]: Rollup failed to resolve import "sonner" from "/home/thoriq/dev/work/freelance/ronica/resources/js/pages/Shop/Checkout/Success.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+    at viteLog (file:///home/thoriq/dev/work/freelance/ronica/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34340:57)
+    at file:///home/thoriq/dev/work/freelance/ronica/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34378:73
+    at onwarn (file:///home/thoriq/dev/work/freelance/ronica/node_modules/@vitejs/plugin-react/dist/index.js:55:7)
+    at file:///home/thoriq/dev/work/freelance/ronica/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34378:28
+    at onRollupLog (file:///home/thoriq/dev/work/freelance/ronica/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34373:3)
+    at onLog (file:///home/thoriq/dev/work/freelance/ronica/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34169:4)
+    at file:///home/thoriq/dev/work/freelance/ronica/node_modules/rollup/dist/es/shared/node-entry.js:20866:32
+    at Object.logger [as onLog] (file:///home/thoriq/dev/work/freelance/ronica/node_modules/rollup/dist/es/shared/node-entry.js:22748:9)
+    at ModuleLoader.handleInvalidResolvedId (file:///home/thoriq/dev/work/freelance/ronica/node_modules/rollup/dist/es/shared/node-entry.js:21492:26)
+    at file:///home/thoriq/dev/work/freelance/ronica/node_modules/rollup/dist/es/shared/node-entry.js:21450:26

@@ -1,0 +1,199 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_migrations:
+        description: 'Jalankan database migrations setelah deploy'
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build & Deploy via FTPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, gd, zip, exif, fileinfo
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install PHP dependencies (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress --prefer-dist
+
+      - name: Archive vendor directory
+        run: |
+          tar -czf vendor.tar.gz vendor/
+          ls -lh vendor.tar.gz
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Deploy via FTPS (with retry)
+        uses: Wandalen/wretry.action@v3
+        with:
+          action: SamKirkland/FTP-Deploy-Action@v4.3.5
+          attempt_limit: 3
+          attempt_delay: 30000
+          with: |
+            server: ${{ secrets.FTP_HOST }}
+            username: ${{ secrets.FTP_USER }}
+            password: ${{ secrets.FTP_PASSWORD }}
+            port: ${{ secrets.FTP_PORT }}
+            protocol: ftps
+            server-dir: ${{ secrets.FTP_SERVER_DIR }}
+            local-dir: ./
+            state-name: .ftp-deploy-sync-state.json
+            timeout: 600000
+            log-level: verbose
+            exclude: |
+              **/.git*
+              **/.git*/**
+              **/.github/**
+              **/node_modules/**
+              **/vendor/**
+              **/tests/**
+              **/.env*
+              !**/.env.example
+              **/storage/logs/**
+              **/storage/framework/cache/data/**
+              **/storage/framework/sessions/**
+              **/storage/framework/views/**
+              **/storage/app/public/**
+              **/storage/pail/**
+              **/bootstrap/cache/*.php
+              **/.phpunit.cache/**
+              **/.phpunit.result.cache
+              **/phpunit.xml
+              **/phpstan.neon
+              **/eslint.config.js
+              **/tsconfig.json
+              **/README.md
+              **/CLAUDE.md
+              **/gemini.md
+              **/build_log.txt
+              **/CPANEL_DEPLOYMENT.md
+              **/docs/**
+              **/.vscode/**
+              **/.idea/**
+              **/.fleet/**
+              **/.nova/**
+              **/.zed/**
+              **/.claude/**
+              **/.editorconfig
+              **/.prettier*
+              **/resources/js/actions/**
+              **/resources/js/routes/**
+              **/resources/js/wayfinder/**
+              **/deployment/**
+              **/.ftp-deploy-sync-state.json
+
+      - name: Verify ARTISAN_TOKEN is configured
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.APP_URL }}/artisan/test?token=${{ secrets.ARTISAN_TOKEN }}")
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::ARTISAN_TOKEN verification failed (HTTP $STATUS)"
+            echo "Pastikan ARTISAN_TOKEN di GitHub Secrets cocok dengan .env di server"
+            exit 1
+          fi
+          echo "ARTISAN_TOKEN valid"
+
+      - name: Clear route cache (so new artisan routes are recognized)
+        run: |
+          echo "Clearing stale caches before calling new endpoints..."
+          curl -f -s "${{ secrets.APP_URL }}/artisan/clear-cache?token=${{ secrets.ARTISAN_TOKEN }}" | head -c 500
+          echo ""
+
+      - name: Extract vendor.tar.gz on server
+        run: |
+          echo "Extracting vendor.tar.gz on server (may take up to 10 min on slow hosts)..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" --max-time 900 \
+            "${{ secrets.APP_URL }}/artisan/extract-vendor?token=${{ secrets.ARTISAN_TOKEN }}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Vendor extraction failed (HTTP $STATUS)"
+            exit 1
+          fi
+
+      - name: Run migrations
+        if: ${{ github.event_name == 'push' || inputs.run_migrations }}
+        run: |
+          echo "Running database migrations..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            "${{ secrets.APP_URL }}/artisan/migrate?token=${{ secrets.ARTISAN_TOKEN }}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Migration failed"
+            exit 1
+          fi
+
+      - name: Clear caches
+        run: |
+          echo "Clearing caches..."
+          curl -f -s "${{ secrets.APP_URL }}/artisan/clear-cache?token=${{ secrets.ARTISAN_TOKEN }}" | head -c 500
+          echo ""
+
+      - name: Rebuild production caches
+        run: |
+          echo "Rebuilding caches (config, route, view)..."
+          curl -f -s "${{ secrets.APP_URL }}/artisan/optimize?token=${{ secrets.ARTISAN_TOKEN }}" | head -c 500
+          echo ""
+
+      - name: Ensure storage symlink
+        run: |
+          curl -f -s "${{ secrets.APP_URL }}/artisan/storage-link?token=${{ secrets.ARTISAN_TOKEN }}" | head -c 500 || true
+          echo ""
+
+      - name: Setup public_html symlinks (build & storage)
+        run: |
+          echo "Setting up public_html → laravel/public symlinks..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            "${{ secrets.APP_URL }}/artisan/setup-public-symlinks?token=${{ secrets.ARTISAN_TOKEN }}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          if [ "$STATUS" != "200" ]; then
+            echo "::warning::Public symlink setup returned HTTP $STATUS — verifikasi manual"
+          fi
+
+      - name: Smoke test
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ secrets.APP_URL }}")
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "302" ]; then
+            echo "::warning::Homepage returned HTTP $STATUS — verifikasi manual"
+          else
+            echo "Homepage OK (HTTP $STATUS)"
+          fi
