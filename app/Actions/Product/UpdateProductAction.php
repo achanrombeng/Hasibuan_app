@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Services\ImageService;
+
 class UpdateProductAction
 {
     /**
@@ -53,7 +55,7 @@ class UpdateProductAction
             // Add new images
             $existingCount = $product->images()->count();
             foreach ($newImages as $index => $image) {
-                $path = $image->store('products', 'public');
+                $path = ImageService::storeWithWhiteBackground($image, 'products', 'public');
 
                 ProductImage::create([
                     'product_id' => $product->id,

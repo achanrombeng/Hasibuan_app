@@ -130,6 +130,9 @@ export interface ApiProduct {
     is_low_stock: boolean;
     is_new_arrival: boolean;
     weight: number | null;
+    length?: number | null;
+    width?: number | null;
+    height?: number | null;
     dimensions: {
         length?: number;
         width?: number;

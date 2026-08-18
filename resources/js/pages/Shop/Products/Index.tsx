@@ -517,60 +517,34 @@ function FilterDrawer({
                     </div>
 
                     {/* Categories */}
-                    {/* Categories */}
                     <div>
-                        {safeFeaturedCategories?.length > 0 && (
-                            <div className="mb-6">
-                                <h3 className="mb-4 font-medium text-neutral-900">
-                                    Kategori Unggulan
-                                </h3>
-                                <div className="space-y-2">
-                                    <button
-                                        onClick={() =>
-                                            setSelectedCategory(null)
-                                        }
-                                        className={`w-full rounded-sm px-4 py-2 text-left transition-colors ${!selectedCategory ? 'bg-teal-50 font-medium text-teal-700' : 'text-neutral-600 hover:bg-neutral-50'}`}
-                                    >
-                                        Semua Kategori
-                                    </button>
-                                    {safeFeaturedCategories.map((cat) => (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() =>
-                                                setSelectedCategory(cat.id)
-                                            }
-                                            className={`w-full rounded-sm px-4 py-2 text-left transition-colors ${selectedCategory === cat.id ? 'bg-teal-50 font-medium text-teal-700' : 'text-neutral-600 hover:bg-neutral-50'}`}
-                                        >
-                                            {cat.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        <div>
-                            <h3 className="mb-4 font-medium text-neutral-900">
+                        <h3 className="mb-4 font-medium text-neutral-900">
+                            Kategori
+                        </h3>
+                        <div className="space-y-2">
+                            <button
+                                onClick={() => setSelectedCategory(null)}
+                                className={`w-full rounded-sm px-4 py-2 text-left transition-colors ${!selectedCategory ? 'bg-teal-50 font-medium text-teal-700' : 'text-neutral-600 hover:bg-neutral-50'}`}
+                            >
                                 Semua Kategori
-                            </h3>
-                            <div className="space-y-2">
-                                {safeCategories.length > 0 ? (
-                                    safeCategories.map((cat) => (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() =>
-                                                setSelectedCategory(cat.id)
-                                            }
-                                            className={`w-full rounded-sm px-4 py-2 text-left transition-colors ${selectedCategory === cat.id ? 'bg-teal-50 font-medium text-teal-700' : 'text-neutral-600 hover:bg-neutral-50'}`}
-                                        >
-                                            {cat.name}
-                                        </button>
-                                    ))
-                                ) : (
-                                    <p className="px-4 py-2 text-sm text-neutral-400">
-                                        Tidak ada kategori tersedia
-                                    </p>
-                                )}
-                            </div>
+                            </button>
+                            {safeCategories.length > 0 ? (
+                                safeCategories.map((cat) => (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() =>
+                                            setSelectedCategory(cat.id)
+                                        }
+                                        className={`w-full rounded-sm px-4 py-2 text-left transition-colors ${selectedCategory === cat.id ? 'bg-teal-50 font-medium text-teal-700' : 'text-neutral-600 hover:bg-neutral-50'}`}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                ))
+                            ) : (
+                                <p className="px-4 py-2 text-sm text-neutral-400">
+                                    Tidak ada kategori tersedia
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>

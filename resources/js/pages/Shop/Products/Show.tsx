@@ -5,7 +5,6 @@ import {
 } from '@/components/seo';
 import {
     ProductCard,
-    RecentlyViewedSection,
     saveToRecentlyViewed,
     ShareModal,
 } from '@/components/shop';
@@ -293,12 +292,6 @@ export default function ProductShow({
                             <RelatedProducts products={relatedProducts} />
                         )}
                     </div>
-
-                    {/* Recently Viewed Section */}
-                    <RecentlyViewedSection
-                        excludeProductId={product.id}
-                        className="bg-sand-50"
-                    />
                 </main>
 
                 <ZoomModal
@@ -568,58 +561,94 @@ function ProductInfo({
             </div>
 
             {/* Description & Specifications Card */}
-            {((product.specifications && Object.keys(product.specifications).length > 0) || product.description) && (
-                <div className="shadow-2xs rounded-2xl border border-neutral-200/70 bg-white p-6 transition-all md:p-8">
-                    <div className="mb-6 flex items-center justify-between border-b border-neutral-100 pb-4">
-                        <h2 className="font-display text-xl font-bold tracking-tight text-neutral-900">
-                            Deskripsi &amp; Spesifikasi Produk
-                        </h2>
-                        <span className="rounded-full border border-teal-100 bg-teal-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-teal-700">
-                            Spesifikasi &amp; Detail
-                        </span>
-                    </div>
+            {(() => {
+                const length = product.dimensions?.length ?? product.length;
+                const width = product.dimensions?.width ?? product.width;
+                const height = product.dimensions?.height ?? product.height;
 
-                    {/* Specifications Table (from Admin Product Form Key-Value builder) */}
-                    {product.specifications && Object.keys(product.specifications).length > 0 && (
-                        <div className="mb-6 overflow-hidden rounded-xl border border-neutral-200/80 shadow-2xs">
-                            <table className="w-full text-left text-sm border-collapse">
-                                <thead>
-                                    <tr className="bg-neutral-50 border-b border-neutral-200/80">
-                                        <th className="px-4 py-3 font-semibold text-neutral-800 w-1/3 border-r border-neutral-200/80">
-                                            Spesifikasi
-                                        </th>
-                                        <th className="px-4 py-3 font-semibold text-neutral-800">
-                                            Detail / Material
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-neutral-200/60">
-                                    {Object.entries(product.specifications).map(([key, value]) => (
-                                        <tr key={key} className="hover:bg-neutral-50/50 transition-colors">
-                                            <td className="px-4 py-3 font-medium text-neutral-700 border-r border-neutral-200/80 bg-neutral-50/30">
-                                                {key}
-                                            </td>
-                                            <td className="px-4 py-3 text-neutral-900 whitespace-pre-line">
-                                                {value}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                const specList: { label: string; value: string }[] = [];
+
+                if (product.weight) {
+                    specList.push({ label: 'Berat', value: `${product.weight} kg` });
+                }
+                if (length) {
+                    specList.push({ label: 'Panjang', value: `${length} cm` });
+                }
+                if (width) {
+                    specList.push({ label: 'Lebar', value: `${width} cm` });
+                }
+                if (height) {
+                    specList.push({ label: 'Tinggi', value: `${height} cm` });
+                }
+                if (product.material) {
+                    specList.push({ label: 'Material', value: product.material });
+                }
+                if (product.color) {
+                    specList.push({ label: 'Warna', value: product.color });
+                }
+                if (product.specifications && typeof product.specifications === 'object') {
+                    Object.entries(product.specifications).forEach(([key, value]) => {
+                        if (value && !specList.some((s) => s.label.toLowerCase() === key.toLowerCase())) {
+                            specList.push({ label: key, value: String(value) });
+                        }
+                    });
+                }
+
+                if (specList.length === 0 && !product.description) return null;
+
+                return (
+                    <div className="shadow-2xs rounded-2xl border border-neutral-200/70 bg-white p-6 transition-all md:p-8">
+                        <div className="mb-6 flex items-center justify-between border-b border-neutral-100 pb-4">
+                            <h2 className="font-display text-xl font-bold tracking-tight text-neutral-900">
+                                Deskripsi &amp; Spesifikasi Produk
+                            </h2>
+                            <span className="rounded-full border border-teal-100 bg-teal-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-teal-700">
+                                Spesifikasi &amp; Detail
+                            </span>
                         </div>
-                    )}
 
-                    {/* Rich Text Description (from Admin Product Form Description field) */}
-                    {product.description && (
-                        <div
-                            className="prose prose-neutral max-w-none leading-relaxed text-neutral-700"
-                            dangerouslySetInnerHTML={{
-                                __html: product.description,
-                            }}
-                        />
-                    )}
-                </div>
-            )}
+                        {/* Specifications Table */}
+                        {specList.length > 0 && (
+                            <div className="mb-6 overflow-hidden rounded-xl border border-neutral-200/80 shadow-2xs">
+                                <table className="w-full border-collapse text-left text-sm">
+                                    <thead>
+                                        <tr className="border-b border-neutral-200/80 bg-neutral-50">
+                                            <th className="w-1/3 border-r border-neutral-200/80 px-4 py-3 font-semibold text-neutral-800">
+                                                Spesifikasi
+                                            </th>
+                                            <th className="px-4 py-3 font-semibold text-neutral-800">
+                                                Detail / Ukuran
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-neutral-200/60">
+                                        {specList.map((spec, idx) => (
+                                            <tr key={idx} className="transition-colors hover:bg-neutral-50/50">
+                                                <td className="border-r border-neutral-200/80 bg-neutral-50/30 px-4 py-3 font-medium text-neutral-700">
+                                                    {spec.label}
+                                                </td>
+                                                <td className="whitespace-pre-line px-4 py-3 text-neutral-900">
+                                                    {spec.value}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {/* Rich Text Description */}
+                        {product.description && (
+                            <div
+                                className="prose prose-neutral max-w-none leading-relaxed text-neutral-700"
+                                dangerouslySetInnerHTML={{
+                                    __html: product.description,
+                                }}
+                            />
+                        )}
+                    </div>
+                );
+            })()}
         </div>
     );
 }

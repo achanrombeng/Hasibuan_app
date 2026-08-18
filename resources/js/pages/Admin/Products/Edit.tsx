@@ -861,40 +861,6 @@ export default function EditProduct({
                                     emptyText="Status tidak ditemukan."
                                 />
                             </div>
-                            <div className="flex flex-col justify-end gap-3">
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.is_featured}
-                                        onChange={(e) =>
-                                            setData(
-                                                'is_featured',
-                                                e.target.checked,
-                                            )
-                                        }
-                                        className="h-5 w-5 rounded border-terra-300 text-terra-900 focus:ring-wood"
-                                    />
-                                    <span className="text-sm text-terra-700">
-                                        Produk Unggulan
-                                    </span>
-                                </label>
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.is_new_arrival}
-                                        onChange={(e) =>
-                                            setData(
-                                                'is_new_arrival',
-                                                e.target.checked,
-                                            )
-                                        }
-                                        className="h-5 w-5 rounded border-terra-300 text-terra-900 focus:ring-wood"
-                                    />
-                                    <span className="text-sm text-terra-700">
-                                        Produk Baru
-                                    </span>
-                                </label>
-                            </div>
                         </div>
                     </div>
 

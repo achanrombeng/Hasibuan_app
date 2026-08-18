@@ -853,30 +853,6 @@ export default function CreateProduct({
                                     emptyText="Status tidak ditemukan."
                                 />
                             </div>
-                            <div className="flex flex-col justify-end gap-3">
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <Switch
-                                        checked={data.is_featured}
-                                        onCheckedChange={(checked) =>
-                                            setData('is_featured', checked)
-                                        }
-                                    />
-                                    <span className="text-sm text-terra-700">
-                                        Produk Unggulan
-                                    </span>
-                                </label>
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <Switch
-                                        checked={data.is_new_arrival}
-                                        onCheckedChange={(checked) =>
-                                            setData('is_new_arrival', checked)
-                                        }
-                                    />
-                                    <span className="text-sm text-terra-700">
-                                        Produk Baru
-                                    </span>
-                                </label>
-                            </div>
                         </div>
                     </div>
 

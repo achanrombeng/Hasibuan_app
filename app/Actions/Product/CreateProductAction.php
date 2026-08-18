@@ -12,6 +12,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+use App\Services\ImageService;
+
 class CreateProductAction
 {
     /**
@@ -32,7 +34,7 @@ class CreateProductAction
 
             // Handle images
             foreach ($images as $index => $image) {
-                $path = $image->store('products', 'public');
+                $path = ImageService::storeWithWhiteBackground($image, 'products', 'public');
 
                 ProductImage::create([
                     'product_id' => $product->id,

@@ -210,7 +210,7 @@ export default function ProductsIndex({
                     </form>
 
                     {showFilters && (
-                        <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-3 lg:grid-cols-6">
+                        <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-2 lg:grid-cols-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-terra-700">
                                     Kategori
@@ -246,43 +246,6 @@ export default function ProductsIndex({
                                             {s.name}
                                         </option>
                                     ))}
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-terra-700">
-                                    Tipe Penjualan
-                                </label>
-                                <select
-                                    value={saleType}
-                                    onChange={(e) =>
-                                        setSaleType(e.target.value)
-                                    }
-                                    className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                >
-                                    <option value="all">Semua Tipe</option>
-                                    {saleTypes.map((t) => (
-                                        <option key={t.value} value={t.value}>
-                                            {t.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-terra-700">
-                                    Produk Unggulan
-                                </label>
-                                <select
-                                    value={isFeatured}
-                                    onChange={(e) =>
-                                        setIsFeatured(e.target.value)
-                                    }
-                                    className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                >
-                                    <option value="all">Semua</option>
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
                                 </select>
                             </div>
 

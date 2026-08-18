@@ -46,6 +46,9 @@ class ProductResource extends JsonResource
             'is_low_stock' => $this->isLowStock(),
             'is_new_arrival' => $this->is_new_arrival,
             'weight' => $this->weight,
+            'length' => $this->length,
+            'width' => $this->width,
+            'height' => $this->height,
             'dimensions' => $this->dimensions,
             'shipping_class' => $this->shipping_class,
             'status' => [

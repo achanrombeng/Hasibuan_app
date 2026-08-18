@@ -9,6 +9,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Services\ImageService;
+
 class UpdateCategoryAction
 {
     /**
@@ -35,7 +37,7 @@ class UpdateCategoryAction
                 Storage::disk('public')->delete($category->image_path);
             }
 
-            $data['image_path'] = $image->store('categories', 'public');
+            $data['image_path'] = ImageService::storeWithWhiteBackground($image, 'categories', 'public');
         }
 
         $category->update($data);

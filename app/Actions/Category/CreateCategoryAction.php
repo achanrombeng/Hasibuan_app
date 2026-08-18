@@ -8,6 +8,8 @@ use App\Models\Category;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
+use App\Services\ImageService;
+
 class CreateCategoryAction
 {
     /**
@@ -18,7 +20,7 @@ class CreateCategoryAction
         $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
 
         if ($image) {
-            $data['image_path'] = $image->store('categories', 'public');
+            $data['image_path'] = ImageService::storeWithWhiteBackground($image, 'categories', 'public');
         }
 
         /** @var Category $category */

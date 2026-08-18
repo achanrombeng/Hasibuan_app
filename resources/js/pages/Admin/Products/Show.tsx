@@ -540,28 +540,6 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                         {product.sale_type.label}
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-terra-600">
-                                        Produk Unggulan
-                                    </span>
-                                    <span
-                                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${product.is_featured ? 'bg-wood/20 text-wood-dark' : 'bg-terra-100 text-terra-600'}`}
-                                    >
-                                        {product.is_featured ? 'Ya' : 'Tidak'}
-                                    </span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-terra-600">
-                                        Produk Baru
-                                    </span>
-                                    <span
-                                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${product.is_new_arrival ? 'bg-blue-100 text-blue-700' : 'bg-terra-100 text-terra-600'}`}
-                                    >
-                                        {product.is_new_arrival
-                                            ? 'Ya'
-                                            : 'Tidak'}
-                                    </span>
-                                </div>
                                 {product.discount_percentage && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-terra-600">

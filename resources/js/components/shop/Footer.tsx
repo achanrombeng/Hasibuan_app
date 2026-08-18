@@ -4,7 +4,6 @@ import {
     faq,
     home,
     privacy,
-    returns,
     shipping,
     terms,
 } from '@/routes/shop';
@@ -12,42 +11,110 @@ import { hotSale, index as productsIndex } from '@/routes/shop/products';
 import { useTranslation } from '@/hooks/use-translation';
 import { SiteSettings } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import {
+    Facebook,
+    Instagram,
+    Mail,
+    MapPin,
+    MessageCircle,
+    Phone,
+} from 'lucide-react';
+
+function TikTokIcon({ className = 'h-4 w-4' }: { className?: string }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
+        </svg>
+    );
+}
 
 export const Footer = () => {
-    const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
+    const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
     const { t } = useTranslation();
     const siteName = siteSettings?.site_name || 'Ronica';
     const siteLogo = siteSettings?.site_logo || '/ronica.png';
+    const description =
+        siteSettings?.site_description || t('shop.footer.description');
     const currentYear = new Date().getFullYear();
 
+    const whatsappNumber = siteSettings?.contact_whatsapp
+        ? siteSettings.contact_whatsapp.replace(/[^0-9]/g, '')
+        : '';
+
     return (
-        <footer className="relative overflow-hidden bg-[#EBEBEB] py-20 text-neutral-800">
+        <footer className="relative overflow-hidden bg-[#EBEBEB] py-16 text-neutral-800">
             <div className="relative z-10 mx-auto max-w-[1400px] px-6 md:px-12">
-                <div className="grid grid-cols-1 gap-12 border-b border-neutral-300 pb-16 md:grid-cols-12">
-                    {/* Brand Section */}
-                    <div className="md:col-span-5">
-                        <Link href={home.url()}>
+                <div className="grid grid-cols-1 gap-10 border-b border-neutral-300 pb-12 md:grid-cols-12">
+                    {/* 1. Informasi Toko & Media Sosial */}
+                    <div className="space-y-5 md:col-span-4">
+                        <Link href={home.url()} className="inline-block">
                             <img
                                 src={siteLogo}
                                 alt={siteName}
-                                className="mb-6 h-10 w-auto object-contain"
+                                className="h-10 w-auto object-contain"
                             />
                         </Link>
-                        <p className="max-w-md text-lg leading-relaxed font-light text-neutral-600">
-                            {t('shop.footer.description')}
+                        <p className="max-w-sm text-sm leading-relaxed text-neutral-600">
+                            {description}
                         </p>
+
+                        {/* Media Sosial */}
+                        {(siteSettings?.facebook_url ||
+                            siteSettings?.instagram_url ||
+                            siteSettings?.tiktok_url) && (
+                            <div className="pt-2">
+                                <h5 className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                    Media Sosial
+                                </h5>
+                                <div className="flex items-center gap-3">
+                                    {siteSettings?.facebook_url && (
+                                        <a
+                                            href={siteSettings.facebook_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
+                                            title="Facebook"
+                                        >
+                                            <Facebook className="h-4 w-4" />
+                                        </a>
+                                    )}
+                                    {siteSettings?.instagram_url && (
+                                        <a
+                                            href={siteSettings.instagram_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
+                                            title="Instagram"
+                                        >
+                                            <Instagram className="h-4 w-4" />
+                                        </a>
+                                    )}
+                                    {siteSettings?.tiktok_url && (
+                                        <a
+                                            href={siteSettings.tiktok_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
+                                            title="TikTok"
+                                        >
+                                            <TikTokIcon className="h-4 w-4" />
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Shop Links */}
-                    <div className="md:col-span-2 md:col-start-7">
-                        <h4 className="mb-6 font-semibold tracking-wide text-neutral-900">
+                    {/* 2. Navigasi Shop */}
+                    <div className="md:col-span-2">
+                        <h4 className="mb-5 font-semibold tracking-wide text-neutral-900">
                             {t('shop.footer.shop')}
                         </h4>
-                        <ul className="space-y-4 text-sm text-neutral-600">
+                        <ul className="space-y-3 text-sm text-neutral-600">
                             <li>
                                 <Link
                                     href={productsIndex.url()}
-                                    className="transition-colors hover:text-teal-500"
+                                    className="transition-colors hover:text-teal-600"
                                 >
                                     {t('shop.footer.all_products')}
                                 </Link>
@@ -55,7 +122,7 @@ export const Footer = () => {
                             <li>
                                 <Link
                                     href={hotSale.url()}
-                                    className="transition-colors hover:text-teal-500"
+                                    className="transition-colors hover:text-teal-600"
                                 >
                                     {t('shop.footer.hot_sale')}
                                 </Link>
@@ -65,34 +132,24 @@ export const Footer = () => {
                                     href={productsIndex.url({
                                         query: { sort: 'newest' },
                                     })}
-                                    className="transition-colors hover:text-teal-500"
+                                    className="transition-colors hover:text-teal-600"
                                 >
                                     {t('shop.footer.new_arrivals')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={productsIndex.url({
-                                        query: { sort: 'best_seller' },
-                                    })}
-                                    className="transition-colors hover:text-teal-500"
-                                >
-                                    {t('shop.footer.best_sellers')}
                                 </Link>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Company Links */}
+                    {/* 3. Informasi Perusahaan */}
                     <div className="md:col-span-2">
-                        <h4 className="mb-6 font-semibold tracking-wide text-neutral-900">
+                        <h4 className="mb-5 font-semibold tracking-wide text-neutral-900">
                             {t('shop.footer.company')}
                         </h4>
-                        <ul className="space-y-4 text-sm text-neutral-600">
+                        <ul className="space-y-3 text-sm text-neutral-600">
                             <li>
                                 <Link
                                     href={about.url()}
-                                    className="transition-colors hover:text-teal-500"
+                                    className="transition-colors hover:text-teal-600"
                                 >
                                     {t('shop.footer.about_us')}
                                 </Link>
@@ -100,7 +157,7 @@ export const Footer = () => {
                             <li>
                                 <Link
                                     href={contact.url()}
-                                    className="transition-colors hover:text-teal-500"
+                                    className="transition-colors hover:text-teal-600"
                                 >
                                     {t('shop.footer.contact')}
                                 </Link>
@@ -108,7 +165,7 @@ export const Footer = () => {
                             <li>
                                 <Link
                                     href={faq.url()}
-                                    className="transition-colors hover:text-teal-500"
+                                    className="transition-colors hover:text-teal-600"
                                 >
                                     {t('shop.footer.faq')}
                                 </Link>
@@ -116,36 +173,53 @@ export const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Support Links */}
-                    <div className="md:col-span-2">
-                        <h4 className="mb-6 font-semibold tracking-wide text-neutral-900">
-                            {t('shop.footer.support')}
+                    {/* 4. Informasi Kontak */}
+                    <div className="md:col-span-4">
+                        <h4 className="mb-5 font-semibold tracking-wide text-neutral-900">
+                            Informasi Kontak
                         </h4>
-                        <ul className="space-y-4 text-sm text-neutral-600">
-                            <li>
-                                <Link
-                                    href={shipping.url()}
-                                    className="transition-colors hover:text-teal-500"
-                                >
-                                    {t('shop.footer.shipping')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={returns.url()}
-                                    className="transition-colors hover:text-teal-500"
-                                >
-                                    {t('shop.footer.returns')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={faq.url()}
-                                    className="transition-colors hover:text-teal-500"
-                                >
-                                    {t('shop.footer.help_center')}
-                                </Link>
-                            </li>
+                        <ul className="space-y-3.5 text-sm text-neutral-600">
+                            {siteSettings?.address && (
+                                <li className="flex items-start gap-3">
+                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
+                                    <span>{siteSettings.address}</span>
+                                </li>
+                            )}
+                            {siteSettings?.contact_phone && (
+                                <li className="flex items-center gap-3">
+                                    <Phone className="h-4 w-4 shrink-0 text-teal-600" />
+                                    <a
+                                        href={`tel:${siteSettings.contact_phone}`}
+                                        className="transition-colors hover:text-teal-600"
+                                    >
+                                        {siteSettings.contact_phone}
+                                    </a>
+                                </li>
+                            )}
+                            {siteSettings?.contact_whatsapp && (
+                                <li className="flex items-center gap-3">
+                                    <MessageCircle className="h-4 w-4 shrink-0 text-teal-600" />
+                                    <a
+                                        href={`https://wa.me/${whatsappNumber}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="transition-colors hover:text-teal-600"
+                                    >
+                                        +{whatsappNumber} (WhatsApp)
+                                    </a>
+                                </li>
+                            )}
+                            {siteSettings?.contact_email && (
+                                <li className="flex items-center gap-3">
+                                    <Mail className="h-4 w-4 shrink-0 text-teal-600" />
+                                    <a
+                                        href={`mailto:${siteSettings.contact_email}`}
+                                        className="transition-colors hover:text-teal-600"
+                                    >
+                                        {siteSettings.contact_email}
+                                    </a>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -153,20 +227,21 @@ export const Footer = () => {
                 {/* Bottom Section */}
                 <div className="flex flex-col items-center justify-between pt-8 text-xs text-neutral-500 md:flex-row">
                     <p>
-                        &copy; {currentYear} {siteName}. {t('shop.footer.all_rights_reserved')}
+                        &copy; {currentYear} {siteName}.{' '}
+                        {t('shop.footer.all_rights_reserved')}
                     </p>
                     <div className="mt-4 flex gap-6 md:mt-0">
                         <Link
                             href={privacy.url()}
-                            className="transition-colors hover:text-teal-500"
+                            className="transition-colors hover:text-teal-600"
                         >
                             Privacy Policy
                         </Link>
                         <Link
                             href={terms.url()}
-                            className="transition-colors hover:text-teal-500"
+                            className="transition-colors hover:text-teal-600"
                         >
-                            Terms & Conditions
+                            Terms &amp; Conditions
                         </Link>
                     </div>
                 </div>
