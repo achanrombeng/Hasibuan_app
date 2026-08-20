@@ -32,8 +32,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, a
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                     {/* Image Gallery */}
                     <div className="space-y-4">
-                        <div className="aspect-[4/5] bg-terra-100 rounded-sm overflow-hidden">
-                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        <div className="aspect-[4/5] bg-terra-100 rounded-sm overflow-hidden flex items-center justify-center p-3">
+                            <img src={product.image} alt={product.name} className="w-full h-full object-scale-down" />
                         </div>
                     </div>
 

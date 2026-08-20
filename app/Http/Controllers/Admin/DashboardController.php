@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\PromoBanner;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -18,6 +20,8 @@ class DashboardController extends Controller
     {
         // Get statistics
         $totalProducts = Product::count();
+        $totalCategories = Category::count();
+        $activeBanners = PromoBanner::active()->count();
         $totalOrders = Order::count();
         $totalCustomers = User::role('customer')->count();
         $totalRevenue = Order::where('payment_status', 'paid')->sum('total');
@@ -67,6 +71,8 @@ class DashboardController extends Controller
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
                 'totalProducts' => $totalProducts,
+                'totalCategories' => $totalCategories,
+                'activeBanners' => $activeBanners,
                 'totalOrders' => $totalOrders,
                 'totalCustomers' => $totalCustomers,
                 'totalRevenue' => (float) $totalRevenue,

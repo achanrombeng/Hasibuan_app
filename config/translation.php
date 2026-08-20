@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'default_locale' => 'id',
-    'supported_locales' => ['id', 'en'],
-    'fallback_locale' => 'id',
+    'default_locale' => 'en',
+    'supported_locales' => ['en', 'id'],
+    'fallback_locale' => 'en',
 
     'auto_translate' => [
         'enabled' => env('AUTO_TRANSLATE_ENABLED', true),

@@ -365,7 +365,7 @@ function ImageGallery({
     return (
         <div className="space-y-4 lg:sticky lg:top-28 lg:self-start">
             <div
-                className="group relative aspect-[4/3] cursor-zoom-in overflow-hidden rounded-2xl border border-neutral-200/60 bg-white shadow-2xs sm:aspect-square"
+                className="group relative aspect-[4/3] cursor-zoom-in overflow-hidden rounded-2xl border border-neutral-200/60 bg-white shadow-2xs sm:aspect-square flex items-center justify-center p-3"
                 onClick={onZoom}
             >
                 <AnimatePresence mode="wait">
@@ -373,7 +373,7 @@ function ImageGallery({
                         key={selectedIndex}
                         src={images[selectedIndex]?.image_url}
                         alt={images[selectedIndex]?.alt_text || product.name}
-                        className="h-full w-full bg-white object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full bg-white object-scale-down transition-transform duration-500 group-hover:scale-105"
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0 }}
@@ -430,7 +430,7 @@ function ImageGallery({
                         <button
                             key={img.id || idx}
                             onClick={() => setSelectedIndex(idx)}
-                            className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 ${
+                            className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 flex items-center justify-center p-1 bg-white ${
                                 idx === selectedIndex
                                     ? 'scale-105 border-teal-600 shadow-sm ring-2 ring-teal-600/20'
                                     : 'border-neutral-200/80 opacity-70 hover:border-neutral-400 hover:opacity-100'
@@ -439,7 +439,7 @@ function ImageGallery({
                             <img
                                 src={img.image_url}
                                 alt=""
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-scale-down"
                             />
                         </button>
                     ))}

@@ -708,11 +708,11 @@ function ProductCard({
                     href={`/shop/products/${product.slug}`}
                     className="group flex gap-6 rounded-sm border border-neutral-100 bg-white p-4 transition-shadow hover:shadow-lg"
                 >
-                    <div className="relative h-48 w-48 flex-shrink-0 overflow-hidden rounded-sm bg-neutral-100">
+                    <div className="relative h-48 w-48 flex-shrink-0 overflow-hidden rounded-sm bg-neutral-100 flex items-center justify-center p-2">
                         <img
                             src={imageUrl}
                             alt={product.name}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
                         />
                         <button
                             onClick={(e) => {
@@ -779,11 +779,11 @@ function ProductCard({
             className="group"
         >
             <Link href={`/shop/products/${product.slug}`} className="block transition-all duration-400 ease-out hover:scale-105 hover:-translate-y-2 hover:z-10">
-                <div className="relative mb-4 aspect-square overflow-hidden rounded-sm bg-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-2xl">
+                <div className="relative mb-4 aspect-square overflow-hidden rounded-sm bg-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-2xl flex items-center justify-center p-2">
                     <img
                         src={imageUrl}
                         alt={product.name}
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        className="h-full w-full object-scale-down transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
                     <div className="absolute right-4 bottom-4 flex gap-2 opacity-0 transition-all duration-300 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100">

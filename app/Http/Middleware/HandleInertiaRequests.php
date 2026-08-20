@@ -140,6 +140,28 @@ class HandleInertiaRequests extends Middleware
         // Always include auth strings (login/register can appear anywhere)
         $prefixes[] = 'auth.';
 
+        if (app()->environment('local')) {
+            $file = lang_path("{$locale}.json");
+
+            if (! File::exists($file)) {
+                return [];
+            }
+
+            $all = json_decode(File::get($file), true) ?? [];
+
+            return collect($all)
+                ->filter(function ($value, $key) use ($prefixes) {
+                    foreach ($prefixes as $prefix) {
+                        if (str_starts_with($key, $prefix)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                })
+                ->all();
+        }
+
         return Cache::remember("translations.{$locale}.{$path}", 3600, function () use ($locale, $prefixes) {
             $file = lang_path("{$locale}.json");
 

@@ -115,11 +115,11 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     >
                         <div className="grid md:grid-cols-2">
                             {/* Image Section */}
-                            <div className="relative aspect-square bg-sand-50 md:aspect-auto">
+                            <div className="relative aspect-square bg-sand-50 md:aspect-auto flex items-center justify-center p-4">
                                 <img
                                     src={images[currentImageIndex]?.image_url}
                                     alt={product.name}
-                                    className="h-full w-full object-cover"
+                                    className="h-full w-full object-scale-down"
                                 />
                                 {images.length > 1 && (
                                     <>

@@ -15,13 +15,11 @@ class SetLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        // Priority: session (explicit switch) > cookie (persists across sessions) > config (defaults to 'en')
-        $locale = session('locale')
-            ?? $request->cookie('locale')
-            ?? config('app.locale', 'en');
+        $defaultLocale = config('translation.default_locale', config('app.locale', 'en'));
+        $locale = session('locale') ?? $defaultLocale;
 
         if (! in_array($locale, self::SUPPORTED_LOCALES, true)) {
-            $locale = config('app.locale', 'en');
+            $locale = $defaultLocale;
         }
 
         App::setLocale($locale);
