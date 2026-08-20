@@ -21,7 +21,7 @@ class ArticleResource extends JsonResource
             'content' => $this->content,
             'featured_image' => $this->featured_image,
             'featured_image_url' => $this->featured_image
-                ? asset('storage/' . $this->featured_image)
+                ? (filter_var($this->featured_image, FILTER_VALIDATE_URL) ? $this->featured_image : asset('storage/' . $this->featured_image))
                 : null,
             'author' => $this->author,
             'author_name' => $this->author?->name ?? $this->author,

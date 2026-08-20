@@ -27,6 +27,7 @@ interface PaginationProps {
   meta?: PaginationMeta;
   // For raw paginator (not resource collection), the fields are at the root
   paginator?: PaginationMeta & { data?: any[] };
+  pagination?: any;
   className?: string;
   showPerPage?: boolean;
 }
@@ -78,12 +79,13 @@ export default function Pagination({
   links,
   meta,
   paginator,
+  pagination,
   className = '',
   showPerPage = true,
 }: PaginationProps) {
   // Normalize data
-  const currentMeta = meta || paginator;
-  const currentLinks = links || paginator?.links || [];
+  const currentMeta = meta || paginator || pagination?.meta || pagination;
+  const currentLinks = links || paginator?.links || pagination?.links || pagination?.meta?.links || [];
 
   // If no links or only 1 page, hide
   if (currentLinks.length === 0 || !currentMeta || currentMeta.last_page <= 1)

@@ -98,9 +98,9 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: 'Dashboard', href: '/admin' },
-                { label: 'Artikel', href: '/admin/articles' },
-                { label: 'Tambah Artikel' },
+                { title: 'Dashboard', href: '/admin' },
+                { title: 'Artikel', href: '/admin/articles' },
+                { title: 'Tambah Artikel', href: '/admin/articles/create' },
             ]}
         >
             <Head title="Tambah Artikel" />

@@ -53,7 +53,7 @@ class ArticleController extends Controller implements HasMiddleware
                 'id' => $article->id,
                 'title' => $article->title,
                 'slug' => $article->slug,
-                'author' => $article->author,
+                'author' => is_string($article->author) ? $article->author : ($article->author?->name ?? 'Admin'),
                 'status' => $article->status->value,
                 'published_at' => $article->published_at?->toISOString(),
                 'views' => $article->views,

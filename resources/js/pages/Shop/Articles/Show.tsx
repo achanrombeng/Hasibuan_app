@@ -22,27 +22,29 @@ interface Article {
 }
 
 interface ArticleShowProps {
-    article: Article;
+    article: Article | { data: Article };
 }
 
 export default function ArticleShow({ article }: ArticleShowProps) {
+    const articleData = (article as any)?.data || article;
+
     return (
         <ShopLayout>
-            <Head title={article.meta_title || article.title}>
+            <Head title={articleData?.meta_title || articleData?.title || 'Artikel'}>
                 <meta
                     name="description"
-                    content={article.meta_description || article.excerpt}
+                    content={articleData?.meta_description || articleData?.excerpt || ''}
                 />
-                {article.meta_title && (
-                    <meta property="og:title" content={article.meta_title} />
+                {articleData?.meta_title && (
+                    <meta property="og:title" content={articleData.meta_title} />
                 )}
-                {article.excerpt && (
-                    <meta property="og:description" content={article.excerpt} />
+                {articleData?.excerpt && (
+                    <meta property="og:description" content={articleData.excerpt} />
                 )}
-                {article.featured_image_url && (
+                {articleData?.featured_image_url && (
                     <meta
                         property="og:image"
-                        content={article.featured_image_url}
+                        content={articleData.featured_image_url}
                     />
                 )}
             </Head>
@@ -65,18 +67,18 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                             Artikel
                         </Link>
                         <span>/</span>
-                        <span className="text-gray-900">{article.title}</span>
+                        <span className="text-gray-900">{articleData?.title}</span>
                     </nav>
                 </div>
 
                 {/* Article Header */}
                 <div className="container mx-auto max-w-4xl px-4 py-8">
                     {/* Featured Image */}
-                    {article.featured_image_url && (
+                    {articleData?.featured_image_url && (
                         <div className="mb-8 overflow-hidden rounded-xl">
                             <img
-                                src={article.featured_image_url}
-                                alt={article.title}
+                                src={articleData.featured_image_url}
+                                alt={articleData.title}
                                 className="h-auto w-full max-h-[500px] object-cover"
                             />
                         </div>
@@ -84,7 +86,7 @@ export default function ArticleShow({ article }: ArticleShowProps) {
 
                     {/* Title */}
                     <h1 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl">
-                        {article.title}
+                        {articleData?.title}
                     </h1>
 
                     {/* Metadata */}
@@ -92,27 +94,27 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                         <div className="flex items-center">
                             <User className="mr-2 h-4 w-4" />
                             <span className="font-medium">
-                                {article.author_name}
+                                {articleData?.author_name}
                             </span>
                         </div>
                         <div className="flex items-center">
                             <Calendar className="mr-2 h-4 w-4" />
-                            {article.formatted_published_at}
+                            {articleData?.formatted_published_at}
                         </div>
                         <div className="flex items-center">
                             <Clock className="mr-2 h-4 w-4" />
-                            {article.read_time} menit baca
+                            {articleData?.read_time} menit baca
                         </div>
                         <div className="flex items-center">
                             <Eye className="mr-2 h-4 w-4" />
-                            {article.views} kali dilihat
+                            {articleData?.views} kali dilihat
                         </div>
                     </div>
 
                     {/* Tags */}
-                    {article.tags && article.tags.length > 0 && (
+                    {articleData?.tags && articleData.tags.length > 0 && (
                         <div className="mb-8 flex flex-wrap gap-2">
-                            {article.tags.map((tag, idx) => (
+                            {articleData.tags.map((tag: string, idx: number) => (
                                 <Link
                                     key={idx}
                                     href={`/shop/articles?tag=${encodeURIComponent(tag)}`}
@@ -175,18 +177,24 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                                         {...props}
                                     />
                                 ),
-                                code: ({ node, inline, ...props }) =>
-                                    inline ? (
-                                        <code
-                                            className="rounded bg-gray-100 px-1.5 py-0.5 text-sm text-terra-600"
-                                            {...props}
-                                        />
-                                    ) : (
+                                code: ({ node, className, children, ...props }: any) => {
+                                    const match = /language-(\w+)/.exec(className || '');
+                                    return match ? (
                                         <code
                                             className="block rounded-lg bg-gray-900 p-4 text-sm text-gray-100"
                                             {...props}
-                                        />
-                                    ),
+                                        >
+                                            {children}
+                                        </code>
+                                    ) : (
+                                        <code
+                                            className="rounded bg-gray-100 px-1.5 py-0.5 text-sm text-terra-600"
+                                            {...props}
+                                        >
+                                            {children}
+                                        </code>
+                                    );
+                                },
                                 img: ({ node, ...props }) => (
                                     <img
                                         className="my-6 rounded-lg"
@@ -201,7 +209,7 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                                 ),
                             }}
                         >
-                            {article.content}
+                            {articleData?.content || ''}
                         </ReactMarkdown>
                     </div>
 

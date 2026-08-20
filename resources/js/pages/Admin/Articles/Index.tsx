@@ -139,8 +139,8 @@ export default function ArticlesIndex({
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: 'Dashboard', href: '/admin' },
-                { label: 'Artikel' },
+                { title: 'Dashboard', href: '/admin' },
+                { title: 'Artikel', href: '/admin/articles' },
             ]}
         >
             <Head title="Artikel" />

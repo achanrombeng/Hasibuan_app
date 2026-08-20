@@ -1,0 +1,147 @@
+import { Link } from '@inertiajs/react';
+import { ArrowRight, Calendar, Clock } from 'lucide-react';
+import React from 'react';
+
+export interface ArticleItem {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  excerpt_truncated?: string;
+  featured_image_url: string | null;
+  author_name: string;
+  formatted_published_at?: string;
+  published_at?: string;
+  read_time: number;
+  tags: string[];
+}
+
+interface ArticlesSectionProps {
+  articles: ArticleItem[];
+}
+
+export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) => {
+  if (!articles || articles.length === 0) return null;
+
+  const displayArticles = articles.slice(0, 3);
+
+  return (
+    <section className="bg-sand-50/50 py-16 md:py-24 border-t border-terra-100/60">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-widest text-terra-600">
+              Blog & Jurnal
+            </span>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Artikel & Berita Terbaru
+            </h2>
+            <p className="mt-2 max-w-2xl text-base text-gray-600">
+              Temukan inspirasi, tren gaya hidup, dan cerita di balik koleksi furniture lüks Ronica.
+            </p>
+          </div>
+          <Link
+            href="/shop/articles"
+            className="inline-flex items-center text-sm font-semibold text-terra-900 hover:text-wood transition-colors group"
+          >
+            Lihat Semua Artikel
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        {/* Articles Grid (3 columns) */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          {displayArticles.map((article) => {
+            const formattedDate =
+              article.formatted_published_at ||
+              (article.published_at
+                ? new Date(article.published_at).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })
+                : '');
+
+            return (
+              <article
+                key={article.id}
+                className="group flex flex-col overflow-hidden rounded-2xl bg-white border border-terra-100/80 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              >
+                {/* Image */}
+                <Link
+                  href={`/shop/articles/${article.slug}`}
+                  className="relative aspect-[16/10] overflow-hidden bg-sand-100 block"
+                >
+                  {article.featured_image_url ? (
+                    <img
+                      src={article.featured_image_url}
+                      alt={article.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-sand-200 text-terra-400">
+                      <span className="text-3xl font-serif">R</span>
+                    </div>
+                  )}
+
+                  {/* Primary Tag Badge */}
+                  {article.tags && article.tags.length > 0 && (
+                    <div className="absolute top-3 left-3">
+                      <span className="inline-block rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-medium text-terra-900 shadow-sm">
+                        {article.tags[0]}
+                      </span>
+                    </div>
+                  )}
+                </Link>
+
+                {/* Content */}
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    {/* Meta info */}
+                    <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                      {formattedDate && (
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3.5 w-3.5 text-terra-600" />
+                          <span>{formattedDate}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3.5 w-3.5 text-terra-600" />
+                        <span>{article.read_time || 3} min baca</span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-terra-900 transition-colors">
+                      <Link href={`/shop/articles/${article.slug}`}>
+                        {article.title}
+                      </Link>
+                    </h3>
+
+                    {/* Excerpt */}
+                    <p className="mt-2.5 text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                      {article.excerpt_truncated || article.excerpt}
+                    </p>
+                  </div>
+
+                  {/* Footer link */}
+                  <div className="mt-6 pt-4 border-t border-sand-100">
+                    <Link
+                      href={`/shop/articles/${article.slug}`}
+                      className="inline-flex items-center text-xs font-semibold text-terra-900 group-hover:text-wood transition-colors"
+                    >
+                      Baca Artikel
+                      <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};

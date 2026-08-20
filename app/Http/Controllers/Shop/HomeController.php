@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticleResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
+use App\Models\Article;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductReview;
@@ -58,6 +60,12 @@ class HomeController extends Controller
                 'location' => $review->user?->city ?? 'Indonesia',
             ]);
 
+        // Recent Published Articles (3 items)
+        $recentArticles = Article::published()
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
+
         // Hero Settings (with locale support)
         $locale = app()->getLocale();
         $heroSettings = [
@@ -106,6 +114,7 @@ class HomeController extends Controller
             'values' => filter_var(Setting::get('section_values_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'products' => filter_var(Setting::get('section_products_visible', '0'), FILTER_VALIDATE_BOOLEAN),
             'testimonials' => filter_var(Setting::get('section_testimonials_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+            'articles' => filter_var(Setting::get('section_articles_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'newsletter' => filter_var(Setting::get('section_newsletter_visible', '1'), FILTER_VALIDATE_BOOLEAN),
         ];
 
@@ -113,6 +122,7 @@ class HomeController extends Controller
             'featuredProducts' => ProductResource::collection($featuredProducts),
             'landingCategories' => CategoryResource::collection($displayCategories),
             'categories' => CategoryResource::collection($allActiveCategories),
+            'articles' => ArticleResource::collection($recentArticles),
             'testimonials' => $testimonials,
             'heroSettings' => $heroSettings,
             'carouselBanners' => $carouselBanners,

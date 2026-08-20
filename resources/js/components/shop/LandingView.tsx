@@ -7,6 +7,7 @@ import {
   HomeValue,
 } from '@/types/shop';
 import { motion } from 'framer-motion';
+import { ArticleItem, ArticlesSection } from './sections/ArticlesSection';
 import { CarouselBannerSection } from './sections/CarouselBannerSection';
 import { CatalogSection } from './sections/CatalogSection';
 import { CategoriesSection } from './sections/CategoriesSection';
@@ -28,6 +29,7 @@ interface SectionVisibility {
   values: boolean;
   products: boolean;
   testimonials: boolean;
+  articles?: boolean;
   newsletter: boolean;
 }
 
@@ -35,6 +37,7 @@ interface LandingViewProps {
   featuredProducts: ApiProduct[];
   featuredCategories: ApiCategory[];
   categories?: ApiCategory[];
+  articles?: ArticleItem[];
   testimonials: HomeTestimonial[];
   heroSettings: HeroSettings;
   trustLogos: string[] | { name: string; logo_url?: string }[];
@@ -47,6 +50,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
   featuredProducts,
   featuredCategories,
   categories,
+  articles,
   testimonials,
   heroSettings,
   trustLogos,
@@ -64,6 +68,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
     values: true,
     products: false,
     testimonials: true,
+    articles: true,
     newsletter: true,
   };
 
@@ -90,6 +95,9 @@ export const LandingView: React.FC<LandingViewProps> = ({
       {visibility.products && <ProductsSection products={featuredProducts} />}
       {visibility.testimonials && (
         <TestimonialsSection testimonials={testimonials} />
+      )}
+      {(visibility.articles ?? true) && articles && articles.length > 0 && (
+        <ArticlesSection articles={articles} />
       )}
       {visibility.newsletter && <NewsletterSection />}
     </motion.div>

@@ -136,9 +136,9 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { label: 'Dashboard', href: '/admin' },
-                { label: 'Artikel', href: '/admin/articles' },
-                { label: 'Edit Artikel' },
+                { title: 'Dashboard', href: '/admin' },
+                { title: 'Artikel', href: '/admin/articles' },
+                { title: 'Edit Artikel', href: `/admin/articles/${article.id}/edit` },
             ]}
         >
             <Head title={`Edit: ${article.title}`} />

@@ -12,6 +12,7 @@ export { ProductDetail } from './ProductDetail';
 export { SuccessView } from './SuccessView';
 
 // Section Components
+export { ArticlesSection } from './sections/ArticlesSection';
 export { CategoriesSection } from './sections/CategoriesSection';
 export { HeroSection } from './sections/HeroSection';
 export { NewsletterSection } from './sections/NewsletterSection';
