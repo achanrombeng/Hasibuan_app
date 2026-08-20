@@ -107,7 +107,9 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
 
         Object.entries(formData).forEach(([key, value]) => {
             if (key === 'tags') {
-                data.append(key, JSON.stringify(value));
+                if (Array.isArray(value)) {
+                    value.forEach((tag) => data.append('tags[]', tag));
+                }
             } else if (value !== null && value !== '') {
                 data.append(key, String(value));
             }

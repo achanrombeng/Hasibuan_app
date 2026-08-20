@@ -2,15 +2,10 @@ import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
-    BarChart3,
-    Box,
-    DollarSign,
     Globe,
     Layers,
     Package,
     Pencil,
-    Tag,
-    Truck,
 } from 'lucide-react';
 
 interface ProductImage {
@@ -68,11 +63,7 @@ interface ShowProductProps {
     product: Product;
 }
 
-const shippingClassLabels: Record<string, string> = {
-    free_shipping: 'Gratis Ongkir',
-    flat_rate: 'Tarif Tetap',
-    local_pickup: 'Ambil di Tempat',
-};
+
 
 export default function ShowProduct({ product }: ShowProductProps) {
     return (
@@ -113,68 +104,6 @@ export default function ShowProduct({ product }: ShowProductProps) {
                         <Pencil className="h-4 w-4" />
                         Edit Produk
                     </Link>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    <div className="rounded-xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-wood/10">
-                                <Package className="h-5 w-5 text-wood" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-terra-500">Stok</p>
-                                <p className="text-lg font-bold text-terra-900">
-                                    {product.stock_quantity}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
-                                <Tag className="h-5 w-5 text-green-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-terra-500">
-                                    Terjual
-                                </p>
-                                <p className="text-lg font-bold text-terra-900">
-                                    {product.sold_count}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-                                <BarChart3 className="h-5 w-5 text-blue-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-terra-500">
-                                    Dilihat
-                                </p>
-                                <p className="text-lg font-bold text-terra-900">
-                                    {product.view_count}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
-                                <Layers className="h-5 w-5 text-purple-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-terra-500">
-                                    Kategori
-                                </p>
-                                <p className="text-lg font-bold text-terra-900">
-                                    {product.category?.name || '-'}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -234,176 +163,19 @@ export default function ShowProduct({ product }: ShowProductProps) {
                             </p>
                         </div>
 
-                        {/* Harga */}
-                        <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
-                                <DollarSign className="h-5 w-5 text-terra-500" />
-                                <h2 className="text-lg font-semibold text-terra-900">
-                                    Informasi Harga
-                                </h2>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                <div>
-                                    <p className="text-sm text-terra-500">
-                                        Harga Jual
-                                    </p>
-                                    <p className="text-xl font-bold text-terra-900">
-                                        {product.price_formatted}
-                                    </p>
-                                </div>
-                                {product.has_discount && (
-                                    <div>
-                                        <p className="text-sm text-terra-500">
-                                            Harga Diskon
-                                        </p>
-                                        <p className="text-xl font-bold text-green-600">
-                                            {product.final_price_formatted}
-                                        </p>
-                                    </div>
-                                )}
-                                {product.compare_price_formatted && (
-                                    <div>
-                                        <p className="text-sm text-terra-500">
-                                            Harga Coret
-                                        </p>
-                                        <p className="text-xl text-terra-400 line-through">
-                                            {product.compare_price_formatted}
-                                        </p>
-                                    </div>
-                                )}
-                                {product.cost_price_formatted && (
-                                    <div>
-                                        <p className="text-sm text-terra-500">
-                                            Harga Modal
-                                        </p>
-                                        <p className="text-xl text-terra-700">
-                                            {product.cost_price_formatted}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Inventori */}
-                        <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
-                                <Box className="h-5 w-5 text-terra-500" />
-                                <h2 className="text-lg font-semibold text-terra-900">
-                                    Inventori
-                                </h2>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                <div>
-                                    <p className="text-sm text-terra-500">
-                                        Stok
-                                    </p>
-                                    <p className="text-lg font-bold text-terra-900">
-                                        {product.stock_quantity}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-terra-500">
-                                        Batas Stok Rendah
-                                    </p>
-                                    <p className="text-lg font-bold text-terra-900">
-                                        {product.low_stock_threshold}
-                                    </p>
-                                </div>
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-2">
-                                        <span
-                                            className={`h-2 w-2 rounded-full ${product.track_stock ? 'bg-green-500' : 'bg-terra-300'}`}
-                                        />
-                                        <span className="text-sm text-terra-600">
-                                            Lacak Stok:{' '}
-                                            {product.track_stock
-                                                ? 'Aktif'
-                                                : 'Nonaktif'}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span
-                                            className={`h-2 w-2 rounded-full ${product.allow_backorder ? 'bg-green-500' : 'bg-terra-300'}`}
-                                        />
-                                        <span className="text-sm text-terra-600">
-                                            Backorder:{' '}
-                                            {product.allow_backorder
-                                                ? 'Ya'
-                                                : 'Tidak'}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span
-                                            className={`h-2 w-2 rounded-full ${product.is_pre_order ? 'bg-blue-500' : 'bg-terra-300'}`}
-                                        />
-                                        <span className="text-sm text-terra-600">
-                                            Pre-Order:{' '}
-                                            {product.is_pre_order
-                                                ? 'Ya'
-                                                : 'Tidak'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Pengiriman */}
-                        <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-                            <div className="mb-4 flex items-center gap-2">
-                                <Truck className="h-5 w-5 text-terra-500" />
-                                <h2 className="text-lg font-semibold text-terra-900">
-                                    Pengiriman
-                                </h2>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                <div>
-                                    <p className="text-sm text-terra-500">
-                                        Berat
-                                    </p>
-                                    <p className="text-lg font-bold text-terra-900">
-                                        {product.weight
-                                            ? `${product.weight} kg`
-                                            : '-'}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-terra-500">
-                                        Dimensi (P x L x T)
-                                    </p>
-                                    <p className="text-lg font-bold text-terra-900">
-                                        {product.dimensions?.length ||
-                                        product.dimensions?.width ||
-                                        product.dimensions?.height
-                                            ? `${product.dimensions.length || 0} x ${product.dimensions.width || 0} x ${product.dimensions.height || 0} cm`
-                                            : '-'}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-terra-500">
-                                        Kelas Pengiriman
-                                    </p>
-                                    <p className="text-lg font-bold text-terra-900">
-                                        {product.shipping_class
-                                            ? (shippingClassLabels[
-                                                  product.shipping_class
-                                              ] || product.shipping_class)
-                                            : '-'}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Atribut */}
+                        {/* Spesifikasi & Atribut */}
                         {(product.material ||
                             product.color ||
+                            product.weight ||
+                            product.dimensions ||
                             (product.specifications &&
                                 Object.keys(product.specifications).length >
                                     0)) && (
                             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                                 <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                    Atribut
+                                    Spesifikasi Produk
                                 </h2>
-                                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                                     {product.material && (
                                         <div>
                                             <p className="text-sm text-terra-500">
@@ -424,13 +196,36 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                             </p>
                                         </div>
                                     )}
+                                    {product.weight && (
+                                        <div>
+                                            <p className="text-sm text-terra-500">
+                                                Berat
+                                            </p>
+                                            <p className="font-medium text-terra-900">
+                                                {product.weight} kg
+                                            </p>
+                                        </div>
+                                    )}
+                                    {product.dimensions &&
+                                        (product.dimensions.length ||
+                                            product.dimensions.width ||
+                                            product.dimensions.height) && (
+                                            <div>
+                                                <p className="text-sm text-terra-500">
+                                                    Dimensi (P x L x T)
+                                                </p>
+                                                <p className="font-medium text-terra-900">
+                                                    {`${product.dimensions.length || 0} x ${product.dimensions.width || 0} x ${product.dimensions.height || 0} cm`}
+                                                </p>
+                                            </div>
+                                        )}
                                 </div>
                                 {product.specifications &&
                                     Object.keys(product.specifications).length >
                                         0 && (
                                         <div className="mt-4 border-t border-terra-100 pt-4">
                                             <p className="mb-2 text-sm font-medium text-terra-500">
-                                                Spesifikasi
+                                                Detail Spesifikasi Tambahan
                                             </p>
                                             <dl className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                                 {Object.entries(
@@ -519,9 +314,17 @@ export default function ShowProduct({ product }: ShowProductProps) {
                     <div className="space-y-6">
                         <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                             <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                Status
+                                Organisasi & Status
                             </h2>
                             <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-terra-600">
+                                        Kategori
+                                    </span>
+                                    <span className="rounded-full bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-700">
+                                        {product.category?.name || '-'}
+                                    </span>
+                                </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-terra-600">
                                         Status Produk
@@ -532,14 +335,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                         {product.status.label}
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-terra-600">
-                                        Tipe Penjualan
-                                    </span>
-                                    <span className="rounded-full bg-terra-100 px-2.5 py-1 text-xs font-medium text-terra-700">
-                                        {product.sale_type.label}
-                                    </span>
-                                </div>
+
                                 {product.discount_percentage && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-terra-600">

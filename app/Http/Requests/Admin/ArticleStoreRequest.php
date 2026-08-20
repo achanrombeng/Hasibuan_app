@@ -15,6 +15,15 @@ class ArticleStoreRequest extends FormRequest
         return $this->user()->can('create articles');
     }
 
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->tags)) {
+            $this->merge([
+                'tags' => json_decode($this->tags, true) ?? [],
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [

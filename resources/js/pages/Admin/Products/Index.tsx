@@ -283,9 +283,6 @@ export default function ProductsIndex({
                                         Kategori
                                     </th>
                                     <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
-                                        Stok
-                                    </th>
-                                    <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
                                         Status
                                     </th>
                                     <th className="px-6 py-4 text-right text-sm font-medium text-terra-600">
@@ -297,7 +294,7 @@ export default function ProductsIndex({
                                 {productData.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan={6}
+                                            colSpan={5}
                                             className="py-12 text-center text-terra-500"
                                         >
                                             Belum ada produk
@@ -349,13 +346,6 @@ export default function ProductsIndex({
                                             </td>
                                             <td className="px-6 py-4 text-sm text-terra-600">
                                                 {product.category?.name || '-'}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span
-                                                    className={`text-sm font-medium ${product.stock_quantity < 10 ? 'text-orange-600' : 'text-terra-600'}`}
-                                                >
-                                                    {product.stock_quantity}
-                                                </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span

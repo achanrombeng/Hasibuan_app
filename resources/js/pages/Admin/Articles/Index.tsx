@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, FileText, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { FileText, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Article {
@@ -232,9 +232,6 @@ export default function ArticlesIndex({
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                         Tanggal Publikasi
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                        Dilihat
-                                    </th>
                                     <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
                                         Aksi
                                     </th>
@@ -244,7 +241,7 @@ export default function ArticlesIndex({
                                 {articles.data.length === 0 ? (
                                     <tr>
                                         <td
-                                            colSpan={6}
+                                            colSpan={5}
                                             className="px-6 py-12 text-center"
                                         >
                                             <FileText className="mx-auto h-12 w-12 text-gray-400" />
@@ -286,12 +283,6 @@ export default function ArticlesIndex({
                                                           },
                                                       )
                                                     : '-'}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-500">
-                                                <div className="flex items-center">
-                                                    <Eye className="mr-1 h-4 w-4" />
-                                                    {article.views}
-                                                </div>
                                             </td>
                                             <td className="px-6 py-4 text-right text-sm">
                                                 <div className="flex justify-end gap-2">
