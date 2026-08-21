@@ -130,6 +130,6 @@ export const NAV_ITEMS = [
     { labelKey: 'shop.nav.about', href: '/shop/about' },
     { labelKey: 'shop.nav.products', href: '/shop/products', hasDropdown: true },
     { labelKey: 'shop.nav.blog', href: '/shop/articles' },
-    { labelKey: 'shop.nav.dealer', href: '/shop/contact' },
+    { labelKey: 'shop.nav.dealer', href: '/shop/dealer' },
     { labelKey: 'shop.nav.contact', href: '/shop/contact' },
 ];

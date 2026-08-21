@@ -1,0 +1,403 @@
+import AdminLayout from '@/layouts/admin/admin-layout';
+import { Head, useForm } from '@inertiajs/react';
+import {
+    Award,
+    Building2,
+    Clock,
+    FileText,
+    Image as ImageIcon,
+    Info,
+    Save,
+    Sparkles,
+    Target,
+} from 'lucide-react';
+import React, { useState } from 'react';
+
+interface AboutSettingsProps {
+    settings: {
+        about_hero_title: string;
+        about_hero_subtitle: string;
+        about_story_title: string;
+        about_story_p1: string;
+        about_story_p2: string;
+        about_story_p3: string;
+        about_story_image: string;
+        about_years_experience: string;
+        about_years_experience_label: string;
+        about_vision_title: string;
+        about_vision_text: string;
+        about_mission_title: string;
+        about_mission_1: string;
+        about_mission_2: string;
+        about_mission_3: string;
+        about_mission_4: string;
+    };
+}
+
+export default function AboutSettings({ settings }: AboutSettingsProps) {
+    const [imagePreview, setImagePreview] = useState<string>(
+        settings.about_story_image || '/images/placeholder-about.svg',
+    );
+
+    const { data, setData, post, processing, errors } = useForm({
+        about_hero_title: settings.about_hero_title || '',
+        about_hero_subtitle: settings.about_hero_subtitle || '',
+        about_story_title: settings.about_story_title || '',
+        about_story_p1: settings.about_story_p1 || '',
+        about_story_p2: settings.about_story_p2 || '',
+        about_story_p3: settings.about_story_p3 || '',
+        about_story_image: settings.about_story_image || '',
+        about_story_image_file: null as File | null,
+        about_years_experience: settings.about_years_experience || '',
+        about_years_experience_label: settings.about_years_experience_label || '',
+        about_vision_title: settings.about_vision_title || '',
+        about_vision_text: settings.about_vision_text || '',
+        about_mission_title: settings.about_mission_title || '',
+        about_mission_1: settings.about_mission_1 || '',
+        about_mission_2: settings.about_mission_2 || '',
+        about_mission_3: settings.about_mission_3 || '',
+        about_mission_4: settings.about_mission_4 || '',
+    });
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setData('about_story_image_file', file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post('/admin/settings/about', {
+            preserveScroll: true,
+        });
+    };
+
+    return (
+        <AdminLayout
+            breadcrumbs={[
+                { title: 'Pengaturan', href: '/admin/settings' },
+                { title: 'Halaman About Us', href: '/admin/settings/about' },
+            ]}
+        >
+            <Head title="Pengaturan Halaman About Us" />
+
+            <div className="space-y-6 pb-12">
+                {/* Header */}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold text-terra-900">
+                            Kelola Halaman About Us
+                        </h1>
+                        <p className="mt-1 text-sm text-neutral-500">
+                            Atur teks, cerita workshop, visi & misi yang tampil pada halaman Tentang Kami toko Anda.
+                        </p>
+                    </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Section 1: Hero Banner */}
+                    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm">
+                        <div className="mb-6 flex items-center gap-3 border-b border-neutral-100 pb-4">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                                <Sparkles className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h2 className="font-serif text-lg font-bold text-neutral-900">
+                                    Hero Banner (Header Atas)
+                                </h2>
+                                <p className="text-xs text-neutral-500">
+                                    Judul utama dan deskripsi pada bagian atas halaman About Us
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                    Judul Hero (Hero Title)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.about_hero_title}
+                                    onChange={(e) => setData('about_hero_title', e.target.value)}
+                                    placeholder="Contoh: Welcome to Ronica Outdoor Furniture"
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                />
+                                {errors.about_hero_title && (
+                                    <p className="mt-1 text-xs text-red-500">{errors.about_hero_title}</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                    Subjudul Hero (Hero Subtitle)
+                                </label>
+                                <textarea
+                                    rows={2}
+                                    value={data.about_hero_subtitle}
+                                    onChange={(e) => setData('about_hero_subtitle', e.target.value)}
+                                    placeholder="Contoh: Delivering premium quality furniture..."
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section 2: Our Story & Image */}
+                    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm">
+                        <div className="mb-6 flex items-center gap-3 border-b border-neutral-100 pb-4">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                                <FileText className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h2 className="font-serif text-lg font-bold text-neutral-900">
+                                    Cerita Kami (Our Story) & Gambar Workshop
+                                </h2>
+                                <p className="text-xs text-neutral-500">
+                                    Cerita latar belakang usaha, foto workshop, dan badge tahun pengalaman
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Judul Bagian Cerita (Story Title)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_story_title}
+                                        onChange={(e) => setData('about_story_title', e.target.value)}
+                                        placeholder="Contoh: Our Story"
+                                        className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Paragraf 1
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={data.about_story_p1}
+                                        onChange={(e) => setData('about_story_p1', e.target.value)}
+                                        placeholder="Paragraf pertama cerita..."
+                                        className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Paragraf 2
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={data.about_story_p2}
+                                        onChange={(e) => setData('about_story_p2', e.target.value)}
+                                        placeholder="Paragraf kedua cerita..."
+                                        className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Paragraf 3
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={data.about_story_p3}
+                                        onChange={(e) => setData('about_story_p3', e.target.value)}
+                                        placeholder="Paragraf ketiga cerita..."
+                                        className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Foto Workshop / Pengrajin
+                                    </label>
+                                    <div className="space-y-3">
+                                        <div className="aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Workshop Preview"
+                                                className="h-full w-full object-cover"
+                                            />
+                                        </div>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="block w-full text-sm text-neutral-500 file:mr-4 file:rounded-xl file:border-0 file:bg-wood-dark file:px-4 file:py-2.5 file:text-sm file:font-medium file:text-white hover:file:bg-wood"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 pt-2">
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                            Angka Pengalaman
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.about_years_experience}
+                                            onChange={(e) => setData('about_years_experience', e.target.value)}
+                                            placeholder="Contoh: 14+"
+                                            className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                            Label Badge Pengalaman
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.about_years_experience_label}
+                                            onChange={(e) => setData('about_years_experience_label', e.target.value)}
+                                            placeholder="Contoh: Years of Experience"
+                                            className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section 3: Vision & Mission */}
+                    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm">
+                        <div className="mb-6 flex items-center gap-3 border-b border-neutral-100 pb-4">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                                <Target className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <h2 className="font-serif text-lg font-bold text-neutral-900">
+                                    Visi & Misi (Our Vision & Mission)
+                                </h2>
+                                <p className="text-xs text-neutral-500">
+                                    Pernyataan Visi dan Poin Misi Perusahaan
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid gap-6 md:grid-cols-2">
+                            {/* Vision */}
+                            <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
+                                <h3 className="font-serif text-base font-semibold text-neutral-800">
+                                    Bagian Visi
+                                </h3>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Judul Visi
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_vision_title}
+                                        onChange={(e) => setData('about_vision_title', e.target.value)}
+                                        placeholder="Contoh: Our Vision"
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Deskripsi Visi
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        value={data.about_vision_text}
+                                        onChange={(e) => setData('about_vision_text', e.target.value)}
+                                        placeholder="Penjelasan visi perusahaan..."
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Mission */}
+                            <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
+                                <h3 className="font-serif text-base font-semibold text-neutral-800">
+                                    Bagian Misi
+                                </h3>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Judul Misi
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_mission_title}
+                                        onChange={(e) => setData('about_mission_title', e.target.value)}
+                                        placeholder="Contoh: Our Mission"
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Poin Misi 1
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_mission_1}
+                                        onChange={(e) => setData('about_mission_1', e.target.value)}
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-900 focus:border-wood focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Poin Misi 2
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_mission_2}
+                                        onChange={(e) => setData('about_mission_2', e.target.value)}
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-900 focus:border-wood focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Poin Misi 3
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_mission_3}
+                                        onChange={(e) => setData('about_mission_3', e.target.value)}
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-900 focus:border-wood focus:outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
+                                        Poin Misi 4
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={data.about_mission_4}
+                                        onChange={(e) => setData('about_mission_4', e.target.value)}
+                                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-900 focus:border-wood focus:outline-none"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="flex justify-end pt-4">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-sm transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                        >
+                            <Save className="h-5 w-5" />
+                            {processing ? 'Menyimpan...' : 'Simpan Pengaturan About Us'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </AdminLayout>
+    );
+}

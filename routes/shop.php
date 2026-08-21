@@ -70,7 +70,31 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
     Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
     // Static Pages
-    Route::get('/about', fn () => \Inertia\Inertia::render('Shop/About'))->name('about');
+    Route::get('/about', function () {
+        $settings = \App\Models\Setting::all()->pluck('value', 'key')->toArray();
+        return \Inertia\Inertia::render('Shop/About', [
+            'aboutSettings' => [
+                'hero_title' => $settings['about_hero_title'] ?? 'Welcome to Ronica Outdoor Furniture',
+                'hero_subtitle' => $settings['about_hero_subtitle'] ?? 'Delivering premium quality furniture with the touch of traditional Indonesian craftsmanship',
+                'story_title' => $settings['about_story_title'] ?? 'Our Story',
+                'story_p1' => $settings['about_story_p1'] ?? 'Ronica Outdoor Furniture was born from a love for high-quality furniture and traditional craftsmanship.',
+                'story_p2' => $settings['about_story_p2'] ?? 'Every product we create is the result of a perfect blend of traditional techniques and modern design.',
+                'story_p3' => $settings['about_story_p3'] ?? 'At Ronica Outdoor Furniture, we believe that furniture is not just an item, but a long-term investment.',
+                'story_image' => $settings['about_story_image'] ?? '/images/placeholder-about.svg',
+                'years_experience' => $settings['about_years_experience'] ?? '14+',
+                'years_experience_label' => $settings['about_years_experience_label'] ?? 'Years of Experience',
+                'vision_title' => $settings['about_vision_title'] ?? 'Our Vision',
+                'vision_text' => $settings['about_vision_text'] ?? 'To become a pioneer in Indonesia\'s premium furniture industry by combining traditional craftsmanship with modern innovation.',
+                'mission_title' => $settings['about_mission_title'] ?? 'Our Mission',
+                'mission_1' => $settings['about_mission_1'] ?? 'Deliver premium quality furniture at competitive prices',
+                'mission_2' => $settings['about_mission_2'] ?? 'Preserve traditional Indonesian craftsmanship techniques',
+                'mission_3' => $settings['about_mission_3'] ?? 'Use sustainable and environmentally friendly materials',
+                'mission_4' => $settings['about_mission_4'] ?? 'Provide the best service to every customer',
+            ],
+        ]);
+    })->name('about');
+
+    Route::get('/dealer', fn () => \Inertia\Inertia::render('Shop/Dealer'))->name('dealer');
     Route::get('/contact', fn () => \Inertia\Inertia::render('Shop/Contact'))->name('contact');
     Route::get('/faq', fn () => \Inertia\Inertia::render('Shop/FAQ'))->name('faq');
     Route::get('/privacy-policy', fn () => \Inertia\Inertia::render('Shop/PrivacyPolicy'))->name('privacy');
@@ -123,3 +147,7 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
         Route::post('/addresses/{address}/default', [AddressController::class, 'setDefault'])->name('addresses.default');
     });
 });
+
+// Fallback root aliases
+Route::get('/dealer', fn () => redirect('/shop/dealer'));
+Route::get('/contact', fn () => redirect('/shop/contact'));

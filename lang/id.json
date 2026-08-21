@@ -317,6 +317,8 @@
     "shop.contact.hero_subtitle": "Kami siap membantu mewujudkan hunian impian Anda",
     "shop.contact.contact_info": "Informasi Kontak",
     "shop.contact.info_address": "Alamat",
+    "shop.contact.factory_address": "Alamat Pabrik",
+    "shop.contact.showroom_address": "Alamat Showroom",
     "shop.contact.address_not_set": "Alamat belum diatur",
     "shop.contact.info_phone": "Telepon",
     "shop.contact.phone_not_set": "Telepon belum diatur",
@@ -476,6 +478,7 @@
     "admin.sidebar.promo_banners": "Promo Banner",
     "admin.sidebar.my_profile": "Profil Saya",
     "admin.sidebar.settings": "Pengaturan",
+    "admin.sidebar.about_page": "Halaman About Us",
     "admin.sidebar.view_store": "Lihat Toko",
 
     "admin.header.search_placeholder": "Cari sesuatu...",

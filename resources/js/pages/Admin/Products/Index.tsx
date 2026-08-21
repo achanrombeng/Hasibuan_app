@@ -179,34 +179,40 @@ export default function ProductsIndex({
                 </div>
 
                 {/* Filters */}
-                <div className="space-y-4 rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
+                <div className="rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm">
                     <form
                         onSubmit={handleSearch}
-                        className="flex flex-col gap-4 sm:flex-row"
+                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
                     >
                         <div className="relative flex-1">
-                            <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-terra-400" />
+                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
                                 placeholder="Cari produk..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full rounded-xl border border-terra-200 bg-sand-50 py-2.5 pr-4 pl-10 text-terra-900 transition-all placeholder:text-terra-400 focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                             />
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => setShowFilters(!showFilters)}
-                            className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 transition-colors ${showFilters ? 'border-terra-300 bg-terra-50 text-terra-900' : 'border-terra-200 text-terra-700 hover:bg-terra-50'}`}
-                        >
-                            <Filter className="h-5 w-5" /> Filter
-                        </button>
-                        <button
-                            type="submit"
-                            className="hidden items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-white transition-colors hover:bg-teal-700 sm:inline-flex"
-                        >
-                            Cari
-                        </button>
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                type="button"
+                                onClick={() => setShowFilters(!showFilters)}
+                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
+                                    showFilters
+                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                }`}
+                            >
+                                <Filter className="h-4 w-4 text-neutral-600" /> Filter
+                            </button>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                            >
+                                Cari
+                            </button>
+                        </div>
                     </form>
 
                     {showFilters && (

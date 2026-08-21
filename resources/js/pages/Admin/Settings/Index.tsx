@@ -1,11 +1,11 @@
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, useForm } from '@inertiajs/react';
 import {
+  Building2,
   Facebook,
   Globe,
   Instagram,
   Mail,
-  MapPin,
   MessageCircle,
   Phone,
   Save,
@@ -17,8 +17,13 @@ interface SettingsIndexProps {
     site_name: string;
     site_description: string;
     contact_email: string;
+    contact_email_2?: string;
     contact_phone: string;
     contact_whatsapp: string;
+    factory_address?: string;
+    showroom_address?: string;
+    maps_showroom_url?: string;
+    maps_factory_url?: string;
     address: string;
     facebook_url: string;
     instagram_url: string;
@@ -116,7 +121,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Email
+                  Email 1
                 </label>
                 <div className="relative">
                   <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
@@ -124,7 +129,22 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                     type="email"
                     value={data.contact_email}
                     onChange={(e) => setData('contact_email', e.target.value)}
-                    placeholder="info@ronica.com"
+                    placeholder="info@ronica.com.tr"
+                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-neutral-700">
+                  Email 2 (Opsional)
+                </label>
+                <div className="relative">
+                  <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                  <input
+                    type="email"
+                    value={data.contact_email_2 ?? ''}
+                    onChange={(e) => setData('contact_email_2', e.target.value)}
+                    placeholder="sales@ronica.com.tr"
                     className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   />
                 </div>
@@ -166,18 +186,63 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Alamat
+                  Alamat Pabrik
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                  <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
                   <input
                     type="text"
-                    value={data.address}
-                    onChange={(e) => setData('address', e.target.value)}
-                    placeholder="Jl. Furniture No. 123, Jepara"
+                    value={data.factory_address ?? ''}
+                    onChange={(e) => setData('factory_address', e.target.value)}
+                    placeholder="Cirebon, Indonesia"
                     className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-neutral-700">
+                  Alamat Showroom
+                </label>
+                <div className="relative">
+                  <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                  <input
+                    type="text"
+                    value={data.showroom_address ?? ''}
+                    onChange={(e) => setData('showroom_address', e.target.value)}
+                    placeholder="İstanbul, Türkiye"
+                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium text-neutral-700">
+                  Google Maps Embed URL Showroom
+                </label>
+                <input
+                  type="text"
+                  value={data.maps_showroom_url ?? ''}
+                  onChange={(e) => setData('maps_showroom_url', e.target.value)}
+                  placeholder="https://www.google.com/maps/embed?pb=..."
+                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                />
+                <p className="mt-1 text-xs text-neutral-500">
+                  URL embed iframe dari Google Maps untuk lokasi Showroom
+                </p>
+              </div>
+              <div className="md:col-span-2">
+                <label className="mb-2 block text-sm font-medium text-neutral-700">
+                  Google Maps Embed URL Pabrik (Opsional)
+                </label>
+                <input
+                  type="text"
+                  value={data.maps_factory_url ?? ''}
+                  onChange={(e) => setData('maps_factory_url', e.target.value)}
+                  placeholder="https://www.google.com/maps/embed?pb=..."
+                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                />
+                <p className="mt-1 text-xs text-neutral-500">
+                  URL embed iframe dari Google Maps untuk lokasi Pabrik
+                </p>
               </div>
             </div>
           </div>
@@ -251,7 +316,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
             <button
               type="submit"
               disabled={processing}
-              className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-6 py-3 font-medium text-white transition-colors hover:bg-teal-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
               {processing ? 'Menyimpan...' : 'Simpan Pengaturan'}

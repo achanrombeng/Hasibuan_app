@@ -26,8 +26,13 @@ class SettingsController extends Controller
                 'site_logo' => $settings['site_logo'] ?? '/ronica.png',
                 'site_description' => $settings['site_description'] ?? '',
                 'contact_email' => $settings['contact_email'] ?? '',
+                'contact_email_2' => $settings['contact_email_2'] ?? '',
                 'contact_phone' => $settings['contact_phone'] ?? '',
                 'contact_whatsapp' => $settings['contact_whatsapp'] ?? '',
+                'factory_address' => $settings['factory_address'] ?? '',
+                'showroom_address' => $settings['showroom_address'] ?? '',
+                'maps_showroom_url' => $settings['maps_showroom_url'] ?? '',
+                'maps_factory_url' => $settings['maps_factory_url'] ?? '',
                 'address' => $settings['address'] ?? '',
                 'facebook_url' => $settings['facebook_url'] ?? '',
                 'instagram_url' => $settings['instagram_url'] ?? '',
@@ -44,8 +49,13 @@ class SettingsController extends Controller
             'site_logo_file' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,svg,gif'],
             'site_description' => ['nullable', 'string', 'max:500'],
             'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_email_2' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:20'],
             'contact_whatsapp' => ['nullable', 'string', 'max:20'],
+            'factory_address' => ['nullable', 'string', 'max:500'],
+            'showroom_address' => ['nullable', 'string', 'max:500'],
+            'maps_showroom_url' => ['nullable', 'string', 'max:2000'],
+            'maps_factory_url' => ['nullable', 'string', 'max:2000'],
             'address' => ['nullable', 'string', 'max:500'],
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'instagram_url' => ['nullable', 'url', 'max:255'],
@@ -398,5 +408,79 @@ class SettingsController extends Controller
         Cache::forget('site_settings');
 
         return back()->with('success', __('messages.payment_settings_saved'));
+    }
+
+    /**
+     * About Us settings page
+     */
+    public function about(): Response
+    {
+        $settings = Setting::all()->pluck('value', 'key')->toArray();
+
+        return Inertia::render('Admin/Settings/About', [
+            'settings' => [
+                'about_hero_title' => $settings['about_hero_title'] ?? 'Welcome to Ronica Outdoor Furniture',
+                'about_hero_subtitle' => $settings['about_hero_subtitle'] ?? 'Delivering premium quality furniture with the touch of traditional Indonesian craftsmanship',
+                'about_story_title' => $settings['about_story_title'] ?? 'Our Story',
+                'about_story_p1' => $settings['about_story_p1'] ?? 'Ronica Outdoor Furniture was born from a love for high-quality furniture and traditional craftsmanship.',
+                'about_story_p2' => $settings['about_story_p2'] ?? 'Every product we create is the result of a perfect blend of traditional techniques and modern design.',
+                'about_story_p3' => $settings['about_story_p3'] ?? 'At Ronica Outdoor Furniture, we believe that furniture is not just an item, but a long-term investment.',
+                'about_story_image' => $settings['about_story_image'] ?? '/images/placeholder-about.svg',
+                'about_years_experience' => $settings['about_years_experience'] ?? '14+',
+                'about_years_experience_label' => $settings['about_years_experience_label'] ?? 'Years of Experience',
+                'about_vision_title' => $settings['about_vision_title'] ?? 'Our Vision',
+                'about_vision_text' => $settings['about_vision_text'] ?? 'To become a pioneer in Indonesia\'s premium furniture industry.',
+                'about_mission_title' => $settings['about_mission_title'] ?? 'Our Mission',
+                'about_mission_1' => $settings['about_mission_1'] ?? 'Deliver premium quality furniture at competitive prices',
+                'about_mission_2' => $settings['about_mission_2'] ?? 'Preserve traditional Indonesian craftsmanship techniques',
+                'about_mission_3' => $settings['about_mission_3'] ?? 'Use sustainable and environmentally friendly materials',
+                'about_mission_4' => $settings['about_mission_4'] ?? 'Provide the best service to every customer',
+            ],
+        ]);
+    }
+
+    /**
+     * Update About Us settings
+     */
+    public function updateAbout(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'about_hero_title' => ['required', 'string', 'max:255'],
+            'about_hero_subtitle' => ['nullable', 'string', 'max:500'],
+            'about_story_title' => ['nullable', 'string', 'max:255'],
+            'about_story_p1' => ['nullable', 'string', 'max:2000'],
+            'about_story_p2' => ['nullable', 'string', 'max:2000'],
+            'about_story_p3' => ['nullable', 'string', 'max:2000'],
+            'about_story_image' => ['nullable', 'string', 'max:500'],
+            'about_story_image_file' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,svg,gif'],
+            'about_years_experience' => ['nullable', 'string', 'max:50'],
+            'about_years_experience_label' => ['nullable', 'string', 'max:255'],
+            'about_vision_title' => ['nullable', 'string', 'max:255'],
+            'about_vision_text' => ['nullable', 'string', 'max:2000'],
+            'about_mission_title' => ['nullable', 'string', 'max:255'],
+            'about_mission_1' => ['nullable', 'string', 'max:500'],
+            'about_mission_2' => ['nullable', 'string', 'max:500'],
+            'about_mission_3' => ['nullable', 'string', 'max:500'],
+            'about_mission_4' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        if ($request->hasFile('about_story_image_file')) {
+            $file = $request->file('about_story_image_file');
+            $path = $file->store('settings/about', 'public');
+            $validated['about_story_image'] = '/storage/'.$path;
+        }
+        unset($validated['about_story_image_file']);
+
+        foreach ($validated as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value ?? '']
+            );
+        }
+
+        // Clear site settings cache
+        Cache::forget('site_settings');
+
+        return back()->with('success', 'Pengaturan Halaman About Us berhasil disimpan');
     }
 }

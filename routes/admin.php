@@ -81,6 +81,10 @@ Route::middleware(['auth', 'verified', 'role:super-admin|admin'])->prefix('admin
     Route::get('/settings/homepage', [SettingsController::class, 'homepage'])->name('settings.homepage');
     Route::post('/settings/homepage', [SettingsController::class, 'updateHomepage'])->name('settings.homepage.update');
 
+    // About Settings
+    Route::get('/settings/about', [SettingsController::class, 'about'])->name('settings.about');
+    Route::post('/settings/about', [SettingsController::class, 'updateAbout'])->name('settings.about.update');
+
     // Payment Settings
     Route::get('/settings/payment', [SettingsController::class, 'payment'])->name('settings.payment');
     Route::post('/settings/payment', [SettingsController::class, 'updatePayment'])->name('settings.payment.update');

@@ -5,6 +5,7 @@ import {
     ChevronLeft,
     FileText,
     FolderTree,
+    Info,
     LayoutDashboard,
     Megaphone,
     Package,
@@ -79,6 +80,12 @@ const settingsNavItems: NavItem[] = [
         href: '/admin/profile',
         icon: Users,
         permission: '',
+    },
+    {
+        titleKey: 'admin.sidebar.about_page',
+        href: '/admin/settings/about',
+        icon: Info,
+        permission: 'manage settings',
     },
     {
         titleKey: 'admin.sidebar.settings',

@@ -12,12 +12,14 @@ import { useTranslation } from '@/hooks/use-translation';
 import { SiteSettings } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
+    Building2,
     Facebook,
     Instagram,
     Mail,
     MapPin,
     MessageCircle,
     Phone,
+    Store,
 } from 'lucide-react';
 
 function TikTokIcon({ className = 'h-4 w-4' }: { className?: string }) {
@@ -179,7 +181,19 @@ export const Footer = () => {
                             Informasi Kontak
                         </h4>
                         <ul className="space-y-3.5 text-sm text-neutral-600">
-                            {siteSettings?.address && (
+                            {siteSettings?.factory_address && (
+                                <li className="flex items-start gap-3">
+                                    <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
+                                    <span><strong className="font-medium text-neutral-800">Pabrik:</strong> {siteSettings.factory_address}</span>
+                                </li>
+                            )}
+                            {siteSettings?.showroom_address && (
+                                <li className="flex items-start gap-3">
+                                    <Store className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
+                                    <span><strong className="font-medium text-neutral-800">Showroom:</strong> {siteSettings.showroom_address}</span>
+                                </li>
+                            )}
+                            {!siteSettings?.factory_address && !siteSettings?.showroom_address && siteSettings?.address && (
                                 <li className="flex items-start gap-3">
                                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
                                     <span>{siteSettings.address}</span>
@@ -217,6 +231,17 @@ export const Footer = () => {
                                         className="transition-colors hover:text-teal-600"
                                     >
                                         {siteSettings.contact_email}
+                                    </a>
+                                </li>
+                            )}
+                            {siteSettings?.contact_email_2 && (
+                                <li className="flex items-center gap-3">
+                                    <Mail className="h-4 w-4 shrink-0 text-teal-600" />
+                                    <a
+                                        href={`mailto:${siteSettings.contact_email_2}`}
+                                        className="transition-colors hover:text-teal-600"
+                                    >
+                                        {siteSettings.contact_email_2}
                                     </a>
                                 </li>
                             )}

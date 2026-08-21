@@ -27,8 +27,13 @@ export interface SiteSettings {
   site_logo?: string;
   site_description: string;
   contact_email: string;
+  contact_email_2?: string;
   contact_phone: string;
   contact_whatsapp: string;
+  factory_address?: string;
+  showroom_address?: string;
+  maps_showroom_url?: string;
+  maps_factory_url?: string;
   address: string;
   facebook_url: string;
   instagram_url: string;

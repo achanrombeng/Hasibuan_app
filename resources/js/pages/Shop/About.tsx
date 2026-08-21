@@ -5,7 +5,28 @@ import { SiteSettings } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { Award, Clock, Heart, Leaf, Target, Users } from 'lucide-react';
 
-export default function About() {
+interface AboutProps {
+    aboutSettings?: {
+        hero_title?: string;
+        hero_subtitle?: string;
+        story_title?: string;
+        story_p1?: string;
+        story_p2?: string;
+        story_p3?: string;
+        story_image?: string;
+        years_experience?: string;
+        years_experience_label?: string;
+        vision_title?: string;
+        vision_text?: string;
+        mission_title?: string;
+        mission_1?: string;
+        mission_2?: string;
+        mission_3?: string;
+        mission_4?: string;
+    };
+}
+
+export default function About({ aboutSettings }: AboutProps) {
     const { t } = useTranslation();
     const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
     const siteName = siteSettings?.site_name || 'Ronica';
@@ -76,10 +97,10 @@ export default function About() {
                     <div className="mb-16 bg-gradient-to-r from-teal-600 to-teal-700 py-20 text-white">
                         <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
                             <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                                {t('shop.about.hero_title', { siteName })}
+                                {aboutSettings?.hero_title || t('shop.about.hero_title', { siteName })}
                             </h1>
                             <p className="mx-auto max-w-2xl text-xl opacity-90">
-                                {t('shop.about.hero_subtitle')}
+                                {aboutSettings?.hero_subtitle || t('shop.about.hero_subtitle')}
                             </p>
                         </div>
                     </div>
@@ -89,34 +110,35 @@ export default function About() {
                         <div className="mb-20 grid items-center gap-12 md:grid-cols-2">
                             <div>
                                 <h2 className="mb-6 font-serif text-3xl text-terra-900">
-                                    {t('shop.about.story_title')}
+                                    {aboutSettings?.story_title || t('shop.about.story_title')}
                                 </h2>
                                 <div className="space-y-4 leading-relaxed text-terra-600">
-                                    <p>
-                                        {t('shop.about.story_p1', { siteName })}
-                                    </p>
-                                    <p>
-                                        {t('shop.about.story_p2')}
-                                    </p>
-                                    <p>
-                                        {t('shop.about.story_p3', { siteName })}
-                                    </p>
+                                    {aboutSettings?.story_p1 && <p>{aboutSettings.story_p1}</p>}
+                                    {aboutSettings?.story_p2 && <p>{aboutSettings.story_p2}</p>}
+                                    {aboutSettings?.story_p3 && <p>{aboutSettings.story_p3}</p>}
+                                    {!aboutSettings?.story_p1 && (
+                                        <>
+                                            <p>{t('shop.about.story_p1', { siteName })}</p>
+                                            <p>{t('shop.about.story_p2')}</p>
+                                            <p>{t('shop.about.story_p3', { siteName })}</p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             <div className="relative">
                                 <div className="aspect-[4/3] overflow-hidden rounded-sm bg-neutral-200">
                                     <img
-                                        src="/images/placeholder-about.svg"
+                                        src={aboutSettings?.story_image || '/images/placeholder-about.svg'}
                                         alt="Workshop"
                                         className="h-full w-full object-cover"
                                     />
                                 </div>
                                 <div className="absolute -bottom-6 -left-6 rounded-sm bg-teal-600 p-6 text-white">
                                     <div className="text-3xl font-bold">
-                                        14+
+                                        {aboutSettings?.years_experience || '14+'}
                                     </div>
                                     <div className="text-sm opacity-80">
-                                        {t('shop.about.years_experience')}
+                                        {aboutSettings?.years_experience_label || t('shop.about.years_experience')}
                                     </div>
                                 </div>
                             </div>
@@ -132,10 +154,10 @@ export default function About() {
                                     />
                                 </div>
                                 <h3 className="mb-4 font-serif text-2xl text-terra-900">
-                                    {t('shop.about.vision_title')}
+                                    {aboutSettings?.vision_title || t('shop.about.vision_title')}
                                 </h3>
                                 <p className="leading-relaxed text-terra-600">
-                                    {t('shop.about.vision_text')}
+                                    {aboutSettings?.vision_text || t('shop.about.vision_text')}
                                 </p>
                             </div>
                             <div className="rounded-sm border border-terra-100 bg-white p-8">
@@ -146,24 +168,24 @@ export default function About() {
                                     />
                                 </div>
                                 <h3 className="mb-4 font-serif text-2xl text-terra-900">
-                                    {t('shop.about.mission_title')}
+                                    {aboutSettings?.mission_title || t('shop.about.mission_title')}
                                 </h3>
                                 <ul className="space-y-2 text-terra-600">
                                     <li className="flex items-start gap-2">
                                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {t('shop.about.mission_1')}
+                                        {aboutSettings?.mission_1 || t('shop.about.mission_1')}
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {t('shop.about.mission_2')}
+                                        {aboutSettings?.mission_2 || t('shop.about.mission_2')}
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {t('shop.about.mission_3')}
+                                        {aboutSettings?.mission_3 || t('shop.about.mission_3')}
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {t('shop.about.mission_4')}
+                                        {aboutSettings?.mission_4 || t('shop.about.mission_4')}
                                     </li>
                                 </ul>
                             </div>

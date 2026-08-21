@@ -317,6 +317,8 @@
     "shop.contact.hero_subtitle": "We are ready to help realize your dream home",
     "shop.contact.contact_info": "Contact Information",
     "shop.contact.info_address": "Address",
+    "shop.contact.factory_address": "Factory Address",
+    "shop.contact.showroom_address": "Showroom Address",
     "shop.contact.address_not_set": "Address not set yet",
     "shop.contact.info_phone": "Phone",
     "shop.contact.phone_not_set": "Phone not set yet",
@@ -476,6 +478,7 @@
     "admin.sidebar.promo_banners": "Promo Banners",
     "admin.sidebar.my_profile": "My Profile",
     "admin.sidebar.settings": "Settings",
+    "admin.sidebar.about_page": "About Us Page",
     "admin.sidebar.view_store": "View Store",
 
     "admin.header.search_placeholder": "Search...",
