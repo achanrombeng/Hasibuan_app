@@ -8,8 +8,8 @@ use App\Enums\ProductStatus;
 use App\Enums\SaleType;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
@@ -17,20 +17,20 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         // Disable foreign key checks to allow truncation
-        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints();
+        Schema::disableForeignKeyConstraints();
         Product::truncate();
-        \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
+        Schema::enableForeignKeyConstraints();
 
         $products = $this->getProductsData();
 
         foreach ($products as $productData) {
             $category = Category::where('name->id', $productData['category'])->first();
 
-            if (!$category) {
-                $category = Category::where('name->id', 'like', '%' . $productData['category'] . '%')->first();
+            if (! $category) {
+                $category = Category::where('name->id', 'like', '%'.$productData['category'].'%')->first();
             }
 
-            if (!$category) {
+            if (! $category) {
                 continue;
             }
 
@@ -38,7 +38,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $category->id,
                 'sku' => $productData['sku'],
                 'name' => $productData['name'],
-                'slug' => Str::slug($productData['name']) . '-' . Str::random(5),
+                'slug' => Str::slug($productData['name']).'-'.Str::random(5),
                 'short_description' => $productData['short_description'],
                 'description' => $productData['description'],
                 'price' => $productData['price'],
@@ -61,7 +61,7 @@ class ProductSeeder extends Seeder
                 'discount_percentage' => $productData['discount'] ?? null,
                 'discount_starts_at' => isset($productData['discount']) ? now() : null,
                 'discount_ends_at' => isset($productData['discount']) ? now()->addDays(30) : null,
-                'meta_title' => $productData['name'] . ' - Toko Furniture',
+                'meta_title' => $productData['name'].' - Toko Furniture',
                 'meta_description' => $productData['short_description'],
             ]);
         }

@@ -9,6 +9,7 @@ use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Payment Model
@@ -27,10 +28,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $account_number
  * @property string|null $account_name
  * @property string|null $transfer_proof_path
- * @property \Illuminate\Support\Carbon|null $paid_at
- * @property \Illuminate\Support\Carbon|null $verified_at
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $verified_at
  * @property int|null $verified_by
- * @property \Illuminate\Support\Carbon|null $expires_at
+ * @property Carbon|null $expires_at
  * @property string|null $notes
  */
 class Payment extends Model

@@ -145,4 +145,3 @@ describe('Shop ProductController', function () {
             ->assertInertia(fn ($page) => $page->has('relatedProducts'));
     });
 });
-

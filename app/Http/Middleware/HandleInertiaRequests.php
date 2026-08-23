@@ -127,18 +127,16 @@ class HandleInertiaRequests extends Middleware
         $path = $request->path();
 
         // Determine which namespace prefixes to include
-        $prefixes = ['common.'];
+        $prefixes = ['common.', 'auth.'];
 
         if (str_starts_with($path, 'admin')) {
             $prefixes[] = 'admin.';
         } elseif (str_starts_with($path, 'settings')) {
             $prefixes[] = 'settings.';
-        } elseif (str_starts_with($path, 'shop')) {
+        } else {
+            // Root "/" or shop routes include "shop."
             $prefixes[] = 'shop.';
         }
-
-        // Always include auth strings (login/register can appear anywhere)
-        $prefixes[] = 'auth.';
 
         if (app()->environment('local')) {
             $file = lang_path("{$locale}.json");

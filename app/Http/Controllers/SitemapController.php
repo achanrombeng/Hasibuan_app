@@ -25,16 +25,16 @@ class SitemapController extends Controller
 
             $xml = '<?xml version="1.0" encoding="UTF-8"?>';
             $xml .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-            
+
             foreach ($sitemaps as $sitemap) {
                 $xml .= '<sitemap>';
-                $xml .= '<loc>' . $sitemap . '</loc>';
-                $xml .= '<lastmod>' . now()->toW3cString() . '</lastmod>';
+                $xml .= '<loc>'.$sitemap.'</loc>';
+                $xml .= '<lastmod>'.now()->toW3cString().'</lastmod>';
                 $xml .= '</sitemap>';
             }
-            
+
             $xml .= '</sitemapindex>';
-            
+
             return $xml;
         });
 
@@ -79,7 +79,7 @@ class SitemapController extends Controller
                 ->get();
 
             $pages = $products->map(fn ($product) => [
-                'url' => '/shop/products/' . $product->slug,
+                'url' => '/shop/products/'.$product->slug,
                 'priority' => '0.8',
                 'changefreq' => 'weekly',
                 'lastmod' => $product->updated_at->toW3cString(),
@@ -103,7 +103,7 @@ class SitemapController extends Controller
                 ->get();
 
             $pages = $categories->map(fn ($category) => [
-                'url' => '/shop/category/' . $category->slug,
+                'url' => '/shop/category/'.$category->slug,
                 'priority' => '0.7',
                 'changefreq' => 'weekly',
                 'lastmod' => $category->updated_at->toW3cString(),
@@ -123,21 +123,20 @@ class SitemapController extends Controller
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>';
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-        
+
         foreach ($pages as $page) {
             $xml .= '<url>';
-            $xml .= '<loc>' . url($page['url']) . '</loc>';
+            $xml .= '<loc>'.url($page['url']).'</loc>';
             if (isset($page['lastmod'])) {
-                $xml .= '<lastmod>' . $page['lastmod'] . '</lastmod>';
+                $xml .= '<lastmod>'.$page['lastmod'].'</lastmod>';
             }
-            $xml .= '<changefreq>' . $page['changefreq'] . '</changefreq>';
-            $xml .= '<priority>' . $page['priority'] . '</priority>';
+            $xml .= '<changefreq>'.$page['changefreq'].'</changefreq>';
+            $xml .= '<priority>'.$page['priority'].'</priority>';
             $xml .= '</url>';
         }
-        
+
         $xml .= '</urlset>';
-        
+
         return $xml;
     }
 }
-

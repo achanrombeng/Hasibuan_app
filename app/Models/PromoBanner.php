@@ -7,6 +7,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -24,10 +26,10 @@ use Spatie\Translatable\HasTranslations;
  * @property string $display_type
  * @property bool $is_active
  * @property int $priority
- * @property \Illuminate\Support\Carbon|null $starts_at
- * @property \Illuminate\Support\Carbon|null $ends_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $starts_at
+ * @property Carbon|null $ends_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class PromoBanner extends Model
 {
@@ -46,13 +48,13 @@ class PromoBanner extends Model
     protected static function booted(): void
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('active_promo_banners.id');
-            \Illuminate\Support\Facades\Cache::forget('active_promo_banners.en');
+            Cache::forget('active_promo_banners.id');
+            Cache::forget('active_promo_banners.en');
         });
 
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('active_promo_banners.id');
-            \Illuminate\Support\Facades\Cache::forget('active_promo_banners.en');
+            Cache::forget('active_promo_banners.id');
+            Cache::forget('active_promo_banners.en');
         });
     }
 
@@ -93,7 +95,7 @@ class PromoBanner extends Model
     /**
      * Scope untuk promo banner yang aktif dan dalam periode waktu.
      *
-     * @param Builder<PromoBanner> $query
+     * @param  Builder<PromoBanner>  $query
      * @return Builder<PromoBanner>
      */
     public function scopeActive(Builder $query): Builder
@@ -112,7 +114,7 @@ class PromoBanner extends Model
     /**
      * Scope untuk promo dengan display type banner atau both.
      *
-     * @param Builder<PromoBanner> $query
+     * @param  Builder<PromoBanner>  $query
      * @return Builder<PromoBanner>
      */
     public function scopeForBanner(Builder $query): Builder
@@ -123,7 +125,7 @@ class PromoBanner extends Model
     /**
      * Scope untuk promo dengan display type popup atau both.
      *
-     * @param Builder<PromoBanner> $query
+     * @param  Builder<PromoBanner>  $query
      * @return Builder<PromoBanner>
      */
     public function scopeForPopup(Builder $query): Builder
@@ -134,7 +136,7 @@ class PromoBanner extends Model
     /**
      * Scope untuk ordering berdasarkan priority.
      *
-     * @param Builder<PromoBanner> $query
+     * @param  Builder<PromoBanner>  $query
      * @return Builder<PromoBanner>
      */
     public function scopeOrdered(Builder $query): Builder
@@ -147,7 +149,7 @@ class PromoBanner extends Model
      */
     public function isCurrentlyActive(): bool
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return false;
         }
 
@@ -169,7 +171,7 @@ class PromoBanner extends Model
      */
     public function getStatusLabel(): string
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return 'Nonaktif';
         }
 

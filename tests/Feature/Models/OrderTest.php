@@ -154,4 +154,3 @@ describe('OrderItem Model', function () {
         expect($item->subtotal)->toBe(500000);
     });
 });
-

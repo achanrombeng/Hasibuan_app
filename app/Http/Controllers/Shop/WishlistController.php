@@ -9,9 +9,11 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -40,7 +42,7 @@ class WishlistController extends Controller implements HasMiddleware
             ->pluck('product')
             ->filter(); // Remove null products (deleted)
 
-        \Illuminate\Support\Facades\Log::info('Wishlist index', [
+        Log::info('Wishlist index', [
             'user_id' => $user->id,
             'raw_count' => $user->wishlists()->count(),
             'filtered_count' => $wishlistProducts->count(),
@@ -54,20 +56,20 @@ class WishlistController extends Controller implements HasMiddleware
     /**
      * Toggle product in wishlist.
      */
-    public function toggle(Request $request, Product $product): \Illuminate\Http\RedirectResponse
+    public function toggle(Request $request, Product $product): RedirectResponse
     {
         /** @var User $user */
         $user = $request->user();
 
-        \Illuminate\Support\Facades\Log::info('Wishlist toggle request', [
+        Log::info('Wishlist toggle request', [
             'user_id' => $user->id,
             'product_id' => $product->id,
-            'product_name' => $product->name
+            'product_name' => $product->name,
         ]);
 
         $isInWishlist = $user->toggleWishlist($product);
 
-        \Illuminate\Support\Facades\Log::info('Wishlist toggle result', ['in_wishlist' => $isInWishlist]);
+        Log::info('Wishlist toggle result', ['in_wishlist' => $isInWishlist]);
 
         return redirect()->back()->with('flash', [
             'type' => 'success',
@@ -80,7 +82,7 @@ class WishlistController extends Controller implements HasMiddleware
     /**
      * Remove product from wishlist.
      */
-    public function destroy(Request $request, Product $product): \Illuminate\Http\RedirectResponse
+    public function destroy(Request $request, Product $product): RedirectResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -106,4 +108,3 @@ class WishlistController extends Controller implements HasMiddleware
         ]);
     }
 }
-

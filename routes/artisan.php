@@ -35,7 +35,7 @@ Route::prefix('artisan')->middleware('web')->group(function () {
                 'output' => Artisan::output(),
                 'message' => 'Locale settings populated successfully!',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -59,7 +59,7 @@ Route::prefix('artisan')->middleware('web')->group(function () {
                 'message' => 'All caches cleared successfully!',
                 'cleared' => ['cache', 'config', 'route', 'view'],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -81,7 +81,7 @@ Route::prefix('artisan')->middleware('web')->group(function () {
                 'message' => 'Application optimized for production!',
                 'cached' => ['config', 'route', 'view'],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -101,7 +101,7 @@ Route::prefix('artisan')->middleware('web')->group(function () {
                 'output' => Artisan::output(),
                 'message' => 'Migrations executed successfully!',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -122,7 +122,7 @@ Route::prefix('artisan')->middleware('web')->group(function () {
                 'output' => Artisan::output(),
                 'message' => 'Storage link created successfully!',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -210,7 +210,7 @@ Route::prefix('artisan')->middleware('web')->group(function () {
                 'cleared_caches' => $clearedCaches,
                 'message' => 'Vendor extracted successfully',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -255,11 +255,13 @@ Route::prefix('artisan')->middleware('web')->group(function () {
 
             if (! file_exists($target) && ! is_link($target)) {
                 $results[$name] = $info + ['status' => 'target_missing'];
+
                 continue;
             }
 
             if (is_link($linkPath) && readlink($linkPath) === $target) {
                 $results[$name] = $info + ['status' => 'already_linked'];
+
                 continue;
             }
 

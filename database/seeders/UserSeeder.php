@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
                 'phone' => '081234567890',
             ]
         );
-        if (!$admin->hasRole('admin')) {
+        if (! $admin->hasRole('admin')) {
             $admin->assignRole('admin');
         }
 
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
                 'phone' => '081234567891',
             ]
         );
-        if (!$manager->hasRole('manager')) {
+        if (! $manager->hasRole('manager')) {
             $manager->assignRole('manager');
         }
 
@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
                 'phone' => '081234567892',
             ]
         );
-        if (!$staff->hasRole('staff')) {
+        if (! $staff->hasRole('staff')) {
             $staff->assignRole('staff');
         }
 
@@ -65,12 +65,12 @@ class UserSeeder extends Seeder
                 'phone' => '081234567893',
             ]
         );
-        if (!$customer->hasRole('customer')) {
+        if (! $customer->hasRole('customer')) {
             $customer->assignRole('customer');
         }
 
         // Create address for customer if not exists
-        if (!Address::where('user_id', $customer->id)->exists()) {
+        if (! Address::where('user_id', $customer->id)->exists()) {
             Address::create([
                 'user_id' => $customer->id,
                 'label' => 'Rumah',

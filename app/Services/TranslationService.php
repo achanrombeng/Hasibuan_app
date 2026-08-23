@@ -2,19 +2,21 @@
 
 namespace App\Services;
 
-use Stichoza\GoogleTranslate\GoogleTranslate;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class TranslationService
 {
     protected GoogleTranslate $translator;
+
     protected int $delayMs;
+
     protected int $maxRetries;
 
     public function __construct()
     {
-        $this->translator = new GoogleTranslate();
+        $this->translator = new GoogleTranslate;
         $this->delayMs = config('translation.auto_translate.rate_limit.delay_ms', 100);
         $this->maxRetries = config('translation.auto_translate.rate_limit.max_retries', 3);
     }
@@ -75,7 +77,7 @@ class TranslationService
             'text' => substr($text, 0, 100),
             'source' => $sourceLocale,
             'target' => $targetLocale,
-            'error' => $lastException?->getMessage()
+            'error' => $lastException?->getMessage(),
         ]);
 
         return $text;
@@ -103,7 +105,7 @@ class TranslationService
      */
     protected function getCacheKey(string $text, string $source, string $target): string
     {
-        return 'translation:' . md5($text . $source . $target);
+        return 'translation:'.md5($text.$source.$target);
     }
 
     /**

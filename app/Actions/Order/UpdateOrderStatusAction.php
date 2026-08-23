@@ -61,4 +61,3 @@ class UpdateOrderStatusAction
         return $order->fresh();
     }
 }
-

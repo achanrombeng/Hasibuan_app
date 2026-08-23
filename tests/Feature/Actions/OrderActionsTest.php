@@ -42,7 +42,7 @@ describe('CreateOrderAction', function () {
             'shipping_method' => 'regular',
         ];
 
-        $action = new CreateOrderAction();
+        $action = new CreateOrderAction;
         $order = $action->execute($user, $cart, $shippingData);
 
         expect($order)->toBeInstanceOf(Order::class)
@@ -77,7 +77,7 @@ describe('CreateOrderAction', function () {
             'shipping_method' => 'regular',
         ];
 
-        $action = new CreateOrderAction();
+        $action = new CreateOrderAction;
         $action->execute($user, $cart, $shippingData);
 
         expect($cart->fresh()->items)->toHaveCount(0);
@@ -92,7 +92,7 @@ describe('UpdateOrderStatusAction', function () {
             'status' => OrderStatus::PENDING,
         ]);
 
-        $action = new UpdateOrderStatusAction();
+        $action = new UpdateOrderStatusAction;
         $action->execute($order, OrderStatus::PROCESSING);
 
         expect($order->fresh()->status)->toBe(OrderStatus::PROCESSING);
@@ -105,7 +105,7 @@ describe('UpdateOrderStatusAction', function () {
             'status' => OrderStatus::PROCESSING,
         ]);
 
-        $action = new UpdateOrderStatusAction();
+        $action = new UpdateOrderStatusAction;
         $action->execute($order, OrderStatus::SHIPPED, 'TRACK123');
 
         expect($order->fresh()->status)->toBe(OrderStatus::SHIPPED)
@@ -120,7 +120,7 @@ describe('UpdateOrderStatusAction', function () {
             'status' => OrderStatus::SHIPPED,
         ]);
 
-        $action = new UpdateOrderStatusAction();
+        $action = new UpdateOrderStatusAction;
         $action->execute($order, OrderStatus::DELIVERED);
 
         expect($order->fresh()->status)->toBe(OrderStatus::DELIVERED)
@@ -148,7 +148,7 @@ describe('CancelOrderAction', function () {
             'subtotal' => 300000,
         ]);
 
-        $action = new CancelOrderAction();
+        $action = new CancelOrderAction;
         $action->execute($order, 'Customer request');
 
         expect($order->fresh()->status)->toBe(OrderStatus::CANCELLED)
@@ -163,10 +163,9 @@ describe('CancelOrderAction', function () {
             'status' => OrderStatus::SHIPPED,
         ]);
 
-        $action = new CancelOrderAction();
+        $action = new CancelOrderAction;
 
         expect(fn () => $action->execute($order, 'Test'))
             ->toThrow(InvalidArgumentException::class);
     });
 });
-

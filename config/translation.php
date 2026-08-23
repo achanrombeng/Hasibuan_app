@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\PromoBanner;
+
 return [
     'default_locale' => 'en',
     'supported_locales' => ['en', 'id'],
@@ -15,8 +19,8 @@ return [
     ],
 
     'translatable_models' => [
-        'products' => \App\Models\Product::class,
-        'categories' => \App\Models\Category::class,
-        'promo_banners' => \App\Models\PromoBanner::class,
+        'products' => Product::class,
+        'categories' => Category::class,
+        'promo_banners' => PromoBanner::class,
     ],
 ];

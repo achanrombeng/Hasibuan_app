@@ -6,12 +6,11 @@ namespace App\Actions\Product;
 
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Services\ImageService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
-use App\Services\ImageService;
 
 class UpdateProductAction
 {

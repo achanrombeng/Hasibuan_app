@@ -15,9 +15,10 @@ use App\Http\Resources\OrderResource;
 use App\Models\Cart;
 use App\Models\Setting;
 use App\Models\User;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use App\Services\Payment\MidtransService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -73,7 +74,7 @@ class CheckoutController extends Controller implements HasMiddleware
         CheckoutRequest $request,
         CreateOrderAction $createOrderAction,
         ResolveShippingAddressAction $resolveAddressAction,
-        \App\Services\Payment\MidtransService $midtransService
+        MidtransService $midtransService
     ): RedirectResponse {
         /** @var User $user */
         $user = $request->user();

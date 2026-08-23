@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -60,7 +59,7 @@ class ReportController extends Controller
                 'id' => $item->id,
                 'name' => $item->name,
                 'total_sold' => (int) $item->total_sold,
-                'revenue' => 'Rp ' . number_format((float) $item->revenue, 0, ',', '.'),
+                'revenue' => 'Rp '.number_format((float) $item->revenue, 0, ',', '.'),
             ]);
 
         // Top customers
@@ -75,7 +74,7 @@ class ReportController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'orders_count' => $user->orders_count,
-                'total_spent' => 'Rp ' . number_format((float) ($user->orders_sum_total ?? 0), 0, ',', '.'),
+                'total_spent' => 'Rp '.number_format((float) ($user->orders_sum_total ?? 0), 0, ',', '.'),
             ]);
 
         // Orders by status
@@ -90,9 +89,9 @@ class ReportController extends Controller
 
         return Inertia::render('Admin/Reports/Index', [
             'summary' => [
-                'totalSales' => 'Rp ' . number_format($totalSales, 0, ',', '.'),
+                'totalSales' => 'Rp '.number_format($totalSales, 0, ',', '.'),
                 'totalOrders' => $totalOrders,
-                'averageOrderValue' => 'Rp ' . number_format($averageOrderValue, 0, ',', '.'),
+                'averageOrderValue' => 'Rp '.number_format($averageOrderValue, 0, ',', '.'),
                 'totalCustomers' => User::role('customer')->count(),
             ],
             'salesByDay' => $salesByDay,
@@ -103,4 +102,3 @@ class ReportController extends Controller
         ]);
     }
 }
-

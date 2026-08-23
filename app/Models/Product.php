@@ -6,11 +6,14 @@ namespace App\Models;
 
 use App\Enums\ProductStatus;
 use App\Enums\SaleType;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -47,8 +50,8 @@ use Spatie\Translatable\HasTranslations;
  * @property bool $is_featured
  * @property bool $is_new_arrival
  * @property int|null $discount_percentage
- * @property \Illuminate\Support\Carbon|null $discount_starts_at
- * @property \Illuminate\Support\Carbon|null $discount_ends_at
+ * @property Carbon|null $discount_starts_at
+ * @property Carbon|null $discount_ends_at
  * @property string|null $meta_title
  * @property string|null $meta_description
  * @property string|null $meta_keywords
@@ -274,8 +277,8 @@ class Product extends Model implements HasMedia
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<Product>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<Product>
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
      */
     public function scopePriceMin($query, int $minPrice)
     {
@@ -283,8 +286,8 @@ class Product extends Model implements HasMedia
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<Product>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<Product>
+     * @param  Builder<Product>  $query
+     * @return Builder<Product>
      */
     public function scopePriceMax($query, int $maxPrice)
     {
@@ -334,7 +337,7 @@ class Product extends Model implements HasMedia
 
     public function getPrimaryImageAttribute(): ?ProductImage
     {
-        /** @var \Illuminate\Database\Eloquent\Collection<int, ProductImage> $images */
+        /** @var Collection<int, ProductImage> $images */
         $images = $this->images;
 
         /** @var ProductImage|null $primary */

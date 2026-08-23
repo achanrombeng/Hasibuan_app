@@ -13,9 +13,7 @@ class ResolveShippingAddressAction
      * Resolve shipping address from request data.
      * Returns array suitable for Order creation.
      *
-     * @param User $user
-     * @param array $validated Request validated data
-     * @return array
+     * @param  array  $validated  Request validated data
      */
     public function execute(User $user, array $validated): array
     {
@@ -23,6 +21,7 @@ class ResolveShippingAddressAction
         if (isset($validated['address_id'])) {
             /** @var Address $address */
             $address = Address::findOrFail($validated['address_id']);
+
             return [
                 'shipping_name' => $address->recipient_name,
                 'shipping_phone' => $address->phone,

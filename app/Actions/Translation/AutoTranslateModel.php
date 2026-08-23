@@ -16,9 +16,7 @@ class AutoTranslateModel
     /**
      * Auto-translate a model's translatable fields to the target locale.
      *
-     * @param Model&HasTranslations $model
-     * @param string $targetLocale
-     * @param string $sourceLocale
+     * @param  Model&HasTranslations  $model
      * @return Model&HasTranslations
      */
     public function execute(
@@ -26,7 +24,7 @@ class AutoTranslateModel
         string $targetLocale = 'en',
         string $sourceLocale = 'id'
     ): Model {
-        if (!method_exists($model, 'getTranslatableAttributes')) {
+        if (! method_exists($model, 'getTranslatableAttributes')) {
             throw new \InvalidArgumentException('Model must use HasTranslations trait');
         }
 
@@ -55,6 +53,7 @@ class AutoTranslateModel
                     $translatedSlug = Str::slug($translatedName);
                     $model->setTranslation($field, $targetLocale, $translatedSlug);
                 }
+
                 continue;
             }
 

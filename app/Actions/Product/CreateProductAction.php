@@ -8,17 +8,16 @@ use App\Enums\ProductStatus;
 use App\Enums\SaleType;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Services\ImageService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-use App\Services\ImageService;
-
 class CreateProductAction
 {
     /**
-     * @param array<string, mixed> $data
-     * @param array<int, UploadedFile> $images
+     * @param  array<string, mixed>  $data
+     * @param  array<int, UploadedFile>  $images
      */
     public function execute(array $data, array $images = []): Product
     {
@@ -49,4 +48,3 @@ class CreateProductAction
         });
     }
 }
-

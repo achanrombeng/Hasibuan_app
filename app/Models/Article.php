@@ -100,6 +100,7 @@ class Article extends Model
         }
 
         $wordCount = str_word_count(strip_tags($this->content ?? ''));
+
         return (int) ceil($wordCount / 200);
     }
 
@@ -110,7 +111,7 @@ class Article extends Model
         $count = 1;
 
         while (static::slugExists($slug, $excludeId)) {
-            $slug = $originalSlug . '-' . $count;
+            $slug = $originalSlug.'-'.$count;
             $count++;
         }
 

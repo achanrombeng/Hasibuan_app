@@ -152,10 +152,10 @@ const useDFlip = (
 
                 // 2. Load Three.js and wait strictly for it
                 await loadScript('/dflip/js/libs/three.min.js', 'THREE');
-                if (!window.THREE) {
+                if (!(window as any).THREE) {
                     await new Promise<void>((resolve) => {
                         const checkInterval = setInterval(() => {
-                            if (window.THREE) {
+                            if ((window as any).THREE) {
                                 clearInterval(checkInterval);
                                 resolve();
                             }

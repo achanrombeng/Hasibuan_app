@@ -2,9 +2,11 @@ import {
   ApiCategory,
   ApiProduct,
   CarouselBannerSlide,
+  CraftsmanshipSettings,
   HeroSettings,
   HomeTestimonial,
   HomeValue,
+  ValuesSettings,
 } from '@/types/shop';
 import { motion } from 'framer-motion';
 import { ArticleItem, ArticlesSection } from './sections/ArticlesSection';
@@ -12,11 +14,9 @@ import { CarouselBannerSection } from './sections/CarouselBannerSection';
 import { CatalogSection } from './sections/CatalogSection';
 import { CategoriesSection } from './sections/CategoriesSection';
 import { CraftsmanshipSection } from './sections/CraftsmanshipSection';
-import { HeroSection } from './sections/HeroSection';
 import { NewsletterSection } from './sections/NewsletterSection';
 import { ProductsSection } from './sections/ProductsSection';
 import { TestimonialsSection } from './sections/TestimonialsSection';
-import { TrustSection } from './sections/TrustSection';
 import { ValuesSection } from './sections/ValuesSection';
 
 interface SectionVisibility {
@@ -40,10 +40,12 @@ interface LandingViewProps {
   articles?: ArticleItem[];
   testimonials: HomeTestimonial[];
   heroSettings: HeroSettings;
+  craftsmanshipSettings?: CraftsmanshipSettings;
   trustLogos: string[] | { name: string; logo_url?: string }[];
   values: HomeValue[];
+  valuesSettings?: ValuesSettings;
   carouselBanners?: CarouselBannerSlide[];
-  sectionVisibility?: SectionVisibility;
+  sectionVisibility?: Partial<SectionVisibility>;
 }
 
 export const LandingView: React.FC<LandingViewProps> = ({
@@ -53,8 +55,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
   articles,
   testimonials,
   heroSettings,
+  craftsmanshipSettings,
   trustLogos,
   values,
+  valuesSettings,
   carouselBanners,
   sectionVisibility,
 }) => {
@@ -64,6 +68,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
     carousel_banners: true,
     trust: false,
     categories: true,
+    craftsmanship: true,
     catalog: true,
     values: true,
     products: false,
@@ -72,7 +77,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
     newsletter: true,
   };
 
-  const activeCategories = categories && categories.length > 0 ? categories : featuredCategories;
+  const activeCategories =
+    categories && categories.length > 0 ? categories : featuredCategories;
 
   return (
     <motion.div
@@ -89,9 +95,17 @@ export const LandingView: React.FC<LandingViewProps> = ({
       {visibility.categories && (
         <CategoriesSection categories={activeCategories} />
       )}
-      <CraftsmanshipSection />
+      {visibility.craftsmanship && (
+        <CraftsmanshipSection settings={craftsmanshipSettings} />
+      )}
       {visibility.catalog && <CatalogSection categories={activeCategories} />}
-      {visibility.values && <ValuesSection values={values} />}
+      {visibility.values && (
+        <ValuesSection
+          badge={valuesSettings?.badge}
+          title={valuesSettings?.title}
+          values={valuesSettings?.values || values}
+        />
+      )}
       {visibility.products && <ProductsSection products={featuredProducts} />}
       {visibility.testimonials && (
         <TestimonialsSection testimonials={testimonials} />

@@ -30,7 +30,7 @@ return new class extends Migration
             DB::statement('ALTER TABLE promo_banners MODIFY title JSON');
             DB::statement('ALTER TABLE promo_banners MODIFY description JSON');
             DB::statement('ALTER TABLE promo_banners MODIFY cta_text JSON');
-        } else if (in_array($driver, ['pgsql', 'postgres'])) {
+        } elseif (in_array($driver, ['pgsql', 'postgres'])) {
             DB::statement('ALTER TABLE promo_banners ALTER COLUMN title TYPE jsonb USING title::jsonb');
             DB::statement('ALTER TABLE promo_banners ALTER COLUMN description TYPE jsonb USING description::jsonb');
             DB::statement('ALTER TABLE promo_banners ALTER COLUMN cta_text DROP DEFAULT');

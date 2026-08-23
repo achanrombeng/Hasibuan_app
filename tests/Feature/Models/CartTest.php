@@ -134,4 +134,3 @@ describe('CartItem Model', function () {
         expect($item->subtotal)->toBe(450000);
     });
 });
-

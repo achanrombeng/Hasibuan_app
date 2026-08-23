@@ -96,9 +96,10 @@ class OrderItem extends Model
 
     public function getDiscountPercentageAttribute(): int
     {
-        if (!$this->original_price || $this->original_price <= 0) {
+        if (! $this->original_price || $this->original_price <= 0) {
             return 0;
         }
+
         return (int) round((($this->original_price - $this->unit_price) / $this->original_price) * 100);
     }
 

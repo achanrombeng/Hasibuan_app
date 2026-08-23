@@ -21,7 +21,7 @@ enum SaleType: string
      */
     public function label(): string
     {
-        return __('enums.sale_type.' . $this->value);
+        return __('enums.sale_type.'.$this->value);
     }
 
     /**
@@ -46,4 +46,3 @@ enum SaleType: string
         return in_array($this, [self::CLEARANCE, self::STOCK_SALE, self::HOT_SALE]);
     }
 }
-

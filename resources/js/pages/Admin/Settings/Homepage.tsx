@@ -2,18 +2,13 @@ import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
-  BookOpen,
-  ChevronLeft,
-  Eye,
-  EyeOff,
-  Film,
-  Globe,
-  Home,
   ArrowDown,
   ArrowUp,
+  BookOpen,
+  ChevronLeft,
+  Home,
   Image,
   LayoutGrid,
-  Link as LinkIcon,
   Loader2,
   Mail,
   MessageSquare,
@@ -22,8 +17,8 @@ import {
   Save,
   ShoppingBag,
   SlidersHorizontal,
+  Sparkles,
   Trash2,
-  Type,
   Upload,
   Users,
   X,
@@ -33,6 +28,7 @@ import { useCallback, useRef, useState } from 'react';
 interface CarouselBanner {
   id: string;
   image_url: string;
+  media_type?: 'image' | 'video';
   link?: string;
   sort_order: number;
 }
@@ -49,13 +45,23 @@ interface HomepageSettingsProps {
     hero_media_type: 'image' | 'video';
     hero_product_name: string;
     trust_logos: string;
+    values_badge?: string;
+    values_title?: string;
     home_values: string;
     carousel_banners: string;
+    // Craftsmanship Section
+    craftsmanship_title_1?: string;
+    craftsmanship_desc_1?: string;
+    craftsmanship_images_1?: string;
+    craftsmanship_title_2?: string;
+    craftsmanship_desc_2?: string;
+    craftsmanship_images_2?: string;
     // Section visibility
     section_carousel_banners_visible: boolean;
     section_hero_visible: boolean;
     section_trust_visible: boolean;
     section_categories_visible: boolean;
+    section_craftsmanship_visible?: boolean;
     section_catalog_visible: boolean;
     section_values_visible: boolean;
     section_products_visible: boolean;
@@ -76,15 +82,31 @@ interface TrustLogo {
 }
 
 const SECTIONS = [
-  { key: 'logo', label: 'Logo Website', icon: Image, desc: 'Logo toko & header' },
+  {
+    key: 'logo',
+    label: 'Logo Website',
+    icon: Image,
+    desc: 'Logo toko & header',
+  },
   { key: 'hero', label: 'Hero', icon: Home, desc: 'Banner utama' },
-  { key: 'carousel_banners', label: 'Carousel Banner', icon: SlidersHorizontal, desc: 'Banner carousel' },
+  {
+    key: 'carousel_banners',
+    label: 'Carousel Banner',
+    icon: SlidersHorizontal,
+    desc: 'Banner carousel',
+  },
   { key: 'trust', label: 'Trust Logos', icon: Users, desc: 'Logo media/brand' },
   {
     key: 'categories',
     label: 'Kategori',
     icon: LayoutGrid,
     desc: 'Kategori produk',
+  },
+  {
+    key: 'craftsmanship',
+    label: 'Craftsmanship',
+    icon: Sparkles,
+    desc: 'Keahlian & bahan',
   },
   { key: 'catalog', label: 'Katalog', icon: BookOpen, desc: 'Flipbook PDF' },
   { key: 'values', label: 'Nilai Unggulan', icon: Quote, desc: 'Fitur/USP' },
@@ -108,7 +130,10 @@ const SECTIONS = [
   },
 ];
 
-export default function HomepageSettings({ settings, locale }: HomepageSettingsProps) {
+export default function HomepageSettings({
+  settings,
+  locale,
+}: HomepageSettingsProps) {
   // Parse JSON strings
   const initialTrustLogos: TrustLogo[] = (() => {
     try {
@@ -132,17 +157,58 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     }
   })();
 
+  const initialCraftsmanshipImages1: string[] = (() => {
+    try {
+      return JSON.parse(settings.craftsmanship_images_1 || '[]');
+    } catch {
+      return [];
+    }
+  })();
+
+  const initialCraftsmanshipImages2: string[] = (() => {
+    try {
+      return JSON.parse(settings.craftsmanship_images_2 || '[]');
+    } catch {
+      return [];
+    }
+  })();
+
   const [trustLogos, setTrustLogos] = useState<TrustLogo[]>(initialTrustLogos);
   const [values, setValues] = useState<ValueItem[]>(initialValues);
-  const [carouselBanners, setCarouselBanners] = useState<CarouselBanner[]>(initialCarouselBanners);
+  const [carouselBanners, setCarouselBanners] = useState<CarouselBanner[]>(
+    initialCarouselBanners,
+  );
   const [bannerFiles, setBannerFiles] = useState<Map<number, File>>(new Map());
-  const [bannerPreviews, setBannerPreviews] = useState<Map<number, string>>(new Map());
+  const [bannerPreviews, setBannerPreviews] = useState<Map<number, string>>(
+    new Map(),
+  );
+  const [craftsmanshipImages1, setCraftsmanshipImages1] = useState<string[]>(
+    initialCraftsmanshipImages1,
+  );
+  const [craftsmanshipImages2, setCraftsmanshipImages2] = useState<string[]>(
+    initialCraftsmanshipImages2,
+  );
+  const [craftsmanshipFiles1, setCraftsmanshipFiles1] = useState<
+    Map<number, File>
+  >(new Map());
+  const [craftsmanshipFiles2, setCraftsmanshipFiles2] = useState<
+    Map<number, File>
+  >(new Map());
+  const [craftsmanshipPreviews1, setCraftsmanshipPreviews1] = useState<
+    Map<number, string>
+  >(new Map());
+  const [craftsmanshipPreviews2, setCraftsmanshipPreviews2] = useState<
+    Map<number, string>
+  >(new Map());
+  const [newCraft1Url, setNewCraft1Url] = useState('');
+  const [newCraft2Url, setNewCraft2Url] = useState('');
   const [newLogoName, setNewLogoName] = useState('');
   const [newLogoUrl, setNewLogoUrl] = useState('');
 
   // Site logo state
   const initialSiteLogo = settings.site_logo || '/ronica.png';
-  const [siteLogoPreview, setSiteLogoPreview] = useState<string>(initialSiteLogo);
+  const [siteLogoPreview, setSiteLogoPreview] =
+    useState<string>(initialSiteLogo);
   const [siteLogoFile, setSiteLogoFile] = useState<File | null>(null);
   const [logoCompressing, setLogoCompressing] = useState(false);
   const [logoDragging, setLogoDragging] = useState(false);
@@ -155,7 +221,10 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     }
     setLogoCompressing(true);
     try {
-      const compressed = await compressImage(file, { maxSizeMB: 1.5, maxWidthOrHeight: 1024 });
+      const compressed = await compressImage(file, {
+        maxSizeMB: 1.5,
+        maxWidthOrHeight: 1024,
+      });
       setSiteLogoFile(compressed);
       setSiteLogoPreview(URL.createObjectURL(compressed));
     } catch {
@@ -173,16 +242,28 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
   };
 
   // Hero media state
-  const isUploadedFile = settings.hero_image_main.startsWith('/storage/settings/hero/');
-  const [heroMediaMode, setHeroMediaMode] = useState<'upload' | 'url'>(isUploadedFile ? 'upload' : 'url');
+  const isUploadedFile = settings.hero_image_main.startsWith(
+    '/storage/settings/hero/',
+  );
+  const [heroMediaMode, setHeroMediaMode] = useState<'upload' | 'url'>(
+    isUploadedFile ? 'upload' : 'url',
+  );
   const [heroMediaFile, setHeroMediaFile] = useState<File | null>(null);
-  const [heroMediaPreview, setHeroMediaPreview] = useState<string>(isUploadedFile ? settings.hero_image_main : '');
-  const [heroMediaType, setHeroMediaType] = useState<'image' | 'video'>(settings.hero_media_type ?? 'image');
+  const [heroMediaPreview, setHeroMediaPreview] = useState<string>(
+    isUploadedFile ? settings.hero_image_main : '',
+  );
+  const [heroMediaType, setHeroMediaType] = useState<'image' | 'video'>(
+    settings.hero_media_type ?? 'image',
+  );
   const [compressing, setCompressing] = useState(false);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data, setData, processing: _formProcessing } = useForm({
+  const {
+    data,
+    setData,
+    processing: _formProcessing,
+  } = useForm({
     hero_badge: settings.hero_badge,
     hero_title: settings.hero_title,
     hero_title_highlight: settings.hero_title_highlight,
@@ -190,13 +271,27 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     hero_image_main: settings.hero_image_main,
     hero_product_name: settings.hero_product_name,
     trust_logos: settings.trust_logos,
+    values_badge:
+      settings.values_badge ||
+      (locale === 'en' ? 'WHY CHOOSE US' : 'MENGAPA MEMILIH KAMI'),
+    values_title:
+      settings.values_title ||
+      (locale === 'en' ? 'Our Philosophy' : 'Filosofi Kami'),
     home_values: settings.home_values,
     carousel_banners: settings.carousel_banners,
+    // Craftsmanship Section
+    craftsmanship_title_1: settings.craftsmanship_title_1 || '',
+    craftsmanship_desc_1: settings.craftsmanship_desc_1 || '',
+    craftsmanship_title_2: settings.craftsmanship_title_2 || '',
+    craftsmanship_desc_2: settings.craftsmanship_desc_2 || '',
     // Section visibility
-    section_carousel_banners_visible: settings.section_carousel_banners_visible ?? true,
+    section_carousel_banners_visible:
+      settings.section_carousel_banners_visible ?? true,
     section_hero_visible: settings.section_hero_visible ?? true,
     section_trust_visible: settings.section_trust_visible ?? true,
     section_categories_visible: settings.section_categories_visible ?? true,
+    section_craftsmanship_visible:
+      settings.section_craftsmanship_visible ?? true,
     section_catalog_visible: settings.section_catalog_visible ?? true,
     section_values_visible: settings.section_values_visible ?? true,
     section_products_visible: settings.section_products_visible ?? true,
@@ -222,7 +317,10 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     if (type === 'image') {
       setCompressing(true);
       try {
-        const compressed = await compressImage(file, { maxSizeMB: 2, maxWidthOrHeight: 1920 });
+        const compressed = await compressImage(file, {
+          maxSizeMB: 2,
+          maxWidthOrHeight: 1920,
+        });
         setHeroMediaFile(compressed);
         setHeroMediaPreview(URL.createObjectURL(compressed));
       } finally {
@@ -238,12 +336,15 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     }
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFileSelect(file);
-  }, [handleFileSelect]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragging(false);
+      const file = e.dataTransfer.files[0];
+      if (file) handleFileSelect(file);
+    },
+    [handleFileSelect],
+  );
 
   const removeMedia = () => {
     setHeroMediaFile(null);
@@ -270,16 +371,67 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
       formData.append(`carousel_banner_files[${index}]`, file);
     });
 
+    // Craftsmanship Section
+    formData.append('craftsmanship_title_1', data.craftsmanship_title_1);
+    formData.append('craftsmanship_desc_1', data.craftsmanship_desc_1);
+    formData.append(
+      'craftsmanship_images_1',
+      JSON.stringify(craftsmanshipImages1),
+    );
+    formData.append('craftsmanship_title_2', data.craftsmanship_title_2);
+    formData.append('craftsmanship_desc_2', data.craftsmanship_desc_2);
+    formData.append(
+      'craftsmanship_images_2',
+      JSON.stringify(craftsmanshipImages2),
+    );
+    craftsmanshipFiles1.forEach((file, index) => {
+      formData.append(`craftsmanship_images_1_files[${index}]`, file);
+    });
+    craftsmanshipFiles2.forEach((file, index) => {
+      formData.append(`craftsmanship_images_2_files[${index}]`, file);
+    });
+
     // Section visibility
-    formData.append('section_carousel_banners_visible', data.section_carousel_banners_visible ? '1' : '0');
-    formData.append('section_hero_visible', data.section_hero_visible ? '1' : '0');
-    formData.append('section_trust_visible', data.section_trust_visible ? '1' : '0');
-    formData.append('section_categories_visible', data.section_categories_visible ? '1' : '0');
-    formData.append('section_catalog_visible', data.section_catalog_visible ? '1' : '0');
-    formData.append('section_values_visible', data.section_values_visible ? '1' : '0');
-    formData.append('section_products_visible', data.section_products_visible ? '1' : '0');
-    formData.append('section_testimonials_visible', data.section_testimonials_visible ? '1' : '0');
-    formData.append('section_newsletter_visible', data.section_newsletter_visible ? '1' : '0');
+    formData.append(
+      'section_carousel_banners_visible',
+      data.section_carousel_banners_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_hero_visible',
+      data.section_hero_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_trust_visible',
+      data.section_trust_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_categories_visible',
+      data.section_categories_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_craftsmanship_visible',
+      data.section_craftsmanship_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_catalog_visible',
+      data.section_catalog_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_values_visible',
+      data.section_values_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_products_visible',
+      data.section_products_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_testimonials_visible',
+      data.section_testimonials_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_newsletter_visible',
+      data.section_newsletter_visible ? '1' : '0',
+    );
 
     // Site logo
     formData.append('site_logo', siteLogoPreview);
@@ -293,7 +445,10 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
       formData.append('hero_media_type', heroMediaType);
     } else {
       formData.append('hero_image_main', data.hero_image_main);
-      formData.append('hero_media_type', detectMediaTypeFromUrl(data.hero_image_main));
+      formData.append(
+        'hero_media_type',
+        detectMediaTypeFromUrl(data.hero_image_main),
+      );
     }
 
     router.post('/admin/settings/homepage', formData, {
@@ -330,14 +485,19 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     for (let i = 0; i < carouselBanners.length; i++) {
       if (i === index) continue;
       if (bannerFiles.has(i)) reindexedFiles.set(newIdx, bannerFiles.get(i)!);
-      if (bannerPreviews.has(i)) reindexedPreviews.set(newIdx, bannerPreviews.get(i)!);
+      if (bannerPreviews.has(i))
+        reindexedPreviews.set(newIdx, bannerPreviews.get(i)!);
       newIdx++;
     }
     setBannerFiles(reindexedFiles);
     setBannerPreviews(reindexedPreviews);
   };
 
-  const updateBanner = (index: number, field: keyof CarouselBanner, value: string) => {
+  const updateBanner = (
+    index: number,
+    field: keyof CarouselBanner,
+    value: string,
+  ) => {
     const updated = [...carouselBanners];
     updated[index] = { ...updated[index], [field]: value };
     setCarouselBanners(updated);
@@ -357,22 +517,38 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     const fileB = newFiles.get(newIndex);
     const previewA = newPreviews.get(index);
     const previewB = newPreviews.get(newIndex);
-    if (fileA) newFiles.set(newIndex, fileA); else newFiles.delete(newIndex);
-    if (fileB) newFiles.set(index, fileB); else newFiles.delete(index);
-    if (previewA) newPreviews.set(newIndex, previewA); else newPreviews.delete(newIndex);
-    if (previewB) newPreviews.set(index, previewB); else newPreviews.delete(index);
+    if (fileA) newFiles.set(newIndex, fileA);
+    else newFiles.delete(newIndex);
+    if (fileB) newFiles.set(index, fileB);
+    else newFiles.delete(index);
+    if (previewA) newPreviews.set(newIndex, previewA);
+    else newPreviews.delete(newIndex);
+    if (previewB) newPreviews.set(index, previewB);
+    else newPreviews.delete(index);
     setBannerFiles(newFiles);
     setBannerPreviews(newPreviews);
   };
 
   const handleBannerFileSelect = async (index: number, file: File) => {
-    const compressed = await compressImage(file, { maxSizeMB: 2, maxWidthOrHeight: 1920 });
+    const isVideo = file.type.startsWith('video/');
+    let processedFile = file;
+
+    if (!isVideo) {
+      processedFile = await compressImage(file, {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1920,
+      });
+    }
+
     const newFiles = new Map(bannerFiles);
-    newFiles.set(index, compressed);
+    newFiles.set(index, processedFile);
     setBannerFiles(newFiles);
+
     const newPreviews = new Map(bannerPreviews);
-    newPreviews.set(index, URL.createObjectURL(compressed));
+    newPreviews.set(index, URL.createObjectURL(processedFile));
     setBannerPreviews(newPreviews);
+
+    updateBanner(index, 'media_type', isVideo ? 'video' : 'image');
   };
 
   // Trust logos handlers
@@ -419,6 +595,69 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
     setData('home_values', JSON.stringify(updated));
   };
 
+  // Craftsmanship image handlers
+  const addCraftsmanshipImage1 = () => {
+    if (newCraft1Url.trim()) {
+      setCraftsmanshipImages1([...craftsmanshipImages1, newCraft1Url.trim()]);
+      setNewCraft1Url('');
+    }
+  };
+  const removeCraftsmanshipImage1 = (index: number) => {
+    setCraftsmanshipImages1(craftsmanshipImages1.filter((_, i) => i !== index));
+    const f = new Map(craftsmanshipFiles1);
+    f.delete(index);
+    setCraftsmanshipFiles1(f);
+    const p = new Map(craftsmanshipPreviews1);
+    p.delete(index);
+    setCraftsmanshipPreviews1(p);
+  };
+  const handleCraftsmanshipFileSelect1 = async (index: number, file: File) => {
+    const compressed = await compressImage(file, {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 1920,
+    });
+    const f = new Map(craftsmanshipFiles1);
+    f.set(index, compressed);
+    setCraftsmanshipFiles1(f);
+    const p = new Map(craftsmanshipPreviews1);
+    p.set(index, URL.createObjectURL(compressed));
+    setCraftsmanshipPreviews1(p);
+    const updated = [...craftsmanshipImages1];
+    updated[index] = URL.createObjectURL(compressed);
+    setCraftsmanshipImages1(updated);
+  };
+
+  const addCraftsmanshipImage2 = () => {
+    if (newCraft2Url.trim()) {
+      setCraftsmanshipImages2([...craftsmanshipImages2, newCraft2Url.trim()]);
+      setNewCraft2Url('');
+    }
+  };
+  const removeCraftsmanshipImage2 = (index: number) => {
+    setCraftsmanshipImages2(craftsmanshipImages2.filter((_, i) => i !== index));
+    const f = new Map(craftsmanshipFiles2);
+    f.delete(index);
+    setCraftsmanshipFiles2(f);
+    const p = new Map(craftsmanshipPreviews2);
+    p.delete(index);
+    setCraftsmanshipPreviews2(p);
+  };
+  const handleCraftsmanshipFileSelect2 = async (index: number, file: File) => {
+    const compressed = await compressImage(file, {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 1920,
+    });
+    const f = new Map(craftsmanshipFiles2);
+    f.set(index, compressed);
+    setCraftsmanshipFiles2(f);
+    const p = new Map(craftsmanshipPreviews2);
+    p.set(index, URL.createObjectURL(compressed));
+    setCraftsmanshipPreviews2(p);
+    const updated = [...craftsmanshipImages2];
+    updated[index] = URL.createObjectURL(compressed);
+    setCraftsmanshipImages2(updated);
+  };
+
   const toggleSection = (key: string) => {
     const fieldName = `section_${key}_visible` as keyof typeof data;
     setData(fieldName, !data[fieldName]);
@@ -455,65 +694,6 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Section Visibility */}
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50">
-                <Eye className="h-5 w-5 text-teal-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  Visibilitas Section
-                </h2>
-                <p className="text-sm text-neutral-500">
-                  Tampilkan atau sembunyikan section di homepage
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {SECTIONS.map((section) => {
-                const fieldName =
-                  `section_${section.key}_visible` as keyof typeof data;
-                const isVisible = data[fieldName] as boolean;
-                return (
-                  <button
-                    key={section.key}
-                    type="button"
-                    onClick={() => toggleSection(section.key)}
-                    className={`flex items-center gap-3 rounded-xl border p-4 transition-all ${
-                      isVisible
-                        ? 'border-teal-200 bg-teal-50'
-                        : 'border-neutral-200 bg-neutral-50 opacity-60'
-                    }`}
-                  >
-                    <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                        isVisible ? 'bg-teal-100' : 'bg-neutral-200'
-                      }`}
-                    >
-                      <section.icon
-                        className={`h-5 w-5 ${isVisible ? 'text-teal-600' : 'text-neutral-400'}`}
-                      />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p
-                        className={`text-sm font-medium ${isVisible ? 'text-neutral-900' : 'text-neutral-500'}`}
-                      >
-                        {section.label}
-                      </p>
-                      <p className="text-xs text-neutral-400">{section.desc}</p>
-                    </div>
-                    {isVisible ? (
-                      <Eye className="h-4 w-4 text-teal-600" />
-                    ) : (
-                      <EyeOff className="h-4 w-4 text-neutral-400" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Site Logo Section Settings */}
           <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
             <div className="mb-6 flex items-center justify-between">
@@ -526,7 +706,8 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                     Logo Website (Ronica)
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Kelola logo utama yang ditampilkan di Header, Mobile Menu, dan Footer
+                    Kelola logo utama yang ditampilkan di Header, Mobile Menu,
+                    dan Footer
                   </p>
                 </div>
               </div>
@@ -540,7 +721,9 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white p-4 text-center">
-                    <span className="mb-2 text-xs font-medium text-neutral-400">Tampilan Terang</span>
+                    <span className="mb-2 text-xs font-medium text-neutral-400">
+                      Tampilan Terang
+                    </span>
                     <img
                       src={siteLogoPreview}
                       alt="Logo Preview Light"
@@ -548,7 +731,9 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                     />
                   </div>
                   <div className="flex flex-col items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900 p-4 text-center">
-                    <span className="mb-2 text-xs font-medium text-neutral-400">Tampilan Gelap</span>
+                    <span className="mb-2 text-xs font-medium text-neutral-400">
+                      Tampilan Gelap
+                    </span>
                     <img
                       src={siteLogoPreview}
                       alt="Logo Preview Dark"
@@ -612,13 +797,15 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                 </div>
 
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-xs text-neutral-500 truncate max-w-[200px]">
-                    {siteLogoFile ? `File baru: ${siteLogoFile.name}` : `Logo aktif: ${siteLogoPreview}`}
+                  <span className="max-w-[200px] truncate text-xs text-neutral-500">
+                    {siteLogoFile
+                      ? `File baru: ${siteLogoFile.name}`
+                      : `Logo aktif: ${siteLogoPreview}`}
                   </span>
                   <button
                     type="button"
                     onClick={resetLogoToDefault}
-                    className="text-xs font-medium text-neutral-500 hover:text-teal-600 underline"
+                    className="text-xs font-medium text-neutral-500 underline hover:text-teal-600"
                   >
                     Reset ke /ronica.png
                   </button>
@@ -638,7 +825,11 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                   Hero Section
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Editing: <span className="font-medium text-teal-600">{locale === 'id' ? 'Bahasa Indonesia' : 'English'}</span> — switch language to edit the other version
+                  Editing:{' '}
+                  <span className="font-medium text-teal-600">
+                    {locale === 'id' ? 'Bahasa Indonesia' : 'English'}
+                  </span>{' '}
+                  — switch language to edit the other version
                 </p>
               </div>
             </div>
@@ -706,166 +897,6 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                 />
               </div>
             </div>
-          </div>
-
-          {/* Hero Media */}
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
-                <Image className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  Media Hero
-                </h2>
-                <p className="text-sm text-neutral-500">
-                  Upload gambar/video atau masukkan URL
-                </p>
-              </div>
-            </div>
-
-            {/* Mode Tabs */}
-            <div className="mb-4 flex gap-1 rounded-lg bg-neutral-100 p-1">
-              <button
-                type="button"
-                onClick={() => setHeroMediaMode('upload')}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${
-                  heroMediaMode === 'upload'
-                    ? 'bg-white text-neutral-900 shadow-sm'
-                    : 'text-neutral-500 hover:text-neutral-700'
-                }`}
-              >
-                <Upload size={16} />
-                Upload File
-              </button>
-              <button
-                type="button"
-                onClick={() => setHeroMediaMode('url')}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${
-                  heroMediaMode === 'url'
-                    ? 'bg-white text-neutral-900 shadow-sm'
-                    : 'text-neutral-500 hover:text-neutral-700'
-                }`}
-              >
-                <LinkIcon size={16} />
-                URL
-              </button>
-            </div>
-
-            {/* Upload Mode */}
-            {heroMediaMode === 'upload' && (
-              <div>
-                {!heroMediaPreview ? (
-                  <div
-                    onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-                    onDragLeave={() => setDragging(false)}
-                    onDrop={handleDrop}
-                    onClick={() => fileInputRef.current?.click()}
-                    className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 transition-all ${
-                      dragging
-                        ? 'border-teal-400 bg-teal-50'
-                        : 'border-neutral-300 bg-neutral-50 hover:border-neutral-400 hover:bg-neutral-100'
-                    }`}
-                  >
-                    {compressing ? (
-                      <>
-                        <Loader2 className="mb-3 h-10 w-10 animate-spin text-teal-500" />
-                        <p className="text-sm font-medium text-neutral-600">Mengompresi gambar...</p>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="mb-3 h-10 w-10 text-neutral-400" />
-                        <p className="text-sm font-medium text-neutral-600">
-                          Drag & drop file di sini, atau klik untuk memilih
-                        </p>
-                        <p className="mt-1 text-xs text-neutral-400">
-                          Gambar (JPG, PNG, WebP, GIF) atau Video (MP4, WebM, maks 50MB)
-                        </p>
-                      </>
-                    )}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleFileSelect(file);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="relative overflow-hidden rounded-lg">
-                    {heroMediaType === 'video' ? (
-                      <video
-                        src={heroMediaPreview}
-                        controls
-                        className="h-48 w-full rounded-lg object-cover"
-                      />
-                    ) : (
-                      <img
-                        src={heroMediaPreview}
-                        alt="Preview"
-                        className="h-48 w-full rounded-lg object-cover"
-                      />
-                    )}
-                    <div className="absolute top-2 right-2 flex gap-2">
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
-                        heroMediaType === 'video'
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-green-100 text-green-700'
-                      }`}>
-                        {heroMediaType === 'video' ? <Film size={12} /> : <Image size={12} />}
-                        {heroMediaType === 'video' ? 'Video' : 'Image'}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={removeMedia}
-                        className="rounded-full bg-red-500 p-1 text-white shadow-sm transition-colors hover:bg-red-600"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* URL Mode */}
-            {heroMediaMode === 'url' && (
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  URL Gambar / Video
-                </label>
-                <input
-                  type="url"
-                  value={data.hero_image_main}
-                  onChange={(e) => {
-                    setData('hero_image_main', e.target.value);
-                    setHeroMediaType(detectMediaTypeFromUrl(e.target.value));
-                  }}
-                  placeholder="https://example.com/hero.jpg atau .mp4"
-                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                />
-                {data.hero_image_main && (
-                  <div className="mt-3">
-                    {detectMediaTypeFromUrl(data.hero_image_main) === 'video' ? (
-                      <video
-                        src={data.hero_image_main}
-                        controls
-                        className="h-48 w-full rounded-lg object-cover"
-                      />
-                    ) : (
-                      <img
-                        src={data.hero_image_main}
-                        alt="Preview"
-                        className="h-48 w-full rounded-lg object-cover"
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Carousel Banners */}
@@ -947,22 +978,33 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                       </div>
 
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {/* Image upload / preview */}
+                        {/* Media upload / preview */}
                         <div>
                           <label className="mb-1 block text-xs text-neutral-500">
-                            Gambar
+                            Gambar / Video
                           </label>
                           {displayImage ? (
                             <div className="relative">
-                              <img
-                                src={displayImage}
-                                alt={`Banner ${index + 1}`}
-                                className="h-32 w-full rounded-lg object-cover"
-                              />
+                              {banner.media_type === 'video' ||
+                              detectMediaTypeFromUrl(displayImage) ===
+                                'video' ? (
+                                <video
+                                  src={displayImage}
+                                  controls
+                                  className="h-32 w-full rounded-lg bg-neutral-900 object-cover"
+                                />
+                              ) : (
+                                <img
+                                  src={displayImage}
+                                  alt={`Banner ${index + 1}`}
+                                  className="h-32 w-full rounded-lg object-cover"
+                                />
+                              )}
                               <button
                                 type="button"
                                 onClick={() => {
                                   updateBanner(index, 'image_url', '');
+                                  updateBanner(index, 'media_type', 'image');
                                   const newFiles = new Map(bannerFiles);
                                   newFiles.delete(index);
                                   setBannerFiles(newFiles);
@@ -978,12 +1020,15 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                           ) : (
                             <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 bg-white transition-colors hover:border-neutral-400 hover:bg-neutral-100">
                               <Upload className="mb-1 h-6 w-6 text-neutral-400" />
-                              <span className="text-xs text-neutral-500">
-                                Upload gambar
+                              <span className="text-xs font-medium text-neutral-600">
+                                Upload gambar / video
+                              </span>
+                              <span className="mt-0.5 text-[10px] text-neutral-400">
+                                JPG, PNG, WebP, MP4, WebM (max 50MB)
                               </span>
                               <input
                                 type="file"
-                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/ogg"
                                 className="hidden"
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
@@ -997,8 +1042,16 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                             <input
                               type="url"
                               value={banner.image_url}
-                              onChange={(e) => updateBanner(index, 'image_url', e.target.value)}
-                              placeholder="Atau masukkan URL gambar"
+                              onChange={(e) => {
+                                const url = e.target.value;
+                                updateBanner(index, 'image_url', url);
+                                updateBanner(
+                                  index,
+                                  'media_type',
+                                  detectMediaTypeFromUrl(url),
+                                );
+                              }}
+                              placeholder="Atau masukkan URL gambar / video"
                               className="mt-2 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                             />
                           )}
@@ -1012,7 +1065,9 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                           <input
                             type="url"
                             value={banner.link || ''}
-                            onChange={(e) => updateBanner(index, 'link', e.target.value)}
+                            onChange={(e) =>
+                              updateBanner(index, 'link', e.target.value)
+                            }
                             placeholder="https://example.com/promo"
                             className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                           />
@@ -1028,89 +1083,11 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
             )}
           </div>
 
-          {/* Trust Logos */}
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
-                <Globe className="h-5 w-5 text-orange-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  Trust Logos / Press
-                </h2>
-                <p className="text-sm text-neutral-500">
-                  Logo media/brand yang pernah memuat
-                </p>
-              </div>
-            </div>
-
-            {/* Existing Logos */}
-            <div className="mb-4 space-y-3">
-              {trustLogos.map((logo, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 rounded-lg border border-neutral-100 bg-neutral-50 p-3"
-                >
-                  {logo.logo_url ? (
-                    <img
-                      src={logo.logo_url}
-                      alt={logo.name}
-                      className="h-8 w-auto object-contain"
-                    />
-                  ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded bg-neutral-200">
-                      <Type className="h-4 w-4 text-neutral-400" />
-                    </div>
-                  )}
-                  <span className="flex-1 text-sm font-medium text-neutral-700">
-                    {logo.name}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeTrustLogo(index)}
-                    className="text-neutral-400 hover:text-red-500"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* Add New Logo */}
-            <div className="rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4">
-              <p className="mb-3 text-sm font-medium text-neutral-700">
-                Tambah Logo Baru
-              </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <input
-                  type="text"
-                  value={newLogoName}
-                  onChange={(e) => setNewLogoName(e.target.value)}
-                  placeholder="Nama brand/media"
-                  className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                />
-                <input
-                  type="url"
-                  value={newLogoUrl}
-                  onChange={(e) => setNewLogoUrl(e.target.value)}
-                  placeholder="URL logo (opsional)"
-                  className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={addTrustLogo}
-                disabled={!newLogoName.trim()}
-                className="mt-3 inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700 disabled:opacity-50"
-              >
-                <Plus size={16} />
-                Tambah
-              </button>
-            </div>
-          </div>
-
-          {/* Values / Features */}
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+          {/* Values / Features (Our Philosophy) Settings */}
+          <div
+            id="values"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
+          >
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
@@ -1118,22 +1095,52 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Nilai / Fitur Unggulan
+                    Nilai / Fitur Unggulan (Our Philosophy)
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Editing: <span className="font-medium text-teal-600">{locale === 'id' ? 'Bahasa Indonesia' : 'English'}</span>
+                    Atur badge, judul utama, dan poin-poin filosofi/keunggulan
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={addValue}
-                className="inline-flex items-center gap-2 rounded-lg bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200"
+                className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700"
               >
                 <Plus size={16} />
-                Tambah
+                Tambah Poin
               </button>
             </div>
+
+            {/* Header Inputs */}
+            <div className="mb-6 grid grid-cols-1 gap-4 rounded-xl border border-neutral-100 bg-neutral-50 p-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-neutral-700">
+                  Sub-Badge (opsional)
+                </label>
+                <input
+                  type="text"
+                  value={data.values_badge || ''}
+                  onChange={(e) => setData('values_badge', e.target.value)}
+                  placeholder="WHY CHOOSE US"
+                  className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-neutral-700">
+                  Judul Utama
+                </label>
+                <input
+                  type="text"
+                  value={data.values_title || ''}
+                  onChange={(e) => setData('values_title', e.target.value)}
+                  placeholder="Our Philosophy"
+                  className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* List of Value Items */}
             <div className="space-y-4">
               {values.map((value, index) => (
                 <div
@@ -1142,7 +1149,7 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                 >
                   <div className="mb-3 flex items-center justify-between">
                     <span className="text-sm font-medium text-neutral-500">
-                      Item {index + 1}
+                      Poin {index + 1}
                     </span>
                     <button
                       type="button"
@@ -1162,19 +1169,21 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                         onChange={(e) =>
                           updateValue(index, 'icon', e.target.value)
                         }
-                        className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                       >
-                        <option value="leaf">🌿 Leaf</option>
-                        <option value="truck">🚚 Truck</option>
-                        <option value="shield-check">🛡️ Shield Check</option>
-                        <option value="heart">❤️ Heart</option>
-                        <option value="star">⭐ Star</option>
-                        <option value="clock">⏰ Clock</option>
+                        <option value="leaf">🌿 Leaf (Bahan/Lingkungan)</option>
+                        <option value="truck">🚚 Truck (Pengiriman)</option>
+                        <option value="shield-check">
+                          🛡️ Shield Check (Garansi)
+                        </option>
+                        <option value="heart">❤️ Heart (Kualitas)</option>
+                        <option value="star">⭐ Star (Rating)</option>
+                        <option value="clock">⏰ Clock (Ketahanan)</option>
                       </select>
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-1 block text-xs text-neutral-500">
-                        Judul
+                        Judul Poin
                       </label>
                       <input
                         type="text"
@@ -1182,8 +1191,8 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                         onChange={(e) =>
                           updateValue(index, 'title', e.target.value)
                         }
-                        placeholder="Bahan Berkelanjutan"
-                        className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        placeholder="Sustainable Materials"
+                        className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                       />
                     </div>
                     <div className="md:col-span-3">
@@ -1196,13 +1205,259 @@ export default function HomepageSettings({ settings, locale }: HomepageSettingsP
                           updateValue(index, 'desc', e.target.value)
                         }
                         rows={2}
-                        placeholder="Setiap produk menggunakan kayu dari hutan yang dikelola secara bertanggung jawab..."
-                        className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-3 py-2 text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        placeholder="Every product uses wood from responsibly managed forests..."
+                        className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                       />
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Craftsmanship Section Settings */}
+          <div
+            id="craftsmanship"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
+                  <Sparkles className="h-5 w-5 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Craftsmanship Section (Handcrafted & Wood)
+                  </h2>
+                  <p className="text-sm text-neutral-500">
+                    Kelola konten keahlian pengrajin, deskripsi bahan, dan
+                    galeri foto slider di homepage
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              {/* Row 1: Handcrafted Touch */}
+              <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
+                    Baris 1: Craftsmanship / Rotan (Teks Kiri, Slider Kanan)
+                  </h3>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-neutral-700">
+                      Judul Baris 1
+                    </label>
+                    <input
+                      type="text"
+                      value={data.craftsmanship_title_1}
+                      onChange={(e) =>
+                        setData('craftsmanship_title_1', e.target.value)
+                      }
+                      placeholder="Handcrafted, Unique Touch"
+                      className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-neutral-700">
+                      Deskripsi Baris 1
+                    </label>
+                    <textarea
+                      value={data.craftsmanship_desc_1}
+                      onChange={(e) =>
+                        setData('craftsmanship_desc_1', e.target.value)
+                      }
+                      rows={3}
+                      placeholder="Hand-woven traditional rattan forms the soul of Ronica furniture..."
+                      className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Images Manager Row 1 */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Gambar Slider Baris 1
+                  </label>
+                  <div className="space-y-3">
+                    {craftsmanshipImages1.map((url, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-white p-3 shadow-sm"
+                      >
+                        <img
+                          src={craftsmanshipPreviews1.get(idx) || url}
+                          alt={`Craft 1 Preview ${idx}`}
+                          className="h-14 w-20 rounded-md border bg-neutral-100 object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <input
+                            type="text"
+                            value={url}
+                            onChange={(e) => {
+                              const updated = [...craftsmanshipImages1];
+                              updated[idx] = e.target.value;
+                              setCraftsmanshipImages1(updated);
+                            }}
+                            placeholder="URL Gambar (https://...)"
+                            className="w-full rounded-md border border-neutral-200 px-3 py-1.5 text-xs text-neutral-800 focus:border-teal-500 focus:outline-none"
+                          />
+                        </div>
+                        <label className="cursor-pointer rounded-md bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-200">
+                          <Upload className="mr-1 inline-block h-3.5 w-3.5" />{' '}
+                          Upload
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (f) handleCraftsmanshipFileSelect1(idx, f);
+                            }}
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => removeCraftsmanshipImage1(idx)}
+                          className="rounded-md p-1.5 text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={newCraft1Url}
+                        onChange={(e) => setNewCraft1Url(e.target.value)}
+                        placeholder="Tambah URL gambar baru..."
+                        className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs text-neutral-900 focus:border-teal-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={addCraftsmanshipImage1}
+                        className="inline-flex items-center gap-1 rounded-lg bg-neutral-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-neutral-800"
+                      >
+                        <Plus className="h-3.5 w-3.5" /> Tambah Gambar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 2: Strength of Nature */}
+              <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
+                    Baris 2: Strength of Nature / Kayu Jati (Slider Kiri, Teks
+                    Kanan)
+                  </h3>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-neutral-700">
+                      Judul Baris 2
+                    </label>
+                    <input
+                      type="text"
+                      value={data.craftsmanship_title_2}
+                      onChange={(e) =>
+                        setData('craftsmanship_title_2', e.target.value)
+                      }
+                      placeholder="Strength of Nature, Timeless Elegance"
+                      className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-sm font-medium text-neutral-700">
+                      Deskripsi Baris 2
+                    </label>
+                    <textarea
+                      value={data.craftsmanship_desc_2}
+                      onChange={(e) =>
+                        setData('craftsmanship_desc_2', e.target.value)
+                      }
+                      rows={3}
+                      placeholder="The premium teak wood used in our furniture is one of nature's..."
+                      className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Images Manager Row 2 */}
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Gambar Slider Baris 2
+                  </label>
+                  <div className="space-y-3">
+                    {craftsmanshipImages2.map((url, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3 rounded-lg border border-neutral-200 bg-white p-3 shadow-sm"
+                      >
+                        <img
+                          src={craftsmanshipPreviews2.get(idx) || url}
+                          alt={`Craft 2 Preview ${idx}`}
+                          className="h-14 w-20 rounded-md border bg-neutral-100 object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <input
+                            type="text"
+                            value={url}
+                            onChange={(e) => {
+                              const updated = [...craftsmanshipImages2];
+                              updated[idx] = e.target.value;
+                              setCraftsmanshipImages2(updated);
+                            }}
+                            placeholder="URL Gambar (https://...)"
+                            className="w-full rounded-md border border-neutral-200 px-3 py-1.5 text-xs text-neutral-800 focus:border-teal-500 focus:outline-none"
+                          />
+                        </div>
+                        <label className="cursor-pointer rounded-md bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-200">
+                          <Upload className="mr-1 inline-block h-3.5 w-3.5" />{' '}
+                          Upload
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const f = e.target.files?.[0];
+                              if (f) handleCraftsmanshipFileSelect2(idx, f);
+                            }}
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => removeCraftsmanshipImage2(idx)}
+                          className="rounded-md p-1.5 text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={newCraft2Url}
+                        onChange={(e) => setNewCraft2Url(e.target.value)}
+                        placeholder="Tambah URL gambar baru..."
+                        className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs text-neutral-900 focus:border-teal-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={addCraftsmanshipImage2}
+                        className="inline-flex items-center gap-1 rounded-lg bg-neutral-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-neutral-800"
+                      >
+                        <Plus className="h-3.5 w-3.5" /> Tambah Gambar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

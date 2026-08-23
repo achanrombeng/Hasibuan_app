@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services\Query;
 
-use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;

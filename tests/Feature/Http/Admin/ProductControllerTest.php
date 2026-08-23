@@ -174,4 +174,3 @@ describe('Admin ProductController', function () {
             ->assertInertia(fn ($page) => $page->has('products.data', 1));
     });
 });
-

@@ -7,7 +7,6 @@ namespace App\Actions\Article;
 use App\Enums\ArticleStatus;
 use App\Models\Article;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class CreateArticleAction
 {

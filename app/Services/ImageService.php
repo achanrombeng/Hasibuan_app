@@ -65,6 +65,7 @@ class ImageService
         // If no transparent pixels found, keep original file intact
         if (! $hasTransparency) {
             imagedestroy($srcImage);
+
             return $file->store($directory, $disk);
         }
 
@@ -72,6 +73,7 @@ class ImageService
         $canvas = imagecreatetruecolor($width, $height);
         if (! $canvas) {
             imagedestroy($srcImage);
+
             return $file->store($directory, $disk);
         }
 

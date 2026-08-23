@@ -19,7 +19,7 @@ enum PaymentMethod: string
      */
     public function label(): string
     {
-        return __('enums.payment_method.' . $this->value);
+        return __('enums.payment_method.'.$this->value);
     }
 
     /**
@@ -27,7 +27,7 @@ enum PaymentMethod: string
      */
     public function description(): string
     {
-        return __('enums.payment_method_description.' . $this->value);
+        return __('enums.payment_method_description.'.$this->value);
     }
 
     /**

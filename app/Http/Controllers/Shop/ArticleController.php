@@ -44,8 +44,8 @@ class ArticleController extends Controller
             ->with('author:id,name')
             ->firstOrFail();
 
-        $sessionKey = 'article_viewed_' . $article->id;
-        if (!session()->has($sessionKey)) {
+        $sessionKey = 'article_viewed_'.$article->id;
+        if (! session()->has($sessionKey)) {
             $article->increment('views');
             session()->put($sessionKey, true);
         }

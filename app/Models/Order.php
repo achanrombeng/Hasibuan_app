@@ -7,11 +7,13 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * Order Model
@@ -41,14 +43,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $tracking_number
  * @property string|null $customer_notes
  * @property string|null $admin_notes
- * @property \Illuminate\Support\Carbon|null $paid_at
- * @property \Illuminate\Support\Carbon|null $shipped_at
- * @property \Illuminate\Support\Carbon|null $delivered_at
- * @property \Illuminate\Support\Carbon|null $cancelled_at
+ * @property Carbon|null $paid_at
+ * @property Carbon|null $shipped_at
+ * @property Carbon|null $delivered_at
+ * @property Carbon|null $cancelled_at
  * @property string|null $cancellation_reason
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Order extends Model
 {
@@ -270,9 +272,8 @@ class Order extends Model
     // ==================== Scopes ====================
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<Order> $query
-     * @param string $date
-     * @return \Illuminate\Database\Eloquent\Builder<Order>
+     * @param  Builder<Order>  $query
+     * @return Builder<Order>
      */
     public function scopeCreatedAfter($query, string $date)
     {
@@ -280,9 +281,8 @@ class Order extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<Order> $query
-     * @param string $date
-     * @return \Illuminate\Database\Eloquent\Builder<Order>
+     * @param  Builder<Order>  $query
+     * @return Builder<Order>
      */
     public function scopeCreatedBefore($query, string $date)
     {

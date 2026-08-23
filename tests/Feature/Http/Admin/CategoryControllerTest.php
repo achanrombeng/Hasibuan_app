@@ -146,4 +146,3 @@ describe('Admin CategoryController', function () {
         expect(Category::find($category->id))->not->toBeNull();
     });
 });
-

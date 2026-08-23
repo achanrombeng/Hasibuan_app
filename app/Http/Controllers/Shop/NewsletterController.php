@@ -64,7 +64,7 @@ class NewsletterController extends Controller
 
         $subscriber = Subscriber::where('email', $validated['email'])->first();
 
-        if (!$subscriber) {
+        if (! $subscriber) {
             return response()->json([
                 'success' => false,
                 'message' => 'Email tidak ditemukan.',

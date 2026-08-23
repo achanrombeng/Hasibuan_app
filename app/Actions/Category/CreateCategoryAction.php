@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace App\Actions\Category;
 
 use App\Models\Category;
+use App\Services\ImageService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-
-use App\Services\ImageService;
 
 class CreateCategoryAction
 {
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function execute(array $data, ?UploadedFile $image = null): Category
     {
@@ -29,4 +28,3 @@ class CreateCategoryAction
         return $category;
     }
 }
-

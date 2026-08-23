@@ -116,9 +116,9 @@ export default function Pagination({
   const isLastPage = currentMeta.current_page === currentMeta.last_page;
 
   // Find prev and next links from Laravel pagination
-  const prevLink = currentLinks.find((_, index) => index === 0);
+  const prevLink = currentLinks.find((_: unknown, index: number) => index === 0);
   const nextLink = currentLinks.find(
-    (_, index) => index === currentLinks.length - 1,
+    (_: unknown, index: number) => index === currentLinks.length - 1,
   );
 
   return (

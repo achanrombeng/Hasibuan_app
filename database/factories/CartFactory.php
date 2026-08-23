@@ -46,4 +46,3 @@ class CartFactory extends Factory
         ]);
     }
 }
-

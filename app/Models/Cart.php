@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -70,7 +71,7 @@ class Cart extends Model
 
     public function getSubtotalAttribute(): int
     {
-        /** @var \Illuminate\Database\Eloquent\Collection<int, CartItem> $items */
+        /** @var Collection<int, CartItem> $items */
         $items = $this->activeItems;
 
         return $items->sum(fn (CartItem $item) => $item->subtotal);
@@ -122,7 +123,7 @@ class Cart extends Model
      */
     public function mergeWith(Cart $guestCart): void
     {
-        /** @var \Illuminate\Database\Eloquent\Collection<int, CartItem> $guestItems */
+        /** @var Collection<int, CartItem> $guestItems */
         $guestItems = $guestCart->items;
 
         foreach ($guestItems as $guestItem) {

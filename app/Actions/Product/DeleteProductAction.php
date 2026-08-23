@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Actions\Product;
 
 use App\Models\Product;
+use App\Models\ProductImage;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,7 +16,7 @@ class DeleteProductAction
     {
         return DB::transaction(function () use ($product) {
             // Delete product images from storage
-            /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\ProductImage> $images */
+            /** @var Collection<int, ProductImage> $images */
             $images = $product->images;
 
             foreach ($images as $image) {
@@ -26,4 +28,3 @@ class DeleteProductAction
         });
     }
 }
-

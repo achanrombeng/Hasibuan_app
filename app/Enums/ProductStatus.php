@@ -20,7 +20,7 @@ enum ProductStatus: string
      */
     public function label(): string
     {
-        return __('enums.product_status.' . $this->value);
+        return __('enums.product_status.'.$this->value);
     }
 
     /**
@@ -53,4 +53,3 @@ enum ProductStatus: string
         return in_array($this, [self::ACTIVE, self::OUT_OF_STOCK]);
     }
 }
-

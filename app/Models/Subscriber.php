@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Subscriber Model
@@ -18,8 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $is_active
  * @property string|null $subscribed_at
  * @property string|null $unsubscribed_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Subscriber extends Model
 {

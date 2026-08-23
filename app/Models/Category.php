@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Spatie\Translatable\HasTranslations;
 
@@ -29,9 +32,9 @@ use Spatie\Translatable\HasTranslations;
  * @property bool $is_featured
  * @property string|null $meta_title
  * @property string|null $meta_description
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 class Category extends Model
 {
@@ -61,13 +64,13 @@ class Category extends Model
         });
 
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.id');
-            \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.en');
+            Cache::forget('featured_categories_navbar.id');
+            Cache::forget('featured_categories_navbar.en');
         });
 
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.id');
-            \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.en');
+            Cache::forget('featured_categories_navbar.id');
+            Cache::forget('featured_categories_navbar.en');
         });
     }
 
@@ -204,7 +207,7 @@ class Category extends Model
     /**
      * Get all descendant IDs including self.
      *
-     * @return \Illuminate\Support\Collection<int, int>
+     * @return Collection<int, int>
      */
     public function getDescendantIds()
     {

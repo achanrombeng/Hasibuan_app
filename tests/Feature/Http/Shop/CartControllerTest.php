@@ -158,4 +158,3 @@ describe('CartController', function () {
         expect(Cart::where('user_id', $user->id)->exists())->toBeTrue();
     });
 });
-

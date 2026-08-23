@@ -8,14 +8,20 @@ use Illuminate\Support\Facades\Log;
 class RajaOngkirService
 {
     protected string $apiKey;
+
     protected string $baseUrl;
+
     protected string $origin;
+
     protected string $defaultCouriers;
 
     // Popular couriers for furniture shipping
     public const COURIER_JNE = 'jne';
+
     public const COURIER_SICEPAT = 'sicepat';
+
     public const COURIER_JNT = 'jnt';
+
     public const COURIER_ANTERAJA = 'anteraja';
 
     public function __construct()
@@ -39,6 +45,7 @@ class RajaOngkirService
                     'status' => $response->status(),
                     'body' => $response->body(),
                 ]);
+
                 return null;
             }
 
@@ -47,6 +54,7 @@ class RajaOngkirService
             Log::error('RajaOngkir Request Exception', [
                 'message' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -64,19 +72,19 @@ class RajaOngkirService
     {
         return $this->makeRequest('get', 'destination/domestic-destination', [
             'search' => $query,
-            'limit' => 20
+            'limit' => 20,
         ]);
     }
 
     /**
      * Get shipping cost using RajaOngkir Komerce API
-     * 
+     *
      * Uses the /calculate/domestic-cost endpoint which accepts IDs from
      * the domestic-destination search endpoint
-     * 
-     * @param string $destination Destination ID from domestic-destination search
-     * @param int $weight Weight in grams
-     * @param string|null $courier Courier codes separated by colon (e.g., 'jne:sicepat:jnt')
+     *
+     * @param  string  $destination  Destination ID from domestic-destination search
+     * @param  int  $weight  Weight in grams
+     * @param  string|null  $courier  Courier codes separated by colon (e.g., 'jne:sicepat:jnt')
      * @return array|null Array of courier options with costs, or null on error
      */
     public function getCost(string $destination, int $weight, ?string $courier = null): ?array
@@ -104,12 +112,13 @@ class RajaOngkirService
                     'body' => $response->body(),
                     'params' => $params,
                 ]);
+
                 return null;
             }
 
             $data = $response->json()['data'] ?? null;
-            
-            if (!$data) {
+
+            if (! $data) {
                 return null;
             }
 
@@ -120,17 +129,18 @@ class RajaOngkirService
                 'message' => $e->getMessage(),
                 'params' => $params,
             ]);
+
             return null;
         }
     }
 
     /**
      * Transform the raw RajaOngkir Komerce response into a flat array of shipping options
-     * 
+     *
      * Komerce API returns a different format than classic RajaOngkir:
      * Each item is already a flat object with name, code, service, cost, etd
-     * 
-     * @param array $data Raw response data from RajaOngkir Komerce
+     *
+     * @param  array  $data  Raw response data from RajaOngkir Komerce
      * @return array Flat array of shipping options
      */
     protected function transformCostResponse(array $data): array
@@ -146,12 +156,12 @@ class RajaOngkirService
                 'description' => $item['description'] ?? '',
                 'cost' => $item['cost'] ?? 0,
                 'etd' => $item['etd'] ?? '-',
-                'key' => strtolower(($item['code'] ?? '') . '_' . ($item['service'] ?? '')),
+                'key' => strtolower(($item['code'] ?? '').'_'.($item['service'] ?? '')),
             ];
         }
 
         // Sort by cost (cheapest first)
-        usort($options, fn($a, $b) => $a['cost'] <=> $b['cost']);
+        usort($options, fn ($a, $b) => $a['cost'] <=> $b['cost']);
 
         return $options;
     }

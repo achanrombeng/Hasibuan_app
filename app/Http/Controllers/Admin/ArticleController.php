@@ -64,7 +64,7 @@ class ArticleController extends Controller implements HasMiddleware
         return Inertia::render('Admin/Articles/Index', [
             'articles' => $articles,
             'filters' => $request->only(['search', 'status']),
-            'statuses' => collect(ArticleStatus::cases())->map(fn($status) => [
+            'statuses' => collect(ArticleStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'label' => $status->label(),
             ]),
@@ -74,7 +74,7 @@ class ArticleController extends Controller implements HasMiddleware
     public function create(): Response
     {
         return Inertia::render('Admin/Articles/Create', [
-            'statuses' => collect(ArticleStatus::cases())->map(fn($status) => [
+            'statuses' => collect(ArticleStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'label' => $status->label(),
             ]),
@@ -113,7 +113,7 @@ class ArticleController extends Controller implements HasMiddleware
                 'meta_description' => $article->meta_description,
                 'meta_keywords' => $article->meta_keywords,
             ],
-            'statuses' => collect(ArticleStatus::cases())->map(fn($status) => [
+            'statuses' => collect(ArticleStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'label' => $status->label(),
             ]),

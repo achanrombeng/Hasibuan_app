@@ -36,10 +36,11 @@ class MidtransController extends Controller
             // Verify server key is configured
             if (empty(Config::$serverKey)) {
                 Log::error('Midtrans server key not configured');
+
                 return response()->json(['message' => 'Server configuration error'], 500);
             }
 
-            $notification = new Notification();
+            $notification = new Notification;
 
             $transactionStatus = $notification->transaction_status;
             $paymentType = $notification->payment_type;
@@ -55,8 +56,9 @@ class MidtransController extends Controller
 
             $order = Order::where('order_number', $orderId)->first();
 
-            if (!$order) {
+            if (! $order) {
                 Log::warning('Order not found for Midtrans notification', ['order_id' => $orderId]);
+
                 return response()->json(['message' => 'Order not found'], 404);
             }
 
@@ -85,6 +87,7 @@ class MidtransController extends Controller
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json(['message' => 'Error processing notification'], 500);
         }
     }

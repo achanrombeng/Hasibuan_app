@@ -10,8 +10,13 @@ use App\Http\Controllers\Shop\HomeController;
 use App\Http\Controllers\Shop\NewsletterController;
 use App\Http\Controllers\Shop\OrderController;
 use App\Http\Controllers\Shop\ProductController;
+use App\Http\Controllers\Shop\ReviewController;
 use App\Http\Controllers\Shop\WishlistController;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,14 +32,14 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
     // Homepage - Landing page with products
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/catalogs', function () {
-        $categories = \App\Models\Category::where('is_active', true)
+        $categories = Category::where('is_active', true)
             ->whereNull('parent_id')
             ->withCount('products')
             ->orderBy('sort_order')
             ->get();
 
-        return \Inertia\Inertia::render('Shop/Catalog', [
-            'categories' => \App\Http\Resources\CategoryResource::collection($categories),
+        return Inertia::render('Shop/Catalog', [
+            'categories' => CategoryResource::collection($categories),
         ]);
     })->name('catalogs');
 
@@ -44,15 +49,15 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
 
     // Categories
     Route::get('/categories', function () {
-        $categories = \App\Models\Category::where('is_active', true)
+        $categories = Category::where('is_active', true)
             ->whereNull('parent_id')
             ->with('children')
             ->withCount('products')
             ->orderBy('sort_order')
             ->get();
 
-        return \Inertia\Inertia::render('Shop/Categories/Index', [
-            'categories' => \App\Http\Resources\CategoryResource::collection($categories),
+        return Inertia::render('Shop/Categories/Index', [
+            'categories' => CategoryResource::collection($categories),
         ]);
     })->name('categories.index');
     Route::get('/category/{category:slug}', [ProductController::class, 'byCategory'])->name('products.category');
@@ -63,7 +68,7 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
     Route::get('/stock-sale', [ProductController::class, 'stockSale'])->name('products.stock-sale');
 
     // Custom Order
-    Route::get('/custom-order', fn () => \Inertia\Inertia::render('Shop/CustomOrder'))->name('custom-order');
+    Route::get('/custom-order', fn () => Inertia::render('Shop/CustomOrder'))->name('custom-order');
 
     // Articles
     Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
@@ -71,8 +76,9 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
 
     // Static Pages
     Route::get('/about', function () {
-        $settings = \App\Models\Setting::all()->pluck('value', 'key')->toArray();
-        return \Inertia\Inertia::render('Shop/About', [
+        $settings = Setting::all()->pluck('value', 'key')->toArray();
+
+        return Inertia::render('Shop/About', [
             'aboutSettings' => [
                 'hero_title' => $settings['about_hero_title'] ?? 'Welcome to Ronica Outdoor Furniture',
                 'hero_subtitle' => $settings['about_hero_subtitle'] ?? 'Delivering premium quality furniture with the touch of traditional Indonesian craftsmanship',
@@ -94,21 +100,21 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
         ]);
     })->name('about');
 
-    Route::get('/dealer', fn () => \Inertia\Inertia::render('Shop/Dealer'))->name('dealer');
-    Route::get('/contact', fn () => \Inertia\Inertia::render('Shop/Contact'))->name('contact');
-    Route::get('/faq', fn () => \Inertia\Inertia::render('Shop/FAQ'))->name('faq');
-    Route::get('/privacy-policy', fn () => \Inertia\Inertia::render('Shop/PrivacyPolicy'))->name('privacy');
-    Route::get('/terms', fn () => \Inertia\Inertia::render('Shop/Terms'))->name('terms');
-    Route::get('/shipping-policy', fn () => \Inertia\Inertia::render('Shop/ShippingPolicy'))->name('shipping');
-    Route::get('/return-policy', fn () => \Inertia\Inertia::render('Shop/ReturnPolicy'))->name('returns');
+    Route::get('/dealer', fn () => Inertia::render('Shop/Dealer'))->name('dealer');
+    Route::get('/contact', fn () => Inertia::render('Shop/Contact'))->name('contact');
+    Route::get('/faq', fn () => Inertia::render('Shop/FAQ'))->name('faq');
+    Route::get('/privacy-policy', fn () => Inertia::render('Shop/PrivacyPolicy'))->name('privacy');
+    Route::get('/terms', fn () => Inertia::render('Shop/Terms'))->name('terms');
+    Route::get('/shipping-policy', fn () => Inertia::render('Shop/ShippingPolicy'))->name('shipping');
+    Route::get('/return-policy', fn () => Inertia::render('Shop/ReturnPolicy'))->name('returns');
 
     // Compare Products
     // Compare Products
     Route::get('/compare', [ProductController::class, 'compare'])->name('products.compare');
 
     // Reviews
-    Route::post('/products/{product}/reviews', [\App\Http\Controllers\Shop\ReviewController::class, 'store'])->name('products.reviews.store');
-    Route::put('/products/{product}/reviews', [\App\Http\Controllers\Shop\ReviewController::class, 'update'])->name('products.reviews.update');
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('products.reviews.store');
+    Route::put('/products/{product}/reviews', [ReviewController::class, 'update'])->name('products.reviews.update');
 
     // Newsletter
     Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');

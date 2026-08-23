@@ -98,6 +98,24 @@ class HomeController extends Controller
         $carouselBanners = json_decode(Setting::get('carousel_banners', '[]'), true) ?? [];
         usort($carouselBanners, fn ($a, $b) => ($a['sort_order'] ?? 0) - ($b['sort_order'] ?? 0));
 
+        // Craftsmanship Settings (with locale support)
+        $craftsmanshipSettings = [
+            'title_1' => Setting::get("craftsmanship_title_1_{$locale}", Setting::get('craftsmanship_title_1', 'Handcrafted, Unique Touch')),
+            'desc_1' => Setting::get("craftsmanship_desc_1_{$locale}", Setting::get('craftsmanship_desc_1', 'Hand-woven traditional rattan forms the soul of Ronica furniture, reflecting craftsmanship passed down through generations of master artisans. This finely woven natural material not only adds aesthetic elegance but also gives our furniture a breathing, durable structure and timeless character.')),
+            'images_1' => json_decode(Setting::get('craftsmanship_images_1', json_encode([
+                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1200&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop',
+            ])), true) ?? [],
+            'title_2' => Setting::get("craftsmanship_title_2_{$locale}", Setting::get('craftsmanship_title_2', 'Strength of Nature, Timeless Elegance')),
+            'desc_2' => Setting::get("craftsmanship_desc_2_{$locale}", Setting::get('craftsmanship_desc_2', 'The premium teak wood used in our furniture is one of nature\'s most durable and cherished materials. Rich in natural protective oils, it offers superior resistance against moisture, intense sunlight, and outdoor weather elements. As years pass, its texture and warm tone grow even more beautiful.')),
+            'images_2' => json_decode(Setting::get('craftsmanship_images_2', json_encode([
+                'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop',
+            ])), true) ?? [],
+        ];
+
         // Page-specific Site Settings for SEO (siteSettings is shared via middleware)
         $pageSiteSettings = [
             'name' => Setting::get('site_name', 'Ronica'),
@@ -110,12 +128,19 @@ class HomeController extends Controller
             'hero' => filter_var(Setting::get('section_hero_visible', '0'), FILTER_VALIDATE_BOOLEAN),
             'trust' => filter_var(Setting::get('section_trust_visible', '0'), FILTER_VALIDATE_BOOLEAN),
             'categories' => filter_var(Setting::get('section_categories_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+            'craftsmanship' => filter_var(Setting::get('section_craftsmanship_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'catalog' => filter_var(Setting::get('section_catalog_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'values' => filter_var(Setting::get('section_values_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'products' => filter_var(Setting::get('section_products_visible', '0'), FILTER_VALIDATE_BOOLEAN),
             'testimonials' => filter_var(Setting::get('section_testimonials_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'articles' => filter_var(Setting::get('section_articles_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'newsletter' => filter_var(Setting::get('section_newsletter_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+        ];
+
+        $valuesSettings = [
+            'badge' => Setting::get("values_badge_{$locale}", Setting::get('values_badge', $locale === 'en' ? 'WHY CHOOSE US' : 'MENGAPA MEMILIH KAMI')),
+            'title' => Setting::get("values_title_{$locale}", Setting::get('values_title', $locale === 'en' ? 'Our Philosophy' : 'Filosofi Kami')),
+            'values' => $values ?? [],
         ];
 
         return Inertia::render('Shop/Home', [
@@ -125,9 +150,11 @@ class HomeController extends Controller
             'articles' => ArticleResource::collection($recentArticles),
             'testimonials' => $testimonials,
             'heroSettings' => $heroSettings,
+            'craftsmanshipSettings' => $craftsmanshipSettings,
             'carouselBanners' => $carouselBanners,
             'trustLogos' => $trustLogos,
             'values' => $values,
+            'valuesSettings' => $valuesSettings,
             'pageSiteSettings' => $pageSiteSettings,
             'sectionVisibility' => $sectionVisibility,
         ]);

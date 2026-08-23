@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     // Address management
     Route::get('settings/addresses', function () {
         $addresses = auth()->user()->addresses()->orderByDesc('is_default')->get();
+
         return Inertia::render('settings/addresses', [
             'addresses' => $addresses->map(function ($addr) {
                 return [
@@ -52,4 +53,3 @@ Route::middleware('auth')->group(function () {
     Route::delete('settings/addresses/{address}', [AddressController::class, 'destroy'])->name('settings.addresses.destroy');
     Route::post('settings/addresses/{address}/set-default', [AddressController::class, 'setDefault'])->name('settings.addresses.set-default');
 });
-

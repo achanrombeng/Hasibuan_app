@@ -121,6 +121,7 @@ class CartController extends Controller
             if ($request->wantsJson()) {
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
+
             return back()->with('error', __('messages.unauthorized'));
         }
 

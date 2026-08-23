@@ -15,4 +15,3 @@ class UpdateCartItemAction
         return $cartItem->fresh();
     }
 }
-

@@ -6,6 +6,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class NonFurnitureImageException extends RuntimeException
-{
-}
+class NonFurnitureImageException extends RuntimeException {}

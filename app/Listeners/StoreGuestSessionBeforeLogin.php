@@ -15,7 +15,7 @@ class StoreGuestSessionBeforeLogin
     public function handle(Attempting $event): void
     {
         // Only store if not already authenticated and not already stored
-        if (!auth()->check() && !session()->has('guest_cart_session_id')) {
+        if (! auth()->check() && ! session()->has('guest_cart_session_id')) {
             session()->put('guest_cart_session_id', session()->getId());
         }
     }

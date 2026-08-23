@@ -8,10 +8,13 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\NewOrderNotification;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class CreateOrderAction
@@ -52,7 +55,7 @@ class CreateOrderAction
             ]);
 
             // Create order items from cart
-            /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\CartItem> $cartItems */
+            /** @var Collection<int, CartItem> $cartItems */
             $cartItems = $cart->items;
 
             foreach ($cartItems as $cartItem) {
@@ -73,7 +76,7 @@ class CreateOrderAction
             $order->load('items');
             $admins = User::role('admin')->get();
             foreach ($admins as $admin) {
-                $admin->notify(new \App\Notifications\NewOrderNotification($order));
+                $admin->notify(new NewOrderNotification($order));
             }
 
             return $order->fresh()->load('items');

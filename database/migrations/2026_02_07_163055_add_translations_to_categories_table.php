@@ -34,7 +34,7 @@ return new class extends Migration
             DB::statement('ALTER TABLE categories MODIFY description JSON');
             DB::statement('ALTER TABLE categories MODIFY meta_title JSON');
             DB::statement('ALTER TABLE categories MODIFY meta_description JSON');
-        } else if (in_array($driver, ['pgsql', 'postgres'])) {
+        } elseif (in_array($driver, ['pgsql', 'postgres'])) {
             DB::statement('ALTER TABLE categories ALTER COLUMN name TYPE jsonb USING name::jsonb');
             DB::statement('ALTER TABLE categories ALTER COLUMN description TYPE jsonb USING description::jsonb');
             DB::statement('ALTER TABLE categories ALTER COLUMN meta_title TYPE jsonb USING meta_title::jsonb');

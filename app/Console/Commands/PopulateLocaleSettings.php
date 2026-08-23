@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class PopulateLocaleSettings extends Command
 {
     protected $signature = 'settings:populate-locale';
+
     protected $description = 'Populate locale-specific settings for hero section';
 
     public function handle()

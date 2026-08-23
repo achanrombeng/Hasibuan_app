@@ -22,7 +22,7 @@ class ReviewController extends Controller
             ->with(['user', 'product.images'])
             ->paginate(15);
 
-        $reviews = collect($paginator->items())->map(fn(ProductReview $review) => [
+        $reviews = collect($paginator->items())->map(fn (ProductReview $review) => [
             'id' => $review->id,
             'user' => $review->user ? [
                 'id' => $review->user->id,
@@ -68,4 +68,3 @@ class ReviewController extends Controller
         return back()->with('success', __('messages.review_deleted'));
     }
 }
-

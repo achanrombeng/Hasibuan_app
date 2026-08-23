@@ -18,9 +18,8 @@ class UpdateAdminOrderAction
     /**
      * Execute admin order update logic.
      *
-     * @param Order $order
-     * @param array $validated Validated request data
-     * @return void
+     * @param  array  $validated  Validated request data
+     *
      * @throws \RuntimeException|\InvalidArgumentException
      */
     public function execute(Order $order, array $validated): void
@@ -28,9 +27,10 @@ class UpdateAdminOrderAction
         // 1. Handle Cancellation
         if (isset($validated['status']) && $validated['status'] === OrderStatus::CANCELLED->value) {
             $this->cancelAction->execute(
-                $order, 
+                $order,
                 $validated['cancellation_reason'] ?? 'Dibatalkan oleh admin'
             );
+
             return; // Stop here if cancelled
         }
 
@@ -46,7 +46,7 @@ class UpdateAdminOrderAction
         // 3. Handle Payment Status Update
         if (isset($validated['payment_status'])) {
             $newPaymentStatus = PaymentStatus::from($validated['payment_status']);
-            
+
             // Only update if changed
             if ($order->payment_status !== $newPaymentStatus) {
                 $order->update([

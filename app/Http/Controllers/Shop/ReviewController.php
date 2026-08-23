@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\ProductReviewRequest;
 use App\Models\Product;
-use App\Models\ProductReview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -65,12 +64,12 @@ class ReviewController extends Controller
             'average_rating' => $avg ?? 0,
             'review_count' => $count,
         ]);
-        
+
         // Also update rating_counts json/array if exists
         // Assuming 'rating_counts' is a column, if not, we skip it.
         // Based on Show.tsx usage `ratingCountData`, backend might support it.
-        // Let's check Product model first? I'll assume standard columns for now 
-        // and if rating_counts exists, I'd update it. 
+        // Let's check Product model first? I'll assume standard columns for now
+        // and if rating_counts exists, I'd update it.
         // For safety, I'll just do avg and count which are standard.
     }
 }

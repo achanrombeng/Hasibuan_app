@@ -55,7 +55,7 @@ return new class extends Migration
             DB::statement('ALTER TABLE products MODIFY meta_description JSON');
             DB::statement('ALTER TABLE products MODIFY material JSON');
             DB::statement('ALTER TABLE products MODIFY color JSON');
-        } else if (in_array($driver, ['pgsql', 'postgres'])) {
+        } elseif (in_array($driver, ['pgsql', 'postgres'])) {
             DB::statement('ALTER TABLE products ALTER COLUMN name TYPE jsonb USING name::jsonb');
             DB::statement('ALTER TABLE products ALTER COLUMN short_description TYPE jsonb USING short_description::jsonb');
             DB::statement('ALTER TABLE products ALTER COLUMN description TYPE jsonb USING description::jsonb');

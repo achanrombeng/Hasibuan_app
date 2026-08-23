@@ -13,4 +13,3 @@ class RemoveFromCartAction
         return (bool) $cartItem->delete();
     }
 }
-

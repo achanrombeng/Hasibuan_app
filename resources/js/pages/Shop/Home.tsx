@@ -19,12 +19,19 @@ export default function Home({
   articles,
   testimonials,
   heroSettings,
+  craftsmanshipSettings,
   trustLogos,
   values,
+  valuesSettings,
   pageSiteSettings,
   carouselBanners,
   sectionVisibility,
-}: HomePageProps & { landingCategories: any; categories?: any; articles?: any; sectionVisibility?: any }) {
+}: HomePageProps & {
+  landingCategories: any;
+  categories?: any;
+  articles?: any;
+  sectionVisibility?: any;
+}) {
   const [bannerVisible, setBannerVisible] = useState(false);
   // Get shared siteSettings with contact info
   const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
@@ -110,12 +117,16 @@ export default function Home({
           <LandingView
             featuredProducts={featuredProducts.data}
             featuredCategories={landingCategories.data}
-            categories={categories?.data || categories || landingCategories?.data}
+            categories={
+              categories?.data || categories || landingCategories?.data
+            }
             articles={articles?.data || articles}
             testimonials={testimonials}
             heroSettings={heroSettings}
+            craftsmanshipSettings={craftsmanshipSettings}
             trustLogos={trustLogos}
             values={values}
+            valuesSettings={valuesSettings}
             carouselBanners={carouselBanners}
             sectionVisibility={sectionVisibility}
           />{' '}

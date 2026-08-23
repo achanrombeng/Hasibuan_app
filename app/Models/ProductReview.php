@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Notifications\NewReviewNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * ProductReview Model
@@ -23,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $comment
  * @property bool $is_verified_purchase
  * @property bool $is_approved
- * @property \Illuminate\Support\Carbon|null $approved_at
+ * @property Carbon|null $approved_at
  */
 class ProductReview extends Model
 {
@@ -36,7 +38,7 @@ class ProductReview extends Model
             // Notify all admin users about new review
             $admins = User::role('admin')->get();
             foreach ($admins as $admin) {
-                $admin->notify(new \App\Notifications\NewReviewNotification($review));
+                $admin->notify(new NewReviewNotification($review));
             }
         });
 

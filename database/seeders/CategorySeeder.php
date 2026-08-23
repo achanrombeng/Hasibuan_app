@@ -38,7 +38,7 @@ class CategorySeeder extends Seeder
                     'is_active' => true,
                     'is_featured' => $categoryData['is_featured'],
                     'sort_order' => $sortOrder++,
-                    'meta_title' => $categoryData['name'] . ' - Ronica Outdoor Furniture',
+                    'meta_title' => $categoryData['name'].' - Ronica Outdoor Furniture',
                     'meta_description' => $categoryData['description'],
                 ]
             );

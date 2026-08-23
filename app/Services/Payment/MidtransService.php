@@ -67,19 +67,19 @@ class MidtransService
 
         // Add/Subtract Discount (Midtrans doesn't support negative distinct item, so we might need to adjust logic or just send gross amount if simple)
         // Best practice: Ensure sum of items equals `gross_amount`
-        
-        // Note: For simplicity and to avoid rounding issues, if discount exists, we might need to distribute it or send as negative item if allowed? 
-        // Midtrans DOES NOT support negative prices. 
+
+        // Note: For simplicity and to avoid rounding issues, if discount exists, we might need to distribute it or send as negative item if allowed?
+        // Midtrans DOES NOT support negative prices.
         // Strategy: Verify totals matching. If not matching, simplistic approach is sending only transaction_details (no item_details),
-        // but for better UX we want item details. 
+        // but for better UX we want item details.
         // Alternative: Just send Shipping Cost.
-        
-        // Let's stick to simple transaction_details first to ensure success, 
+
+        // Let's stick to simple transaction_details first to ensure success,
         // OR handle logic strictly.
-        
-        // For now, let's include basic items. 
+
+        // For now, let's include basic items.
         // IMPORTANT: Midtrans compares sum(items) vs gross_amount. MUST MATCH.
-        
+
         return $items;
     }
 }

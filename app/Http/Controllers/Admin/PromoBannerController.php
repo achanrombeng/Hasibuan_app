@@ -12,8 +12,8 @@ use App\Http\Requests\Admin\PromoBannerStoreRequest;
 use App\Http\Requests\Admin\PromoBannerUpdateRequest;
 use App\Http\Resources\PromoBannerResource;
 use App\Models\PromoBanner;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
@@ -86,7 +86,7 @@ class PromoBannerController extends Controller implements HasMiddleware
     public function toggleActive(PromoBanner $promoBanner): JsonResponse
     {
         $promoBanner->update([
-            'is_active' => !$promoBanner->is_active,
+            'is_active' => ! $promoBanner->is_active,
         ]);
 
         return response()->json([

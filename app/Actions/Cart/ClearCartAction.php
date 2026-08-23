@@ -13,4 +13,3 @@ class ClearCartAction
         return (bool) $cart->items()->delete();
     }
 }
-

@@ -226,6 +226,7 @@ export interface HeroSettings {
 export interface CarouselBannerSlide {
     id: string;
     image_url: string;
+    media_type?: 'image' | 'video';
     link?: string;
     sort_order: number;
 }
@@ -253,13 +254,30 @@ export interface HomeSiteSettings {
     whatsapp: string;
 }
 
+export interface CraftsmanshipSettings {
+    title_1: string;
+    desc_1: string;
+    images_1: string[];
+    title_2: string;
+    desc_2: string;
+    images_2: string[];
+}
+
+export interface ValuesSettings {
+    badge: string;
+    title: string;
+    values: HomeValue[];
+}
+
 export interface HomePageProps {
     featuredProducts: { data: ApiProduct[] };
     featuredCategories: { data: ApiCategory[] };
     testimonials: HomeTestimonial[];
     heroSettings: HeroSettings;
+    craftsmanshipSettings?: CraftsmanshipSettings;
     trustLogos: string[];
     values: HomeValue[];
+    valuesSettings?: ValuesSettings;
     pageSiteSettings: HomeSiteSettings;
     carouselBanners: CarouselBannerSlide[];
 }

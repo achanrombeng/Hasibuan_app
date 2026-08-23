@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductReview;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 describe('Product Model', function () {
     it('can be created with factory', function () {
@@ -38,10 +39,10 @@ describe('Product Model', function () {
 
     it('has many reviews', function () {
         // Create role to prevent observer failure
-        if (! \Spatie\Permission\Models\Role::where('name', 'admin')->exists()) {
-            \Spatie\Permission\Models\Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        if (! Role::where('name', 'admin')->exists()) {
+            Role::create(['name' => 'admin', 'guard_name' => 'web']);
         }
-        
+
         $product = Product::factory()->create();
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
@@ -67,7 +68,7 @@ describe('Product Model', function () {
     it('calculates final price with discount', function () {
         $product = Product::factory()->create([
             'price' => 1000000,
-            'sale_type' => \App\Enums\SaleType::HOT_SALE,
+            'sale_type' => SaleType::HOT_SALE,
             'discount_percentage' => 20,
             'discount_starts_at' => now()->subDay(),
             'discount_ends_at' => now()->addDay(),
@@ -157,4 +158,3 @@ describe('Product Model', function () {
             ->and($product->formatted_price)->toContain('Rp');
     });
 });
-

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NotificationController extends Controller
@@ -37,12 +36,14 @@ class NotificationController extends Controller
     public function markAllRead()
     {
         auth()->user()->unreadNotifications->markAsRead();
+
         return back();
     }
 
     public function clearAll()
     {
         auth()->user()->notifications()->delete();
+
         return back()->with('success', __('messages.notifications_cleared'));
     }
 }

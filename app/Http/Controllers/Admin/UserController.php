@@ -27,7 +27,7 @@ class UserController extends Controller
             ->paginate($request->input('per_page', 15))
             ->onEachSide(1)
             ->withQueryString()
-            ->through(fn(User $user) => [
+            ->through(fn (User $user) => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -86,7 +86,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', Password::defaults()],
             'role' => ['required', 'string', 'exists:roles,name'],
         ]);
@@ -96,7 +96,7 @@ class UserController extends Controller
             'email' => $validated['email'],
         ]);
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $user->update(['password' => Hash::make($validated['password'])]);
         }
 
@@ -116,4 +116,3 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', __('messages.user_deleted'));
     }
 }
-

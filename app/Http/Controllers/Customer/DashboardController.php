@@ -37,7 +37,7 @@ class DashboardController extends Controller
             ->map(fn (Order $order) => [
                 'id' => $order->id,
                 'order_number' => $order->order_number,
-                'total' => 'Rp ' . number_format($order->total, 0, ',', '.'),
+                'total' => 'Rp '.number_format($order->total, 0, ',', '.'),
                 'status' => [
                     'value' => $order->status->value,
                     'label' => $order->status->label(),
@@ -54,11 +54,10 @@ class DashboardController extends Controller
                 'totalOrders' => $totalOrders,
                 'pendingOrders' => $pendingOrders,
                 'completedOrders' => $completedOrders,
-                'totalSpent' => 'Rp ' . number_format($totalSpent, 0, ',', '.'),
+                'totalSpent' => 'Rp '.number_format($totalSpent, 0, ',', '.'),
                 'wishlistCount' => $wishlistCount,
             ],
             'recentOrders' => $recentOrders,
         ]);
     }
 }
-

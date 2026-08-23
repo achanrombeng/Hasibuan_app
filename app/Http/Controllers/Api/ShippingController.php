@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\Shipping\RajaOngkirService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ShippingController extends Controller
 {
@@ -19,24 +19,25 @@ class ShippingController extends Controller
     public function provinces(): JsonResponse
     {
         $provinces = $this->rajaOngkir->getProvinces();
+
         return response()->json($provinces);
     }
 
     public function search(Request $request): JsonResponse
     {
         $query = $request->query('search');
-        if (!$query) {
+        if (! $query) {
             return response()->json([]);
         }
-        
+
         $destinations = $this->rajaOngkir->searchDestination($query);
+
         return response()->json($destinations);
     }
 
     /**
      * Calculate shipping cost for multiple couriers
-     * 
-     * @param Request $request
+     *
      * @return JsonResponse Returns array of shipping options with cost, ETD, etc.
      */
     public function cost(Request $request): JsonResponse

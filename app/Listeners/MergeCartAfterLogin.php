@@ -19,7 +19,7 @@ class MergeCartAfterLogin
 
         if ($oldSessionId) {
             // Merge guest cart to user cart
-            $action = new MergeCartsAction();
+            $action = new MergeCartsAction;
             $action->execute($event->user, $oldSessionId);
         }
     }

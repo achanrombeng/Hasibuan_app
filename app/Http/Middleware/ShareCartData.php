@@ -35,11 +35,11 @@ class ShareCartData
             'items' => $cart->items->map(function ($item) {
                 // Use final_price which already includes discount calculation
                 $price = $item->product->final_price;
-                
+
                 // Get primary image from loaded images relation
-                $primaryImage = $item->product->images->firstWhere('is_primary', true) 
+                $primaryImage = $item->product->images->firstWhere('is_primary', true)
                     ?? $item->product->images->first();
-                
+
                 return [
                     'id' => $item->id,
                     'product_id' => $item->product_id,
@@ -55,7 +55,7 @@ class ShareCartData
                         'has_discount' => $item->product->hasActiveDiscount(),
                         'discount_percentage' => $item->product->discount_percentage,
                         'primary_image' => $primaryImage ? [
-                            'image_url' => asset('storage/' . $primaryImage->image_path),
+                            'image_url' => asset('storage/'.$primaryImage->image_path),
                         ] : null,
                         'category' => $item->product->category ? [
                             'name' => $item->product->category->name,

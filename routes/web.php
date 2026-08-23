@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\Shop\HomeController;
 use App\Http\Controllers\SitemapController;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -17,9 +20,9 @@ Route::get('/debug-locale', function () {
         'cookie_locale' => request()->cookie('locale'),
         'config_locale' => config('app.locale'),
         'settings' => [
-            'hero_badge_id' => \App\Models\Setting::get('hero_badge_id'),
-            'hero_badge_en' => \App\Models\Setting::get('hero_badge_en'),
-            'hero_badge' => \App\Models\Setting::get('hero_badge'),
+            'hero_badge_id' => Setting::get('hero_badge_id'),
+            'hero_badge_en' => Setting::get('hero_badge_en'),
+            'hero_badge' => Setting::get('hero_badge'),
         ],
     ]);
 });
@@ -27,7 +30,7 @@ Route::get('/debug-locale', function () {
 // Quick populate route - BACKUP (remove after testing)
 Route::get('/quick-populate', function () {
     $token = config('app.artisan_token');
-    if (!$token || request()->input('token') !== $token) {
+    if (! $token || request()->input('token') !== $token) {
         abort(403, 'Unauthorized');
     }
 
@@ -70,12 +73,12 @@ Route::get('/quick-populate', function () {
 
         $updated = [];
         foreach ($settings as $key => $value) {
-            \App\Models\Setting::set($key, $value);
+            Setting::set($key, $value);
             $updated[] = $key;
         }
 
         // Clear cache
-        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        Artisan::call('cache:clear');
 
         return response()->json([
             'success' => true,
@@ -83,7 +86,7 @@ Route::get('/quick-populate', function () {
             'updated_settings' => $updated,
             'count' => count($settings),
         ]);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return response()->json([
             'success' => false,
             'error' => $e->getMessage(),
@@ -94,8 +97,8 @@ Route::get('/quick-populate', function () {
     }
 });
 
-// Redirect root to shop homepage
-Route::get('/', fn() => redirect()->route('shop.home'))->name('home');
+// Root route - displays shop homepage
+Route::get('/', [HomeController::class, 'index'])->middleware('share.cart')->name('home');
 
 // Sitemap Routes
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
@@ -116,6 +119,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin', 'manager', 'staff'])) {
             return redirect('/admin');
         }
+
         return app(DashboardController::class)->index(request());
     })->name('dashboard');
 });

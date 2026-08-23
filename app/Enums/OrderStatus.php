@@ -22,7 +22,7 @@ enum OrderStatus: string
      */
     public function label(): string
     {
-        return __('enums.order_status.' . $this->value);
+        return __('enums.order_status.'.$this->value);
     }
 
     /**

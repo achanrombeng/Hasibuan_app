@@ -12,7 +12,7 @@ enum ArticleStatus: string
 
     public function label(): string
     {
-        return __('enums.article_status.' . $this->value);
+        return __('enums.article_status.'.$this->value);
     }
 
     public function color(): string

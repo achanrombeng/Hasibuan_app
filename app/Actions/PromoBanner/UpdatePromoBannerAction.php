@@ -9,7 +9,7 @@ use App\Models\PromoBanner;
 class UpdatePromoBannerAction
 {
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function execute(PromoBanner $promoBanner, array $data): PromoBanner
     {

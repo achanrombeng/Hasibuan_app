@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Actions\Translation\AutoTranslateModel;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\PromoBanner;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -34,7 +37,8 @@ class TranslateContentCommand extends Command
 
         if (empty($models)) {
             $this->error("Invalid model: {$modelArg}");
-            $this->info("Valid options: products, categories, promo_banners, all");
+            $this->info('Valid options: products, categories, promo_banners, all');
+
             return self::FAILURE;
         }
 
@@ -60,7 +64,7 @@ class TranslateContentCommand extends Command
                 } catch (\Exception $e) {
                     $failed++;
                     Log::error("Failed to translate {$modelName} ID {$record->id}", [
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ]);
                 }
                 $bar->advance();
@@ -69,14 +73,14 @@ class TranslateContentCommand extends Command
             $bar->finish();
             $this->newLine();
 
-            $this->info("✓ Translated {$translated} {$modelName}" . ($failed > 0 ? " ({$failed} failed)" : ""));
+            $this->info("✓ Translated {$translated} {$modelName}".($failed > 0 ? " ({$failed} failed)" : ''));
 
             $totalTranslated += $translated;
             $totalFailed += $failed;
         }
 
         $this->newLine();
-        $this->info("Translation complete!");
+        $this->info('Translation complete!');
         $this->info("Total translated: {$totalTranslated}");
         if ($totalFailed > 0) {
             $this->warn("Total failed: {$totalFailed}");
@@ -91,9 +95,9 @@ class TranslateContentCommand extends Command
     protected function getModelsToTranslate(string $arg): array
     {
         $allModels = [
-            'products' => \App\Models\Product::class,
-            'categories' => \App\Models\Category::class,
-            'promo_banners' => \App\Models\PromoBanner::class,
+            'products' => Product::class,
+            'categories' => Category::class,
+            'promo_banners' => PromoBanner::class,
         ];
 
         if ($arg === 'all') {

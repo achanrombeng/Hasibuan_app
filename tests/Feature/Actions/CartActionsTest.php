@@ -18,7 +18,7 @@ describe('AddToCartAction', function () {
             'price' => 100000,
             'discount_percentage' => null, // No discount
         ]);
-        $action = new AddToCartAction();
+        $action = new AddToCartAction;
 
         $cartItem = $action->execute($product, 2, null, 'test-session');
 
@@ -32,7 +32,7 @@ describe('AddToCartAction', function () {
     it('creates new cart for user', function () {
         $user = User::factory()->create();
         $product = Product::factory()->create(['price' => 150000]);
-        $action = new AddToCartAction();
+        $action = new AddToCartAction;
 
         $cartItem = $action->execute($product, 1, $user, 'test-session');
 
@@ -44,7 +44,7 @@ describe('AddToCartAction', function () {
         $user = User::factory()->create();
         $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create(['price' => 100000]);
-        $action = new AddToCartAction();
+        $action = new AddToCartAction;
 
         $cartItem = $action->execute($product, 3, $user, 'test-session');
 
@@ -62,7 +62,7 @@ describe('AddToCartAction', function () {
             'quantity' => 2,
         ]);
 
-        $action = new AddToCartAction();
+        $action = new AddToCartAction;
         $cartItem = $action->execute($product, 3, $user, 'test-session');
 
         expect($cartItem->quantity)->toBe(5)
@@ -80,7 +80,7 @@ describe('UpdateCartItemAction', function () {
             'quantity' => 2,
         ]);
 
-        $action = new UpdateCartItemAction();
+        $action = new UpdateCartItemAction;
         $action->execute($cartItem, 5);
 
         expect($cartItem->fresh()->quantity)->toBe(5);
@@ -96,7 +96,7 @@ describe('RemoveFromCartAction', function () {
             'product_id' => $product->id,
         ]);
 
-        $action = new RemoveFromCartAction();
+        $action = new RemoveFromCartAction;
         $action->execute($cartItem);
 
         expect(CartItem::find($cartItem->id))->toBeNull();
@@ -120,7 +120,7 @@ describe('ClearCartAction', function () {
             'product_id' => Product::factory()->create()->id,
         ]);
 
-        $action = new ClearCartAction();
+        $action = new ClearCartAction;
         $action->execute($cart);
 
         expect($cart->items()->count())->toBe(0);
@@ -154,11 +154,10 @@ describe('MergeCartsAction', function () {
             'unit_price' => 200000,
         ]);
 
-        $action = new MergeCartsAction();
+        $action = new MergeCartsAction;
         $mergedCart = $action->execute($user, 'guest-session');
 
         expect($mergedCart->items)->toHaveCount(2)
             ->and(Cart::where('session_id', 'guest-session')->exists())->toBeFalse();
     });
 });
-

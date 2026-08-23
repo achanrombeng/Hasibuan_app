@@ -14,8 +14,9 @@ class DeleteCategoryAction
     /**
      * Delete a category with option to cascade delete children
      *
-     * @param Category $category The category to delete
-     * @param bool $cascadeChildren If true, delete all children recursively
+     * @param  Category  $category  The category to delete
+     * @param  bool  $cascadeChildren  If true, delete all children recursively
+     *
      * @throws InvalidArgumentException If category has products or children (when cascade is false)
      */
     public function execute(Category $category, bool $cascadeChildren = true): bool
@@ -28,7 +29,7 @@ class DeleteCategoryAction
         return DB::transaction(function () use ($category, $cascadeChildren) {
             // Handle children
             if ($category->children()->exists()) {
-                if (!$cascadeChildren) {
+                if (! $cascadeChildren) {
                     throw new InvalidArgumentException('Kategori tidak dapat dihapus karena masih memiliki sub-kategori.');
                 }
 

@@ -10,7 +10,6 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\PromoBanner;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,7 +46,7 @@ class DashboardController extends Controller
         $recentOrders = Order::with('user')
             ->latest()
             ->paginate(5, ['*'], 'orders_page')
-            ->through(fn(Order $order) => [
+            ->through(fn (Order $order) => [
                 'id' => $order->id,
                 'order_number' => $order->order_number,
                 'customer' => $order->user?->name ?? $order->shipping_name,
@@ -61,7 +60,7 @@ class DashboardController extends Controller
             ->whereColumn('stock_quantity', '<=', 'low_stock_threshold')
             ->orderBy('stock_quantity')
             ->paginate(5, ['*'], 'products_page')
-            ->through(fn(Product $product) => [
+            ->through(fn (Product $product) => [
                 'id' => $product->id,
                 'name' => $product->name,
                 'stock' => $product->stock_quantity,
@@ -84,4 +83,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

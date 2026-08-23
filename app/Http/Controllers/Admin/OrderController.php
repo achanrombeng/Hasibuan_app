@@ -12,9 +12,9 @@ use App\Http\Requests\Admin\OrderUpdateRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\Query\OrderQuery;
-use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -41,11 +41,11 @@ class OrderController extends Controller implements HasMiddleware
         return Inertia::render('Admin/Orders/Index', [
             'orders' => OrderResource::collection($orders),
             'filters' => $request->only(['filter', 'sort']),
-            'statuses' => collect(OrderStatus::cases())->map(fn($status) => [
+            'statuses' => collect(OrderStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'name' => $status->label(),
             ])->all(),
-            'paymentStatuses' => collect(PaymentStatus::cases())->map(fn($status) => [
+            'paymentStatuses' => collect(PaymentStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'name' => $status->label(),
             ])->all(),
@@ -58,11 +58,11 @@ class OrderController extends Controller implements HasMiddleware
 
         return Inertia::render('Admin/Orders/Show', [
             'order' => (new OrderResource($order))->resolve(),
-            'statuses' => collect(OrderStatus::cases())->map(fn($status) => [
+            'statuses' => collect(OrderStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'name' => $status->label(),
             ])->all(),
-            'paymentStatuses' => collect(PaymentStatus::cases())->map(fn($status) => [
+            'paymentStatuses' => collect(PaymentStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'name' => $status->label(),
             ])->all(),

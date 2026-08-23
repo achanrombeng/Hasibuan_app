@@ -71,4 +71,3 @@ describe('Category Model', function () {
             ->and($categories->last()->name)->toBe('Third');
     });
 });
-

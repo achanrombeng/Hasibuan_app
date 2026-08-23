@@ -112,6 +112,8 @@ class SettingsController extends Controller
                     ['name' => 'Forbes Indonesia', 'logo_url' => ''],
                 ]),
                 // Values (JSON array, locale-aware)
+                'values_badge' => $settings["values_badge_{$locale}"] ?? $settings['values_badge'] ?? ($locale === 'en' ? 'WHY CHOOSE US' : 'MENGAPA MEMILIH KAMI'),
+                'values_title' => $settings["values_title_{$locale}"] ?? $settings['values_title'] ?? ($locale === 'en' ? 'Our Philosophy' : 'Filosofi Kami'),
                 'home_values' => $settings["home_values_{$locale}"] ?? $settings['home_values'] ?? json_encode([
                     ['icon' => 'leaf', 'title' => 'Bahan Berkelanjutan', 'desc' => 'Setiap produk menggunakan kayu dari hutan yang dikelola secara bertanggung jawab dan bahan daur ulang.'],
                     ['icon' => 'truck', 'title' => 'Gratis Pengiriman', 'desc' => 'Pengiriman gratis untuk pembelian di atas Rp 5 juta ke seluruh Indonesia.'],
@@ -119,11 +121,27 @@ class SettingsController extends Controller
                 ]),
                 // Carousel Banners (JSON array, not locale-specific)
                 'carousel_banners' => $settings['carousel_banners'] ?? json_encode([]),
+                // Craftsmanship Section (locale-aware)
+                'craftsmanship_title_1' => $settings["craftsmanship_title_1_{$locale}"] ?? $settings['craftsmanship_title_1'] ?? 'Handcrafted, Unique Touch',
+                'craftsmanship_desc_1' => $settings["craftsmanship_desc_1_{$locale}"] ?? $settings['craftsmanship_desc_1'] ?? 'Hand-woven traditional rattan forms the soul of Ronica furniture, reflecting craftsmanship passed down through generations of master artisans. This finely woven natural material not only adds aesthetic elegance but also gives our furniture a breathing, durable structure and timeless character.',
+                'craftsmanship_images_1' => $settings['craftsmanship_images_1'] ?? json_encode([
+                    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1200&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop',
+                ]),
+                'craftsmanship_title_2' => $settings["craftsmanship_title_2_{$locale}"] ?? $settings['craftsmanship_title_2'] ?? 'Strength of Nature, Timeless Elegance',
+                'craftsmanship_desc_2' => $settings["craftsmanship_desc_2_{$locale}"] ?? $settings['craftsmanship_desc_2'] ?? 'The premium teak wood used in our furniture is one of nature\'s most durable and cherished materials. Rich in natural protective oils, it offers superior resistance against moisture, intense sunlight, and outdoor weather elements. As years pass, its texture and warm tone grow even more beautiful.',
+                'craftsmanship_images_2' => $settings['craftsmanship_images_2'] ?? json_encode([
+                    'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop',
+                ]),
                 // Section visibility (not locale-specific)
                 'section_carousel_banners_visible' => filter_var($settings['section_carousel_banners_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_hero_visible' => filter_var($settings['section_hero_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_trust_visible' => filter_var($settings['section_trust_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_categories_visible' => filter_var($settings['section_categories_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'section_craftsmanship_visible' => filter_var($settings['section_craftsmanship_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_catalog_visible' => filter_var($settings['section_catalog_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_values_visible' => filter_var($settings['section_values_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_products_visible' => filter_var($settings['section_products_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
@@ -150,16 +168,30 @@ class SettingsController extends Controller
             'hero_media_type' => ['nullable', 'string', 'in:image,video'],
             'hero_product_name' => ['nullable', 'string', 'max:100'],
             'trust_logos' => ['nullable', 'string'],
+            'values_badge' => ['nullable', 'string', 'max:255'],
+            'values_title' => ['nullable', 'string', 'max:255'],
             'home_values' => ['nullable', 'string'],
+            // Craftsmanship Section
+            'craftsmanship_title_1' => ['nullable', 'string', 'max:255'],
+            'craftsmanship_desc_1' => ['nullable', 'string', 'max:2000'],
+            'craftsmanship_images_1' => ['nullable', 'string'],
+            'craftsmanship_images_1_files' => ['nullable', 'array'],
+            'craftsmanship_images_1_files.*' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,gif'],
+            'craftsmanship_title_2' => ['nullable', 'string', 'max:255'],
+            'craftsmanship_desc_2' => ['nullable', 'string', 'max:2000'],
+            'craftsmanship_images_2' => ['nullable', 'string'],
+            'craftsmanship_images_2_files' => ['nullable', 'array'],
+            'craftsmanship_images_2_files.*' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,gif'],
             // Carousel banners
             'carousel_banners' => ['nullable', 'string'],
             'carousel_banner_files' => ['nullable', 'array'],
-            'carousel_banner_files.*' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,gif'],
+            'carousel_banner_files.*' => ['nullable', 'file', 'max:51200', 'mimes:jpg,jpeg,png,webp,gif,mp4,webm,ogg'],
             // Section visibility
             'section_carousel_banners_visible' => ['required', 'boolean'],
             'section_hero_visible' => ['required', 'boolean'],
             'section_trust_visible' => ['required', 'boolean'],
             'section_categories_visible' => ['required', 'boolean'],
+            'section_craftsmanship_visible' => ['required', 'boolean'],
             'section_catalog_visible' => ['required', 'boolean'],
             'section_values_visible' => ['required', 'boolean'],
             'section_products_visible' => ['required', 'boolean'],
@@ -207,6 +239,35 @@ class SettingsController extends Controller
         // Remove file field from validated data before saving to settings
         unset($validated['hero_media_file']);
 
+        // Handle craftsmanship images file uploads
+        if (isset($validated['craftsmanship_images_1'])) {
+            $images1 = json_decode($validated['craftsmanship_images_1'], true) ?? [];
+            $files1 = $request->file('craftsmanship_images_1_files', []);
+
+            foreach ($files1 as $index => $file) {
+                if ($file && isset($images1[$index])) {
+                    $path = $file->store('settings/craftsmanship', 'public');
+                    $images1[$index] = '/storage/'.$path;
+                }
+            }
+            $validated['craftsmanship_images_1'] = json_encode(array_values($images1));
+        }
+        unset($validated['craftsmanship_images_1_files']);
+
+        if (isset($validated['craftsmanship_images_2'])) {
+            $images2 = json_decode($validated['craftsmanship_images_2'], true) ?? [];
+            $files2 = $request->file('craftsmanship_images_2_files', []);
+
+            foreach ($files2 as $index => $file) {
+                if ($file && isset($images2[$index])) {
+                    $path = $file->store('settings/craftsmanship', 'public');
+                    $images2[$index] = '/storage/'.$path;
+                }
+            }
+            $validated['craftsmanship_images_2'] = json_encode(array_values($images2));
+        }
+        unset($validated['craftsmanship_images_2_files']);
+
         // Handle carousel banner file uploads
         if (isset($validated['carousel_banners'])) {
             $banners = json_decode($validated['carousel_banners'], true) ?? [];
@@ -216,8 +277,20 @@ class SettingsController extends Controller
                 if ($file && isset($banners[$index])) {
                     $path = $file->store('settings/carousel', 'public');
                     $banners[$index]['image_url'] = '/storage/'.$path;
+                    $mime = $file->getMimeType();
+                    $banners[$index]['media_type'] = str_starts_with($mime, 'video/') ? 'video' : 'image';
                 }
             }
+
+            // Ensure media_type is set for URL banners as well
+            foreach ($banners as &$banner) {
+                if (empty($banner['media_type'])) {
+                    $url = $banner['image_url'] ?? '';
+                    $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+                    $banner['media_type'] = in_array($ext, ['mp4', 'webm', 'ogg']) ? 'video' : 'image';
+                }
+            }
+            unset($banner);
 
             // Cleanup orphaned carousel images
             $this->cleanupCarouselImages($banners);
@@ -230,6 +303,9 @@ class SettingsController extends Controller
         $localeKeys = [
             'hero_badge', 'hero_title', 'hero_title_highlight',
             'hero_description', 'hero_product_name', 'home_values',
+            'values_badge', 'values_title',
+            'craftsmanship_title_1', 'craftsmanship_desc_1',
+            'craftsmanship_title_2', 'craftsmanship_desc_2',
         ];
 
         foreach ($validated as $key => $value) {

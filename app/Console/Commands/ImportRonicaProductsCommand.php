@@ -77,20 +77,21 @@ class ImportRonicaProductsCommand extends Command
             );
 
             // 2. Fetch category page
-            $catUrl = $this->baseUrl . $catSlug . '/';
+            $catUrl = $this->baseUrl.$catSlug.'/';
             $response = Http::withHeaders([
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
             ])->get($catUrl);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 $this->warn("Failed to fetch category page: {$catUrl}");
+
                 continue;
             }
 
             $html = $response->body();
             $productLinks = $this->extractProductLinks($html);
 
-            $this->info("Found " . count($productLinks) . " products in {$catName}");
+            $this->info('Found '.count($productLinks)." products in {$catName}");
 
             $countInCat = 0;
             foreach ($productLinks as $productRelUrl) {
@@ -100,7 +101,7 @@ class ImportRonicaProductsCommand extends Command
 
                 $productUrl = Str::startsWith($productRelUrl, 'http')
                     ? $productRelUrl
-                    : $this->baseUrl . ltrim($productRelUrl, '/');
+                    : $this->baseUrl.ltrim($productRelUrl, '/');
 
                 $importedProduct = $this->importSingleProduct($productUrl, $category);
                 if ($importedProduct) {
@@ -112,6 +113,7 @@ class ImportRonicaProductsCommand extends Command
         }
 
         $this->info("\nSuccessfully imported total {$importedCount} products!");
+
         return self::SUCCESS;
     }
 
@@ -122,13 +124,14 @@ class ImportRonicaProductsCommand extends Command
     {
         $links = [];
         preg_match_all('/href=["\'](products\/[^"\']+)["\']/i', $html, $matches);
-        if (!empty($matches[1])) {
+        if (! empty($matches[1])) {
             foreach ($matches[1] as $href) {
-                if (!in_array($href, $links)) {
+                if (! in_array($href, $links)) {
                     $links[] = $href;
                 }
             }
         }
+
         return $links;
     }
 
@@ -142,7 +145,7 @@ class ImportRonicaProductsCommand extends Command
                 'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
             ])->get($url);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 return null;
             }
 
@@ -164,12 +167,12 @@ class ImportRonicaProductsCommand extends Command
 
             // Extract Description block from <div class="content1...">
             preg_match('/<div[^>]*class=["\'][^"\']*content1[^"\']*["\'][^>]*>(.*?)<\/div>/is', $html, $contentMatch);
-            $descriptionHtml = !empty($contentMatch[1]) ? trim($contentMatch[1]) : '';
+            $descriptionHtml = ! empty($contentMatch[1]) ? trim($contentMatch[1]) : '';
             $descriptionText = strip_tags($descriptionHtml);
 
             // Short Description from first paragraph
             preg_match('/<p[^>]*>(.*?)<\/p>/is', $descriptionHtml, $pMatch);
-            $shortDesc = !empty($pMatch[1]) ? trim(strip_tags($pMatch[1])) : $name;
+            $shortDesc = ! empty($pMatch[1]) ? trim(strip_tags($pMatch[1])) : $name;
 
             // Generate price
             $estimatedPrice = $this->generateEstimatedPrice($name, $category->slug);
@@ -177,16 +180,16 @@ class ImportRonicaProductsCommand extends Command
             // Extract Images
             $imageUrls = [];
             preg_match_all('/(yukleme\/products\/[^"\']+\.(webp|jpg|jpeg|png))/i', $html, $imgMatches);
-            if (!empty($imgMatches[1])) {
+            if (! empty($imgMatches[1])) {
                 foreach ($imgMatches[1] as $imgRel) {
-                    $fullImgUrl = $this->baseUrl . ltrim($imgRel, '/');
-                    if (!in_array($fullImgUrl, $imageUrls)) {
+                    $fullImgUrl = $this->baseUrl.ltrim($imgRel, '/');
+                    if (! in_array($fullImgUrl, $imageUrls)) {
                         $imageUrls[] = $fullImgUrl;
                     }
                 }
             }
 
-            $sku = 'RON-' . strtoupper(Str::random(6));
+            $sku = 'RON-'.strtoupper(Str::random(6));
 
             // Create Product
             $product = Product::create([
@@ -229,7 +232,8 @@ class ImportRonicaProductsCommand extends Command
 
             return $product;
         } catch (\Throwable $e) {
-            $this->error("Error importing {$url}: " . $e->getMessage());
+            $this->error("Error importing {$url}: ".$e->getMessage());
+
             return null;
         }
     }
@@ -241,7 +245,7 @@ class ImportRonicaProductsCommand extends Command
     {
         try {
             $response = Http::timeout(10)->get($url);
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 return null;
             }
 
