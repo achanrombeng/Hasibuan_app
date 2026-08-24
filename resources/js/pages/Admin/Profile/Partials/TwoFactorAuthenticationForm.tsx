@@ -130,22 +130,24 @@ export default function TwoFactorAuthenticationForm({
 
             <div>
               {hasSetupData ? (
-                <Button
+                <button
+                  type="button"
                   onClick={() => setShowSetupModal(true)}
-                  className="rounded-xl bg-terra-900 text-white hover:bg-wood-dark"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98]"
                 >
-                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  <ShieldCheck className="h-4 w-4" />
                   Lanjutkan Setup
-                </Button>
+                </button>
               ) : (
-                <Button
+                <button
+                  type="button"
                   onClick={handleEnable}
                   disabled={enabling}
-                  className="rounded-xl bg-terra-900 text-white hover:bg-wood-dark"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                 >
-                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  <ShieldCheck className="h-4 w-4" />
                   Aktifkan 2FA
-                </Button>
+                </button>
               )}
             </div>
           </div>

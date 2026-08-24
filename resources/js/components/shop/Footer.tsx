@@ -4,7 +4,6 @@ import {
     faq,
     home,
     privacy,
-    shipping,
     terms,
 } from '@/routes/shop';
 import { hotSale, index as productsIndex } from '@/routes/shop/products';
@@ -20,6 +19,7 @@ import {
     MessageCircle,
     Phone,
     Store,
+    Youtube,
 } from 'lucide-react';
 
 function TikTokIcon({ className = 'h-4 w-4' }: { className?: string }) {
@@ -30,18 +30,67 @@ function TikTokIcon({ className = 'h-4 w-4' }: { className?: string }) {
     );
 }
 
+interface CustomLinkItem {
+    label: string;
+    url: string;
+}
+
 export const Footer = () => {
     const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
     const { t } = useTranslation();
     const siteName = siteSettings?.site_name || 'Ronica';
     const siteLogo = siteSettings?.site_logo || '/ronica.png';
     const description =
-        siteSettings?.site_description || t('shop.footer.description');
+        siteSettings?.footer_description ||
+        siteSettings?.site_description ||
+        t('shop.footer.description');
     const currentYear = new Date().getFullYear();
 
     const whatsappNumber = siteSettings?.contact_whatsapp
         ? siteSettings.contact_whatsapp.replace(/[^0-9]/g, '')
         : '';
+
+    // Parse dynamic column links if configured
+    const col1Links: CustomLinkItem[] = (() => {
+        if (!siteSettings?.footer_col1_links) return [];
+        try {
+            const parsed = JSON.parse(siteSettings.footer_col1_links);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    })();
+
+    const col2Links: CustomLinkItem[] = (() => {
+        if (!siteSettings?.footer_col2_links) return [];
+        try {
+            const parsed = JSON.parse(siteSettings.footer_col2_links);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            return [];
+        }
+    })();
+
+    const col1Title = siteSettings?.footer_col1_title || t('shop.footer.shop');
+    const col2Title = siteSettings?.footer_col2_title || t('shop.footer.company');
+    const contactTitle = siteSettings?.footer_contact_title || 'Informasi Kontak';
+
+    const showSocials = siteSettings?.footer_show_socials !== false;
+    const showFactory = siteSettings?.footer_show_factory !== false;
+    const showShowroom = siteSettings?.footer_show_showroom !== false;
+    const showPhone = siteSettings?.footer_show_phone !== false;
+    const showWhatsapp = siteSettings?.footer_show_whatsapp !== false;
+    const showEmail = siteSettings?.footer_show_email !== false;
+
+    const privacyUrl = siteSettings?.footer_privacy_url || privacy.url();
+    const termsUrl = siteSettings?.footer_terms_url || terms.url();
+
+    const copyrightText = siteSettings?.footer_copyright || (
+        <>
+            &copy; {currentYear} {siteName}.{' '}
+            {t('shop.footer.all_rights_reserved')}
+        </>
+    );
 
     return (
         <footer className="relative overflow-hidden bg-[#EBEBEB] py-16 text-neutral-800">
@@ -61,9 +110,10 @@ export const Footer = () => {
                         </p>
 
                         {/* Media Sosial */}
-                        {(siteSettings?.facebook_url ||
+                        {showSocials && (siteSettings?.facebook_url ||
                             siteSettings?.instagram_url ||
-                            siteSettings?.tiktok_url) && (
+                            siteSettings?.tiktok_url ||
+                            siteSettings?.youtube_url) && (
                             <div className="pt-2">
                                 <h5 className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
                                     Media Sosial
@@ -102,92 +152,133 @@ export const Footer = () => {
                                             <TikTokIcon className="h-4 w-4" />
                                         </a>
                                     )}
+                                    {siteSettings?.youtube_url && (
+                                        <a
+                                            href={siteSettings.youtube_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-red-600 hover:text-white"
+                                            title="YouTube"
+                                        >
+                                            <Youtube className="h-4 w-4" />
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    {/* 2. Navigasi Shop */}
+                    {/* 2. Navigasi Kolom 1 (Shop) */}
                     <div className="md:col-span-2">
                         <h4 className="mb-5 font-semibold tracking-wide text-neutral-900">
-                            {t('shop.footer.shop')}
+                            {col1Title}
                         </h4>
                         <ul className="space-y-3 text-sm text-neutral-600">
-                            <li>
-                                <Link
-                                    href={productsIndex.url()}
-                                    className="transition-colors hover:text-teal-600"
-                                >
-                                    {t('shop.footer.all_products')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={hotSale.url()}
-                                    className="transition-colors hover:text-teal-600"
-                                >
-                                    {t('shop.footer.hot_sale')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={productsIndex.url({
-                                        query: { sort: 'newest' },
-                                    })}
-                                    className="transition-colors hover:text-teal-600"
-                                >
-                                    {t('shop.footer.new_arrivals')}
-                                </Link>
-                            </li>
+                            {col1Links.length > 0 ? (
+                                col1Links.map((item, index) => (
+                                    <li key={index}>
+                                        <Link
+                                            href={item.url}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <>
+                                    <li>
+                                        <Link
+                                            href={productsIndex.url()}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {t('shop.footer.all_products')}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href={hotSale.url()}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {t('shop.footer.hot_sale')}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href={productsIndex.url({
+                                                query: { sort: 'newest' },
+                                            })}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {t('shop.footer.new_arrivals')}
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </div>
 
-                    {/* 3. Informasi Perusahaan */}
+                    {/* 3. Navigasi Kolom 2 (Company) */}
                     <div className="md:col-span-2">
                         <h4 className="mb-5 font-semibold tracking-wide text-neutral-900">
-                            {t('shop.footer.company')}
+                            {col2Title}
                         </h4>
                         <ul className="space-y-3 text-sm text-neutral-600">
-                            <li>
-                                <Link
-                                    href={about.url()}
-                                    className="transition-colors hover:text-teal-600"
-                                >
-                                    {t('shop.footer.about_us')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={contact.url()}
-                                    className="transition-colors hover:text-teal-600"
-                                >
-                                    {t('shop.footer.contact')}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={faq.url()}
-                                    className="transition-colors hover:text-teal-600"
-                                >
-                                    {t('shop.footer.faq')}
-                                </Link>
-                            </li>
+                            {col2Links.length > 0 ? (
+                                col2Links.map((item, index) => (
+                                    <li key={index}>
+                                        <Link
+                                            href={item.url}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <>
+                                    <li>
+                                        <Link
+                                            href={about.url()}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {t('shop.footer.about_us')}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href={contact.url()}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {t('shop.footer.contact')}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href={faq.url()}
+                                            className="transition-colors hover:text-teal-600"
+                                        >
+                                            {t('shop.footer.faq')}
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                         </ul>
                     </div>
 
                     {/* 4. Informasi Kontak */}
                     <div className="md:col-span-4">
                         <h4 className="mb-5 font-semibold tracking-wide text-neutral-900">
-                            Informasi Kontak
+                            {contactTitle}
                         </h4>
                         <ul className="space-y-3.5 text-sm text-neutral-600">
-                            {siteSettings?.factory_address && (
+                            {showFactory && siteSettings?.factory_address && (
                                 <li className="flex items-start gap-3">
                                     <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
                                     <span><strong className="font-medium text-neutral-800">Pabrik:</strong> {siteSettings.factory_address}</span>
                                 </li>
                             )}
-                            {siteSettings?.showroom_address && (
+                            {showShowroom && siteSettings?.showroom_address && (
                                 <li className="flex items-start gap-3">
                                     <Store className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
                                     <span><strong className="font-medium text-neutral-800">Showroom:</strong> {siteSettings.showroom_address}</span>
@@ -199,7 +290,7 @@ export const Footer = () => {
                                     <span>{siteSettings.address}</span>
                                 </li>
                             )}
-                            {siteSettings?.contact_phone && (
+                            {showPhone && siteSettings?.contact_phone && (
                                 <li className="flex items-center gap-3">
                                     <Phone className="h-4 w-4 shrink-0 text-teal-600" />
                                     <a
@@ -210,7 +301,7 @@ export const Footer = () => {
                                     </a>
                                 </li>
                             )}
-                            {siteSettings?.contact_whatsapp && (
+                            {showWhatsapp && siteSettings?.contact_whatsapp && (
                                 <li className="flex items-center gap-3">
                                     <MessageCircle className="h-4 w-4 shrink-0 text-teal-600" />
                                     <a
@@ -223,7 +314,7 @@ export const Footer = () => {
                                     </a>
                                 </li>
                             )}
-                            {siteSettings?.contact_email && (
+                            {showEmail && siteSettings?.contact_email && (
                                 <li className="flex items-center gap-3">
                                     <Mail className="h-4 w-4 shrink-0 text-teal-600" />
                                     <a
@@ -234,7 +325,7 @@ export const Footer = () => {
                                     </a>
                                 </li>
                             )}
-                            {siteSettings?.contact_email_2 && (
+                            {showEmail && siteSettings?.contact_email_2 && (
                                 <li className="flex items-center gap-3">
                                     <Mail className="h-4 w-4 shrink-0 text-teal-600" />
                                     <a
@@ -251,19 +342,16 @@ export const Footer = () => {
 
                 {/* Bottom Section */}
                 <div className="flex flex-col items-center justify-between pt-8 text-xs text-neutral-500 md:flex-row">
-                    <p>
-                        &copy; {currentYear} {siteName}.{' '}
-                        {t('shop.footer.all_rights_reserved')}
-                    </p>
+                    <p>{copyrightText}</p>
                     <div className="mt-4 flex gap-6 md:mt-0">
                         <Link
-                            href={privacy.url()}
+                            href={privacyUrl}
                             className="transition-colors hover:text-teal-600"
                         >
                             Privacy Policy
                         </Link>
                         <Link
-                            href={terms.url()}
+                            href={termsUrl}
                             className="transition-colors hover:text-teal-600"
                         >
                             Terms &amp; Conditions

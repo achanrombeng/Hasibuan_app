@@ -11,6 +11,7 @@ import {
     Globe,
     Loader2,
     Plus,
+    Save,
     Sparkles,
     Star,
     Trash2,
@@ -953,21 +954,27 @@ export default function CreateProduct({
                         </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center justify-end gap-4">
-                        <Link
-                            href="/admin/products"
-                            className="rounded-xl border border-terra-200 px-6 py-3 font-medium text-terra-700 transition-colors hover:bg-terra-50"
-                        >
-                            Batal
-                        </Link>
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="rounded-xl bg-terra-900 px-6 py-3 font-medium text-white transition-colors hover:bg-wood-dark disabled:opacity-50"
-                        >
-                            {processing ? 'Menyimpan...' : 'Simpan Produk'}
-                        </button>
+                    {/* Sticky Submit Bar */}
+                    <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
+                        <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
+                            Pastikan spesifikasi dan data produk sudah benar sebelum menyimpan
+                        </span>
+                        <div className="ml-auto flex items-center gap-3">
+                            <Link
+                                href="/admin/products"
+                                className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                            >
+                                Batal
+                            </Link>
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                            >
+                                <Save className="h-5 w-5" />
+                                {processing ? 'Menyimpan...' : 'Simpan Produk'}
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -123,10 +123,6 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                             </h1>
                         </div>
                     </div>
-                    <Button type="submit" disabled={isSubmitting}>
-                        <Save className="mr-2 h-4 w-4" />
-                        {isSubmitting ? 'Menyimpan...' : 'Simpan'}
-                    </Button>
                 </div>
 
                 {/* Basic Information */}
@@ -431,6 +427,29 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                         </CardContent>
                     )}
                 </Card>
+
+                {/* Sticky Submit Bar */}
+                <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
+                    <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
+                        Pastikan data artikel sudah benar sebelum menyimpan
+                    </span>
+                    <div className="ml-auto flex items-center gap-3">
+                        <Link
+                            href="/admin/articles"
+                            className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                        >
+                            Kembali
+                        </Link>
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                        >
+                            <Save className="h-5 w-5" />
+                            {isSubmitting ? 'Menyimpan...' : 'Simpan Artikel'}
+                        </button>
+                    </div>
+                </div>
             </form>
         </AdminLayout>
     );

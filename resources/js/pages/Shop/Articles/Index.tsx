@@ -1,4 +1,5 @@
 import Pagination from '@/components/pagination';
+import { SEOHead } from '@/components/seo';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -68,36 +69,50 @@ export default function ArticlesIndex({
     };
 
     return (
-        <ShopLayout>
-            <Head title="Artikel & Berita" />
-
-            <div className="container mx-auto px-4 py-8">
-                {/* Header */}
-                <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
-                        Artikel & Berita
-                    </h1>
-                    <p className="mt-2 text-gray-600">
-                        Temukan inspirasi dan tips terbaru tentang furniture
-                    </p>
-                </div>
-
-                {/* Search */}
-                <div className="mx-auto mb-8 max-w-2xl">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                        <Input
-                            type="text"
-                            placeholder="Cari artikel..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSearch();
-                            }}
-                            className="pl-10"
-                        />
+        <>
+            <SEOHead
+                title="Artikel & Berita"
+                description="Temukan inspirasi dan tips terbaru tentang furnitur dan dekorasi hunian Anda."
+                keywords={[
+                    'artikel',
+                    'berita',
+                    'tips furniture',
+                    'furnitur outdoor',
+                    'inspirasi mebel',
+                ]}
+            />
+            <div className="bg-noise" />
+            <ShopLayout>
+                <main className="min-h-screen bg-sand-50 pb-20">
+                    {/* Hero */}
+                    <div className="mb-16 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
+                        <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
+                            <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
+                                Artikel & Berita
+                            </h1>
+                            <p className="text-xl opacity-90">
+                                Temukan inspirasi dan tips terbaru tentang furniture
+                            </p>
+                        </div>
                     </div>
-                </div>
+
+                    <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+                        {/* Search */}
+                        <div className="mx-auto mb-12 max-w-2xl">
+                            <div className="relative">
+                                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-terra-400" />
+                                <Input
+                                    type="text"
+                                    placeholder="Cari artikel..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') handleSearch();
+                                    }}
+                                    className="rounded-xl border-terra-200 bg-white py-3 pl-11 pr-4 shadow-sm focus:border-wood focus:ring-wood/50"
+                                />
+                            </div>
+                        </div>
 
                 {/* Articles Grid */}
                 {articles.data.length === 0 ? (
@@ -183,7 +198,9 @@ export default function ArticlesIndex({
                         )}
                     </>
                 )}
-            </div>
-        </ShopLayout>
+                    </div>
+                </main>
+            </ShopLayout>
+        </>
     );
 }

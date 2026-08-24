@@ -480,6 +480,7 @@
   "admin.sidebar.settings": "Settings",
   "admin.sidebar.about_page": "About Us Page",
   "admin.sidebar.homepage_settings": "Homepage Settings",
+  "admin.sidebar.footer_settings": "Footer Settings",
   "admin.sidebar.view_store": "View Store",
 
   "admin.header.search_placeholder": "Search...",

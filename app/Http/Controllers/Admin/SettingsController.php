@@ -559,4 +559,92 @@ class SettingsController extends Controller
 
         return back()->with('success', 'Pengaturan Halaman About Us berhasil disimpan');
     }
+
+    /**
+     * Footer settings page
+     */
+    public function footer(): Response
+    {
+        $settings = Setting::all()->pluck('value', 'key')->toArray();
+
+        $defaultCol1Links = json_encode([
+            ['label' => 'Semua Produk', 'url' => '/shop/products'],
+            ['label' => 'Hot Sale', 'url' => '/shop/products/hot-sale'],
+            ['label' => 'Produk Terbaru', 'url' => '/shop/products?sort=newest'],
+        ]);
+
+        $defaultCol2Links = json_encode([
+            ['label' => 'Tentang Kami', 'url' => '/shop/about'],
+            ['label' => 'Kontak', 'url' => '/shop/contact'],
+            ['label' => 'FAQ', 'url' => '/shop/faq'],
+        ]);
+
+        return Inertia::render('Admin/Settings/Footer', [
+            'settings' => [
+                'footer_description' => $settings['footer_description'] ?? '',
+                'footer_copyright' => $settings['footer_copyright'] ?? '',
+                'footer_col1_title' => $settings['footer_col1_title'] ?? 'Belanja',
+                'footer_col1_links' => $settings['footer_col1_links'] ?? $defaultCol1Links,
+                'footer_col2_title' => $settings['footer_col2_title'] ?? 'Perusahaan',
+                'footer_col2_links' => $settings['footer_col2_links'] ?? $defaultCol2Links,
+                'footer_contact_title' => $settings['footer_contact_title'] ?? 'Informasi Kontak',
+                'footer_show_factory' => filter_var($settings['footer_show_factory'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_showroom' => filter_var($settings['footer_show_showroom'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_phone' => filter_var($settings['footer_show_phone'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_whatsapp' => filter_var($settings['footer_show_whatsapp'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_email' => filter_var($settings['footer_show_email'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_socials' => filter_var($settings['footer_show_socials'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'youtube_url' => $settings['youtube_url'] ?? '',
+                'footer_privacy_url' => $settings['footer_privacy_url'] ?? '/shop/privacy-policy',
+                'footer_terms_url' => $settings['footer_terms_url'] ?? '/shop/terms',
+                // Inherited site contact info for reference
+                'site_description' => $settings['site_description'] ?? '',
+                'contact_email' => $settings['contact_email'] ?? '',
+                'contact_phone' => $settings['contact_phone'] ?? '',
+                'contact_whatsapp' => $settings['contact_whatsapp'] ?? '',
+                'facebook_url' => $settings['facebook_url'] ?? '',
+                'instagram_url' => $settings['instagram_url'] ?? '',
+                'tiktok_url' => $settings['tiktok_url'] ?? '',
+            ],
+        ]);
+    }
+
+    /**
+     * Update Footer settings
+     */
+    public function updateFooter(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'footer_description' => ['nullable', 'string', 'max:1000'],
+            'footer_copyright' => ['nullable', 'string', 'max:255'],
+            'footer_col1_title' => ['required', 'string', 'max:100'],
+            'footer_col1_links' => ['nullable', 'string'],
+            'footer_col2_title' => ['required', 'string', 'max:100'],
+            'footer_col2_links' => ['nullable', 'string'],
+            'footer_contact_title' => ['required', 'string', 'max:100'],
+            'footer_show_factory' => ['required', 'boolean'],
+            'footer_show_showroom' => ['required', 'boolean'],
+            'footer_show_phone' => ['required', 'boolean'],
+            'footer_show_whatsapp' => ['required', 'boolean'],
+            'footer_show_email' => ['required', 'boolean'],
+            'footer_show_socials' => ['required', 'boolean'],
+            'youtube_url' => ['nullable', 'url', 'max:255'],
+            'footer_privacy_url' => ['nullable', 'string', 'max:255'],
+            'footer_terms_url' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        foreach ($validated as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_bool($value) ? ($value ? '1' : '0') : ($value ?? '')]
+            );
+        }
+
+        // Clear site settings cache
+        Cache::forget('site_settings');
+        Cache::forget('site_settings.id');
+        Cache::forget('site_settings.en');
+
+        return back()->with('success', 'Pengaturan Footer berhasil disimpan');
+    }
 }

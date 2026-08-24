@@ -311,12 +311,15 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
             </div>
           </div>
 
-          {/* Submit */}
-          <div className="flex justify-end">
+          {/* Sticky Submit Bar */}
+          <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
+            <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
+              Pastikan perubahan sudah sesuai sebelum menyimpan
+            </span>
             <button
               type="submit"
               disabled={processing}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+              className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
               {processing ? 'Menyimpan...' : 'Simpan Pengaturan'}

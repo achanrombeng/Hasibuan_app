@@ -46,26 +46,15 @@ export default function Dealer() {
             <div className="bg-noise" />
             <ShopLayout>
                 <main className="min-h-screen bg-sand-50 pb-20">
-                    {/* Hero Banner with Dark Pattern */}
-                    <div className="relative overflow-hidden bg-[#383a3c] py-14 text-white">
-                        <div
-                            className="absolute inset-0 opacity-10"
-                            style={{
-                                backgroundImage: `radial-gradient(#ffffff 1px, transparent 1px)`,
-                                backgroundSize: '16px 16px',
-                            }}
-                        />
-                        <div className="relative mx-auto max-w-[1400px] px-6 text-center md:px-12">
-                            <h1 className="mb-3 font-serif text-3xl font-bold tracking-wide md:text-4xl">
+                    {/* Hero */}
+                    <div className="mb-16 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
+                        <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
+                            <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
                                 Dealer Form
                             </h1>
-                            <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-widest text-neutral-400">
-                                <Link href="/shop" className="transition-colors hover:text-white">
-                                    HOMEPAGE
-                                </Link>
-                                <span>/</span>
-                                <span className="text-[#a67c52]">Dealer Form</span>
-                            </div>
+                            <p className="text-xl opacity-90">
+                                Evaluasi peluang kemitraan bisnis dengan cepat dan efektif.
+                            </p>
                         </div>
                     </div>
 

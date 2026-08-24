@@ -1,6 +1,6 @@
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ArrowLeft, ChevronDown, Gift, Percent, Truck } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Gift, Percent, Save, Truck } from 'lucide-react';
 
 interface PromoBanner {
     id: number;
@@ -424,21 +424,27 @@ export default function EditPromoBanner({ promoBanner }: EditPromoBannerProps) {
                         </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
-                        <Link
-                            href="/admin/promo-banners"
-                            className="rounded-xl border border-neutral-200 px-6 py-3 text-center font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
-                        >
-                            Batal
-                        </Link>
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="rounded-xl bg-teal-600 px-6 py-3 font-medium text-white transition-colors hover:bg-teal-700 disabled:opacity-50"
-                        >
-                            {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
-                        </button>
+                    {/* Sticky Submit Bar */}
+                    <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
+                        <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
+                            Pastikan data promo banner sudah benar sebelum menyimpan
+                        </span>
+                        <div className="ml-auto flex items-center gap-3">
+                            <Link
+                                href="/admin/promo-banners"
+                                className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                            >
+                                Batal
+                            </Link>
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                            >
+                                <Save className="h-5 w-5" />
+                                {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

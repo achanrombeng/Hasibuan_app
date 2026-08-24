@@ -38,6 +38,22 @@ export interface SiteSettings {
   facebook_url: string;
   instagram_url: string;
   tiktok_url: string;
+  youtube_url?: string;
+  footer_description?: string;
+  footer_copyright?: string;
+  footer_col1_title?: string;
+  footer_col1_links?: string;
+  footer_col2_title?: string;
+  footer_col2_links?: string;
+  footer_contact_title?: string;
+  footer_show_factory?: boolean;
+  footer_show_showroom?: boolean;
+  footer_show_phone?: boolean;
+  footer_show_whatsapp?: boolean;
+  footer_show_email?: boolean;
+  footer_show_socials?: boolean;
+  footer_privacy_url?: string;
+  footer_terms_url?: string;
 }
 
 export interface PromoBannerData {

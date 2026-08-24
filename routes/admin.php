@@ -96,6 +96,10 @@ Route::middleware(['auth', 'verified', 'role:super-admin|admin'])->prefix('admin
     Route::get('/settings/ai', [SettingsController::class, 'ai'])->name('settings.ai');
     Route::post('/settings/ai', [SettingsController::class, 'updateAi'])->name('settings.ai.update');
 
+    // Footer Settings
+    Route::get('/settings/footer', [SettingsController::class, 'footer'])->name('settings.footer');
+    Route::post('/settings/footer', [SettingsController::class, 'updateFooter'])->name('settings.footer.update');
+
     // Promo Banners
     Route::resource('promo-banners', PromoBannerController::class)->except(['show']);
     Route::patch('/promo-banners/{promo_banner}/toggle', [PromoBannerController::class, 'toggleActive'])

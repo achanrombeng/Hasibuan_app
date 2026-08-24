@@ -211,6 +211,22 @@ class HandleInertiaRequests extends Middleware
                 'facebook_url' => $settings['facebook_url'] ?? '',
                 'instagram_url' => $settings['instagram_url'] ?? '',
                 'tiktok_url' => $settings['tiktok_url'] ?? '',
+                'youtube_url' => $settings['youtube_url'] ?? '',
+                'footer_description' => $settings['footer_description'] ?? '',
+                'footer_copyright' => $settings['footer_copyright'] ?? '',
+                'footer_col1_title' => $settings['footer_col1_title'] ?? '',
+                'footer_col1_links' => $settings['footer_col1_links'] ?? '',
+                'footer_col2_title' => $settings['footer_col2_title'] ?? '',
+                'footer_col2_links' => $settings['footer_col2_links'] ?? '',
+                'footer_contact_title' => $settings['footer_contact_title'] ?? '',
+                'footer_show_factory' => filter_var($settings['footer_show_factory'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_showroom' => filter_var($settings['footer_show_showroom'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_phone' => filter_var($settings['footer_show_phone'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_whatsapp' => filter_var($settings['footer_show_whatsapp'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_email' => filter_var($settings['footer_show_email'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_socials' => filter_var($settings['footer_show_socials'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_privacy_url' => $settings['footer_privacy_url'] ?? '',
+                'footer_terms_url' => $settings['footer_terms_url'] ?? '',
             ];
         });
     }

@@ -9,6 +9,7 @@ import {
   LayoutTemplate,
   Megaphone,
   Package,
+  PanelBottom,
   Settings,
   Star,
   Store,
@@ -88,6 +89,12 @@ const settingsNavItems: NavItem[] = [
     titleKey: 'admin.sidebar.about_page',
     href: '/admin/settings/about',
     icon: Info,
+    permission: 'manage settings',
+  },
+  {
+    titleKey: 'admin.sidebar.footer_settings',
+    href: '/admin/settings/footer',
+    icon: PanelBottom,
     permission: 'manage settings',
   },
   {

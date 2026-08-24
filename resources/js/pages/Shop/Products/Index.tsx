@@ -204,36 +204,39 @@ export default function ProductsIndex({
             <BreadcrumbStructuredData items={breadcrumbItems} />
             <div className="bg-noise" />
             <ShopLayout>
-                <main className="min-h-screen bg-white pt-8 pb-20">
-                    <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-                        {/* Breadcrumb */}
-                        <nav className="mb-8 flex items-center gap-2 text-sm text-neutral-500">
-                            <Link href="/shop" className="hover:text-teal-500">
-                                Beranda
-                            </Link>
-                            <span>/</span>
-                            <span className="text-neutral-900">
+                <main className="min-h-screen bg-sand-50 pb-20">
+                    {/* Hero Banner */}
+                    <div className="mb-12 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
+                        <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
+                            <h1 className="mb-3 font-serif text-4xl font-bold md:text-5xl">
                                 {normalizedCurrentCategory
                                     ? normalizedCurrentCategory.name
                                     : 'Semua Produk'}
-                            </span>
-                        </nav>
+                            </h1>
+                            <p className="text-xl opacity-90">
+                                {products.meta.total} produk berkualitas ditemukan
+                            </p>
+                        </div>
+                    </div>
 
-                        {/* Header */}
-                        <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-                            <div>
-                                <h1 className="font-serif text-4xl text-neutral-900 md:text-5xl">
+                    <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+                        {/* Search & Controls Header */}
+                        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                            {/* Breadcrumb */}
+                            <nav className="flex items-center gap-2 text-sm text-neutral-500">
+                                <Link href="/shop" className="hover:text-teal-600 transition-colors">
+                                    Beranda
+                                </Link>
+                                <span>/</span>
+                                <span className="text-neutral-900 font-medium">
                                     {normalizedCurrentCategory
                                         ? normalizedCurrentCategory.name
                                         : 'Semua Produk'}
-                                </h1>
-                                <p className="mt-2 text-neutral-500">
-                                    {products.meta.total} produk ditemukan
-                                </p>
-                            </div>
+                                </span>
+                            </nav>
 
                             {/* Search & Filter Toggle */}
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
                                 <div className="relative flex-1 md:w-80">
                                     <Search
                                         className="absolute top-1/2 left-4 -translate-y-1/2 text-neutral-400"
@@ -246,12 +249,12 @@ export default function ProductsIndex({
                                         onChange={(e) =>
                                             setSearchQuery(e.target.value)
                                         }
-                                        className="w-full rounded-sm border border-neutral-200 py-3 pr-4 pl-12 transition-colors focus:border-teal-500 focus:outline-none"
+                                        className="w-full rounded-xl border border-neutral-200 bg-white py-3 pr-4 pl-12 shadow-sm transition-colors focus:border-teal-500 focus:outline-none"
                                     />
                                 </div>
                                 <button
                                     onClick={() => setShowFilters(true)}
-                                    className="flex items-center gap-2 rounded-sm border border-neutral-200 bg-white px-4 py-3 text-neutral-700 transition-colors hover:border-teal-500 hover:text-teal-600"
+                                    className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-700 shadow-sm transition-all hover:border-teal-500 hover:text-teal-600 active:scale-[0.98]"
                                 >
                                     <SlidersHorizontal size={20} />
                                     <span className="hidden sm:inline">

@@ -8,6 +8,7 @@ import { FormEventHandler } from 'react';
 import { SharedData } from '@/types';
 import { update as profileUpdate } from '@/routes/profile';
 import { send as verificationSend } from '@/routes/verification';
+import { Save } from 'lucide-react';
 
 export default function UpdateProfileInformationForm({
     mustVerifyEmail,
@@ -97,9 +98,14 @@ export default function UpdateProfileInformationForm({
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Button disabled={processing} className="bg-terra-900 hover:bg-wood-dark text-white rounded-xl">
-                        Simpan
-                    </Button>
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                    >
+                        <Save className="h-4 w-4" />
+                        {processing ? 'Menyimpan...' : 'Simpan'}
+                    </button>
 
                     <Transition
                         show={recentlySuccessful}
