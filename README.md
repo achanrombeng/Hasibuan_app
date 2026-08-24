@@ -85,6 +85,14 @@ php artisan storage:link
 # 6. Jalankan Server Pengembang (Concurrently)
 composer dev
 ```
+### 3. Account
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | [EMAIL_ADDRESS] | password |
+| Manager | [EMAIL_ADDRESS] | password |
+| Staff | [EMAIL_ADDRESS] | password |
+| Customer | [EMAIL_ADDRESS] | password |
 
 > **Catatan**: Perintah `composer dev` akan menjalankan `php artisan serve`, `queue:listen`, dan Vite dev server secara bersamaan.
 
