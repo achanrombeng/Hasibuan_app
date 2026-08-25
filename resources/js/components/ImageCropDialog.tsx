@@ -28,7 +28,7 @@ type AspectOption = {
 };
 
 const ASPECT_OPTIONS: AspectOption[] = [
-    { label: 'Bebas', value: undefined, icon: Square },
+    { label: 'Free', value: undefined, icon: Square },
     { label: '1:1', value: 1, icon: Square },
     { label: '4:3', value: 4 / 3, icon: RectangleHorizontal },
     { label: '3:4', value: 3 / 4, icon: RectangleVertical },
@@ -83,7 +83,7 @@ async function canvasFromCrop(
         canvas.toBlob(
             (blob) => {
                 if (!blob) {
-                    reject(new Error('Gagal membuat crop'));
+                    reject(new Error('Failed to create crop'));
                     return;
                 }
                 resolve(blob);
@@ -164,7 +164,7 @@ export default function ImageCropDialog({
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogContent className="max-w-3xl">
                 <DialogHeader>
-                    <DialogTitle>Edit Gambar</DialogTitle>
+                    <DialogTitle>Edit Image</DialogTitle>
                 </DialogHeader>
 
                 <div className="flex flex-wrap gap-2">
@@ -215,7 +215,7 @@ export default function ImageCropDialog({
                         onClick={() => handleOpenChange(false)}
                         className="rounded-xl border border-terra-200 px-5 py-2.5 text-sm font-medium text-terra-700 transition-colors hover:bg-terra-50"
                     >
-                        Batal
+                        Cancel
                     </button>
                     <button
                         type="button"
@@ -226,10 +226,10 @@ export default function ImageCropDialog({
                         {saving ? (
                             <>
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                Menyimpan...
+                                Saving...
                             </>
                         ) : (
-                            'Simpan Crop'
+                            'Save Crop'
                         )}
                     </button>
                 </div>

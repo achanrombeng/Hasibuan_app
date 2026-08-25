@@ -1,6 +1,6 @@
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
-import { Search, Eye, Clock, Package, Truck, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Filter, Eye, Clock, Package, Truck, CheckCircle, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import Pagination from '@/components/pagination';
 
@@ -53,14 +53,21 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
     const filterObj = filters?.filter && typeof filters.filter === 'object' ? filters.filter : {};
     const [search, setSearch] = useState(filterObj.order_number || '');
     const [statusFilter, setStatusFilter] = useState(filterObj.status || '');
+    const [showFilters, setShowFilters] = useState(false);
     const orderData = orders.data;
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSearch = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
         const params: Record<string, string> = {};
         if (search) params['filter[order_number]'] = search;
         if (statusFilter) params['filter[status]'] = statusFilter;
         router.get('/admin/orders', params, { preserveState: true });
+    };
+
+    const handleReset = () => {
+        setSearch('');
+        setStatusFilter('');
+        router.get('/admin/orders', {}, { preserveState: true });
     };
 
     return (
@@ -74,30 +81,80 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
                     <p className="text-terra-500 mt-1">Manage and track all customer orders</p>
                 </div>
 
-                {/* Filters */}
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-terra-100">
-                    <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-terra-400" />
+                {/* Search & Filter Bar */}
+                <div className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm md:p-6">
+                    <form
+                        onSubmit={handleSearch}
+                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                    >
+                        <div className="relative flex-1">
+                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
-                                placeholder="Search order number or customer name..."
+                                placeholder="Cari nomor pesanan atau nama pelanggan..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-terra-200 bg-sand-50 text-terra-900 placeholder:text-terra-400 focus:outline-none focus:ring-2 focus:ring-wood/50 focus:border-wood transition-all"
+                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                             />
                         </div>
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-4 py-2.5 rounded-xl border border-terra-200 bg-white text-terra-900 focus:outline-none focus:ring-2 focus:ring-wood/50 focus:border-wood transition-all"
-                        >
-                            <option value="" className="text-terra-900 bg-white">All Statuses</option>
-                            {statuses.map((s) => (
-                                <option key={s.value} value={s.value} className="text-terra-900 bg-white">{s.name}</option>
-                            ))}
-                        </select>
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                type="button"
+                                onClick={() => setShowFilters(!showFilters)}
+                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
+                                    showFilters
+                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                }`}
+                            >
+                                <Filter className="h-4 w-4 text-neutral-600" /> Filter
+                            </button>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                            >
+                                Cari
+                            </button>
+                        </div>
                     </form>
+
+                    {showFilters && (
+                        <div className="mt-4 grid grid-cols-1 gap-4 border-t border-neutral-100 pt-4 sm:grid-cols-2 lg:grid-cols-4">
+                            <div>
+                                <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                    Status Pesanan
+                                </label>
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 p-2.5 text-sm text-neutral-900 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                >
+                                    <option value="">Semua Status</option>
+                                    {statuses.map((s) => (
+                                        <option key={s.value} value={s.value}>
+                                            {s.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex items-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => handleSearch()}
+                                    className="flex-1 rounded-xl bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none"
+                                >
+                                    Terapkan
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleReset}
+                                    className="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Orders Table */}

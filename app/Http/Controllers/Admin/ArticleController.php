@@ -41,7 +41,7 @@ class ArticleController extends Controller implements HasMiddleware
             $query->search($request->search);
         }
 
-        if ($request->filled('status')) {
+        if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 

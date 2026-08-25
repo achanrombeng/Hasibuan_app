@@ -11,11 +11,13 @@ import {
 import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
+    ArrowRight,
     ChevronLeft,
     ChevronRight,
     Eye,
     Grid3X3,
     Heart,
+    Layers,
     LayoutList,
     Loader2,
     Search,
@@ -35,11 +37,42 @@ interface Props {
 }
 
 const SORT_OPTIONS = [
-    { value: '-created_at', label: 'Terbaru' },
-    { value: 'created_at', label: 'Terlama' },
+    { value: '-created_at', label: 'Newest' },
+    { value: 'created_at', label: 'Oldest' },
     { value: 'name', label: 'A-Z' },
     { value: '-name', label: 'Z-A' },
 ];
+
+const CATEGORY_IMAGE_MAP: Record<string, string> = {
+    'dining-sets':
+        'https://images.unsplash.com/photo-1617806118233-18e1de247200?q=80&w=800&auto=format&fit=crop',
+    'living-set':
+        'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800&auto=format&fit=crop',
+    chairs:
+        'https://images.unsplash.com/photo-1580481072645-022f9a6d8310?q=80&w=800&auto=format&fit=crop',
+    tables:
+        'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=800&auto=format&fit=crop',
+    collection:
+        'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop',
+    'lounge-set':
+        'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=800&auto=format&fit=crop',
+    daybeds:
+        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop',
+    'comfort-product':
+        'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=800&auto=format&fit=crop',
+};
+
+function getCategoryImageUrl(cat: ApiCategory): string {
+    if (cat.image_url) return cat.image_url;
+    const slugKey = (cat.slug || '').toLowerCase();
+    if (CATEGORY_IMAGE_MAP[slugKey]) return CATEGORY_IMAGE_MAP[slugKey];
+
+    const nameLower = (cat.name || '').toLowerCase();
+    for (const [key, url] of Object.entries(CATEGORY_IMAGE_MAP)) {
+        if (nameLower.includes(key.replace('-', ' '))) return url;
+    }
+    return 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800&auto=format&fit=crop';
+}
 
 export default function ProductsIndex({
     products,
@@ -106,6 +139,23 @@ export default function ProductsIndex({
         });
     }, [searchQuery, selectedCategory, priceRange, selectedSort]);
 
+    const handleCategorySelect = (categoryId: number | null) => {
+        const newCat = selectedCategory === categoryId ? null : categoryId;
+        setSelectedCategory(newCat);
+
+        const params: Record<string, string> = {};
+        if (searchQuery) params['filter[name]'] = searchQuery;
+        if (newCat) params['filter[category_id]'] = String(newCat);
+        if (priceRange.min) params['filter[price_min]'] = String(priceRange.min);
+        if (priceRange.max) params['filter[price_max]'] = String(priceRange.max);
+        if (selectedSort) params['sort'] = selectedSort;
+
+        router.get('/shop/products', params, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
+
     const clearFilters = () => {
         setSearchQuery('');
         setSelectedCategory(null);
@@ -150,13 +200,13 @@ export default function ProductsIndex({
     // SEO Data
     const pageTitle = normalizedCurrentCategory
         ? normalizedCurrentCategory.name
-        : 'Semua Produk';
+        : 'All Products';
     const pageDescription = normalizedCurrentCategory
-        ? `Koleksi ${normalizedCurrentCategory.name} berkualitas tinggi di ${siteName}. Temukan berbagai pilihan ${normalizedCurrentCategory.name?.toLowerCase() || ''} dengan harga terbaik.`
-        : `Jelajahi koleksi lengkap furnitur berkualitas di ${siteName}. Kursi, meja, lemari, dan berbagai furnitur lainnya dengan harga terjangkau.`;
+        ? `Explore our high-quality ${normalizedCurrentCategory.name} collection at ${siteName}. Find premium outdoor & indoor furniture at the best prices.`
+        : `Explore our complete collection of premium furniture at ${siteName}. Chairs, tables, dining sets, daybeds, and handcrafted outdoor items.`;
     const breadcrumbItems = [
         {
-            name: 'Beranda',
+            name: 'Home',
             url:
                 typeof window !== 'undefined'
                     ? `${window.location.origin}/shop`
@@ -174,7 +224,7 @@ export default function ProductsIndex({
             ]
             : [
                 {
-                    name: 'Semua Produk',
+                    name: 'All Products',
                     url:
                         typeof window !== 'undefined'
                             ? `${window.location.origin}/shop/products`
@@ -211,27 +261,113 @@ export default function ProductsIndex({
                             <h1 className="mb-3 font-serif text-4xl font-bold md:text-5xl">
                                 {normalizedCurrentCategory
                                     ? normalizedCurrentCategory.name
-                                    : 'Semua Produk'}
+                                    : 'All Products'}
                             </h1>
                             <p className="text-xl opacity-90">
-                                {products.meta.total} produk berkualitas ditemukan
+                                {products.meta.total} {products.meta.total === 1 ? 'quality product found' : 'quality products found'}
                             </p>
                         </div>
                     </div>
 
                     <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+                        {/* Category Cards Showcase Grid (FIRST SECTION) */}
+                        <div className="mb-14">
+                            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                                <div>
+                                    <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-teal-50 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-teal-700">
+                                        <Layers size={14} />
+                                        <span>Product Categories</span>
+                                    </div>
+                                    <h2 className="font-serif text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl">
+                                        Explore by Category
+                                    </h2>
+                                    <p className="mt-1 text-sm text-neutral-500">
+                                        Select a furniture category to view our curated collection
+                                    </p>
+                                </div>
+                                {selectedCategory && (
+                                    <Link
+                                        href="/shop/products"
+                                        className="inline-flex items-center gap-1.5 text-sm font-medium text-teal-600 transition-colors hover:text-teal-700 hover:underline"
+                                    >
+                                        <span>View All Products</span>
+                                        <ArrowRight size={16} />
+                                    </Link>
+                                )}
+                            </div>
+
+                            {/* Category Cards Grid */}
+                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:gap-6">
+                                {normalizedCategories.map((cat: ApiCategory) => {
+                                    const isSelected =
+                                        selectedCategory === Number(cat.id) ||
+                                        (normalizedCurrentCategory &&
+                                            Number(normalizedCurrentCategory.id) === Number(cat.id));
+                                    const bgImage = getCategoryImageUrl(cat);
+                                    const targetHref = isSelected
+                                        ? '/shop/products'
+                                        : `/shop/products?filter[category]=${cat.slug || cat.id}`;
+
+                                    return (
+                                        <Link
+                                            key={cat.id}
+                                            href={targetHref}
+                                            className={`group relative overflow-hidden rounded-2xl bg-neutral-900 text-left transition-all duration-400 ${
+                                                isSelected
+                                                    ? 'ring-4 ring-teal-500 shadow-2xl scale-[1.02]'
+                                                    : 'hover:-translate-y-1.5 hover:shadow-xl'
+                                            }`}
+                                        >
+                                            <div className="relative aspect-[4/3] w-full overflow-hidden">
+                                                <img
+                                                    src={bgImage}
+                                                    alt={cat.name}
+                                                    className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
+                                                />
+                                                {/* Gradient Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 transition-opacity group-hover:opacity-90" />
+
+                                                {/* Active Status Badge */}
+                                                {isSelected && (
+                                                    <div className="absolute top-3 right-3 rounded-full bg-teal-500 px-3 py-1 text-xs font-semibold text-white shadow-md">
+                                                        Active
+                                                    </div>
+                                                )}
+
+                                                {/* Category Info Overlay */}
+                                                <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-5">
+                                                    <span className="text-xs font-medium uppercase tracking-wider text-teal-300">
+                                                        {cat.products_count !== undefined
+                                                            ? `${cat.products_count} ${cat.products_count === 1 ? 'Product' : 'Products'}`
+                                                            : 'Furniture Collection'}
+                                                    </span>
+                                                    <h3 className="mt-0.5 font-serif text-lg font-bold text-white transition-colors md:text-xl group-hover:text-teal-200">
+                                                        {cat.name}
+                                                    </h3>
+                                                    <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-white/80 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">
+                                                        <span>{isSelected ? 'Active Category' : 'Select Category'}</span>
+                                                        <ChevronRight size={14} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
                         {/* Search & Controls Header */}
                         <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
                             {/* Breadcrumb */}
                             <nav className="flex items-center gap-2 text-sm text-neutral-500">
                                 <Link href="/shop" className="hover:text-teal-600 transition-colors">
-                                    Beranda
+                                    Home
                                 </Link>
                                 <span>/</span>
                                 <span className="text-neutral-900 font-medium">
                                     {normalizedCurrentCategory
                                         ? normalizedCurrentCategory.name
-                                        : 'Semua Produk'}
+                                        : 'All Products'}
                                 </span>
                             </nav>
 
@@ -244,7 +380,7 @@ export default function ProductsIndex({
                                     />
                                     <input
                                         type="text"
-                                        placeholder="Cari produk..."
+                                        placeholder="Search products..."
                                         value={searchQuery}
                                         onChange={(e) =>
                                             setSearchQuery(e.target.value)
@@ -502,7 +638,7 @@ function FilterDrawer({
                     {/* Sort */}
                     <div>
                         <h3 className="mb-4 font-medium text-neutral-900">
-                            Urutkan
+                            Sort By
                         </h3>
                         <select
                             value={selectedSort}
@@ -522,14 +658,14 @@ function FilterDrawer({
                     {/* Categories */}
                     <div>
                         <h3 className="mb-4 font-medium text-neutral-900">
-                            Kategori
+                            Categories
                         </h3>
                         <div className="space-y-2">
                             <button
                                 onClick={() => setSelectedCategory(null)}
                                 className={`w-full rounded-sm px-4 py-2 text-left transition-colors ${!selectedCategory ? 'bg-teal-50 font-medium text-teal-700' : 'text-neutral-600 hover:bg-neutral-50'}`}
                             >
-                                Semua Kategori
+                                All Categories
                             </button>
                             {safeCategories.length > 0 ? (
                                 safeCategories.map((cat) => (
@@ -545,7 +681,7 @@ function FilterDrawer({
                                 ))
                             ) : (
                                 <p className="px-4 py-2 text-sm text-neutral-400">
-                                    Tidak ada kategori tersedia
+                                    No categories available
                                 </p>
                             )}
                         </div>
@@ -559,7 +695,7 @@ function FilterDrawer({
                             onClick={onApply}
                             className="flex-1 rounded-sm bg-teal-600 py-3 font-medium text-white shadow-sm transition-colors hover:bg-teal-700"
                         >
-                            Terapkan Filter
+                            Apply Filters
                         </button>
                         {hasActiveFilters && (
                             <button
@@ -593,10 +729,10 @@ function ProductGrid({ products, viewMode, onQuickView }: ProductGridProps) {
                     size={64}
                 />
                 <h3 className="mb-2 text-xl font-medium text-neutral-900">
-                    Tidak ada produk ditemukan
+                    No products found
                 </h3>
                 <p className="text-neutral-500">
-                    Coba ubah filter atau kata kunci pencarian Anda
+                    Try adjusting your filter or search keywords
                 </p>
             </div>
         );

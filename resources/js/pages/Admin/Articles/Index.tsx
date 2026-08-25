@@ -20,41 +20,32 @@ import {
 } from '@/components/ui/select';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
-import { FileText, Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { FileText, Filter, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Article {
     id: number;
     title: string;
     slug: string;
-    author: string;
-    status: string;
+    excerpt: string | null;
+    status: 'draft' | 'published' | 'archived';
     published_at: string | null;
-    views: number;
+    author: {
+        id: number;
+        name: string;
+    };
     created_at: string;
 }
 
 interface ArticlesIndexProps {
     articles: {
         data: Article[];
-        links: {
-            first?: string;
-            last?: string;
-            prev?: string;
-            next?: string;
-        };
-        meta: {
-            current_page: number;
-            last_page: number;
-            from: number;
-            to: number;
-            total: number;
-            links: Array<{
-                url: string | null;
-                label: string;
-                active: boolean;
-            }>;
-        };
+        links: Array<{ url: string | null; label: string; active: boolean }>;
+        current_page: number;
+        last_page: number;
+        from: number;
+        to: number;
+        total: number;
     };
     filters?: {
         search?: string;
@@ -70,12 +61,14 @@ export default function ArticlesIndex({
 }: ArticlesIndexProps) {
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || 'all');
+    const [showFilters, setShowFilters] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState<Article | null>(
         null,
     );
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleFilter = () => {
+    const handleFilter = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
         router.get(
             '/admin/articles',
             {
@@ -113,35 +106,24 @@ export default function ArticlesIndex({
 
     const getStatusBadge = (status: string) => {
         const colors = {
-            draft: 'bg-gray-100 text-gray-800',
+            draft: 'bg-yellow-100 text-yellow-800',
             published: 'bg-green-100 text-green-800',
-            archived: 'bg-yellow-100 text-yellow-800',
+            archived: 'bg-gray-100 text-gray-800',
         };
-
-        const labels = {
-            draft: 'Draft',
-            published: 'Published',
-            archived: 'Archived',
-        };
-
         return (
             <Badge
                 className={
-                    colors[status as keyof typeof colors] ||
-                    'bg-gray-100 text-gray-800'
+                    colors[status as keyof typeof colors] || colors.draft
                 }
             >
-                {labels[status as keyof typeof labels] || status}
+                {status.charAt(0).toUpperCase() + status.slice(1)}
             </Badge>
         );
     };
 
     return (
         <AdminLayout
-            breadcrumbs={[
-                { title: 'Dashboard', href: '/admin' },
-                { title: 'Articles', href: '/admin/articles' },
-            ]}
+            breadcrumbs={[{ title: 'Articles', href: '/admin/articles' }]}
         >
             <Head title="Articles" />
 
@@ -149,69 +131,95 @@ export default function ArticlesIndex({
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-terra-900">
                             Articles
                         </h1>
-                        <p className="mt-1 text-sm text-gray-600">
-                            Manage articles and blog content
+                        <p className="mt-1 text-sm text-terra-500">
+                            Manage blog articles and news
                         </p>
                     </div>
                     <Link href="/admin/articles/create">
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Article
+                        <Button className="flex items-center gap-2">
+                            <Plus className="h-4 w-4" />
+                            Create Article
                         </Button>
                     </Link>
                 </div>
 
-                {/* Filters */}
-                <div className="rounded-lg border bg-white p-4 shadow-sm">
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                            <Input
+                {/* Search & Filter Bar */}
+                <div className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm md:p-6">
+                    <form
+                        onSubmit={handleFilter}
+                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                    >
+                        <div className="relative flex-1">
+                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                            <input
                                 type="text"
                                 placeholder="Search article..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') handleFilter();
-                                }}
-                                className="pl-10"
+                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                             />
                         </div>
-
-                        <Select value={status} onValueChange={setStatus}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Statuses</SelectItem>
-                                {statuses.map((s) => (
-                                    <SelectItem key={s.value} value={s.value}>
-                                        {s.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-
-                        <div className="flex gap-2">
-                            <Button
-                                onClick={handleFilter}
-                                className="flex-1"
-                                variant="default"
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                type="button"
+                                onClick={() => setShowFilters(!showFilters)}
+                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
+                                    showFilters
+                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                }`}
                             >
-                                Apply
-                            </Button>
-                            <Button
-                                onClick={handleReset}
-                                variant="outline"
-                                className="flex-1"
+                                <Filter className="h-4 w-4 text-neutral-600" /> Filter
+                            </button>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
                             >
-                                Reset
-                            </Button>
+                                Cari
+                            </button>
                         </div>
-                    </div>
+                    </form>
+
+                    {showFilters && (
+                        <div className="mt-4 grid grid-cols-1 gap-4 border-t border-neutral-100 pt-4 sm:grid-cols-2 lg:grid-cols-4">
+                            <div>
+                                <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                    Status
+                                </label>
+                                <select
+                                    value={status}
+                                    onChange={(e) => setStatus(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 p-2.5 text-sm text-neutral-900 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                >
+                                    <option value="all">All Statuses</option>
+                                    {statuses.map((s) => (
+                                        <option key={s.value} value={s.value}>
+                                            {s.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex items-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => handleFilter()}
+                                    className="flex-1 rounded-xl bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none"
+                                >
+                                    Terapkan
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleReset}
+                                    className="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Table */}
@@ -265,7 +273,9 @@ export default function ArticlesIndex({
                                                 </Link>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {article.author}
+                                                {typeof article.author === 'object'
+                                                    ? article.author?.name
+                                                    : article.author || '-'}
                                             </td>
                                             <td className="px-6 py-4">
                                                 {getStatusBadge(article.status)}

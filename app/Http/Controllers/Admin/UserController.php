@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function index(Request $request): Response
     {
-        $users = QueryBuilder::for(User::class)
+        $users = QueryBuilder::for(User::class, $request)
             ->allowedFilters(['name', 'email'])
             ->allowedSorts(['name', 'email', 'created_at'])
             ->defaultSort('-created_at')

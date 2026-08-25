@@ -7,15 +7,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductReview;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ReviewController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $paginator = QueryBuilder::for(ProductReview::class)
+        $paginator = QueryBuilder::for(ProductReview::class, $request)
             ->allowedFilters(['rating', 'is_approved'])
             ->allowedSorts(['rating', 'created_at'])
             ->defaultSort('-created_at')

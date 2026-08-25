@@ -92,7 +92,13 @@ export default function ProductsIndex({
     const [isFeatured, setIsFeatured] = useState(
         filterObj.is_featured || 'all',
     );
-    const [showFilters, setShowFilters] = useState(false);
+    const hasActiveFilters = Boolean(
+        (filterObj.category_id && filterObj.category_id !== 'all') ||
+        (filterObj.status && filterObj.status !== 'all') ||
+        (filterObj.sale_type && filterObj.sale_type !== 'all') ||
+        (filterObj.is_featured && filterObj.is_featured !== 'all')
+    );
+    const [showFilters, setShowFilters] = useState(hasActiveFilters);
     const [productToDelete, setProductToDelete] = useState<Product | null>(
         null,
     );
@@ -104,7 +110,7 @@ export default function ProductsIndex({
         if (e) e.preventDefault();
 
         const params: Record<string, string> = {};
-        if (search) params['filter[name]'] = search;
+        if (search.trim()) params['filter[name]'] = search.trim();
         if (category && category !== 'all')
             params['filter[category_id]'] = category;
         if (status && status !== 'all') params['filter[status]'] = status;
@@ -156,25 +162,25 @@ export default function ProductsIndex({
 
     return (
         <AdminLayout
-            breadcrumbs={[{ title: 'Produk', href: '/admin/products' }]}
+            breadcrumbs={[{ title: 'Products', href: '/admin/products' }]}
         >
-            <Head title="Kelola Produk" />
+            <Head title="Manage Products" />
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Kelola Produk
+                            Manage Products
                         </h1>
                         <p className="mt-1 text-terra-500">
-                            Kelola semua produk di toko Anda
+                            Manage all products in your shop
                         </p>
                     </div>
                     <Link
                         href="/admin/products/create"
                         className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-teal-700"
                     >
-                        <Plus className="h-5 w-5" /> Tambah Produk
+                        <Plus className="h-5 w-5" /> Add Product
                     </Link>
                 </div>
 
@@ -188,7 +194,7 @@ export default function ProductsIndex({
                             <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
-                                placeholder="Cari produk..."
+                                placeholder="Search products..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
@@ -198,11 +204,10 @@ export default function ProductsIndex({
                             <button
                                 type="button"
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
-                                    showFilters
-                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
-                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
-                                }`}
+                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${showFilters
+                                    ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                    : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                    }`}
                             >
                                 <Filter className="h-4 w-4 text-neutral-600" /> Filter
                             </button>
@@ -210,7 +215,7 @@ export default function ProductsIndex({
                                 type="submit"
                                 className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
                             >
-                                Cari
+                                Search
                             </button>
                         </div>
                     </form>
@@ -219,7 +224,7 @@ export default function ProductsIndex({
                         <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-2 lg:grid-cols-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-terra-700">
-                                    Kategori
+                                    Category
                                 </label>
                                 <select
                                     value={category}
@@ -228,7 +233,7 @@ export default function ProductsIndex({
                                     }
                                     className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
                                 >
-                                    <option value="all">Semua Kategori</option>
+                                    <option value="all">All Categories</option>
                                     {categories.data.map((cat) => (
                                         <option key={cat.id} value={cat.id}>
                                             {cat.name}
@@ -246,7 +251,7 @@ export default function ProductsIndex({
                                     onChange={(e) => setStatus(e.target.value)}
                                     className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
                                 >
-                                    <option value="all">Semua Status</option>
+                                    <option value="all">All Status</option>
                                     {statuses.map((s) => (
                                         <option key={s.value} value={s.value}>
                                             {s.name}
@@ -260,7 +265,7 @@ export default function ProductsIndex({
                                     onClick={() => handleSearch()}
                                     className="flex-1 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700 sm:flex-none"
                                 >
-                                    Terapkan
+                                    Apply
                                 </button>
                                 <button
                                     onClick={handleReset}
@@ -303,7 +308,7 @@ export default function ProductsIndex({
                                             colSpan={5}
                                             className="py-12 text-center text-terra-500"
                                         >
-                                            Belum ada produk
+                                            No products yet
                                         </td>
                                     </tr>
                                 ) : (
@@ -321,11 +326,11 @@ export default function ProductsIndex({
                                                                     .primary_image
                                                                     ?.image_url ||
                                                                 (product.images &&
-                                                                product.images
-                                                                    .length > 0
+                                                                    product.images
+                                                                        .length > 0
                                                                     ? product
-                                                                          .images[0]
-                                                                          .image_url
+                                                                        .images[0]
+                                                                        .image_url
                                                                     : null);
                                                             return imageUrl ? (
                                                                 <img
@@ -414,14 +419,14 @@ export default function ProductsIndex({
                             <AlertTriangle className="h-6 w-6 text-red-600" />
                         </div>
                         <DialogTitle className="text-center">
-                            Hapus Produk
+                            Delete Product
                         </DialogTitle>
                         <DialogDescription className="text-center">
-                            Apakah Anda yakin ingin menghapus produk{' '}
+                            Are you sure you want to delete product{' '}
                             <span className="font-semibold text-terra-900">
                                 "{productToDelete?.name}"
                             </span>
-                            ? Tindakan ini tidak dapat dibatalkan.
+                            ? Action cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-4 gap-2">
@@ -430,7 +435,7 @@ export default function ProductsIndex({
                                 type="button"
                                 className="flex-1 rounded-xl border border-terra-200 px-4 py-2.5 font-medium text-terra-700 transition-colors hover:bg-terra-50 sm:flex-none"
                             >
-                                Batal
+                                Cancel
                             </button>
                         </DialogClose>
                         <button
@@ -439,7 +444,7 @@ export default function ProductsIndex({
                             disabled={isDeleting}
                             className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
                         >
-                            {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
+                            {isDeleting ? 'Deleting...' : 'Yes, Delete'}
                         </button>
                     </DialogFooter>
                 </DialogContent>

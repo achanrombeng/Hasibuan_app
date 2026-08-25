@@ -24,6 +24,7 @@ class ProductController extends Controller
             ->withQueryString();
 
         $categories = Category::active()
+            ->withCount('products')
             ->ordered()
             ->get();
 

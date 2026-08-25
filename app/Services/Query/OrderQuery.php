@@ -13,7 +13,7 @@ class OrderQuery
 {
     public static function admin(Request $request): QueryBuilder
     {
-        return QueryBuilder::for(Order::class)
+        return QueryBuilder::for(Order::class, $request)
             ->allowedFilters([
                 AllowedFilter::partial('order_number'),
                 AllowedFilter::exact('status'),

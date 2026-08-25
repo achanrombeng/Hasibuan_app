@@ -16,37 +16,45 @@ class ImageService
      * it flattens the image onto a solid white (#FFFFFF) background.
      * If the image is opaque/already has a background, it stores as-is.
      */
+    /**
+     * Store uploaded image.
+     * If the image has transparency (PNG/WebP/GIF with alpha channel) or solid black background,
+     * it flattens/converts the image background onto solid white (#FFFFFF).
+     * If the image already has a solid non-black background (opaque photo/scene), it stores as-is.
+     */
     public static function storeWithWhiteBackground(
-        UploadedFile $file,
+        UploadedFile|string $file,
         string $directory = 'products',
         string $disk = 'public'
     ): string {
-        $mimeType = $file->getMimeType();
+        $isUploaded = $file instanceof UploadedFile;
 
-        // Only process PNG, WebP, or GIF which support transparency
-        if (! in_array($mimeType, ['image/png', 'image/webp', 'image/gif'], true)) {
-            return $file->store($directory, $disk);
+        if ($isUploaded) {
+            $realPath = $file->getRealPath();
+            $mimeType = $file->getMimeType();
+        } else {
+            $realPath = $file;
+            $mimeType = mime_content_type($realPath) ?: 'image/jpeg';
         }
 
-        $realPath = $file->getRealPath();
         if (! $realPath || ! file_exists($realPath)) {
-            return $file->store($directory, $disk);
+            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
         }
 
         $content = file_get_contents($realPath);
         if ($content === false) {
-            return $file->store($directory, $disk);
+            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
         }
 
         $srcImage = @imagecreatefromstring($content);
         if (! $srcImage) {
-            return $file->store($directory, $disk);
+            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
         }
 
         $width = imagesx($srcImage);
         $height = imagesy($srcImage);
 
-        // Sample pixels to detect transparency (alpha channel > 0)
+        // 1. Detect transparency (alpha channel > 0)
         $hasTransparency = false;
         $stepX = max(1, (int) ($width / 100));
         $stepY = max(1, (int) ($height / 100));
@@ -62,36 +70,76 @@ class ImageService
             }
         }
 
-        // If no transparent pixels found, keep original file intact
+        // 2. Detect solid black / near-black background in corners
+        $hasBlackBackground = false;
         if (! $hasTransparency) {
-            imagedestroy($srcImage);
-
-            return $file->store($directory, $disk);
+            $corners = [
+                [0, 0],
+                [$width - 1, 0],
+                [0, $height - 1],
+                [$width - 1, $height - 1],
+            ];
+            $blackCorners = 0;
+            foreach ($corners as [$cx, $cy]) {
+                $c = imagecolorat($srcImage, $cx, $cy);
+                $r = ($c >> 16) & 0xFF;
+                $g = ($c >> 8) & 0xFF;
+                $b = $c & 0xFF;
+                if ($r < 25 && $g < 25 && $b < 25) {
+                    $blackCorners++;
+                }
+            }
+            if ($blackCorners >= 3) {
+                $hasBlackBackground = true;
+            }
         }
 
-        // Create canvas filled with solid white background
+        // If no transparency AND no black background, store original file as-is
+        if (! $hasTransparency && ! $hasBlackBackground) {
+            imagedestroy($srcImage);
+
+            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
+        }
+
+        // Create white canvas
         $canvas = imagecreatetruecolor($width, $height);
         if (! $canvas) {
             imagedestroy($srcImage);
 
-            return $file->store($directory, $disk);
+            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
         }
 
         $white = imagecolorallocate($canvas, 255, 255, 255);
         imagefill($canvas, 0, 0, $white);
 
-        // Copy transparent image over solid white canvas with alpha blending enabled
-        imagealphablending($canvas, true);
-        imagecopy($canvas, $srcImage, 0, 0, 0, 0, $width, $height);
+        if ($hasTransparency) {
+            // Composite transparent image onto white canvas
+            imagealphablending($canvas, true);
+            imagecopy($canvas, $srcImage, 0, 0, 0, 0, $width, $height);
+        } elseif ($hasBlackBackground) {
+            // Copy source image to canvas and replace black background pixels with white
+            imagecopy($canvas, $srcImage, 0, 0, 0, 0, $width, $height);
+            for ($x = 0; $x < $width; $x++) {
+                for ($y = 0; $y < $height; $y++) {
+                    $c = imagecolorat($srcImage, $x, $y);
+                    $r = ($c >> 16) & 0xFF;
+                    $g = ($c >> 8) & 0xFF;
+                    $b = $c & 0xFF;
+                    if ($r < 25 && $g < 25 && $b < 25) {
+                        imagesetpixel($canvas, $x, $y, $white);
+                    }
+                }
+            }
+        }
 
-        // Save output to stream buffer
+        // Save processed output
         ob_start();
         if ($mimeType === 'image/webp' && function_exists('imagewebp')) {
             imagewebp($canvas, null, 92);
-            $filename = Str::random(40).'.webp';
+            $extension = '.webp';
         } else {
             imagepng($canvas, null, 6);
-            $filename = Str::random(40).'.png';
+            $extension = '.png';
         }
         $processedData = ob_get_clean();
 
@@ -99,9 +147,10 @@ class ImageService
         imagedestroy($canvas);
 
         if (! $processedData) {
-            return $file->store($directory, $disk);
+            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
         }
 
+        $filename = Str::random(40).$extension;
         $path = rtrim($directory, '/').'/'.$filename;
         Storage::disk($disk)->put($path, $processedData);
 

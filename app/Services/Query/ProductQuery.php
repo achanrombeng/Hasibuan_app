@@ -14,7 +14,7 @@ class ProductQuery
 {
     public static function shop(Request $request): QueryBuilder
     {
-        return QueryBuilder::for(Product::class)
+        return QueryBuilder::for(Product::class, $request)
             ->allowedFilters([
                 AllowedFilter::partial('name'),
                 AllowedFilter::callback('category_id', function ($query, $value) {
@@ -44,7 +44,7 @@ class ProductQuery
 
     public static function admin(Request $request): QueryBuilder
     {
-        return QueryBuilder::for(Product::class)
+        return QueryBuilder::for(Product::class, $request)
             ->allowedFilters([
                 AllowedFilter::partial('name'),
                 AllowedFilter::exact('category_id'),

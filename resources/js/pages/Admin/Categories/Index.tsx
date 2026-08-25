@@ -73,18 +73,16 @@ function CategoryTreeItem({
     return (
         <>
             <div
-                className={`group flex items-center gap-3 rounded-xl border border-terra-100 bg-white p-4 shadow-sm transition-all hover:shadow-md ${
-                    level > 0 ? 'ml-8 border-l-4 border-l-wood/30' : ''
-                }`}
+                className={`group flex items-center gap-3 rounded-xl border border-terra-100 bg-white p-4 shadow-sm transition-all hover:shadow-md ${level > 0 ? 'ml-8 border-l-4 border-l-wood/30' : ''
+                    }`}
             >
                 {/* Expand/Collapse Button */}
                 <button
                     onClick={() => hasChildren && toggleExpand(category.id)}
-                    className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                        hasChildren
-                            ? 'bg-terra-100 text-terra-600 hover:bg-terra-200'
-                            : 'cursor-default bg-terra-50 text-terra-300'
-                    }`}
+                    className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${hasChildren
+                        ? 'bg-terra-100 text-terra-600 hover:bg-terra-200'
+                        : 'cursor-default bg-terra-50 text-terra-300'
+                        }`}
                     disabled={!hasChildren}
                 >
                     {hasChildren ? (
@@ -134,11 +132,10 @@ function CategoryTreeItem({
                 {/* Status Badges */}
                 <div className="hidden items-center gap-2 md:flex">
                     <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                            category.is_active
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-700'
-                        }`}
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${category.is_active
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                            }`}
                     >
                         {category.is_active ? 'Active' : 'Inactive'}
                     </span>
@@ -390,39 +387,44 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                 </div>
 
                 {/* Search & Filter Bar */}
-                <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm sm:flex-row sm:items-center">
-                    <div className="relative flex-1">
-                        <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-                        <input
-                            type="text"
-                            placeholder="Search category..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
-                        />
-                    </div>
-                    <div className="flex items-center gap-2.5">
-                        <div className="relative">
-                            <Filter className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value as any)}
-                                className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pr-8 pl-9 text-sm font-medium text-neutral-700 shadow-sm transition-all hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
-                            >
-                                <option value="name_asc">Filter: A - Z</option>
-                                <option value="name_desc">Filter: Z - A</option>
-                                <option value="newest">Filter: Newest</option>
-                                <option value="oldest">Filter: Oldest</option>
-                            </select>
-                            <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                <div className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm md:p-6">
+                    <form
+                        onSubmit={(e) => e.preventDefault()}
+                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                    >
+                        <div className="relative flex-1">
+                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                            <input
+                                type="text"
+                                placeholder="Search categories..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                            />
                         </div>
-                        <button
-                            type="button"
-                            className="rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#8e6843] active:scale-[0.98]"
-                        >
-                            Search
-                        </button>
-                    </div>
+                        <div className="flex items-center gap-2.5">
+                            <div className="relative">
+                                <Filter className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value as any)}
+                                    className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pr-8 pl-9 text-sm font-medium text-neutral-700 shadow-sm transition-all hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                >
+                                    <option value="name_asc">Sort by: A - Z</option>
+                                    <option value="name_desc">Sort by: Z - A</option>
+                                    <option value="newest">Sort by: Newest</option>
+                                    <option value="oldest">Sort by: Oldest</option>
+                                </select>
+                                <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                            </div>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                            >
+                                Search
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 {/* Categories Tree */}

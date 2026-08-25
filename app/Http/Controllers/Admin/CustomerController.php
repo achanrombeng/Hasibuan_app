@@ -15,7 +15,7 @@ class CustomerController extends Controller
 {
     public function index(Request $request): Response
     {
-        $customers = QueryBuilder::for(User::class)
+        $customers = QueryBuilder::for(User::class, $request)
             ->role('customer')
             ->allowedFilters(['name', 'email'])
             ->allowedSorts(['name', 'email', 'created_at'])

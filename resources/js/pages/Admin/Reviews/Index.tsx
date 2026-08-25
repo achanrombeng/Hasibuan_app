@@ -14,6 +14,8 @@ import {
     AlertTriangle,
     Check,
     Clock,
+    Filter,
+    Search,
     Star,
     Trash2,
     User,
@@ -69,9 +71,11 @@ export default function ReviewsIndex({
         filters?.filter && typeof filters.filter === 'object'
             ? filters.filter
             : {};
+    const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState(
         filterObj.is_approved || '',
     );
+    const [showFilters, setShowFilters] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
     const [reviewToDelete, setReviewToDelete] = useState<Review | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -118,6 +122,12 @@ export default function ReviewsIndex({
         );
     };
 
+    const handleReset = () => {
+        setSearch('');
+        setStatusFilter('');
+        router.get('/admin/reviews', {}, { preserveState: true });
+    };
+
     const loadMore = () => {
         if (next_page_url && !loadingMore) {
             setLoadingMore(true);
@@ -155,23 +165,80 @@ export default function ReviewsIndex({
                         </p>
                     </div>
 
-                    {/* Filters */}
-                    <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => handleFilterChange(e.target.value)}
-                            className="rounded-xl border border-terra-200 bg-white px-4 py-2.5 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                    {/* Search & Filter Bar */}
+                    <div className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm md:p-6">
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleFilterChange(statusFilter);
+                            }}
+                            className="flex flex-col gap-3 sm:flex-row sm:items-center"
                         >
-                            <option value="" className="bg-white text-terra-900">
-                                All Statuses
-                            </option>
-                            <option value="1" className="bg-white text-terra-900">
-                                Approved
-                            </option>
-                            <option value="0" className="bg-white text-terra-900">
-                                Pending Approval
-                            </option>
-                        </select>
+                            <div className="relative flex-1">
+                                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Cari ulasan..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                />
+                            </div>
+                            <div className="flex items-center gap-2.5">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
+                                        showFilters
+                                            ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                            : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                    }`}
+                                >
+                                    <Filter className="h-4 w-4 text-neutral-600" /> Filter
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                                >
+                                    Cari
+                                </button>
+                            </div>
+                        </form>
+
+                        {showFilters && (
+                            <div className="mt-4 grid grid-cols-1 gap-4 border-t border-neutral-100 pt-4 sm:grid-cols-2 lg:grid-cols-4">
+                                <div>
+                                    <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                        Status Ulasan
+                                    </label>
+                                    <select
+                                        value={statusFilter}
+                                        onChange={(e) => handleFilterChange(e.target.value)}
+                                        className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 p-2.5 text-sm text-neutral-900 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                    >
+                                        <option value="">Semua Status</option>
+                                        <option value="1">Disetujui (Approved)</option>
+                                        <option value="0">Menunggu (Pending)</option>
+                                    </select>
+                                </div>
+                                <div className="flex items-end gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleFilterChange(statusFilter)}
+                                        className="flex-1 rounded-xl bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none"
+                                    >
+                                        Terapkan
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleReset}
+                                        className="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none"
+                                    >
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Reviews List */}
@@ -253,7 +320,7 @@ export default function ReviewsIndex({
                                 href="/admin"
                                 className="inline-flex items-center gap-2 rounded-xl bg-terra-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-wood hover:shadow-md"
                             >
-                                Kembali ke Dashboard
+                                Back to Dashboard
                             </Link>
                         </div>
                     </div>

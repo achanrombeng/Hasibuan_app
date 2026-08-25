@@ -114,58 +114,58 @@ export const Footer = () => {
                             siteSettings?.instagram_url ||
                             siteSettings?.tiktok_url ||
                             siteSettings?.youtube_url) && (
-                            <div className="pt-2">
-                                <h5 className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                                    Media Sosial
-                                </h5>
-                                <div className="flex items-center gap-3">
-                                    {siteSettings?.facebook_url && (
-                                        <a
-                                            href={siteSettings.facebook_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
-                                            title="Facebook"
-                                        >
-                                            <Facebook className="h-4 w-4" />
-                                        </a>
-                                    )}
-                                    {siteSettings?.instagram_url && (
-                                        <a
-                                            href={siteSettings.instagram_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
-                                            title="Instagram"
-                                        >
-                                            <Instagram className="h-4 w-4" />
-                                        </a>
-                                    )}
-                                    {siteSettings?.tiktok_url && (
-                                        <a
-                                            href={siteSettings.tiktok_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
-                                            title="TikTok"
-                                        >
-                                            <TikTokIcon className="h-4 w-4" />
-                                        </a>
-                                    )}
-                                    {siteSettings?.youtube_url && (
-                                        <a
-                                            href={siteSettings.youtube_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-red-600 hover:text-white"
-                                            title="YouTube"
-                                        >
-                                            <Youtube className="h-4 w-4" />
-                                        </a>
-                                    )}
+                                <div className="pt-2">
+                                    <h5 className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                        Media Sosial
+                                    </h5>
+                                    <div className="flex items-center gap-3">
+                                        {siteSettings?.facebook_url && (
+                                            <a
+                                                href={siteSettings.facebook_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
+                                                title="Facebook"
+                                            >
+                                                <Facebook className="h-4 w-4" />
+                                            </a>
+                                        )}
+                                        {siteSettings?.instagram_url && (
+                                            <a
+                                                href={siteSettings.instagram_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
+                                                title="Instagram"
+                                            >
+                                                <Instagram className="h-4 w-4" />
+                                            </a>
+                                        )}
+                                        {siteSettings?.tiktok_url && (
+                                            <a
+                                                href={siteSettings.tiktok_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-teal-600 hover:text-white"
+                                                title="TikTok"
+                                            >
+                                                <TikTokIcon className="h-4 w-4" />
+                                            </a>
+                                        )}
+                                        {siteSettings?.youtube_url && (
+                                            <a
+                                                href={siteSettings.youtube_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-200/80 text-neutral-700 transition-all hover:bg-red-600 hover:text-white"
+                                                title="YouTube"
+                                            >
+                                                <Youtube className="h-4 w-4" />
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
                     </div>
 
                     {/* 2. Navigasi Kolom 1 (Shop) */}

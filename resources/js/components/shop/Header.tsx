@@ -125,15 +125,21 @@ export const Header: React.FC<HeaderProps> = ({
 
     const activeCategoriesList =
         categoriesArray && categoriesArray.length > 0
-            ? categoriesArray.map((c: any) => ({
-                  id: c.id,
-                  name:
-                      typeof c.name === 'object' && c.name !== null
-                          ? c.name.id || c.name.en || Object.values(c.name)[0]
-                          : c.name,
-                  slug: c.slug,
-                  href: `/shop/products?filter[category]=${c.slug}`,
-              }))
+            ? categoriesArray
+                .map((c: any) => ({
+                    id: c.id,
+                    name:
+                        typeof c.name === 'object' && c.name !== null
+                            ? c.name.id || c.name.en || Object.values(c.name)[0]
+                            : c.name,
+                    slug: c.slug,
+                    href: `/shop/products?filter[category]=${c.slug}`,
+                }))
+                .sort((a: any, b: any) =>
+                    (a.name || '').localeCompare(b.name || '', undefined, {
+                        sensitivity: 'base',
+                    }),
+                )
             : [];
 
     const handleLogout = () => {
@@ -152,10 +158,10 @@ export const Header: React.FC<HeaderProps> = ({
     };
 
     return (
-        <header className="relative sticky top-0 z-40 w-full bg-white shadow-sm">
+        <header className="relative sticky top-0 z-40 w-full bg-[#EBEBEB] shadow-sm">
             {/* Main Navigation */}
             <nav className="py-4">
-                <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 md:px-12">
+                <div className="flex items-center justify-between gap-x-6 max-w-[1720px] mx-auto relative py-[10px] sm:py-3 lg:py-0">
                     {/* Logo */}
                     <div
                         className="group flex cursor-pointer items-center"
@@ -184,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
                                             className="flex items-center gap-1 text-base xl:text-lg font-medium text-neutral-800 transition-colors hover:text-teal-500"
                                         >
                                             {t(item.labelKey)}
-                                            <span className="ml-0.5 text-sm font-light text-neutral-400 transition-colors group-hover:text-teal-500">
+                                            <span className="ml-0.5 text-sm font-light text-neutral-400  transition-colors group-hover:text-teal-500">
                                                 +
                                             </span>
                                         </Link>

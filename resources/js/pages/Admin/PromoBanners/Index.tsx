@@ -217,18 +217,31 @@ export default function PromoBannersIndex({
                     </div>
                 </div>
 
-                {/* Search */}
-                <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-                    <div className="relative max-w-md">
-                        <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                        <input
-                            type="text"
-                            placeholder="Search promo..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pr-4 pl-10 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                        />
-                    </div>
+                {/* Search & Filter Bar */}
+                <div className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm md:p-6">
+                    <form
+                        onSubmit={(e) => e.preventDefault()}
+                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                    >
+                        <div className="relative flex-1">
+                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                            <input
+                                type="text"
+                                placeholder="Cari promo..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                            />
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                type="submit"
+                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                            >
+                                Cari
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 {/* Promo Banners List */}
