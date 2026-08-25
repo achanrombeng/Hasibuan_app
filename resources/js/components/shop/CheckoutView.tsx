@@ -87,7 +87,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
                     className="flex items-center gap-2 text-terra-600 hover:text-terra-900 mb-8 transition-colors"
                 >
                     <ArrowLeft size={20} />
-                    <span>Kembali ke Keranjang</span>
+                    <span>Back to Cart</span>
                 </button>
 
                 <h1 className="font-serif text-5xl text-terra-900 mb-12">Checkout</h1>
@@ -96,33 +96,33 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
                     {/* Checkout Form */}
                     <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-8">
                         <div>
-                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Informasi Kontak</h2>
+                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Contact Information</h2>
                             <div className="grid grid-cols-2 gap-4">
-                                <input type="text" placeholder="Nama Depan" className="col-span-1 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
-                                <input type="text" placeholder="Nama Belakang" className="col-span-1 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                <input type="text" placeholder="First Name" className="col-span-1 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                <input type="text" placeholder="Last Name" className="col-span-1 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
                                 <input type="email" placeholder="Email" className="col-span-2 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
-                                <input type="tel" placeholder="Nomor Telepon" className="col-span-2 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                <input type="tel" placeholder="Phone Number" className="col-span-2 p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
                             </div>
                         </div>
 
                         <div>
-                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Alamat Pengiriman</h2>
+                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Shipping Address</h2>
                             <div className="space-y-4">
-                                <input type="text" placeholder="Alamat Lengkap" className="w-full p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                <input type="text" placeholder="Full Address" className="w-full p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
                                 <div className="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="Kota" className="p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
-                                    <input type="text" placeholder="Provinsi" className="p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                    <input type="text" placeholder="City" className="p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                    <input type="text" placeholder="State / Province" className="p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
                                 </div>
-                                <input type="text" placeholder="Kode Pos" className="w-full p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
+                                <input type="text" placeholder="Postal Code" className="w-full p-4 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors" required />
                             </div>
                         </div>
 
                         <div>
-                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Metode Pembayaran</h2>
+                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Payment Method</h2>
                             <div className="space-y-3">
-                                {['Transfer Bank', 'Kartu Kredit/Debit', 'E-Wallet', 'COD (Bayar di Tempat)'].map((method) => (
+                                {['Bank Transfer', 'Credit/Debit Card', 'E-Wallet', 'Cash on Delivery (COD)'].map((method) => (
                                     <label key={method} className="flex items-center gap-4 p-4 border border-terra-200 rounded-sm cursor-pointer hover:border-wood transition-colors">
-                                        <input type="radio" name="payment" value={method} className="w-5 h-5 accent-wood" defaultChecked={method === 'Transfer Bank'} />
+                                        <input type="radio" name="payment" value={method} className="w-5 h-5 accent-wood" defaultChecked={method === 'Bank Transfer'} />
                                         <span className="text-terra-700">{method}</span>
                                     </label>
                                 ))}
@@ -131,14 +131,14 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
 
                         <button type="submit" className="w-full bg-terra-900 text-white py-5 rounded-full font-medium hover:bg-wood transition-colors flex items-center justify-center gap-3 text-lg">
                             <Check size={22} />
-                            Selesaikan Pesanan
+                            Complete Order
                         </button>
                     </form>
 
                     {/* Order Summary */}
                     <div className="lg:col-span-5">
                         <div className="bg-sand-50 rounded-sm p-8 sticky top-32">
-                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Ringkasan Pesanan</h2>
+                            <h2 className="font-serif text-2xl text-terra-900 mb-6">Order Summary</h2>
 
                             <div className="space-y-4 mb-6 max-h-60 overflow-y-auto custom-scrollbar pr-2">
                                 {cart.map((item) => (
@@ -159,7 +159,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
                             <div className="border-t border-terra-200 pt-6 mb-6">
                                 <h3 className="font-medium text-terra-900 mb-3 flex items-center gap-2">
                                     <Tag size={18} className="text-wood" />
-                                    Kode Kupon
+                                    Coupon Code
                                 </h3>
                                 {appliedCoupon?.isValid ? (
                                     <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-sm p-4">
@@ -177,7 +177,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
                                             type="text"
                                             value={couponInput}
                                             onChange={(e) => setCouponInput(e.target.value)}
-                                            placeholder="Masukkan kode kupon"
+                                            placeholder="Enter coupon code"
                                             className="flex-1 p-3 border border-terra-200 rounded-sm focus:outline-none focus:border-wood transition-colors text-sm"
                                         />
                                         <button
@@ -186,7 +186,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
                                             disabled={couponLoading || !couponInput.trim()}
                                             className="px-4 py-3 bg-terra-900 text-white rounded-sm hover:bg-wood transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                         >
-                                            {couponLoading ? <Loader2 size={16} className="animate-spin" /> : 'Pakai'}
+                                            {couponLoading ? <Loader2 size={16} className="animate-spin" /> : 'Apply'}
                                         </button>
                                     </div>
                                 )}
@@ -201,12 +201,12 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ cart, onBack, onSucc
                                     <span>{formatPrice(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between text-terra-600">
-                                    <span>Ongkir</span>
-                                    <span>{shipping === 0 ? 'Gratis' : formatPrice(shipping)}</span>
+                                    <span>Shipping</span>
+                                    <span>{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
                                 </div>
                                 {discount > 0 && (
                                     <div className="flex justify-between text-green-600">
-                                        <span>Diskon</span>
+                                        <span>Discount</span>
                                         <span>-{formatPrice(discount)}</span>
                                     </div>
                                 )}

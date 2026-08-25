@@ -120,8 +120,8 @@ export default function ArticlesIndex({
 
         const labels = {
             draft: 'Draft',
-            published: 'Dipublikasi',
-            archived: 'Diarsipkan',
+            published: 'Published',
+            archived: 'Archived',
         };
 
         return (
@@ -140,26 +140,26 @@ export default function ArticlesIndex({
         <AdminLayout
             breadcrumbs={[
                 { title: 'Dashboard', href: '/admin' },
-                { title: 'Artikel', href: '/admin/articles' },
+                { title: 'Articles', href: '/admin/articles' },
             ]}
         >
-            <Head title="Artikel" />
+            <Head title="Articles" />
 
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                            Artikel
+                            Articles
                         </h1>
                         <p className="mt-1 text-sm text-gray-600">
-                            Kelola artikel dan konten blog
+                            Manage articles and blog content
                         </p>
                     </div>
                     <Link href="/admin/articles/create">
                         <Button>
                             <Plus className="mr-2 h-4 w-4" />
-                            Tambah Artikel
+                            Add Article
                         </Button>
                     </Link>
                 </div>
@@ -171,7 +171,7 @@ export default function ArticlesIndex({
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                             <Input
                                 type="text"
-                                placeholder="Cari artikel..."
+                                placeholder="Search article..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 onKeyDown={(e) => {
@@ -186,7 +186,7 @@ export default function ArticlesIndex({
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Semua Status</SelectItem>
+                                <SelectItem value="all">All Statuses</SelectItem>
                                 {statuses.map((s) => (
                                     <SelectItem key={s.value} value={s.value}>
                                         {s.label}
@@ -201,7 +201,7 @@ export default function ArticlesIndex({
                                 className="flex-1"
                                 variant="default"
                             >
-                                Terapkan
+                                Apply
                             </Button>
                             <Button
                                 onClick={handleReset}
@@ -221,19 +221,19 @@ export default function ArticlesIndex({
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                        Judul
+                                        Title
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                        Penulis
+                                        Author
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                         Status
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                        Tanggal Publikasi
+                                        Publish Date
                                     </th>
                                     <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                                        Aksi
+                                        Actions
                                     </th>
                                 </tr>
                             </thead>
@@ -246,7 +246,7 @@ export default function ArticlesIndex({
                                         >
                                             <FileText className="mx-auto h-12 w-12 text-gray-400" />
                                             <p className="mt-2 text-sm text-gray-500">
-                                                Tidak ada artikel ditemukan
+                                                No articles found
                                             </p>
                                         </td>
                                     </tr>
@@ -275,7 +275,7 @@ export default function ArticlesIndex({
                                                     ? new Date(
                                                           article.published_at,
                                                       ).toLocaleDateString(
-                                                          'id-ID',
+                                                          'en-US',
                                                           {
                                                               day: 'numeric',
                                                               month: 'short',
@@ -332,17 +332,17 @@ export default function ArticlesIndex({
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Hapus Artikel</DialogTitle>
+                        <DialogTitle>Delete Article</DialogTitle>
                         <DialogDescription>
-                            Apakah Anda yakin ingin menghapus artikel "
-                            {articleToDelete?.title}"? Tindakan ini tidak dapat
-                            dibatalkan.
+                            Are you sure you want to delete article "
+                            {articleToDelete?.title}"? This action cannot be
+                            undone.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button variant="outline" disabled={isDeleting}>
-                                Batal
+                                Cancel
                             </Button>
                         </DialogClose>
                         <Button
@@ -350,7 +350,7 @@ export default function ArticlesIndex({
                             onClick={handleDelete}
                             disabled={isDeleting}
                         >
-                            {isDeleting ? 'Menghapus...' : 'Hapus'}
+                            {isDeleting ? 'Deleting...' : 'Delete'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -48,10 +48,10 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                         {/* Header */}
                         <div className="mb-10">
                             <h1 className="font-serif text-3xl font-medium text-terra-900 md:text-4xl">
-                                Pengaturan Akun
+                                Account Settings
                             </h1>
                             <p className="mt-2 text-terra-500">
-                                Kelola profil dan keamanan akun Anda
+                                Manage your profile details and security options
                             </p>
                         </div>
 

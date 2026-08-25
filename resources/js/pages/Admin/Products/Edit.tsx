@@ -397,9 +397,9 @@ export default function EditProduct({
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Produk', href: '/admin/products' },
+                { title: 'Products', href: '/admin/products' },
                 {
-                    title: 'Edit Produk',
+                    title: 'Edit Product',
                     href: `/admin/products/${product.id}/edit`,
                 },
             ]}
@@ -417,22 +417,22 @@ export default function EditProduct({
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Edit Produk
+                            Edit Product
                         </h1>
                         <p className="mt-1 text-terra-500">{product.name}</p>
                     </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* 1. Informasi Umum */}
+                    {/* 1. General Information */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                            Informasi Umum
+                            General Information
                         </h2>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="md:col-span-2">
                                 <label className={labelClass}>
-                                    Nama Produk *
+                                    Product Name *
                                 </label>
                                 <input
                                     type="text"
@@ -466,7 +466,7 @@ export default function EditProduct({
                             </div>
                             <div>
                                 <label className={labelClass}>
-                                    Kategori *
+                                    Category *
                                 </label>
                                 <Combobox
                                     options={categories.map((cat) => ({
@@ -477,9 +477,9 @@ export default function EditProduct({
                                     onChange={(val) =>
                                         setData('category_id', val)
                                     }
-                                    placeholder="Pilih kategori"
-                                    searchPlaceholder="Cari kategori..."
-                                    emptyText="Kategori tidak ditemukan."
+                                    placeholder="Select category"
+                                    searchPlaceholder="Search category..."
+                                    emptyText="No category found."
                                 />
                                 {errors.category_id && (
                                     <p className="mt-1 text-sm text-red-500">
@@ -489,7 +489,7 @@ export default function EditProduct({
                             </div>
                             <div className="md:col-span-2">
                                 <label className={labelClass}>
-                                    Deskripsi Singkat
+                                    Short Description
                                 </label>
                                 <textarea
                                     value={data.short_description}
@@ -501,7 +501,7 @@ export default function EditProduct({
                                     }
                                     rows={2}
                                     className={inputClass + ' resize-none'}
-                                    placeholder="Ringkasan singkat tentang produk..."
+                                    placeholder="Brief summary about the product..."
                                 />
                                 <p className="mt-1 text-right text-xs text-terra-400">
                                     {data.short_description.length}/500
@@ -509,7 +509,7 @@ export default function EditProduct({
                             </div>
                             <div className="md:col-span-2">
                                 <label className={labelClass}>
-                                    Deskripsi Lengkap
+                                    Full Description
                                 </label>
                                 <textarea
                                     value={data.description}
@@ -518,6 +518,7 @@ export default function EditProduct({
                                     }
                                     rows={5}
                                     className={inputClass + ' resize-none'}
+                                    placeholder="Detailed product description..."
                                 />
                             </div>
                         </div>
@@ -525,10 +526,10 @@ export default function EditProduct({
 
 
 
-                    {/* 3. Spesifikasi Produk */}
+                    {/* 3. Product Specifications */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                            Spesifikasi Produk
+                            Product Specifications
                         </h2>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
@@ -540,11 +541,11 @@ export default function EditProduct({
                                         setData('material', e.target.value)
                                     }
                                     className={inputClass}
-                                    placeholder="Kayu Jati, Rotan Alami, dll"
+                                    placeholder="Teak Wood, Natural Rattan, etc."
                                 />
                             </div>
                             <div>
-                                <label className={labelClass}>Warna</label>
+                                <label className={labelClass}>Color</label>
                                 <input
                                     type="text"
                                     value={data.color}
@@ -552,11 +553,11 @@ export default function EditProduct({
                                         setData('color', e.target.value)
                                     }
                                     className={inputClass}
-                                    placeholder="Coklat Tua, Natural, Gold, dll"
+                                    placeholder="Dark Brown, Natural, Gold, etc."
                                 />
                             </div>
                             <div>
-                                <label className={labelClass}>Berat (kg)</label>
+                                <label className={labelClass}>Weight (kg)</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -570,7 +571,7 @@ export default function EditProduct({
                             </div>
                             <div>
                                 <label className={labelClass}>
-                                    Dimensi (cm)
+                                    Dimensions (cm)
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
                                     <input
@@ -581,7 +582,7 @@ export default function EditProduct({
                                             setData('length', e.target.value)
                                         }
                                         className={inputClass}
-                                        placeholder="Panjang"
+                                        placeholder="Length"
                                     />
                                     <input
                                         type="number"
@@ -591,7 +592,7 @@ export default function EditProduct({
                                             setData('width', e.target.value)
                                         }
                                         className={inputClass}
-                                        placeholder="Lebar"
+                                        placeholder="Width"
                                     />
                                     <input
                                         type="number"
@@ -601,24 +602,24 @@ export default function EditProduct({
                                             setData('height', e.target.value)
                                         }
                                         className={inputClass}
-                                        placeholder="Tinggi"
+                                        placeholder="Height"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Detail Spesifikasi Tambahan */}
+                        {/* Additional Specification Details */}
                         <div className="mt-6 border-t border-terra-100 pt-6">
                             <div className="mb-3 flex items-center justify-between">
                                 <label className={labelClass + ' mb-0'}>
-                                    Detail Spesifikasi Tambahan
+                                    Additional Specifications
                                 </label>
                                 <button
                                     type="button"
                                     onClick={addSpecification}
                                     className="flex items-center gap-1 rounded-lg bg-terra-100 px-3 py-1.5 text-sm text-terra-700 transition-colors hover:bg-terra-200"
                                 >
-                                    <Plus className="h-4 w-4" /> Tambah Detail
+                                    <Plus className="h-4 w-4" /> Add Spec
                                 </button>
                             </div>
                             {specifications.length > 0 ? (
@@ -639,7 +640,7 @@ export default function EditProduct({
                                                     )
                                                 }
                                                 className={inputClass}
-                                                placeholder="Nama (cth: Finishing)"
+                                                placeholder="Key (e.g. Finishing)"
                                             />
                                             <input
                                                 type="text"
@@ -652,7 +653,7 @@ export default function EditProduct({
                                                     )
                                                 }
                                                 className={inputClass}
-                                                placeholder="Nilai (cth: Melamine Coated)"
+                                                placeholder="Value (e.g. Melamine Coated)"
                                             />
                                             <button
                                                 type="button"
@@ -668,7 +669,7 @@ export default function EditProduct({
                                 </div>
                             ) : (
                                 <p className="text-sm text-terra-400">
-                                    Belum ada detail spesifikasi. Klik tombol "Tambah Detail" untuk menambahkan.
+                                    No additional specifications yet. Click "Add Spec" to add one.
                                 </p>
                             )}
                         </div>
@@ -684,9 +685,7 @@ export default function EditProduct({
                             {existingImages.length > 0 && (
                                 <div>
                                     <p className="mb-3 text-sm text-terra-500">
-                                        Gambar Saat Ini — Klik gambar untuk
-                                        jadikan utama, hover untuk crop atau
-                                        hapus
+                                        Current Images — Click image to set as primary, hover to crop or delete
                                     </p>
                                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                                         {existingImages.map((img) => (
@@ -711,7 +710,7 @@ export default function EditProduct({
                                                 {primaryImageId === img.id && (
                                                     <span className="absolute top-2 left-2 flex items-center gap-1 rounded-lg bg-wood px-2 py-1 text-xs text-white">
                                                         <Star className="h-3 w-3" />{' '}
-                                                        Utama
+                                                        Primary
                                                     </span>
                                                 )}
                                                 <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 transition-opacity group-hover:opacity-100">
@@ -731,7 +730,7 @@ export default function EditProduct({
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        title="Hapus"
+                                                        title="Delete"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             removeExistingImage(
@@ -767,22 +766,24 @@ export default function EditProduct({
                                     <>
                                         <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-terra-400" />
                                         <p className="font-medium text-terra-700">
-                                            Mengompres gambar...
+                                            Compressing image...
                                         </p>
                                         <p className="mt-1 text-sm text-terra-400">
-                                            Mohon tunggu sebentar
+                                            Please wait a moment
                                         </p>
                                     </>
                                 ) : (
                                     <>
                                         <Upload className="mx-auto mb-4 h-12 w-12 text-terra-400" />
                                         <p className="font-medium text-terra-700">
-                                            Klik untuk upload gambar baru
+                                            Click to upload new images
                                         </p>
                                         <p className="mt-1 text-sm text-terra-400">
-                                            PNG, JPG, WEBP (otomatis dikompres
-                                            ke 2MB)
+                                            PNG, JPG, WEBP (auto-compressed to 2MB)
                                         </p>
+                                        <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-wood/20 bg-wood/5 px-3 py-1 text-xs text-wood">
+                                            <span className="font-semibold">Recommended size:</span> 1000 × 1000 px (1:1 ratio) or 1000 × 1250 px (4:5 ratio)
+                                        </div>
                                     </>
                                 )}
                             </div>
@@ -791,7 +792,7 @@ export default function EditProduct({
                             {newImages.length > 0 && (
                                 <div>
                                     <p className="mb-3 text-sm text-terra-500">
-                                        Gambar Baru
+                                        New Images
                                     </p>
                                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                                         {newImages.map((img, index) => (
@@ -819,7 +820,7 @@ export default function EditProduct({
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        title="Hapus"
+                                                        title="Delete"
                                                         onClick={() =>
                                                             removeNewImage(
                                                                 index,
@@ -838,15 +839,15 @@ export default function EditProduct({
                         </div>
                     </div>
 
-                    {/* 7. Status Produk */}
+                    {/* 7. Product Status */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                            Status Publikasi
+                            Publishing Status
                         </h2>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
                                 <label className={labelClass}>
-                                    Status Publikasi Produk
+                                    Product Publication Status
                                 </label>
                                 <Combobox
                                     options={statuses.map((s) => ({
@@ -857,9 +858,9 @@ export default function EditProduct({
                                     onChange={(val) =>
                                         setData('status', val)
                                     }
-                                    placeholder="Pilih status"
-                                    searchPlaceholder="Cari status..."
-                                    emptyText="Status tidak ditemukan."
+                                    placeholder="Select status"
+                                    searchPlaceholder="Search status..."
+                                    emptyText="No status found."
                                 />
                             </div>
                         </div>
@@ -885,7 +886,7 @@ export default function EditProduct({
                                         setData('meta_title', e.target.value)
                                     }
                                     className={inputClass}
-                                    placeholder="Judul halaman untuk mesin pencari"
+                                    placeholder="Page title for search engines"
                                     maxLength={60}
                                 />
                                 <p className="mt-1 text-right text-xs text-terra-400">
@@ -906,7 +907,7 @@ export default function EditProduct({
                                     }
                                     rows={2}
                                     className={inputClass + ' resize-none'}
-                                    placeholder="Deskripsi singkat untuk mesin pencari"
+                                    placeholder="Short description for search engines"
                                     maxLength={160}
                                 />
                                 <p className="mt-1 text-right text-xs text-terra-400">
@@ -927,10 +928,10 @@ export default function EditProduct({
                                         )
                                     }
                                     className={inputClass}
-                                    placeholder="kata kunci 1, kata kunci 2, kata kunci 3"
+                                    placeholder="keyword 1, keyword 2, keyword 3"
                                 />
                                 <p className="mt-1 text-xs text-terra-400">
-                                    Pisahkan dengan koma
+                                    Separate with commas
                                 </p>
                             </div>
 
@@ -938,7 +939,7 @@ export default function EditProduct({
                             {(data.meta_title || data.name) && (
                                 <div className="rounded-xl bg-sand-50 p-4">
                                     <p className="mb-2 text-xs font-medium text-terra-500">
-                                        Preview Google
+                                        Google Search Preview
                                     </p>
                                     <div className="space-y-1">
                                         <p className="truncate text-lg text-blue-700">
@@ -951,7 +952,7 @@ export default function EditProduct({
                                         <p className="line-clamp-2 text-sm text-terra-600">
                                             {data.meta_description ||
                                                 data.short_description ||
-                                                'Deskripsi produk akan tampil di sini...'}
+                                                'Product description will appear here...'}
                                         </p>
                                     </div>
                                 </div>
@@ -962,14 +963,14 @@ export default function EditProduct({
                     {/* Sticky Submit Bar */}
                     <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                         <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                            Pastikan spesifikasi dan data produk sudah benar sebelum menyimpan
+                            Please ensure product details and specifications are accurate before saving
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
                                 href="/admin/products"
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
-                                Batal
+                                Cancel
                             </Link>
                             <button
                                 type="submit"
@@ -977,7 +978,7 @@ export default function EditProduct({
                                 className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                             >
                                 <Save className="h-5 w-5" />
-                                {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                {processing ? 'Saving...' : 'Save Changes'}
                             </button>
                         </div>
                     </div>

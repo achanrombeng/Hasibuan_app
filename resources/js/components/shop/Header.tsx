@@ -232,29 +232,6 @@ export const Header: React.FC<HeaderProps> = ({
                         {/* Language Switcher */}
                         <LanguageSwitcher variant="toggle" className="hidden md:flex" />
 
-                        {/* Search */}
-                        <button
-                            onClick={() => setSearchOpen(true)}
-                            className="rounded-sm p-2.5 text-neutral-700 transition-colors hover:bg-neutral-100"
-                        >
-                            <Search size={20} />
-                        </button>
-
-                        {/* Wishlist */}
-                        {user && (
-                            <Link
-                                href="/shop/wishlist"
-                                className="relative hidden rounded-sm p-2.5 text-neutral-700 transition-colors hover:bg-neutral-100 md:flex"
-                            >
-                                <Heart size={20} />
-                                {(wishlistCount ?? 0) > 0 && (
-                                    <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-teal-500 text-[10px] font-medium text-white">
-                                        {wishlistCount}
-                                    </span>
-                                )}
-                            </Link>
-                        )}
-
                         {/* Cart hidden for product showcase site */}
 
                         {/* Admin Panel Quick Access Button */}
@@ -319,20 +296,7 @@ export const Header: React.FC<HeaderProps> = ({
                                                 <span>{t('shop.header.admin_panel')}</span>
                                             </Link>
                                         )}
-                                        <Link
-                                            href="/shop/orders"
-                                            className="flex items-center gap-3 px-4 py-2.5 text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-teal-500"
-                                        >
-                                            <Package size={18} />
-                                            <span>{t('shop.header.my_orders')}</span>
-                                        </Link>
-                                        <Link
-                                            href="/shop/wishlist"
-                                            className="flex items-center gap-3 px-4 py-2.5 text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-teal-500"
-                                        >
-                                            <Heart size={18} />
-                                            <span>{t('shop.header.wishlist')}</span>
-                                        </Link>
+
                                         <Link
                                             href={
                                                 (user as any).roles?.includes(
@@ -563,31 +527,7 @@ export const Header: React.FC<HeaderProps> = ({
                                                     <span>{t('shop.header.admin_panel')}</span>
                                                 </Link>
                                             )}
-                                            <Link
-                                                href="/shop/orders"
-                                                onClick={() =>
-                                                    setMobileMenuOpen(false)
-                                                }
-                                                className="flex items-center gap-3 rounded-sm px-3 py-2.5 text-neutral-600 hover:bg-neutral-50 hover:text-teal-500"
-                                            >
-                                                <Package size={18} />
-                                                <span>{t('shop.header.my_orders')}</span>
-                                            </Link>
-                                            <Link
-                                                href="/shop/wishlist"
-                                                onClick={() =>
-                                                    setMobileMenuOpen(false)
-                                                }
-                                                className="flex items-center gap-3 rounded-sm px-3 py-2.5 text-neutral-600 hover:bg-neutral-50 hover:text-teal-500"
-                                            >
-                                                <Heart size={18} />
-                                                <span>{t('shop.header.wishlist')}</span>
-                                                {(wishlistCount ?? 0) > 0 && (
-                                                    <span className="ml-auto rounded-full bg-teal-500 px-2 py-0.5 text-xs font-medium text-white">
-                                                        {wishlistCount}
-                                                    </span>
-                                                )}
-                                            </Link>
+
                                             <Link
                                                 href={
                                                     (

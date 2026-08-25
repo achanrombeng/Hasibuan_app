@@ -110,9 +110,9 @@ export default function EditCategory({
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Kategori', href: '/admin/categories' },
+                { title: 'Categories', href: '/admin/categories' },
                 {
-                    title: 'Edit Kategori',
+                    title: 'Edit Category',
                     href: `/admin/categories/${category.id}/edit`,
                 },
             ]}
@@ -130,7 +130,7 @@ export default function EditCategory({
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Edit Kategori
+                            Edit Category
                         </h1>
                         <p className="mt-1 text-terra-500">{category.name}</p>
                     </div>
@@ -142,12 +142,10 @@ export default function EditCategory({
                             {/* Parent Category Selection */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                                    Kategori Induk
+                                    Parent Category
                                 </label>
                                 <p className="mb-3 text-sm text-terra-500">
-                                    Pilih kategori induk jika ini adalah
-                                    sub-kategori. Kosongkan jika ini adalah
-                                    kategori utama.
+                                    Select parent category if this is a sub-category. Leave empty if this is a main category.
                                 </p>
                                 <div className="relative">
                                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -166,7 +164,7 @@ export default function EditCategory({
                                         className="w-full appearance-none rounded-xl border border-terra-200 bg-sand-50 py-3 pr-10 pl-10 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
                                     >
                                         <option value="">
-                                            — Tidak ada (Kategori Utama) —
+                                            — None (Main Category) —
                                         </option>
                                         {parentCategories.map((cat) => (
                                             <option key={cat.id} value={cat.id}>
@@ -188,7 +186,7 @@ export default function EditCategory({
                             {/* Category Name */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                                    Nama Kategori *
+                                    Category Name *
                                 </label>
                                 <input
                                     type="text"
@@ -208,7 +206,7 @@ export default function EditCategory({
                             {/* Description */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                                    Deskripsi
+                                    Description
                                 </label>
                                 <textarea
                                     value={data.description}
@@ -223,11 +221,10 @@ export default function EditCategory({
                             {/* Image Upload */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                                    Gambar Kategori
+                                    Category Image
                                 </label>
                                 <p className="mb-3 text-sm text-terra-500">
-                                    Gambar ini akan ditampilkan di section
-                                    "Ruangan Pilihan" pada halaman utama.
+                                    This image will be displayed in the "Featured Rooms" section on the homepage.
                                 </p>
 
                                 {imagePreview ? (
@@ -249,10 +246,10 @@ export default function EditCategory({
                                     <div className="flex h-48 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-terra-300 bg-terra-50/50">
                                         <Loader2 className="mb-3 h-10 w-10 animate-spin text-terra-400" />
                                         <p className="text-sm font-semibold text-terra-500">
-                                            Mengompres gambar...
+                                            Compressing image...
                                         </p>
                                         <p className="text-xs text-terra-400">
-                                            Mohon tunggu sebentar
+                                            Please wait a moment
                                         </p>
                                     </div>
                                 ) : (
@@ -261,14 +258,16 @@ export default function EditCategory({
                                             <ImageIcon className="mb-3 h-10 w-10 text-terra-400" />
                                             <p className="mb-2 text-sm text-terra-500">
                                                 <span className="font-semibold">
-                                                    Klik untuk upload
+                                                    Click to upload new image
                                                 </span>{' '}
-                                                atau drag and drop
+                                                or drag and drop
                                             </p>
                                             <p className="text-xs text-terra-400">
-                                                PNG, JPG atau WEBP (otomatis
-                                                dikompres ke 2MB)
+                                                PNG, JPG, or WEBP (auto-compressed to 2MB)
                                             </p>
+                                            <div className="mt-2 inline-flex items-center gap-1 rounded-full border border-wood/20 bg-wood/5 px-2.5 py-0.5 text-xs text-wood">
+                                                <span className="font-semibold">Recommended size:</span> 800 × 600 px (4:3 ratio) or 800 × 800 px (1:1 ratio)
+                                            </div>
                                         </div>
                                         <input
                                             type="file"
@@ -301,7 +300,7 @@ export default function EditCategory({
                                         className="h-5 w-5 rounded border-terra-300 text-terra-900 focus:ring-wood"
                                     />
                                     <span className="text-terra-700">
-                                        Kategori Aktif
+                                        Active Category
                                     </span>
                                 </label>
 
@@ -319,11 +318,10 @@ export default function EditCategory({
                                     />
                                     <div>
                                         <span className="text-terra-700">
-                                            Kategori Unggulan
+                                            Featured Category
                                         </span>
                                         <p className="text-xs text-terra-500">
-                                            Tampilkan di section "Ruangan
-                                            Pilihan" pada homepage
+                                            Display in "Featured Rooms" section on homepage
                                         </p>
                                     </div>
                                 </label>
@@ -334,14 +332,14 @@ export default function EditCategory({
                     {/* Sticky Submit Bar */}
                     <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                         <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                            Pastikan data kategori sudah benar sebelum menyimpan
+                            Please ensure category details are accurate before saving
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
                                 href="/admin/categories"
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
-                                Batal
+                                Cancel
                             </Link>
                             <button
                                 type="submit"
@@ -349,7 +347,7 @@ export default function EditCategory({
                                 className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                             >
                                 <Save className="h-5 w-5" />
-                                {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                {processing ? 'Saving...' : 'Save Changes'}
                             </button>
                         </div>
                     </div>

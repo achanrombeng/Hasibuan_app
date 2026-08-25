@@ -64,14 +64,14 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
     };
 
     return (
-        <AdminLayout breadcrumbs={[{ title: 'Pesanan', href: '/admin/orders' }]}>
-            <Head title="Kelola Pesanan" />
+        <AdminLayout breadcrumbs={[{ title: 'Orders', href: '/admin/orders' }]}>
+            <Head title="Manage Orders" />
 
             <div className="space-y-6">
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl font-bold text-terra-900">Kelola Pesanan</h1>
-                    <p className="text-terra-500 mt-1">Kelola semua pesanan pelanggan</p>
+                    <h1 className="text-2xl font-bold text-terra-900">Manage Orders</h1>
+                    <p className="text-terra-500 mt-1">Manage and track all customer orders</p>
                 </div>
 
                 {/* Filters */}
@@ -81,7 +81,7 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-terra-400" />
                             <input
                                 type="text"
-                                placeholder="Cari nomor pesanan atau nama pelanggan..."
+                                placeholder="Search order number or customer name..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-terra-200 bg-sand-50 text-terra-900 placeholder:text-terra-400 focus:outline-none focus:ring-2 focus:ring-wood/50 focus:border-wood transition-all"
@@ -92,7 +92,7 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
                             onChange={(e) => setStatusFilter(e.target.value)}
                             className="px-4 py-2.5 rounded-xl border border-terra-200 bg-white text-terra-900 focus:outline-none focus:ring-2 focus:ring-wood/50 focus:border-wood transition-all"
                         >
-                            <option value="" className="text-terra-900 bg-white">Semua Status</option>
+                            <option value="" className="text-terra-900 bg-white">All Statuses</option>
                             {statuses.map((s) => (
                                 <option key={s.value} value={s.value} className="text-terra-900 bg-white">{s.name}</option>
                             ))}
@@ -106,25 +106,25 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
                         <table className="w-full">
                             <thead className="bg-sand-50 border-b border-terra-100">
                                 <tr>
-                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">No. Pesanan</th>
-                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Pelanggan</th>
+                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Order No.</th>
+                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Customer</th>
                                     <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Total</th>
                                     <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Status</th>
-                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Pembayaran</th>
-                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Tanggal</th>
-                                    <th className="text-right py-4 px-6 text-sm font-medium text-terra-600">Aksi</th>
+                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Payment</th>
+                                    <th className="text-left py-4 px-6 text-sm font-medium text-terra-600">Date</th>
+                                    <th className="text-right py-4 px-6 text-sm font-medium text-terra-600">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-terra-100">
                                 {orderData.length === 0 ? (
-                                    <tr><td colSpan={7} className="py-12 text-center text-terra-500">Belum ada pesanan</td></tr>
+                                    <tr><td colSpan={7} className="py-12 text-center text-terra-500">No orders found</td></tr>
                                 ) : orderData.map((order) => {
                                     const StatusIcon = statusIcons[order.status.value] || Clock;
                                     return (
                                         <tr key={order.id} className="hover:bg-sand-50/50 transition-colors">
                                             <td className="py-4 px-6">
                                                 <p className="font-medium text-terra-900">{order.order_number}</p>
-                                                <p className="text-sm text-terra-500">{order.items?.length || 0} item</p>
+                                                <p className="text-sm text-terra-500">{order.items?.length || 0} items</p>
                                             </td>
                                             <td className="py-4 px-6">
                                                 <p className="font-medium text-terra-900">{order.user?.name || 'Guest'}</p>
@@ -143,8 +143,8 @@ export default function OrdersIndex({ orders, filters, statuses }: OrdersIndexPr
                                                 </span>
                                             </td>
                                             <td className="py-4 px-6 text-sm text-terra-600">{new Date(order.created_at).toLocaleDateString('id-ID')}</td>
-                                            <td className="py-4 px-6">
-                                                <Link href={`/admin/orders/${order.id}`} className="p-2 rounded-lg text-terra-500 hover:bg-terra-100 transition-colors inline-flex" title="Lihat Detail">
+                                            <td className="py-4 px-6 text-right">
+                                                <Link href={`/admin/orders/${order.id}`} className="p-2 rounded-lg text-terra-500 hover:bg-terra-100 transition-colors inline-flex" title="View Details">
                                                     <Eye className="w-4 h-4" />
                                                 </Link>
                                             </td>

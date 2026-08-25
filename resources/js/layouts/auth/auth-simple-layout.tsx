@@ -43,24 +43,23 @@ export default function AuthSimpleLayout({
               className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-medium text-white shadow-xs backdrop-blur-md transition-all hover:border-white/40 hover:bg-white/20"
             >
               <Home className="h-3.5 w-3.5 text-teal-300" />
-              <span>Kembali ke Landing Page</span>
+              <span>Back to Storefront</span>
             </Link>
           </div>
 
           <div className="space-y-6">
             <h2 className="font-serif text-4xl leading-tight text-white xl:text-5xl">
-              Furniture Berkualitas
+              Quality Furniture
               <br />
-              <span className="text-accent-600">untuk Hunian Impian</span>
+              <span className="text-accent-600">for Your Living Spaces</span>
             </h2>
             <p className="max-w-md text-lg leading-relaxed text-teal-100/80">
-              Temukan koleksi furniture premium dengan desain elegan dan
-              kualitas terbaik untuk melengkapi ruang hidup Anda.
+              Discover premium outdoor and indoor furniture collections designed to elevate your living environment.
             </p>
           </div>
 
           <p className="text-sm text-teal-200/60">
-            &copy; {currentYear} {siteName}. Hak cipta dilindungi.
+            &copy; {currentYear} {siteName}. All rights reserved.
           </p>
         </div>
       </div>
@@ -74,7 +73,7 @@ export default function AuthSimpleLayout({
             className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs font-medium text-neutral-700 shadow-xs transition-all hover:bg-neutral-100 hover:text-neutral-900 hover:shadow-sm"
           >
             <ArrowLeft className="h-3.5 w-3.5 text-neutral-500" />
-            <span>Kembali ke Landing Page</span>
+            <span>Back to Storefront</span>
           </Link>
         </div>
 

@@ -40,7 +40,7 @@ export default function EditUser({ user, roles }: EditUserProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Manajemen User', href: '/admin/users' },
+                { title: 'User Management', href: '/admin/users' },
                 { title: 'Edit User', href: `/admin/users/${user.id}/edit` },
             ]}
         >
@@ -60,7 +60,7 @@ export default function EditUser({ user, roles }: EditUserProps) {
                             Edit User
                         </h1>
                         <p className="mt-1 text-terra-500">
-                            Perbarui informasi user
+                            Update user details
                         </p>
                     </div>
                 </div>
@@ -72,14 +72,14 @@ export default function EditUser({ user, roles }: EditUserProps) {
                 >
                     <div>
                         <label className="mb-2 block text-sm font-medium text-terra-700">
-                            Nama Lengkap
+                            Full Name
                         </label>
                         <input
                             type="text"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                            placeholder="Masukkan nama lengkap"
+                            placeholder="Enter full name"
                         />
                         {errors.name && (
                             <p className="mt-1 text-sm text-red-500">
@@ -108,9 +108,9 @@ export default function EditUser({ user, roles }: EditUserProps) {
 
                     <div>
                         <label className="mb-2 block text-sm font-medium text-terra-700">
-                            Password Baru{' '}
+                            New Password{' '}
                             <span className="text-terra-400">
-                                (kosongkan jika tidak ingin mengubah)
+                                (leave empty to keep current)
                             </span>
                         </label>
                         <div className="relative">
@@ -121,7 +121,7 @@ export default function EditUser({ user, roles }: EditUserProps) {
                                     setData('password', e.target.value)
                                 }
                                 className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 pr-12 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                placeholder="Masukkan password baru"
+                                placeholder="Enter new password"
                             />
                             <button
                                 type="button"
@@ -151,7 +151,7 @@ export default function EditUser({ user, roles }: EditUserProps) {
                             onChange={(e) => setData('role', e.target.value)}
                             className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
                         >
-                            <option value="">Pilih Role</option>
+                            <option value="">Select Role</option>
                             {roles.map((role) => (
                                 <option key={role} value={role}>
                                     {roleLabels[role] || role}
@@ -168,14 +168,14 @@ export default function EditUser({ user, roles }: EditUserProps) {
                     {/* Sticky Submit Bar */}
                     <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                         <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                            Pastikan data pengguna sudah benar sebelum menyimpan
+                            Please ensure user details are accurate before saving
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
                                 href="/admin/users"
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
-                                Batal
+                                Cancel
                             </Link>
                             <button
                                 type="submit"
@@ -183,7 +183,7 @@ export default function EditUser({ user, roles }: EditUserProps) {
                                 className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                             >
                                 <Save className="h-5 w-5" />
-                                {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                {processing ? 'Saving...' : 'Save Changes'}
                             </button>
                         </div>
                     </div>

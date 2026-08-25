@@ -22,11 +22,19 @@ export default function LanguageSwitcher({ variant = 'dropdown', className = '' 
             setOpen(false);
             return;
         }
+
+        // 1. Immediately write to client-side cookie so next request sends it
+        document.cookie = `locale=${code}; path=/; max-age=31536000; SameSite=Lax`;
+
+        // 2. Post to backend to update session & server cookie
         router.post('/locale', { locale: code }, {
             preserveScroll: true,
             preserveState: false,
             onSuccess: () => {
-                // Force hard reload to ensure locale is fully applied
+                window.location.reload();
+            },
+            onError: () => {
+                // Fallback reload if router error
                 window.location.reload();
             },
             onFinish: () => setOpen(false),
@@ -38,10 +46,12 @@ export default function LanguageSwitcher({ variant = 'dropdown', className = '' 
         const nextLabel = locale === 'id' ? 'EN' : 'ID';
         return (
             <button
+                type="button"
                 onClick={() => switchLocale(next)}
-                className={`flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors hover:bg-neutral-100 ${className}`}
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold transition-all hover:bg-neutral-100 active:scale-95 ${className}`}
+                title={locale === 'id' ? 'Switch to English' : 'Ubah ke Bahasa Indonesia'}
             >
-                <Globe className="h-4 w-4" />
+                <Globe className="h-4 w-4 text-teal-600" />
                 <span>{nextLabel}</span>
             </button>
         );
@@ -50,11 +60,12 @@ export default function LanguageSwitcher({ variant = 'dropdown', className = '' 
     return (
         <div className={`relative ${className}`}>
             <button
+                type="button"
                 onClick={() => setOpen(!open)}
-                className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors hover:bg-neutral-100"
+                className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold transition-all hover:bg-neutral-100"
             >
-                <Globe className="h-4 w-4" />
-                <span>{locale.toUpperCase()}</span>
+                <Globe className="h-4 w-4 text-teal-600" />
+                <span>{(locale || 'en').toUpperCase()}</span>
             </button>
             {open && (
                 <>
@@ -63,6 +74,7 @@ export default function LanguageSwitcher({ variant = 'dropdown', className = '' 
                         {languages.map((lang) => (
                             <button
                                 key={lang.code}
+                                type="button"
                                 onClick={() => switchLocale(lang.code)}
                                 className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-neutral-50 ${
                                     locale === lang.code ? 'font-semibold text-teal-700 bg-teal-50' : 'text-neutral-700'

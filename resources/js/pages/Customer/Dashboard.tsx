@@ -31,8 +31,8 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
             <div className="space-y-6">
                 {/* Welcome */}
                 <div className="bg-gradient-to-r from-terra-900 to-terra-700 rounded-2xl p-6 text-white">
-                    <h1 className="text-2xl font-bold mb-2">Selamat Datang!</h1>
-                    <p className="text-terra-100">Kelola pesanan dan akun Anda di sini.</p>
+                    <h1 className="text-2xl font-bold mb-2">Welcome Back!</h1>
+                    <p className="text-terra-100">Manage your orders and account settings here.</p>
                 </div>
 
                 {/* Stats */}
@@ -44,7 +44,7 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-terra-900">{stats.totalOrders}</p>
-                        <p className="text-sm text-terra-500">Total Pesanan</p>
+                        <p className="text-sm text-terra-500">Total Orders</p>
                     </div>
                     <div className="bg-white rounded-xl p-5 shadow-sm border border-terra-100">
                         <div className="flex items-center gap-3 mb-3">
@@ -53,7 +53,7 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-terra-900">{stats.pendingOrders}</p>
-                        <p className="text-sm text-terra-500">Dalam Proses</p>
+                        <p className="text-sm text-terra-500">In Progress</p>
                     </div>
                     <div className="bg-white rounded-xl p-5 shadow-sm border border-terra-100">
                         <div className="flex items-center gap-3 mb-3">
@@ -62,7 +62,7 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
                             </div>
                         </div>
                         <p className="text-2xl font-bold text-terra-900">{stats.completedOrders}</p>
-                        <p className="text-sm text-terra-500">Selesai</p>
+                        <p className="text-sm text-terra-500">Completed</p>
                     </div>
                     <div className="bg-white rounded-xl p-5 shadow-sm border border-terra-100">
                         <div className="flex items-center gap-3 mb-3">
@@ -79,7 +79,7 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-terra-100">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-terra-500 mb-1">Total Belanja</p>
+                            <p className="text-sm text-terra-500 mb-1">Total Spent</p>
                             <p className="text-3xl font-bold text-terra-900">{stats.totalSpent}</p>
                         </div>
                         <div className="p-4 bg-terra-100 rounded-xl">
@@ -91,9 +91,9 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
                 {/* Recent Orders */}
                 <div className="bg-white rounded-xl shadow-sm border border-terra-100 overflow-hidden">
                     <div className="p-5 border-b border-terra-100 flex items-center justify-between">
-                        <h2 className="text-lg font-semibold text-terra-900">Pesanan Terbaru</h2>
+                        <h2 className="text-lg font-semibold text-terra-900">Recent Orders</h2>
                         <Link href="/shop/orders" className="text-sm text-wood hover:text-wood-dark flex items-center gap-1">
-                            Lihat Semua <ArrowRight className="w-4 h-4" />
+                            View All <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
                     {recentOrders.length > 0 ? (
@@ -120,9 +120,9 @@ export default function Dashboard({ stats, recentOrders }: DashboardProps) {
                     ) : (
                         <div className="p-8 text-center">
                             <Package className="w-12 h-12 mx-auto text-terra-300 mb-3" />
-                            <p className="text-terra-500">Belum ada pesanan</p>
+                            <p className="text-terra-500">No orders placed yet</p>
                             <Link href="/shop/products" className="inline-block mt-4 px-4 py-2 bg-terra-900 text-white rounded-lg hover:bg-terra-800 transition-colors">
-                                Mulai Belanja
+                                Start Shopping
                             </Link>
                         </div>
                     )}

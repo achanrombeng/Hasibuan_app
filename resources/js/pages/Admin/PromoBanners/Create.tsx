@@ -3,15 +3,15 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, ChevronDown, Gift, Percent, Save, Truck } from 'lucide-react';
 
 const iconOptions = [
-    { value: 'percent', label: 'Diskon', icon: Percent },
-    { value: 'gift', label: 'Hadiah', icon: Gift },
-    { value: 'truck', label: 'Pengiriman', icon: Truck },
+    { value: 'percent', label: 'Discount', icon: Percent },
+    { value: 'gift', label: 'Gift', icon: Gift },
+    { value: 'truck', label: 'Shipping', icon: Truck },
 ];
 
 const displayTypeOptions = [
     { value: 'banner', label: 'Banner (Header)' },
     { value: 'popup', label: 'Popup (Modal)' },
-    { value: 'both', label: 'Keduanya' },
+    { value: 'both', label: 'Both' },
 ];
 
 const gradientOptions = [
@@ -63,7 +63,7 @@ export default function CreatePromoBanner() {
     }>({
         title: '',
         description: '',
-        cta_text: 'Lihat Sekarang',
+        cta_text: 'View Now',
         cta_link: '/shop/products',
         icon: 'percent',
         bg_gradient: 'from-teal-700 to-teal-900',
@@ -89,11 +89,11 @@ export default function CreatePromoBanner() {
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Promo Banner', href: '/admin/promo-banners' },
-                { title: 'Tambah Promo', href: '/admin/promo-banners/create' },
+                { title: 'Promo Banners', href: '/admin/promo-banners' },
+                { title: 'Add Promo', href: '/admin/promo-banners/create' },
             ]}
         >
-            <Head title="Tambah Promo Banner" />
+            <Head title="Add Promo Banner" />
 
             <div className="mx-auto max-w-6xl space-y-6">
                 {/* Header */}
@@ -106,10 +106,10 @@ export default function CreatePromoBanner() {
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold text-neutral-900">
-                            Tambah Promo Banner
+                            Add Promo Banner
                         </h1>
                         <p className="mt-1 text-neutral-500">
-                            Buat promo banner atau popup baru
+                            Create a new promo banner or popup
                         </p>
                     </div>
                 </div>
@@ -125,7 +125,7 @@ export default function CreatePromoBanner() {
                         >
                             <SelectedIcon size={18} className="flex-shrink-0" />
                             <span className="font-medium">
-                                {data.title || 'Judul Promo'}
+                                {data.title || 'Promo Title'}
                             </span>
                             {data.description && (
                                 <span className="hidden opacity-90 sm:inline">
@@ -133,7 +133,7 @@ export default function CreatePromoBanner() {
                                 </span>
                             )}
                             <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
-                                {data.cta_text || 'Lihat Sekarang'}
+                                {data.cta_text || 'View Now'}
                             </span>
                         </div>
                     </div>
@@ -144,7 +144,7 @@ export default function CreatePromoBanner() {
                             {/* Title */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                    Judul Promo *
+                                    Promo Title *
                                 </label>
                                 <input
                                     type="text"
@@ -153,7 +153,7 @@ export default function CreatePromoBanner() {
                                         setData('title', e.target.value)
                                     }
                                     className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                                    placeholder="Contoh: Flash Sale! 🔥"
+                                    placeholder="e.g. Flash Sale! 🔥"
                                 />
                                 {errors.title && (
                                     <p className="mt-1 text-sm text-red-500">
@@ -165,7 +165,7 @@ export default function CreatePromoBanner() {
                             {/* Description */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                    Deskripsi
+                                    Description
                                 </label>
                                 <input
                                     type="text"
@@ -174,7 +174,7 @@ export default function CreatePromoBanner() {
                                         setData('description', e.target.value)
                                     }
                                     className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                                    placeholder="Contoh: Diskon hingga 70% untuk produk pilihan"
+                                    placeholder="e.g. Up to 70% off selected items"
                                 />
                             </div>
 
@@ -182,7 +182,7 @@ export default function CreatePromoBanner() {
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                        Teks Tombol
+                                        Button Text
                                     </label>
                                     <input
                                         type="text"
@@ -191,12 +191,12 @@ export default function CreatePromoBanner() {
                                             setData('cta_text', e.target.value)
                                         }
                                         className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                                        placeholder="Lihat Sekarang"
+                                        placeholder="View Now"
                                     />
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                        Link Tujuan
+                                        Target URL
                                     </label>
                                     <input
                                         type="text"
@@ -213,7 +213,7 @@ export default function CreatePromoBanner() {
                             {/* Icon Selection */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                    Ikon
+                                    Icon
                                 </label>
                                 <div className="flex flex-wrap gap-2 sm:gap-3">
                                     {iconOptions.map((option) => {
@@ -247,7 +247,7 @@ export default function CreatePromoBanner() {
                             {/* Gradient Selection */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                    Warna Gradien
+                                    Gradient Color
                                 </label>
                                 <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                                     {gradientOptions.map((option) => (
@@ -281,7 +281,7 @@ export default function CreatePromoBanner() {
                             {/* Display Type */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                    Tipe Tampilan
+                                    Display Type
                                 </label>
                                 <div className="relative">
                                     <select
@@ -312,11 +312,10 @@ export default function CreatePromoBanner() {
                             {/* Priority */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                    Prioritas
+                                    Priority
                                 </label>
                                 <p className="mb-2 text-sm text-neutral-500">
-                                    Promo dengan prioritas lebih tinggi akan
-                                    ditampilkan lebih dulu
+                                    Promos with higher priority will be displayed first
                                 </p>
                                 <input
                                     type="number"
@@ -337,7 +336,7 @@ export default function CreatePromoBanner() {
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                        Tanggal Mulai
+                                        Start Date
                                     </label>
                                     <input
                                         type="datetime-local"
@@ -348,12 +347,12 @@ export default function CreatePromoBanner() {
                                         className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                                     />
                                     <p className="mt-1 text-xs text-neutral-500">
-                                        Kosongkan untuk langsung aktif
+                                        Leave empty for immediate activation
                                     </p>
                                 </div>
                                 <div>
                                     <label className="mb-2 block text-sm font-medium text-neutral-700">
-                                        Tanggal Berakhir
+                                        End Date
                                     </label>
                                     <input
                                         type="datetime-local"
@@ -369,7 +368,7 @@ export default function CreatePromoBanner() {
                                         </p>
                                     )}
                                     <p className="mt-1 text-xs text-neutral-500">
-                                        Kosongkan untuk tidak ada batas waktu
+                                        Leave empty for no expiration
                                     </p>
                                 </div>
                             </div>
@@ -389,7 +388,7 @@ export default function CreatePromoBanner() {
                                     htmlFor="is_active"
                                     className="text-sm font-medium text-neutral-700"
                                 >
-                                    Aktifkan promo ini
+                                    Activate this promo
                                 </label>
                             </div>
                         </div>
@@ -398,14 +397,14 @@ export default function CreatePromoBanner() {
                     {/* Sticky Submit Bar */}
                     <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                         <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                            Pastikan data promo banner sudah benar sebelum menyimpan
+                            Please ensure promo banner details are accurate before saving
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
                                 href="/admin/promo-banners"
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
-                                Batal
+                                Cancel
                             </Link>
                             <button
                                 type="submit"
@@ -413,7 +412,7 @@ export default function CreatePromoBanner() {
                                 className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                             >
                                 <Save className="h-5 w-5" />
-                                {processing ? 'Menyimpan...' : 'Simpan Promo'}
+                                {processing ? 'Saving...' : 'Save Promo'}
                             </button>
                         </div>
                     </div>

@@ -8,7 +8,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import AdminLayout from '@/layouts/admin/admin-layout';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
     AlertTriangle,
@@ -37,12 +37,34 @@ interface ReviewsIndexProps {
     filters?: { filter?: Record<string, string> };
 }
 
+const DEMO_REVIEWS: Review[] = [
+    {
+        id: 1,
+        product: { id: 101, name: 'Kursi Santai Kayu Jati', image: null },
+        user: { id: 1, name: 'Siti Rahayu' },
+        rating: 5,
+        title: 'Sangat Nyaman!',
+        comment: 'Kualitas kayu jati dan finishingnya sangat luar biasa. Nyaman sekali untuk santai.',
+        is_approved: true,
+        created_at: '2026-08-22',
+    },
+    {
+        id: 2,
+        product: { id: 102, name: 'Sofa Minimalis 3 Dudukan', image: null },
+        user: { id: 2, name: 'Budi Santoso' },
+        rating: 4,
+        title: 'Desain Elegan',
+        comment: 'Busa empuk dan jahitan sangat rapi. Pengiriman cepat sampai.',
+        is_approved: false,
+        created_at: '2026-08-20',
+    },
+];
+
 export default function ReviewsIndex({
     reviews,
     filters,
     next_page_url,
 }: ReviewsIndexProps & { next_page_url: string | null }) {
-    // Safely get filter value - check if filter is an object
     const filterObj =
         filters?.filter && typeof filters.filter === 'object'
             ? filters.filter
@@ -112,227 +134,131 @@ export default function ReviewsIndex({
         }
     };
 
+    const displayReviews = reviews && reviews.length > 0 ? reviews : DEMO_REVIEWS;
+
     return (
         <AdminLayout
-            breadcrumbs={[{ title: 'Ulasan', href: '/admin/reviews' }]}
+            breadcrumbs={[{ title: 'Reviews', href: '/admin/reviews' }]}
         >
-            <Head title="Kelola Ulasan" />
+            <Head title="Manage Reviews - Coming Soon" />
 
-            <div className="space-y-6">
-                {/* Header */}
-                <div>
-                    <h1 className="text-2xl font-bold text-terra-900">
-                        Kelola Ulasan
-                    </h1>
-                    <p className="mt-1 text-terra-500">
-                        Moderasi ulasan produk dari pelanggan
-                    </p>
-                </div>
+            <div className="relative min-h-[600px]">
+                {/* 1. Full Original Design (Behind Blur Overlay) */}
+                <div className="space-y-6 filter blur-md select-none pointer-events-none opacity-60">
+                    {/* Header */}
+                    <div>
+                        <h1 className="text-2xl font-bold text-terra-900">
+                            Manage Reviews
+                        </h1>
+                        <p className="mt-1 text-terra-500">
+                            Moderate product reviews from customers
+                        </p>
+                    </div>
 
-                {/* Filters */}
-                <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => handleFilterChange(e.target.value)}
-                        className="rounded-xl border border-terra-200 bg-white px-4 py-2.5 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                    >
-                        <option value="" className="bg-white text-terra-900">
-                            Semua Status
-                        </option>
-                        <option value="1" className="bg-white text-terra-900">
-                            Disetujui
-                        </option>
-                        <option value="0" className="bg-white text-terra-900">
-                            Belum Disetujui
-                        </option>
-                    </select>
-                </div>
+                    {/* Filters */}
+                    <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => handleFilterChange(e.target.value)}
+                            className="rounded-xl border border-terra-200 bg-white px-4 py-2.5 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                        >
+                            <option value="" className="bg-white text-terra-900">
+                                All Statuses
+                            </option>
+                            <option value="1" className="bg-white text-terra-900">
+                                Approved
+                            </option>
+                            <option value="0" className="bg-white text-terra-900">
+                                Pending Approval
+                            </option>
+                        </select>
+                    </div>
 
-                {/* Reviews List */}
-                <div className="space-y-4">
-                    {reviews.length === 0 ? (
-                        <div className="rounded-2xl border border-terra-100 bg-white p-12 text-center shadow-sm">
-                            <Star className="mx-auto mb-4 h-12 w-12 text-terra-300" />
-                            <h3 className="text-lg font-medium text-terra-900">
-                                Tidak ada ulasan
-                            </h3>
-                            <p className="mt-1 text-terra-500">
-                                Belum ada ulasan yang perlu dimoderasi
-                            </p>
-                        </div>
-                    ) : (
-                        <>
-                            {reviews.map((review) => (
-                                <div
-                                    key={review.id}
-                                    className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm"
-                                >
-                                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                                        <div className="flex-1">
-                                            <div className="mb-2 flex items-center gap-3">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-wood/10">
-                                                    <User className="h-5 w-5 text-wood" />
-                                                </div>
-                                                <div>
-                                                    <p className="font-medium text-terra-900">
-                                                        {review.user?.name ||
-                                                            'Anonim'}
-                                                    </p>
-                                                    <p className="text-sm text-terra-500">
-                                                        {review.created_at}
-                                                    </p>
-                                                </div>
+                    {/* Reviews List */}
+                    <div className="space-y-4">
+                        {displayReviews.map((review) => (
+                            <div
+                                key={review.id}
+                                className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm"
+                            >
+                                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                                    <div className="flex-1">
+                                        <div className="mb-2 flex items-center gap-3">
+                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-wood/10">
+                                                <User className="h-5 w-5 text-wood" />
                                             </div>
-                                            <p className="mb-2 text-sm text-terra-600">
-                                                Produk:{' '}
-                                                <span className="font-medium text-terra-900">
-                                                    {review.product?.name ||
-                                                        '-'}
-                                                </span>
-                                            </p>
-                                            <div className="mb-3 flex items-center gap-1">
-                                                {[1, 2, 3, 4, 5].map((star) => (
-                                                    <Star
-                                                        key={star}
-                                                        className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-terra-200'}`}
-                                                    />
-                                                ))}
-                                            </div>
-                                            {review.title && (
-                                                <p className="mb-1 font-medium text-terra-900">
-                                                    {review.title}
+                                            <div>
+                                                <p className="font-medium text-terra-900">
+                                                    {review.user?.name ||
+                                                        'Anonymous'}
                                                 </p>
-                                            )}
-                                            <p className="text-terra-700">
-                                                {review.comment}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <span
-                                                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${review.is_approved ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}
-                                            >
-                                                {review.is_approved ? (
-                                                    <Check className="h-3.5 w-3.5" />
-                                                ) : (
-                                                    <Clock className="h-3.5 w-3.5" />
-                                                )}
-                                                {review.is_approved
-                                                    ? 'Disetujui'
-                                                    : 'Menunggu'}
-                                            </span>
-                                            <div className="flex gap-2">
-                                                {!review.is_approved && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleApprove(
-                                                                review.id,
-                                                            )
-                                                        }
-                                                        className="rounded-lg bg-green-50 p-2 text-green-600 transition-colors hover:bg-green-100"
-                                                        title="Setujui"
-                                                    >
-                                                        <Check className="h-4 w-4" />
-                                                    </button>
-                                                )}
-                                                {review.is_approved && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleReject(
-                                                                review.id,
-                                                            )
-                                                        }
-                                                        className="rounded-lg bg-yellow-50 p-2 text-yellow-600 transition-colors hover:bg-yellow-100"
-                                                        title="Batalkan Persetujuan"
-                                                    >
-                                                        <X className="h-4 w-4" />
-                                                    </button>
-                                                )}
-                                                <button
-                                                    onClick={() =>
-                                                        confirmDelete(review)
-                                                    }
-                                                    className="rounded-lg bg-red-50 p-2 text-red-600 transition-colors hover:bg-red-100"
-                                                    title="Hapus"
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </button>
+                                                <p className="text-sm text-terra-500">
+                                                    {review.created_at}
+                                                </p>
                                             </div>
                                         </div>
+                                        <p className="mb-2 text-sm text-terra-600">
+                                            Product:{' '}
+                                            <span className="font-medium text-terra-900">
+                                                {review.product?.name ||
+                                                    '-'}
+                                            </span>
+                                        </p>
+                                        <div className="mb-3 flex items-center gap-1">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <Star
+                                                    key={star}
+                                                    className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-terra-200'}`}
+                                                />
+                                            ))}
+                                        </div>
+                                        {review.title && (
+                                            <p className="mb-1 font-medium text-terra-900">
+                                                {review.title}
+                                            </p>
+                                        )}
+                                        <p className="text-terra-700">
+                                            {review.comment}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span
+                                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${review.is_approved ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}
+                                        >
+                                            {review.is_approved ? (
+                                                <Check className="h-3.5 w-3.5" />
+                                            ) : (
+                                                <Clock className="h-3.5 w-3.5" />
+                                            )}
+                                            {review.is_approved
+                                                ? 'Approved'
+                                                : 'Pending'}
+                                        </span>
                                     </div>
                                 </div>
-                            ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
-                            {/* Infinite Scroll Sentinel */}
-                            {next_page_url ? (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    whileInView={{ opacity: 1 }}
-                                    viewport={{ once: false, margin: '100px' }}
-                                    onViewportEnter={loadMore}
-                                    className="flex justify-center py-8"
-                                >
-                                    {loadingMore && (
-                                        <div className="flex items-center gap-2 text-terra-500">
-                                            <div className="h-2 w-2 animate-bounce rounded-full bg-terra-400 [animation-delay:-0.3s]"></div>
-                                            <div className="h-2 w-2 animate-bounce rounded-full bg-terra-400 [animation-delay:-0.15s]"></div>
-                                            <div className="h-2 w-2 animate-bounce rounded-full bg-terra-400"></div>
-                                        </div>
-                                    )}
-                                </motion.div>
-                            ) : (
-                                <div className="py-8 text-center text-sm text-terra-400">
-                                    Semua ulasan telah ditampilkan
-                                </div>
-                            )}
-                        </>
-                    )}
+                {/* 2. Glassmorphism Coming Soon Overlay (Centered On Top) */}
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 text-center">
+                    <div className="mx-auto max-w-md rounded-3xl border border-white/80 bg-white/90 p-8 md:p-10 shadow-2xl backdrop-blur-xl transition-all">
+                        <h2 className="mb-6 font-serif text-4xl font-extrabold text-terra-900 md:text-5xl">
+                            Coming Soon
+                        </h2>
+
+                        <div className="flex justify-center">
+                            <Link
+                                href="/admin"
+                                className="inline-flex items-center gap-2 rounded-xl bg-terra-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-wood hover:shadow-md"
+                            >
+                                Kembali ke Dashboard
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <Dialog
-                open={!!reviewToDelete}
-                onOpenChange={(open) => !open && setReviewToDelete(null)}
-            >
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-                            <AlertTriangle className="h-6 w-6 text-red-600" />
-                        </div>
-                        <DialogTitle className="text-center">
-                            Hapus Ulasan
-                        </DialogTitle>
-                        <DialogDescription className="text-center">
-                            Apakah Anda yakin ingin menghapus ulasan dari{' '}
-                            <span className="font-semibold text-terra-900">
-                                "{reviewToDelete?.user?.name || 'Anonim'}"
-                            </span>{' '}
-                            untuk produk{' '}
-                            <span className="font-semibold text-terra-900">
-                                "{reviewToDelete?.product?.name || '-'}"
-                            </span>
-                            ? Tindakan ini tidak dapat dibatalkan.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="mt-4 gap-2">
-                        <DialogClose asChild>
-                            <button
-                                type="button"
-                                className="flex-1 rounded-xl border border-terra-200 px-4 py-2.5 font-medium text-terra-700 transition-colors hover:bg-terra-50 sm:flex-none"
-                            >
-                                Batal
-                            </button>
-                        </DialogClose>
-                        <button
-                            type="button"
-                            onClick={handleDelete}
-                            disabled={isDeleting}
-                            className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
-                        >
-                            {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
-                        </button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </AdminLayout>
     );
 }

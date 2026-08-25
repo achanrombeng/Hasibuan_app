@@ -53,7 +53,7 @@ export default function Profile({
                                             name="name"
                                             required
                                             autoComplete="name"
-                                            placeholder="Nama lengkap"
+                                            placeholder="Full name"
                                         />
                                         <InputError
                                             className="mt-2"
@@ -86,25 +86,20 @@ export default function Profile({
                                             null && (
                                             <div className="rounded-sm border border-yellow-200 bg-yellow-50 p-4">
                                                 <p className="text-sm text-yellow-700">
-                                                    Email Anda belum
-                                                    terverifikasi.{' '}
+                                                    Your email address is unverified.{' '}
                                                     <Link
                                                         href={send()}
                                                         as="button"
                                                         className="font-medium text-yellow-800 underline hover:text-yellow-900"
                                                     >
-                                                        Klik di sini untuk
-                                                        mengirim ulang email
-                                                        verifikasi.
+                                                        Click here to resend the verification email.
                                                     </Link>
                                                 </p>
 
                                                 {status ===
                                                     'verification-link-sent' && (
                                                     <p className="mt-2 text-sm font-medium text-green-600">
-                                                        Link verifikasi baru
-                                                        telah dikirim ke email
-                                                        Anda.
+                                                        A new verification link has been sent to your email address.
                                                     </p>
                                                 )}
                                             </div>
@@ -116,7 +111,7 @@ export default function Profile({
                                             data-test="update-profile-button"
                                             className="rounded-sm bg-teal-500 text-white hover:bg-teal-600"
                                         >
-                                            Simpan
+                                            Save
                                         </Button>
 
                                         <Transition
@@ -127,7 +122,7 @@ export default function Profile({
                                             leaveTo="opacity-0"
                                         >
                                             <p className="text-sm text-green-600">
-                                                Tersimpan
+                                                Saved
                                             </p>
                                         </Transition>
                                     </div>

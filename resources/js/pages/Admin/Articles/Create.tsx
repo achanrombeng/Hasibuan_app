@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import MDEditor from '@uiw/react-md-editor';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Save, X } from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
 
 interface CreateArticleProps {
@@ -101,11 +101,11 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
         <AdminLayout
             breadcrumbs={[
                 { title: 'Dashboard', href: '/admin' },
-                { title: 'Artikel', href: '/admin/articles' },
-                { title: 'Tambah Artikel', href: '/admin/articles/create' },
+                { title: 'Articles', href: '/admin/articles' },
+                { title: 'Add Article', href: '/admin/articles/create' },
             ]}
         >
-            <Head title="Tambah Artikel" />
+            <Head title="Add Article" />
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Header */}
@@ -114,12 +114,12 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                         <Link href="/admin/articles">
                             <Button variant="outline" size="sm" type="button">
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Kembali
+                                Back
                             </Button>
                         </Link>
                         <div>
                             <h1 className="text-2xl font-bold text-gray-900">
-                                Tambah Artikel
+                                Add Article
                             </h1>
                         </div>
                     </div>
@@ -128,12 +128,12 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 {/* Basic Information */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Informasi Dasar</CardTitle>
+                        <CardTitle>Basic Information</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
                             <Label htmlFor="title">
-                                Judul <span className="text-red-500">*</span>
+                                Title <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="title"
@@ -144,7 +144,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                                         title: e.target.value,
                                     })
                                 }
-                                placeholder="Judul artikel"
+                                placeholder="Article title"
                             />
                             {errors.title && (
                                 <p className="mt-1 text-sm text-red-600">
@@ -164,7 +164,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                                         slug: e.target.value,
                                     })
                                 }
-                                placeholder="slug-artikel"
+                                placeholder="article-slug"
                             />
                             {errors.slug && (
                                 <p className="mt-1 text-sm text-red-600">
@@ -175,7 +175,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
 
                         <div>
                             <Label htmlFor="author">
-                                Penulis <span className="text-red-500">*</span>
+                                Author <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="author"
@@ -186,7 +186,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                                         author: e.target.value,
                                     })
                                 }
-                                placeholder="Nama penulis"
+                                placeholder="Author name"
                             />
                             {errors.author && (
                                 <p className="mt-1 text-sm text-red-600">
@@ -197,7 +197,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
 
                         <div>
                             <Label htmlFor="excerpt">
-                                Ringkasan <span className="text-red-500">*</span>
+                                Excerpt <span className="text-red-500">*</span>
                             </Label>
                             <Textarea
                                 id="excerpt"
@@ -208,12 +208,12 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                                         excerpt: e.target.value,
                                     })
                                 }
-                                placeholder="Ringkasan singkat artikel (maks 500 karakter)"
+                                placeholder="Short article summary (max 500 characters)"
                                 rows={3}
                                 maxLength={500}
                             />
                             <p className="mt-1 text-xs text-gray-500">
-                                {formData.excerpt.length}/500 karakter
+                                {formData.excerpt.length}/500 characters
                             </p>
                             {errors.excerpt && (
                                 <p className="mt-1 text-sm text-red-600">
@@ -227,7 +227,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 {/* Content */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Konten</CardTitle>
+                        <CardTitle>Content</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div data-color-mode="light">
@@ -254,41 +254,56 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 {/* Featured Image */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Gambar Unggulan</CardTitle>
+                        <CardTitle>Featured Image</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div>
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                            />
-                            {errors.featured_image && (
-                                <p className="mt-1 text-sm text-red-600">
-                                    {errors.featured_image}
-                                </p>
-                            )}
-                        </div>
-                        {imagePreview && (
-                            <div className="relative">
+                        {imagePreview ? (
+                            <div className="relative h-56 w-full overflow-hidden rounded-xl border border-neutral-200">
                                 <img
                                     src={imagePreview}
                                     alt="Preview"
-                                    className="h-48 w-full rounded-lg object-cover"
+                                    className="h-full w-full object-cover"
                                 />
-                                <Button
+                                <button
                                     type="button"
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute right-2 top-2"
                                     onClick={() => {
                                         setFeaturedImage(null);
                                         setImagePreview(null);
                                     }}
+                                    className="absolute top-2 right-2 rounded-full bg-red-500 p-1.5 text-white transition-colors hover:bg-red-600"
                                 >
-                                    Hapus
-                                </Button>
+                                    <X className="h-4 w-4" />
+                                </button>
                             </div>
+                        ) : (
+                            <label className="flex h-44 w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-neutral-300 transition-all hover:border-wood hover:bg-wood/5">
+                                <div className="flex flex-col items-center justify-center pt-4 pb-4">
+                                    <ImageIcon className="mb-2 h-9 w-9 text-neutral-400" />
+                                    <p className="mb-1 text-sm text-neutral-600">
+                                        <span className="font-semibold text-wood">
+                                            Click to upload
+                                        </span>{' '}
+                                        or drag and drop
+                                    </p>
+                                    <p className="text-xs text-neutral-400">
+                                        PNG, JPG, or WEBP
+                                    </p>
+                                    <div className="mt-2.5 inline-flex items-center gap-1 rounded-full border border-wood/20 bg-wood/10 px-3 py-1 text-xs text-wood">
+                                        <span className="font-semibold">Recommended size:</span> 1200 × 675 px (16:9 ratio)
+                                    </div>
+                                </div>
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                />
+                            </label>
+                        )}
+                        {errors.featured_image && (
+                            <p className="mt-1 text-sm text-red-600">
+                                {errors.featured_image}
+                            </p>
                         )}
                     </CardContent>
                 </Card>
@@ -296,7 +311,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 {/* Publication Settings */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Pengaturan Publikasi</CardTitle>
+                        <CardTitle>Publication Settings</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
@@ -326,19 +341,19 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                         </div>
 
                         <div>
-                            <Label htmlFor="tags">Tag</Label>
+                            <Label htmlFor="tags">Tags</Label>
                             <TagInput
                                 value={formData.tags}
                                 onChange={(tags) =>
                                     setFormData({ ...formData, tags })
                                 }
-                                placeholder="Tambah tag (tekan Enter atau koma)"
+                                placeholder="Add tag (press Enter or comma)"
                             />
                         </div>
 
                         <div>
                             <Label htmlFor="published_at">
-                                Tanggal Publikasi
+                                Publish Date
                             </Label>
                             <Input
                                 id="published_at"
@@ -359,14 +374,14 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 <Card>
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle>SEO (Opsional)</CardTitle>
+                            <CardTitle>SEO (Optional)</CardTitle>
                             <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setShowSeo(!showSeo)}
                             >
-                                {showSeo ? 'Sembunyikan' : 'Tampilkan'}
+                                {showSeo ? 'Hide' : 'Show'}
                             </Button>
                         </div>
                     </CardHeader>
@@ -385,7 +400,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                                             meta_title: e.target.value,
                                         })
                                     }
-                                    placeholder="Judul untuk SEO"
+                                    placeholder="Title for SEO"
                                 />
                             </div>
 
@@ -402,7 +417,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                                             meta_description: e.target.value,
                                         })
                                     }
-                                    placeholder="Deskripsi untuk SEO (maks 500 karakter)"
+                                    placeholder="Description for SEO (max 500 characters)"
                                     rows={3}
                                     maxLength={500}
                                 />
@@ -431,14 +446,14 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 {/* Sticky Submit Bar */}
                 <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                     <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                        Pastikan data artikel sudah benar sebelum menyimpan
+                        Please ensure article details are accurate before saving
                     </span>
                     <div className="ml-auto flex items-center gap-3">
                         <Link
                             href="/admin/articles"
                             className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                         >
-                            Kembali
+                            Back
                         </Link>
                         <button
                             type="submit"
@@ -446,7 +461,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                             className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                         >
                             <Save className="h-5 w-5" />
-                            {isSubmitting ? 'Menyimpan...' : 'Simpan Artikel'}
+                            {isSubmitting ? 'Saving...' : 'Save Article'}
                         </button>
                     </div>
                 </div>

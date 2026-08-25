@@ -30,7 +30,7 @@ export default function ArticleShow({ article }: ArticleShowProps) {
 
     return (
         <ShopLayout>
-            <Head title={articleData?.meta_title || articleData?.title || 'Artikel'}>
+            <Head title={articleData?.meta_title || articleData?.title || 'Article'}>
                 <meta
                     name="description"
                     content={articleData?.meta_description || articleData?.excerpt || ''}
@@ -64,7 +64,7 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                             href="/shop/articles"
                             className="hover:text-terra-600"
                         >
-                            Artikel
+                            Articles
                         </Link>
                         <span>/</span>
                         <span className="text-gray-900">{articleData?.title}</span>
@@ -103,11 +103,11 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                         </div>
                         <div className="flex items-center">
                             <Clock className="mr-2 h-4 w-4" />
-                            {articleData?.read_time} menit baca
+                            {articleData?.read_time} min read
                         </div>
                         <div className="flex items-center">
                             <Eye className="mr-2 h-4 w-4" />
-                            {articleData?.views} kali dilihat
+                            {articleData?.views} views
                         </div>
                     </div>
 
@@ -219,7 +219,7 @@ export default function ArticleShow({ article }: ArticleShowProps) {
                             href="/shop/articles"
                             className="inline-flex items-center text-terra-600 hover:text-terra-700"
                         >
-                            ← Kembali ke Artikel
+                            ← Back to Articles
                         </Link>
                     </div>
                 </div>

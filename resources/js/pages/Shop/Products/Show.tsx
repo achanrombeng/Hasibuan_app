@@ -720,7 +720,7 @@ function CustomerReviews({
     return (
         <section className="mb-20 border-t border-neutral-100 pt-12">
             <h2 className="mb-8 font-serif text-2xl text-neutral-900">
-                Ulasan Pelanggan
+                Customer Reviews
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
                 {/* Rating Summary */}
@@ -1034,7 +1034,7 @@ function ReviewForm({
                     href="/login"
                     className="inline-block rounded-sm bg-teal-600 px-6 py-2 font-medium text-white transition-colors hover:bg-teal-700"
                 >
-                    Masuk Akun
+                    Sign In
                 </Link>
             </div>
         );
@@ -1043,7 +1043,7 @@ function ReviewForm({
     return (
         <div className="mt-8 border-t border-neutral-100 pt-8">
             <h3 className="mb-4 font-medium text-neutral-900">
-                {existingReview ? 'Edit Ulasan Anda' : 'Tulis Ulasan Anda'}
+                {existingReview ? 'Edit Your Review' : 'Write Your Review'}
             </h3>
             {message && (
                 <div
@@ -1086,7 +1086,7 @@ function ReviewForm({
                         htmlFor="comment"
                         className="mb-2 block text-sm font-medium text-neutral-700"
                     >
-                        Ulasan
+                        Review
                     </label>
                     <textarea
                         id="comment"
@@ -1094,7 +1094,7 @@ function ReviewForm({
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         className="w-full rounded-sm border-neutral-200 focus:border-teal-500 focus:ring-teal-500"
-                        placeholder="Bagikan pengalaman Anda tentang produk ini..."
+                        placeholder="Share your experience about this product..."
                         required
                     />
                 </div>
@@ -1103,7 +1103,7 @@ function ReviewForm({
                     disabled={isSubmitting}
                     className="rounded-sm bg-teal-600 px-6 py-2 font-medium text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    {isSubmitting ? 'Mengirim...' : 'Kirim Ulasan'}
+                    {isSubmitting ? 'Submitting...' : 'Submit Review'}
                 </button>
             </form>
         </div>

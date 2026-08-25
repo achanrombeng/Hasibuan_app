@@ -37,9 +37,8 @@ export default function Dealer() {
                 description={`Dealer Form - ${siteName} Outdoor Furniture partnership inquiries.`}
                 keywords={[
                     'dealer form',
-                    'kemitraan furnitur',
-                    'form dealer',
-                    'inquiry',
+                    'furniture partnership',
+                    'dealer inquiry',
                     'partnership',
                 ]}
             />
@@ -53,7 +52,7 @@ export default function Dealer() {
                                 Dealer Form
                             </h1>
                             <p className="text-xl opacity-90">
-                                Evaluasi peluang kemitraan bisnis dengan cepat dan efektif.
+                                Evaluate business partnership opportunities quickly and effectively.
                             </p>
                         </div>
                     </div>

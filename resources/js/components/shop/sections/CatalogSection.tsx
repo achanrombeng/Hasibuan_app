@@ -14,7 +14,7 @@ interface CategoryItem {
 const CATEGORY_ITEMS: CategoryItem[] = [
   {
     id: 'corner-sets',
-    title: 'Set Tempat Duduk',
+    title: 'Seating Sets',
     slug: 'corner-sets',
     image:
       'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1400&auto=format&fit=crop',
@@ -22,7 +22,7 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   },
   {
     id: 'dining-sets',
-    title: 'Set Makan Malam',
+    title: 'Dining Sets',
     slug: 'dining-sets',
     image:
       'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1400&auto=format&fit=crop',
@@ -30,7 +30,7 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   },
   {
     id: 'chairs',
-    title: 'Kursi',
+    title: 'Chairs',
     slug: 'chairs',
     image:
       'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1400&auto=format&fit=crop',
@@ -38,7 +38,7 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   },
   {
     id: 'tables',
-    title: 'Meja',
+    title: 'Tables',
     slug: 'tables',
     image:
       'https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?q=80&w=1400&auto=format&fit=crop',
@@ -46,7 +46,7 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   },
   {
     id: 'sun-loungers',
-    title: 'Tempat Berjemur',
+    title: 'Sun Loungers',
     slug: 'sun-loungers',
     image:
       'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1400&auto=format&fit=crop',
@@ -54,7 +54,7 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   },
   {
     id: 'natural-rattan',
-    title: 'Rotan Alami',
+    title: 'Natural Rattan',
     slug: 'natural-rattan',
     image:
       'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=1400&auto=format&fit=crop',
@@ -126,7 +126,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
               strokeWidth="2.5"
             />
             <path
-              d="M52 24C54.2091 24 56 25.7909 56 28V40C56 42.2091 54.2091 44 52 44V24Z"
+              d="M52 24C54.2091 24 56 25.7909 52 28V40C56 42.2091 54.2091 44 52 44V24Z"
               stroke="currentColor"
               strokeWidth="2.5"
             />
@@ -142,13 +142,12 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
         {/* Section Header */}
         <div className="mb-12 text-center max-w-3xl mx-auto">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-neutral-900 mb-4 tracking-tight">
-            Kategori Produk
+            Product Categories
           </h2>
           <p className="text-neutral-600 text-sm md:text-base leading-relaxed font-sans">
-            Koleksi Ronica menggabungkan daya tahan rotan rajutan tangan dan
-            kayu jati kelas A dengan desain modern. Ini menambah keanggunan
-            tropis ke ruang tamu Anda dengan keanggunan alami dan keahliannya
-            yang unggul.
+            The Ronica collection combines the durability of hand-woven rattan and
+            Grade-A teak wood with modern design. Adding tropical elegance to
+            your living space with natural grace and superior craftsmanship.
           </p>
         </div>
 

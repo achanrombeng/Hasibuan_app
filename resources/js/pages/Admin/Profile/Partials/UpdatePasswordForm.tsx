@@ -57,13 +57,13 @@ export default function UpdatePasswordForm({
                     Update Password
                 </h2>
                 <p className="mt-1 text-sm text-terra-500">
-                    Pastikan akun Anda menggunakan password yang panjang dan acak agar tetap aman.
+                    Ensure your account is using a long, random password to stay secure.
                 </p>
             </header>
 
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="current_password">Password Saat Ini</Label>
+                    <Label htmlFor="current_password">Current Password</Label>
 
                     <Input
                         id="current_password"
@@ -79,7 +79,7 @@ export default function UpdatePasswordForm({
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="password">Password Baru</Label>
+                    <Label htmlFor="password">New Password</Label>
 
                     <Input
                         id="password"
@@ -95,7 +95,7 @@ export default function UpdatePasswordForm({
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="password_confirmation">Konfirmasi Password</Label>
+                    <Label htmlFor="password_confirmation">Confirm Password</Label>
 
                     <Input
                         id="password_confirmation"
@@ -116,7 +116,7 @@ export default function UpdatePasswordForm({
                         className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        {processing ? 'Menyimpan...' : 'Simpan'}
+                        {processing ? 'Saving...' : 'Save Password'}
                     </button>
 
                     <Transition
@@ -126,7 +126,7 @@ export default function UpdatePasswordForm({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-terra-500">Tersimpan.</p>
+                        <p className="text-sm text-terra-500">Saved.</p>
                     </Transition>
                 </div>
             </form>

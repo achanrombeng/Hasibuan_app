@@ -55,8 +55,8 @@ export default function TwoFactorAuthenticationForm({
 
   const handleDisable = () => {
     showConfirm(
-      'Nonaktifkan 2FA',
-      'Apakah Anda yakin ingin menonaktifkan 2FA?',
+      'Disable 2FA',
+      'Are you sure you want to disable two-factor authentication?',
       () => {
         setDisabling(true);
         router.delete(disable.url(), {
@@ -77,8 +77,7 @@ export default function TwoFactorAuthenticationForm({
           Two-Factor Authentication
         </h2>
         <p className="mt-1 text-sm text-terra-500">
-          Tambahkan keamanan ekstra pada akun Anda menggunakan autentikasi dua
-          faktor.
+          Add additional security to your account using two-factor authentication.
         </p>
       </header>
 
@@ -89,12 +88,10 @@ export default function TwoFactorAuthenticationForm({
               variant="default"
               className="border-none bg-green-100 text-green-700 hover:bg-green-200"
             >
-              Aktif
+              Enabled
             </Badge>
             <p className="text-sm text-terra-600">
-              Saat autentikasi dua faktor diaktifkan, Anda akan diminta token
-              acak yang aman saat login. Anda dapat mengambil token ini dari
-              aplikasi Google Authenticator di telepon Anda.
+              When two-factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.
             </p>
 
             <TwoFactorRecoveryCodes
@@ -110,7 +107,7 @@ export default function TwoFactorAuthenticationForm({
                 disabled={disabling}
                 className="border-none bg-red-50 text-red-600 hover:bg-red-100"
               >
-                <ShieldBan className="mr-2 h-4 w-4" /> Nonaktifkan 2FA
+                <ShieldBan className="mr-2 h-4 w-4" /> Disable 2FA
               </Button>
             </div>
           </div>
@@ -120,12 +117,10 @@ export default function TwoFactorAuthenticationForm({
               variant="destructive"
               className="border-none bg-red-100 text-red-700 hover:bg-red-200"
             >
-              Nonaktif
+              Disabled
             </Badge>
             <p className="text-sm text-terra-600">
-              Saat anda mengaktifkan autentikasi dua faktor, Anda akan diminta
-              token acak yang aman saat login. Token ini dapat diambil dari
-              aplikasi Google Authenticator di telepon Anda.
+              When you enable two-factor authentication, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.
             </p>
 
             <div>
@@ -136,7 +131,7 @@ export default function TwoFactorAuthenticationForm({
                   className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98]"
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  Lanjutkan Setup
+                  Continue Setup
                 </button>
               ) : (
                 <button
@@ -146,7 +141,7 @@ export default function TwoFactorAuthenticationForm({
                   className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  Aktifkan 2FA
+                  Enable 2FA
                 </button>
               )}
             </div>

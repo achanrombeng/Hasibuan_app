@@ -32,11 +32,11 @@ export default function CreateUser({ roles }: CreateUserProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Manajemen User', href: '/admin/users' },
-                { title: 'Tambah User', href: '/admin/users/create' },
+                { title: 'User Management', href: '/admin/users' },
+                { title: 'Add User', href: '/admin/users/create' },
             ]}
         >
-            <Head title="Tambah User" />
+            <Head title="Add User" />
 
             <div className="mx-auto space-y-6">
                 {/* Header */}
@@ -49,10 +49,10 @@ export default function CreateUser({ roles }: CreateUserProps) {
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Tambah User Baru
+                            Add New User
                         </h1>
                         <p className="mt-1 text-terra-500">
-                            Buat akun user admin baru
+                            Create a new admin user account
                         </p>
                     </div>
                 </div>
@@ -64,14 +64,14 @@ export default function CreateUser({ roles }: CreateUserProps) {
                 >
                     <div>
                         <label className="mb-2 block text-sm font-medium text-terra-700">
-                            Nama Lengkap
+                            Full Name
                         </label>
                         <input
                             type="text"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                            placeholder="Masukkan nama lengkap"
+                            placeholder="Enter full name"
                         />
                         {errors.name && (
                             <p className="mt-1 text-sm text-red-500">
@@ -110,7 +110,7 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                     setData('password', e.target.value)
                                 }
                                 className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 pr-12 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                placeholder="Masukkan password"
+                                placeholder="Enter password"
                             />
                             <button
                                 type="button"
@@ -140,7 +140,7 @@ export default function CreateUser({ roles }: CreateUserProps) {
                             onChange={(e) => setData('role', e.target.value)}
                             className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
                         >
-                            <option value="">Pilih Role</option>
+                            <option value="">Select Role</option>
                             {roles.map((role) => (
                                 <option key={role} value={role}>
                                     {roleLabels[role] || role}
@@ -157,14 +157,14 @@ export default function CreateUser({ roles }: CreateUserProps) {
                     {/* Sticky Submit Bar */}
                     <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                         <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                            Pastikan data pengguna sudah benar sebelum menyimpan
+                            Please ensure user details are accurate before saving
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
                                 href="/admin/users"
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
-                                Batal
+                                Cancel
                             </Link>
                             <button
                                 type="submit"
@@ -172,7 +172,7 @@ export default function CreateUser({ roles }: CreateUserProps) {
                                 className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                             >
                                 <Save className="h-5 w-5" />
-                                {processing ? 'Menyimpan...' : 'Simpan User'}
+                                {processing ? 'Saving...' : 'Save User'}
                             </button>
                         </div>
                     </div>

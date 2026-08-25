@@ -21,18 +21,18 @@ export default function Edit({
 
     return (
         <AdminLayout
-            breadcrumbs={[{ title: 'Profile Saya', href: '/admin/profile' }]}
+            breadcrumbs={[{ title: 'My Profile', href: '/admin/profile' }]}
         >
-            <Head title="Profile Saya" />
+            <Head title="My Profile" />
 
             <div className="space-y-6">
                 {/* Header */}
                 <div>
                     <h1 className="text-2xl font-bold text-terra-900">
-                        Pengaturan Profile
+                        Profile Settings
                     </h1>
                     <p className="mt-1 text-terra-500">
-                        Kelola informasi profile dan keamanan akun Anda
+                        Manage your profile information and account security
                     </p>
                 </div>
 

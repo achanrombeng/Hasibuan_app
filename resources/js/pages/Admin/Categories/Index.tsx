@@ -121,7 +121,7 @@ function CategoryTreeItem({
                     </div>
                     <div className="flex items-center gap-3">
                         <p className="text-sm text-terra-500">
-                            {category.products_count} produk
+                            {category.products_count} {category.products_count === 1 ? 'product' : 'products'}
                         </p>
                         {category.description && (
                             <p className="hidden truncate text-sm text-terra-400 md:block">
@@ -140,11 +140,11 @@ function CategoryTreeItem({
                                 : 'bg-red-100 text-red-700'
                         }`}
                     >
-                        {category.is_active ? 'Aktif' : 'Nonaktif'}
+                        {category.is_active ? 'Active' : 'Inactive'}
                     </span>
                     {category.is_featured && (
                         <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">
-                            Unggulan
+                            Featured
                         </span>
                     )}
                 </div>
@@ -239,9 +239,9 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
 
             return copy.sort((a, b) => {
                 if (sortBy === 'name_asc') {
-                    return a.name.localeCompare(b.name, 'id');
+                    return a.name.localeCompare(b.name, 'en');
                 } else if (sortBy === 'name_desc') {
-                    return b.name.localeCompare(a.name, 'id');
+                    return b.name.localeCompare(a.name, 'en');
                 } else if (sortBy === 'newest') {
                     const timeA = a.created_at ? new Date(a.created_at).getTime() : a.id;
                     const timeB = b.created_at ? new Date(b.created_at).getTime() : b.id;
@@ -316,19 +316,19 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
 
     return (
         <AdminLayout
-            breadcrumbs={[{ title: 'Kategori', href: '/admin/categories' }]}
+            breadcrumbs={[{ title: 'Categories', href: '/admin/categories' }]}
         >
-            <Head title="Kelola Kategori" />
+            <Head title="Manage Categories" />
 
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Kelola Kategori
+                            Manage Categories
                         </h1>
                         <p className="mt-1 text-terra-500">
-                            Kelola kategori produk di toko Anda
+                            Manage product categories in your store
                         </p>
                     </div>
                     <Link
@@ -336,7 +336,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                         className="inline-flex items-center gap-2 rounded-xl bg-wood-dark px-4 py-2.5 font-medium text-white transition-all"
                     >
                         <Plus className="h-5 w-5" />
-                        Tambah Kategori
+                        Add Category
                     </Link>
                 </div>
 
@@ -352,7 +352,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                     {totalCategories}
                                 </p>
                                 <p className="text-sm text-terra-500">
-                                    Total Kategori
+                                    Total Categories
                                 </p>
                             </div>
                         </div>
@@ -367,7 +367,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                     {parentCategoriesCount}
                                 </p>
                                 <p className="text-sm text-terra-500">
-                                    Kategori Utama
+                                    Main Categories
                                 </p>
                             </div>
                         </div>
@@ -382,7 +382,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                     {childCategoriesCount}
                                 </p>
                                 <p className="text-sm text-terra-500">
-                                    Sub Kategori
+                                    Sub-Categories
                                 </p>
                             </div>
                         </div>
@@ -395,7 +395,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                         <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                             type="text"
-                            placeholder="Cari kategori..."
+                            placeholder="Search category..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
@@ -411,8 +411,8 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             >
                                 <option value="name_asc">Filter: A - Z</option>
                                 <option value="name_desc">Filter: Z - A</option>
-                                <option value="newest">Filter: Terbaru</option>
-                                <option value="oldest">Filter: Terlama</option>
+                                <option value="newest">Filter: Newest</option>
+                                <option value="oldest">Filter: Oldest</option>
                             </select>
                             <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         </div>
@@ -420,7 +420,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             type="button"
                             className="rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#8e6843] active:scale-[0.98]"
                         >
-                            Cari
+                            Search
                         </button>
                     </div>
                 </div>
@@ -442,12 +442,12 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                     <div className="rounded-2xl border border-terra-100 bg-white p-12 text-center shadow-sm">
                         <Layers className="mx-auto mb-4 h-12 w-12 text-terra-300" />
                         <h3 className="text-lg font-medium text-terra-900">
-                            Tidak ada kategori
+                            No categories found
                         </h3>
                         <p className="mt-1 text-terra-500">
                             {search
-                                ? 'Tidak ditemukan kategori yang sesuai dengan pencarian'
-                                : 'Mulai dengan menambahkan kategori baru'}
+                                ? 'No categories match your search criteria'
+                                : 'Get started by adding a new category'}
                         </p>
                     </div>
                 )}
@@ -461,14 +461,14 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             <AlertTriangle className="h-6 w-6 text-red-600" />
                         </div>
                         <DialogTitle className="text-center">
-                            Hapus Kategori
+                            Delete Category
                         </DialogTitle>
                         <DialogDescription className="text-center">
-                            Apakah Anda yakin ingin menghapus kategori{' '}
+                            Are you sure you want to delete category{' '}
                             <span className="font-semibold text-terra-900">
                                 "{categoryToDelete?.name}"
                             </span>
-                            ? Tindakan ini tidak dapat dibatalkan.
+                            ? This action cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
                     {categoryToDelete &&
@@ -476,9 +476,8 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                         categoryToDelete.children.length > 0 && (
                             <div className="rounded-lg border border-red-200 bg-red-50 p-3">
                                 <p className="text-sm text-red-800">
-                                    <strong>Peringatan:</strong> Kategori ini
-                                    memiliki {categoryToDelete.children.length}{' '}
-                                    sub-kategori yang akan ikut terhapus.
+                                    <strong>Warning:</strong> This category has {categoryToDelete.children.length}{' '}
+                                    sub-categories that will also be deleted.
                                 </p>
                             </div>
                         )}
@@ -486,11 +485,8 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                         categoryToDelete.products_count > 0 && (
                             <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
                                 <p className="text-sm text-amber-800">
-                                    <strong>Peringatan:</strong> Kategori ini
-                                    memiliki {categoryToDelete.products_count}{' '}
-                                    produk yang terhubung. Menghapus kategori
-                                    akan membuat produk tersebut tidak memiliki
-                                    kategori.
+                                    <strong>Warning:</strong> This category has {categoryToDelete.products_count}{' '}
+                                    linked products. Deleting this category will unassign those products.
                                 </p>
                             </div>
                         )}
@@ -500,7 +496,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                 type="button"
                                 className="flex-1 rounded-xl border border-terra-200 px-4 py-2.5 font-medium text-terra-700 transition-colors hover:bg-terra-50 sm:flex-none"
                             >
-                                Batal
+                                Cancel
                             </button>
                         </DialogClose>
                         <button
@@ -509,7 +505,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             disabled={isDeleting}
                             className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
                         >
-                            {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
+                            {isDeleting ? 'Deleting...' : 'Yes, Delete'}
                         </button>
                     </DialogFooter>
                 </DialogContent>

@@ -58,26 +58,26 @@ export default function DeleteUserForm({ className = '' }: { className?: string 
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold text-red-900">
-                        Hapus Akun
+                        Delete Account
                     </h2>
                     <p className="mt-1 text-sm text-red-600">
-                        Setelah akun Anda dihapus, semua data dan sumber daya akan dihapus secara permanen.
+                        Once your account is deleted, all of its resources and data will be permanently deleted.
                     </p>
                 </div>
             </header>
 
             <div className="mt-6">
                 <Button variant="destructive" onClick={confirmUserDeletion} className="bg-red-600 hover:bg-red-700 text-white rounded-xl">
-                    Hapus Akun
+                    Delete Account
                 </Button>
             </div>
 
             <Dialog open={confirmingUserDeletion} onOpenChange={setConfirmingUserDeletion}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Apakah Anda yakin ingin menghapus akun Anda?</DialogTitle>
+                        <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
                         <DialogDescription>
-                            Setelah akun Anda dihapus, semua data dan sumber daya akan dihapus secara permanen. Silakan masukkan password Anda untuk mengonfirmasi bahwa Anda ingin menghapus akun Anda secara permanen.
+                            Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
                         </DialogDescription>
                     </DialogHeader>
 
@@ -103,11 +103,11 @@ export default function DeleteUserForm({ className = '' }: { className?: string 
 
                         <DialogFooter className="mt-6 gap-2">
                             <Button type="button" variant="secondary" onClick={closeModal}>
-                                Batal
+                                Cancel
                             </Button>
 
                             <Button variant="destructive" disabled={processing}>
-                                Hapus Akun
+                                Delete Account
                             </Button>
                         </DialogFooter>
                     </form>

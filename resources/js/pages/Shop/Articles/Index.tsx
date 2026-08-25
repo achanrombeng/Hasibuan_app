@@ -71,14 +71,14 @@ export default function ArticlesIndex({
     return (
         <>
             <SEOHead
-                title="Artikel & Berita"
-                description="Temukan inspirasi dan tips terbaru tentang furnitur dan dekorasi hunian Anda."
+                title="Articles & News"
+                description="Discover the latest inspiration and tips on furniture and home decor."
                 keywords={[
-                    'artikel',
-                    'berita',
-                    'tips furniture',
-                    'furnitur outdoor',
-                    'inspirasi mebel',
+                    'articles',
+                    'news',
+                    'furniture tips',
+                    'outdoor furniture',
+                    'decor inspiration',
                 ]}
             />
             <div className="bg-noise" />
@@ -88,10 +88,10 @@ export default function ArticlesIndex({
                     <div className="mb-16 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
                         <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
                             <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                                Artikel & Berita
+                                Articles & News
                             </h1>
                             <p className="text-xl opacity-90">
-                                Temukan inspirasi dan tips terbaru tentang furniture
+                                Discover the latest inspiration and tips on furniture
                             </p>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ export default function ArticlesIndex({
                                 <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-terra-400" />
                                 <Input
                                     type="text"
-                                    placeholder="Cari artikel..."
+                                    placeholder="Search articles..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     onKeyDown={(e) => {
@@ -117,7 +117,7 @@ export default function ArticlesIndex({
                 {/* Articles Grid */}
                 {articles.data.length === 0 ? (
                     <div className="py-16 text-center">
-                        <p className="text-gray-500">Tidak ada artikel ditemukan</p>
+                        <p className="text-gray-500">No articles found</p>
                     </div>
                 ) : (
                     <>
@@ -167,7 +167,7 @@ export default function ArticlesIndex({
                                             </div>
                                             <div className="flex items-center">
                                                 <Clock className="mr-1 h-3.5 w-3.5" />
-                                                {article.read_time} menit
+                                                {article.read_time} min read
                                             </div>
                                         </div>
 

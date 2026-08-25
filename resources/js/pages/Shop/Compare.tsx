@@ -108,21 +108,20 @@ export default function Compare({ products }: Props) {
                                     className="mx-auto mb-4 text-terra-300"
                                 />
                                 <h3 className="mb-2 text-xl font-medium text-terra-900">
-                                    Pilih minimal 2 produk
+                                    Select at least 2 products
                                 </h3>
                                 <p className="mb-6 text-terra-500">
-                                    Tambahkan produk untuk membandingkan
+                                    Add products to compare features
                                 </p>
                                 <Link
                                     href="/shop/products"
                                     className="inline-flex items-center gap-2 rounded-full bg-terra-900 px-6 py-3 text-white hover:bg-wood-dark"
                                 >
-                                    Lihat Produk
+                                    View Products
                                 </Link>
                             </div>
                         ) : (
                             <div className="overflow-hidden rounded-sm border border-terra-100 bg-white">
-                                {/* Product Images & Names */}
                                 <div
                                     className="grid"
                                     style={{
@@ -130,7 +129,7 @@ export default function Compare({ products }: Props) {
                                     }}
                                 >
                                     <div className="bg-terra-50 p-4 font-medium text-terra-700">
-                                        Produk
+                                        Product
                                     </div>
                                     {products.map((product) => (
                                         <div

@@ -150,20 +150,20 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
   return (
     <AdminLayout
       breadcrumbs={[
-        { title: 'Pengaturan', href: '/admin/settings' },
-        { title: 'Pengaturan Footer', href: '/admin/settings/footer' },
+        { title: 'Settings', href: '/admin/settings' },
+        { title: 'Footer Settings', href: '/admin/settings/footer' },
       ]}
     >
-      <Head title="Pengaturan Footer" />
+      <Head title="Footer Settings" />
 
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">
-            Pengaturan Footer Toko
+            Store Footer Settings
           </h1>
           <p className="mt-1 text-neutral-500">
-            Atur deskripsi, hak cipta, menu navigasi, informasi kontak, dan tautan sosial media pada footer halaman publik.
+            Manage store description, copyright text, column navigation, contact info, and social media links displayed on storefront footers.
           </p>
         </div>
 
@@ -176,10 +176,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Teks Deskripsi &amp; Hak Cipta
+                  Description &amp; Copyright Text
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Deskripsi singkat toko dan teks hak cipta pada bagian bawah footer
+                  Short store description and bottom copyright text
                 </p>
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Deskripsi Singkat Footer
+                  Short Footer Description
                 </label>
                 <textarea
                   value={data.footer_description}
@@ -195,28 +195,28 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                   rows={3}
                   placeholder={
                     settings.site_description ||
-                    'Furniture minimalis dari bahan berkelanjutan. Dibuat untuk mereka yang menemukan kemewahan dalam kesederhanaan.'
+                    'Minimalist furniture crafted from sustainable materials. Created for those who find luxury in simplicity.'
                   }
                   className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1.5 text-xs text-neutral-500">
-                  Kosongkan jika ingin menggunakan deskripsi utama toko ({settings.site_description ? 'Deskripsi toko aktif' : 'default'}).
+                  Leave empty to use primary store description ({settings.site_description ? 'Active store description' : 'default'}).
                 </p>
               </div>
 
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Teks Hak Cipta (Copyright)
+                  Copyright Text
                 </label>
                 <input
                   type="text"
                   value={data.footer_copyright}
                   onChange={(e) => setData('footer_copyright', e.target.value)}
-                  placeholder="© 2026 Ronica. Hak cipta dilindungi."
+                  placeholder="© 2026 Ronica. All rights reserved."
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1.5 text-xs text-neutral-500">
-                  Kosongkan untuk menggunakan format default (© [Tahun] [Nama Toko]. Hak cipta dilindungi.)
+                  Leave empty to use default format (© [Year] [Store Name]. All rights reserved.)
                 </p>
               </div>
             </div>
@@ -231,10 +231,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Navigasi Kolom 1 (Belanja / Shop)
+                    Navigation Column 1 (Shop)
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Atur judul kolom dan daftar tautan navigasi belanja
+                    Manage column title and shopping link navigation
                   </p>
                 </div>
               </div>
@@ -245,20 +245,20 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3.5 py-2 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100"
               >
                 <Plus className="h-4 w-4" />
-                Tambah Link
+                Add Link
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Judul Kolom 1
+                  Column 1 Title
                 </label>
                 <input
                   type="text"
                   value={data.footer_col1_title}
                   onChange={(e) => setData('footer_col1_title', e.target.value)}
-                  placeholder="Belanja"
+                  placeholder="Shop"
                   className="w-full max-w-md rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -274,7 +274,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                         type="text"
                         value={link.label}
                         onChange={(e) => handleCol1Change(index, 'label', e.target.value)}
-                        placeholder="Label Link (misal: Semua Produk)"
+                        placeholder="Link Label (e.g. All Products)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
                     </div>
@@ -283,7 +283,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                         type="text"
                         value={link.url}
                         onChange={(e) => handleCol1Change(index, 'url', e.target.value)}
-                        placeholder="URL (misal: /shop/products)"
+                        placeholder="URL (e.g. /shop/products)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
                     </div>
@@ -291,7 +291,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                       type="button"
                       onClick={() => removeCol1Link(index)}
                       className="rounded-md p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-700 sm:self-center"
-                      title="Hapus Link"
+                      title="Delete Link"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -300,7 +300,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
 
                 {col1Links.length === 0 && (
                   <div className="rounded-lg border border-dashed border-neutral-300 py-6 text-center text-sm text-neutral-400">
-                    Belum ada link di Kolom 1. Klik &quot;Tambah Link&quot; untuk menambahkan.
+                    No links in Column 1 yet. Click &quot;Add Link&quot; to get started.
                   </div>
                 )}
               </div>
@@ -316,10 +316,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Navigasi Kolom 2 (Perusahaan / Company)
+                    Navigation Column 2 (Company)
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Atur judul kolom dan daftar tautan informasi perusahaan
+                    Manage column title and company info links
                   </p>
                 </div>
               </div>
@@ -330,20 +330,20 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-50 px-3.5 py-2 text-xs font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
               >
                 <Plus className="h-4 w-4" />
-                Tambah Link
+                Add Link
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Judul Kolom 2
+                  Column 2 Title
                 </label>
                 <input
                   type="text"
                   value={data.footer_col2_title}
                   onChange={(e) => setData('footer_col2_title', e.target.value)}
-                  placeholder="Perusahaan"
+                  placeholder="Company"
                   className="w-full max-w-md rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -359,7 +359,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                         type="text"
                         value={link.label}
                         onChange={(e) => handleCol2Change(index, 'label', e.target.value)}
-                        placeholder="Label Link (misal: Tentang Kami)"
+                        placeholder="Link Label (e.g. About Us)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
                     </div>
@@ -368,7 +368,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                         type="text"
                         value={link.url}
                         onChange={(e) => handleCol2Change(index, 'url', e.target.value)}
-                        placeholder="URL (misal: /shop/about)"
+                        placeholder="URL (e.g. /shop/about)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
                     </div>
@@ -376,7 +376,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                       type="button"
                       onClick={() => removeCol2Link(index)}
                       className="rounded-md p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-700 sm:self-center"
-                      title="Hapus Link"
+                      title="Delete Link"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -385,7 +385,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
 
                 {col2Links.length === 0 && (
                   <div className="rounded-lg border border-dashed border-neutral-300 py-6 text-center text-sm text-neutral-400">
-                    Belum ada link di Kolom 2. Klik &quot;Tambah Link&quot; untuk menambahkan.
+                    No links in Column 2 yet. Click &quot;Add Link&quot; to get started.
                   </div>
                 )}
               </div>
@@ -400,10 +400,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Informasi Kontak &amp; Opsi Tampilan Footer
+                  Contact Info &amp; Footer Display Options
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Pilih informasi kontak mana yang ingin ditampilkan pada kolom footer
+                  Choose which contact information to show on footer columns
                 </p>
               </div>
             </div>
@@ -411,13 +411,13 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
             <div className="space-y-6">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Judul Seksi Kontak
+                  Contact Section Title
                 </label>
                 <input
                   type="text"
                   value={data.footer_contact_title}
                   onChange={(e) => setData('footer_contact_title', e.target.value)}
-                  placeholder="Informasi Kontak"
+                  placeholder="Contact Information"
                   className="w-full max-w-md rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -426,7 +426,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition-all hover:bg-neutral-100/60">
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Building2 className="h-4 w-4 text-teal-600" />
-                    Alamat Pabrik
+                    Factory Address
                   </span>
                   <input
                     type="checkbox"
@@ -439,7 +439,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition-all hover:bg-neutral-100/60">
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Store className="h-4 w-4 text-teal-600" />
-                    Alamat Showroom
+                    Showroom Address
                   </span>
                   <input
                     type="checkbox"
@@ -452,7 +452,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition-all hover:bg-neutral-100/60">
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Phone className="h-4 w-4 text-teal-600" />
-                    Nomor Telepon
+                    Phone Number
                   </span>
                   <input
                     type="checkbox"
@@ -465,7 +465,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition-all hover:bg-neutral-100/60">
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <MessageCircle className="h-4 w-4 text-teal-600" />
-                    Nomor WhatsApp
+                    WhatsApp Number
                   </span>
                   <input
                     type="checkbox"
@@ -478,7 +478,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition-all hover:bg-neutral-100/60">
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Mail className="h-4 w-4 text-teal-600" />
-                    Email Kontak
+                    Contact Email
                   </span>
                   <input
                     type="checkbox"
@@ -491,7 +491,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition-all hover:bg-neutral-100/60">
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Globe className="h-4 w-4 text-teal-600" />
-                    Sosial Media
+                    Social Media
                   </span>
                   <input
                     type="checkbox"
@@ -512,10 +512,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Media Sosial &amp; Tautan Halaman Legal
+                  Social Media &amp; Legal Page Links
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Tautan media sosial tambahan dan halaman Kebijakan Privasi / Syarat Ketentuan
+                  Additional social media links and Privacy Policy / Terms &amp; Conditions pages
                 </p>
               </div>
             </div>
@@ -524,7 +524,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               <div>
                 <label className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-700">
                   <Youtube className="h-4 w-4 text-red-600" />
-                  YouTube Channel URL (Opsional)
+                  YouTube Channel URL (Optional)
                 </label>
                 <input
                   type="url"
@@ -538,7 +538,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               <div>
                 <label className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-700">
                   <ShieldCheck className="h-4 w-4 text-teal-600" />
-                  URL Kebijakan Privasi (Privacy Policy)
+                  Privacy Policy URL
                 </label>
                 <input
                   type="text"
@@ -552,7 +552,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               <div className="md:col-span-2">
                 <label className="mb-2 flex items-center gap-2 text-sm font-medium text-neutral-700">
                   <ShieldCheck className="h-4 w-4 text-teal-600" />
-                  URL Syarat &amp; Ketentuan (Terms &amp; Conditions)
+                  Terms &amp; Conditions URL
                 </label>
                 <input
                   type="text"
@@ -568,7 +568,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
           {/* Sticky Submit Bar */}
           <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
             <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-              Pastikan perubahan sudah sesuai sebelum menyimpan
+              Please ensure details are accurate before saving
             </span>
             <button
               type="submit"
@@ -576,7 +576,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
-              {processing ? 'Menyimpan...' : 'Simpan Pengaturan Footer'}
+              {processing ? 'Saving...' : 'Save Footer Settings'}
             </button>
           </div>
         </form>

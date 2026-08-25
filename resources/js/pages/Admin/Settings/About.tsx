@@ -81,21 +81,21 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Pengaturan', href: '/admin/settings' },
-                { title: 'Halaman About Us', href: '/admin/settings/about' },
+                { title: 'Settings', href: '/admin/settings' },
+                { title: 'About Us Page', href: '/admin/settings/about' },
             ]}
         >
-            <Head title="Pengaturan Halaman About Us" />
+            <Head title="About Us Page Settings" />
 
             <div className="space-y-6 pb-12">
                 {/* Header */}
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Kelola Halaman About Us
+                            Manage About Us Page
                         </h1>
                         <p className="mt-1 text-sm text-neutral-500">
-                            Atur teks, cerita workshop, visi & misi yang tampil pada halaman Tentang Kami toko Anda.
+                            Manage headline text, workshop story, vision & mission displayed on your store's About Us page.
                         </p>
                     </div>
                 </div>
@@ -109,10 +109,10 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             </div>
                             <div>
                                 <h2 className="font-serif text-lg font-bold text-neutral-900">
-                                    Hero Banner (Header Atas)
+                                    Hero Banner
                                 </h2>
                                 <p className="text-xs text-neutral-500">
-                                    Judul utama dan deskripsi pada bagian atas halaman About Us
+                                    Main title and description at the top of the About Us page
                                 </p>
                             </div>
                         </div>
@@ -120,13 +120,13 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                         <div className="space-y-4">
                             <div>
                                 <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                    Judul Hero (Hero Title)
+                                    Hero Title
                                 </label>
                                 <input
                                     type="text"
                                     value={data.about_hero_title}
                                     onChange={(e) => setData('about_hero_title', e.target.value)}
-                                    placeholder="Contoh: Welcome to Ronica Outdoor Furniture"
+                                    placeholder="e.g. Welcome to Ronica Outdoor Furniture"
                                     className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                 />
                                 {errors.about_hero_title && (
@@ -136,13 +136,13 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
 
                             <div>
                                 <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                    Subjudul Hero (Hero Subtitle)
+                                    Hero Subtitle
                                 </label>
                                 <textarea
                                     rows={2}
                                     value={data.about_hero_subtitle}
                                     onChange={(e) => setData('about_hero_subtitle', e.target.value)}
-                                    placeholder="Contoh: Delivering premium quality furniture..."
+                                    placeholder="e.g. Delivering premium quality furniture..."
                                     className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                 />
                             </div>
@@ -157,10 +157,10 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             </div>
                             <div>
                                 <h2 className="font-serif text-lg font-bold text-neutral-900">
-                                    Cerita Kami (Our Story) & Gambar Workshop
+                                    Our Story & Workshop Photo
                                 </h2>
                                 <p className="text-xs text-neutral-500">
-                                    Cerita latar belakang usaha, foto workshop, dan badge tahun pengalaman
+                                    Background story, workshop photos, and years of experience badge
                                 </p>
                             </div>
                         </div>
@@ -169,52 +169,52 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             <div className="space-y-4">
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Judul Bagian Cerita (Story Title)
+                                        Story Title
                                     </label>
                                     <input
                                         type="text"
                                         value={data.about_story_title}
                                         onChange={(e) => setData('about_story_title', e.target.value)}
-                                        placeholder="Contoh: Our Story"
+                                        placeholder="e.g. Our Story"
                                         className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Paragraf 1
+                                        Paragraph 1
                                     </label>
                                     <textarea
                                         rows={3}
                                         value={data.about_story_p1}
                                         onChange={(e) => setData('about_story_p1', e.target.value)}
-                                        placeholder="Paragraf pertama cerita..."
+                                        placeholder="First story paragraph..."
                                         className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Paragraf 2
+                                        Paragraph 2
                                     </label>
                                     <textarea
                                         rows={3}
                                         value={data.about_story_p2}
                                         onChange={(e) => setData('about_story_p2', e.target.value)}
-                                        placeholder="Paragraf kedua cerita..."
+                                        placeholder="Second story paragraph..."
                                         className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Paragraf 3
+                                        Paragraph 3
                                     </label>
                                     <textarea
                                         rows={3}
                                         value={data.about_story_p3}
                                         onChange={(e) => setData('about_story_p3', e.target.value)}
-                                        placeholder="Paragraf ketiga cerita..."
+                                        placeholder="Third story paragraph..."
                                         className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
@@ -222,9 +222,14 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Foto Workshop / Pengrajin
-                                    </label>
+                                    <div className="mb-1.5 flex items-center justify-between">
+                                        <label className="block text-sm font-medium text-neutral-700">
+                                            Workshop / Craftsman Photo
+                                        </label>
+                                        <span className="text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60">
+                                            Recommended size: 800 × 600 px (4:3 ratio)
+                                        </span>
+                                    </div>
                                     <div className="space-y-3">
                                         <div className="aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
                                             <img
@@ -245,25 +250,25 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                                 <div className="grid grid-cols-2 gap-4 pt-2">
                                     <div>
                                         <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                            Angka Pengalaman
+                                            Experience Value
                                         </label>
                                         <input
                                             type="text"
                                             value={data.about_years_experience}
                                             onChange={(e) => setData('about_years_experience', e.target.value)}
-                                            placeholder="Contoh: 14+"
+                                            placeholder="e.g. 14+"
                                             className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                         />
                                     </div>
                                     <div>
                                         <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                            Label Badge Pengalaman
+                                            Experience Badge Label
                                         </label>
                                         <input
                                             type="text"
                                             value={data.about_years_experience_label}
                                             onChange={(e) => setData('about_years_experience_label', e.target.value)}
-                                            placeholder="Contoh: Years of Experience"
+                                            placeholder="e.g. Years of Experience"
                                             className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                         />
                                     </div>
@@ -280,10 +285,10 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             </div>
                             <div>
                                 <h2 className="font-serif text-lg font-bold text-neutral-900">
-                                    Visi & Misi (Our Vision & Mission)
+                                    Vision & Mission
                                 </h2>
                                 <p className="text-xs text-neutral-500">
-                                    Pernyataan Visi dan Poin Misi Perusahaan
+                                    Company vision statement and mission points
                                 </p>
                             </div>
                         </div>
@@ -292,29 +297,29 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             {/* Vision */}
                             <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
                                 <h3 className="font-serif text-base font-semibold text-neutral-800">
-                                    Bagian Visi
+                                    Vision Section
                                 </h3>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Judul Visi
+                                        Vision Title
                                     </label>
                                     <input
                                         type="text"
                                         value={data.about_vision_title}
                                         onChange={(e) => setData('about_vision_title', e.target.value)}
-                                        placeholder="Contoh: Our Vision"
+                                        placeholder="e.g. Our Vision"
                                         className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Deskripsi Visi
+                                        Vision Description
                                     </label>
                                     <textarea
                                         rows={4}
                                         value={data.about_vision_text}
                                         onChange={(e) => setData('about_vision_text', e.target.value)}
-                                        placeholder="Penjelasan visi perusahaan..."
+                                        placeholder="Company vision statement..."
                                         className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
@@ -323,23 +328,23 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             {/* Mission */}
                             <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
                                 <h3 className="font-serif text-base font-semibold text-neutral-800">
-                                    Bagian Misi
+                                    Mission Section
                                 </h3>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Judul Misi
+                                        Mission Title
                                     </label>
                                     <input
                                         type="text"
                                         value={data.about_mission_title}
                                         onChange={(e) => setData('about_mission_title', e.target.value)}
-                                        placeholder="Contoh: Our Mission"
+                                        placeholder="e.g. Our Mission"
                                         className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none"
                                     />
                                 </div>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Poin Misi 1
+                                        Mission Point 1
                                     </label>
                                     <input
                                         type="text"
@@ -350,7 +355,7 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                                 </div>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Poin Misi 2
+                                        Mission Point 2
                                     </label>
                                     <input
                                         type="text"
@@ -361,7 +366,7 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                                 </div>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Poin Misi 3
+                                        Mission Point 3
                                     </label>
                                     <input
                                         type="text"
@@ -372,7 +377,7 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                                 </div>
                                 <div>
                                     <label className="mb-1.5 block text-sm font-medium text-neutral-700">
-                                        Poin Misi 4
+                                        Mission Point 4
                                     </label>
                                     <input
                                         type="text"
@@ -388,7 +393,7 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                     {/* Sticky Submit Bar */}
                     <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
                         <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-                            Pastikan perubahan sudah sesuai sebelum menyimpan
+                            Please ensure details are accurate before saving
                         </span>
                         <button
                             type="submit"
@@ -396,7 +401,7 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                             className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                         >
                             <Save className="h-5 w-5" />
-                            {processing ? 'Menyimpan...' : 'Simpan Pengaturan About Us'}
+                            {processing ? 'Saving...' : 'Save About Us Settings'}
                         </button>
                     </div>
                 </form>

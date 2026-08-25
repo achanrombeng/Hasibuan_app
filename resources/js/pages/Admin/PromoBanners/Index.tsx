@@ -54,7 +54,7 @@ const IconMap = {
 const displayTypeLabels = {
     banner: 'Banner',
     popup: 'Popup',
-    both: 'Keduanya',
+    both: 'Both',
 };
 
 export default function PromoBannersIndex({
@@ -126,7 +126,7 @@ export default function PromoBannersIndex({
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return '-';
-        return new Date(dateString).toLocaleDateString('id-ID', {
+        return new Date(dateString).toLocaleDateString('en-US', {
             day: 'numeric',
             month: 'short',
             year: 'numeric',
@@ -137,26 +137,26 @@ export default function PromoBannersIndex({
         (b) => b.is_currently_active,
     ).length;
     const scheduledCount = promoBanners.filter(
-        (b) => b.status_label === 'Terjadwal',
+        (b) => b.status_label === 'Terjadwal' || b.status_label === 'Scheduled',
     ).length;
 
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Promo Banner', href: '/admin/promo-banners' },
+                { title: 'Promo Banners', href: '/admin/promo-banners' },
             ]}
         >
-            <Head title="Kelola Promo Banner" />
+            <Head title="Manage Promo Banners" />
 
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-neutral-900">
-                            Kelola Promo Banner
+                            Manage Promo Banners
                         </h1>
                         <p className="mt-1 text-neutral-500">
-                            Kelola banner dan popup promosi di toko Anda
+                            Manage promotional banners and popups in your store
                         </p>
                     </div>
                     <Link
@@ -164,7 +164,7 @@ export default function PromoBannersIndex({
                         className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-teal-700"
                     >
                         <Plus className="h-5 w-5" />
-                        Tambah Promo
+                        Add Promo
                     </Link>
                 </div>
 
@@ -180,7 +180,7 @@ export default function PromoBannersIndex({
                                     {promoBanners.length}
                                 </p>
                                 <p className="text-sm text-neutral-500">
-                                    Total Promo
+                                    Total Promos
                                 </p>
                             </div>
                         </div>
@@ -195,7 +195,7 @@ export default function PromoBannersIndex({
                                     {activeCount}
                                 </p>
                                 <p className="text-sm text-neutral-500">
-                                    Sedang Aktif
+                                    Currently Active
                                 </p>
                             </div>
                         </div>
@@ -210,7 +210,7 @@ export default function PromoBannersIndex({
                                     {scheduledCount}
                                 </p>
                                 <p className="text-sm text-neutral-500">
-                                    Terjadwal
+                                    Scheduled
                                 </p>
                             </div>
                         </div>
@@ -223,7 +223,7 @@ export default function PromoBannersIndex({
                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
                         <input
                             type="text"
-                            placeholder="Cari promo..."
+                            placeholder="Search promo..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-2.5 pr-4 pl-10 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
@@ -235,6 +235,11 @@ export default function PromoBannersIndex({
                 <div className="space-y-3">
                     {filteredBanners.map((banner) => {
                         const Icon = IconMap[banner.icon];
+                        const isAktif = banner.status_label === 'Aktif' || banner.status_label === 'Active';
+                        const isTerjadwal = banner.status_label === 'Terjadwal' || banner.status_label === 'Scheduled';
+                        const isBerakhir = banner.status_label === 'Berakhir' || banner.status_label === 'Expired';
+                        const displayStatus = isAktif ? 'Active' : isTerjadwal ? 'Scheduled' : isBerakhir ? 'Expired' : banner.status_label;
+
                         return (
                             <div
                                 key={banner.id}
@@ -302,18 +307,16 @@ export default function PromoBannersIndex({
                                     <div className="flex flex-wrap items-center gap-2 sm:hidden">
                                         <span
                                             className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                                                banner.status_label === 'Aktif'
+                                                isAktif
                                                     ? 'bg-green-100 text-green-700'
-                                                    : banner.status_label ===
-                                                        'Terjadwal'
+                                                    : isTerjadwal
                                                       ? 'bg-amber-100 text-amber-700'
-                                                      : banner.status_label ===
-                                                          'Berakhir'
+                                                      : isBerakhir
                                                         ? 'bg-red-100 text-red-700'
                                                         : 'bg-neutral-100 text-neutral-700'
                                             }`}
                                         >
-                                            {banner.status_label}
+                                            {displayStatus}
                                         </span>
                                         {(banner.starts_at ||
                                             banner.ends_at) && (
@@ -358,18 +361,16 @@ export default function PromoBannersIndex({
                                         </span>
                                         <span
                                             className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                                                banner.status_label === 'Aktif'
+                                                isAktif
                                                     ? 'bg-green-100 text-green-700'
-                                                    : banner.status_label ===
-                                                        'Terjadwal'
+                                                    : isTerjadwal
                                                       ? 'bg-amber-100 text-amber-700'
-                                                      : banner.status_label ===
-                                                          'Berakhir'
+                                                      : isBerakhir
                                                         ? 'bg-red-100 text-red-700'
                                                         : 'bg-neutral-100 text-neutral-700'
                                             }`}
                                         >
-                                            {banner.status_label}
+                                            {displayStatus}
                                         </span>
                                     </div>
 
@@ -419,12 +420,12 @@ export default function PromoBannersIndex({
                     <div className="rounded-2xl border border-neutral-200 bg-white p-12 text-center shadow-sm">
                         <Megaphone className="mx-auto mb-4 h-12 w-12 text-neutral-300" />
                         <h3 className="text-lg font-medium text-neutral-900">
-                            Tidak ada promo
+                            No promos found
                         </h3>
                         <p className="mt-1 text-neutral-500">
                             {search
-                                ? 'Tidak ditemukan promo yang sesuai dengan pencarian'
-                                : 'Mulai dengan menambahkan promo baru'}
+                                ? 'No promos match your search criteria'
+                                : 'Get started by adding a new promo'}
                         </p>
                     </div>
                 )}
@@ -438,14 +439,14 @@ export default function PromoBannersIndex({
                             <AlertTriangle className="h-6 w-6 text-red-600" />
                         </div>
                         <DialogTitle className="text-center">
-                            Hapus Promo Banner
+                            Delete Promo Banner
                         </DialogTitle>
                         <DialogDescription className="text-center">
-                            Apakah Anda yakin ingin menghapus promo{' '}
+                            Are you sure you want to delete promo{' '}
                             <span className="font-semibold text-neutral-900">
                                 "{bannerToDelete?.title}"
                             </span>
-                            ? Tindakan ini tidak dapat dibatalkan.
+                            ? This action cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-4 gap-2">
@@ -454,7 +455,7 @@ export default function PromoBannersIndex({
                                 type="button"
                                 className="flex-1 rounded-xl border border-neutral-200 px-4 py-2.5 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none"
                             >
-                                Batal
+                                Cancel
                             </button>
                         </DialogClose>
                         <button
@@ -463,7 +464,7 @@ export default function PromoBannersIndex({
                             disabled={isDeleting}
                             className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
                         >
-                            {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
+                            {isDeleting ? 'Deleting...' : 'Yes, Delete'}
                         </button>
                     </DialogFooter>
                 </DialogContent>

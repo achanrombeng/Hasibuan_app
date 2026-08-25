@@ -89,19 +89,19 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
 
     return (
         <AdminLayout
-            breadcrumbs={[{ title: 'Manajemen User', href: '/admin/users' }]}
+            breadcrumbs={[{ title: 'User Management', href: '/admin/users' }]}
         >
-            <Head title="Manajemen User" />
+            <Head title="User Management" />
 
             <div className="space-y-6">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-terra-900">
-                            Manajemen User
+                            User Management
                         </h1>
                         <p className="mt-1 text-terra-500">
-                            Kelola user admin dan staff
+                            Manage admin users and staff
                         </p>
                     </div>
                     <Link
@@ -109,7 +109,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                         className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-wood-dark"
                     >
                         <Plus className="h-5 w-5" />
-                        Tambah User
+                        Add User
                     </Link>
                 </div>
 
@@ -119,7 +119,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-terra-400" />
                         <input
                             type="text"
-                            placeholder="Cari nama atau email..."
+                            placeholder="Search by name or email..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full rounded-xl border border-terra-200 bg-sand-50 py-2.5 pr-4 pl-10 text-terra-900 transition-all placeholder:text-terra-400 focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
@@ -140,10 +140,10 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                                         Role
                                     </th>
                                     <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
-                                        Terdaftar
+                                        Registered Date
                                     </th>
                                     <th className="px-6 py-4 text-right text-sm font-medium text-terra-600">
-                                        Aksi
+                                        Actions
                                     </th>
                                 </tr>
                             </thead>
@@ -154,7 +154,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                                             colSpan={4}
                                             className="py-8 text-center text-terra-500"
                                         >
-                                            Tidak ada user ditemukan
+                                            No users found
                                         </td>
                                     </tr>
                                 ) : (
@@ -226,7 +226,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                                                                 )
                                                             }
                                                             className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50"
-                                                            title="Hapus"
+                                                            title="Delete"
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
@@ -254,10 +254,9 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Konfirmasi Hapus</DialogTitle>
+                        <DialogTitle>Confirm Delete</DialogTitle>
                         <DialogDescription>
-                            Apakah Anda yakin ingin menghapus user ini? Tindakan
-                            ini tidak dapat dibatalkan.
+                            Are you sure you want to delete this user? This action cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -265,10 +264,10 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                             variant="outline"
                             onClick={() => setDeleteId(null)}
                         >
-                            Batal
+                            Cancel
                         </Button>
                         <Button variant="destructive" onClick={handleDelete}>
-                            Hapus
+                            Delete
                         </Button>
                     </DialogFooter>
                 </DialogContent>

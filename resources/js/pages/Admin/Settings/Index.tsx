@@ -41,18 +41,18 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
   return (
     <AdminLayout
-      breadcrumbs={[{ title: 'Pengaturan', href: '/admin/settings' }]}
+      breadcrumbs={[{ title: 'Settings', href: '/admin/settings' }]}
     >
-      <Head title="Pengaturan Situs" />
+      <Head title="Site Settings" />
 
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">
-            Pengaturan Situs
+            Site Settings
           </h1>
           <p className="mt-1 text-neutral-500">
-            Kelola pengaturan umum toko Anda
+            Manage general store settings
           </p>
         </div>
 
@@ -65,17 +65,17 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Informasi Toko
+                  Store Information
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Nama dan deskripsi toko Anda
+                  Your store name and description
                 </p>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Nama Toko
+                  Store Name
                 </label>
                 <input
                   type="text"
@@ -87,17 +87,17 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Deskripsi Toko
+                  Store Description
                 </label>
                 <textarea
                   value={data.site_description}
                   onChange={(e) => setData('site_description', e.target.value)}
                   rows={3}
-                  placeholder="Toko furniture premium dengan kualitas terbaik..."
+                  placeholder="Premium furniture store with finest quality..."
                   className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Digunakan untuk SEO dan meta description
+                  Used for SEO and meta description
                 </p>
               </div>
             </div>
@@ -111,10 +111,10 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Informasi Kontak
+                  Contact Information
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Cara pelanggan menghubungi Anda
+                  How customers reach you
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Email 2 (Opsional)
+                  Email 2 (Optional)
                 </label>
                 <div className="relative">
                   <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
@@ -151,7 +151,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Telepon
+                  Phone Number
                 </label>
                 <div className="relative">
                   <Phone className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
@@ -166,7 +166,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  WhatsApp
+                  WhatsApp Number
                 </label>
                 <div className="relative">
                   <MessageCircle className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
@@ -181,12 +181,12 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   />
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
-                  Tanpa tanda + (contoh: 6281234567890)
+                  Without + prefix (e.g. 6281234567890)
                 </p>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Alamat Pabrik
+                  Factory Address
                 </label>
                 <div className="relative">
                   <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
@@ -201,7 +201,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Alamat Showroom
+                  Showroom Address
                 </label>
                 <div className="relative">
                   <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
@@ -216,7 +216,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Google Maps Embed URL Showroom
+                  Showroom Google Maps Embed URL
                 </label>
                 <input
                   type="text"
@@ -226,12 +226,12 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1 text-xs text-neutral-500">
-                  URL embed iframe dari Google Maps untuk lokasi Showroom
+                  Google Maps iframe embed URL for Showroom location
                 </p>
               </div>
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Google Maps Embed URL Pabrik (Opsional)
+                  Factory Google Maps Embed URL (Optional)
                 </label>
                 <input
                   type="text"
@@ -241,7 +241,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1 text-xs text-neutral-500">
-                  URL embed iframe dari Google Maps untuk lokasi Pabrik
+                  Google Maps iframe embed URL for Factory location
                 </p>
               </div>
             </div>
@@ -255,10 +255,10 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Media Sosial
+                  Social Media
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Link ke akun sosial media toko
+                  Links to store social media accounts
                 </p>
               </div>
             </div>
@@ -314,7 +314,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
           {/* Sticky Submit Bar */}
           <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
             <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-              Pastikan perubahan sudah sesuai sebelum menyimpan
+              Please ensure details are accurate before saving
             </span>
             <button
               type="submit"
@@ -322,7 +322,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
-              {processing ? 'Menyimpan...' : 'Simpan Pengaturan'}
+              {processing ? 'Saving...' : 'Save Settings'}
             </button>
           </div>
         </form>

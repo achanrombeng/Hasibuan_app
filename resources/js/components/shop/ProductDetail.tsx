@@ -26,7 +26,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, a
                     className="flex items-center gap-2 text-terra-600 hover:text-terra-900 mb-8 transition-colors"
                 >
                     <ArrowLeft size={20} />
-                    <span>Kembali</span>
+                    <span>Back</span>
                 </button>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -57,7 +57,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, a
 
                         {/* Features */}
                         <div className="mb-8">
-                            <h3 className="font-medium text-terra-900 mb-4">Fitur Utama</h3>
+                            <h3 className="font-medium text-terra-900 mb-4">Key Features</h3>
                             <div className="flex flex-wrap gap-2">
                                 {product.features.map((feature, i) => (
                                     <span key={i} className="px-4 py-2 bg-terra-100 text-terra-700 rounded-full text-sm">
@@ -69,7 +69,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, a
 
                         {/* Quantity Selector */}
                         <div className="flex items-center gap-6 mb-8">
-                            <span className="text-terra-700 font-medium">Jumlah</span>
+                            <span className="text-terra-700 font-medium">Quantity</span>
                             <div className="flex items-center border border-terra-200 rounded-lg text-terra-900">
                                 <button onClick={() => setSelectedQty(Math.max(1, selectedQty - 1))} className="p-3 hover:bg-terra-50 transition-colors text-terra-900">
                                     <Minus size={18} />
@@ -91,7 +91,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, a
                             className="w-full bg-terra-900 text-white py-5 rounded-full font-medium hover:bg-wood transition-colors flex items-center justify-center gap-3 text-lg"
                         >
                             <ShoppingBag size={22} />
-                            Tambahkan ke Keranjang
+                            Add to Cart
                         </button>
 
                         {/* Delivery Info */}
@@ -99,15 +99,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, a
                             <div className="flex items-center gap-4">
                                 <Truck className="text-wood" size={24} />
                                 <div>
-                                    <p className="font-medium text-terra-900">Gratis Pengiriman</p>
-                                    <p className="text-sm text-terra-500">Untuk pembelian di atas Rp 5.000.000</p>
+                                    <p className="font-medium text-terra-900">Free Shipping</p>
+                                    <p className="text-sm text-terra-500">For orders over Rp 5,000,000</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
                                 <ShieldCheck className="text-wood" size={24} />
                                 <div>
-                                    <p className="font-medium text-terra-900">Garansi 5 Tahun</p>
-                                    <p className="text-sm text-terra-500">Untuk kerusakan struktural</p>
+                                    <p className="font-medium text-terra-900">5-Year Warranty</p>
+                                    <p className="text-sm text-terra-500">For structural integrity</p>
                                 </div>
                             </div>
                         </div>

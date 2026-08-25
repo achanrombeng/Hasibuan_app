@@ -36,16 +36,16 @@ export default function UpdateProfileInformationForm({
         <section className={`bg-white rounded-2xl p-6 shadow-sm border border-terra-100 ${className}`}>
             <header>
                 <h2 className="text-lg font-semibold text-terra-900">
-                    Informasi Profile
+                    Profile Information
                 </h2>
                 <p className="mt-1 text-sm text-terra-500">
-                    Update detail akun profile dan email Anda.
+                    Update your account profile details and email address.
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div className="grid gap-2">
-                    <Label htmlFor="name" className="text-terra-700">Nama</Label>
+                    <Label htmlFor="name" className="text-terra-700">Full Name</Label>
 
                     <Input
                         id="name"
@@ -77,20 +77,20 @@ export default function UpdateProfileInformationForm({
                     {mustVerifyEmail && user.email_verified_at === null && (
                         <div>
                             <p className="text-sm mt-2 text-terra-600">
-                                Alamat email Anda belum diversifikasi.{' '}
+                                Your email address is unverified.{' '}
                                 <Link
                                     href={verificationSend.url()}
                                     method="post"
                                     as="button"
                                     className="underline text-terra-600 hover:text-terra-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wood"
                                 >
-                                    Klik disini untuk mengirim ulang email verifikasi.
+                                    Click here to resend the verification email.
                                 </Link>
                             </p>
 
                             {status === 'verification-link-sent' && (
                                 <div className="mt-2 font-medium text-sm text-green-600">
-                                    Link verifikasi baru telah dikirim ke email Anda.
+                                    A new verification link has been sent to your email address.
                                 </div>
                             )}
                         </div>
@@ -104,7 +104,7 @@ export default function UpdateProfileInformationForm({
                         className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        {processing ? 'Menyimpan...' : 'Simpan'}
+                        {processing ? 'Saving...' : 'Save Changes'}
                     </button>
 
                     <Transition
@@ -114,7 +114,7 @@ export default function UpdateProfileInformationForm({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-terra-500">Simpan.</p>
+                        <p className="text-sm text-terra-500">Saved.</p>
                     </Transition>
                 </div>
             </form>

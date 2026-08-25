@@ -84,49 +84,49 @@ interface TrustLogo {
 const SECTIONS = [
   {
     key: 'logo',
-    label: 'Logo Website',
+    label: 'Website Logo',
     icon: Image,
-    desc: 'Logo toko & header',
+    desc: 'Store logo & header',
   },
-  { key: 'hero', label: 'Hero', icon: Home, desc: 'Banner utama' },
+  { key: 'hero', label: 'Hero', icon: Home, desc: 'Main hero banner' },
   {
     key: 'carousel_banners',
-    label: 'Carousel Banner',
+    label: 'Carousel Banners',
     icon: SlidersHorizontal,
-    desc: 'Banner carousel',
+    desc: 'Carousel banners',
   },
-  { key: 'trust', label: 'Trust Logos', icon: Users, desc: 'Logo media/brand' },
+  { key: 'trust', label: 'Trust Logos', icon: Users, desc: 'Media & brand logos' },
   {
     key: 'categories',
-    label: 'Kategori',
+    label: 'Categories',
     icon: LayoutGrid,
-    desc: 'Kategori produk',
+    desc: 'Product categories',
   },
   {
     key: 'craftsmanship',
     label: 'Craftsmanship',
     icon: Sparkles,
-    desc: 'Keahlian & bahan',
+    desc: 'Craft & materials',
   },
-  { key: 'catalog', label: 'Katalog', icon: BookOpen, desc: 'Flipbook PDF' },
-  { key: 'values', label: 'Nilai Unggulan', icon: Quote, desc: 'Fitur/USP' },
+  { key: 'catalog', label: 'Catalog', icon: BookOpen, desc: 'Flipbook PDF' },
+  { key: 'values', label: 'Core Values', icon: Quote, desc: 'Features & USP' },
   {
     key: 'products',
-    label: 'Produk Unggulan',
+    label: 'Featured Products',
     icon: ShoppingBag,
-    desc: 'Produk pilihan',
+    desc: 'Selected products',
   },
   {
     key: 'testimonials',
-    label: 'Testimoni',
+    label: 'Testimonials',
     icon: MessageSquare,
-    desc: 'Review pelanggan',
+    desc: 'Customer reviews',
   },
   {
     key: 'newsletter',
     label: 'Newsletter',
     icon: Mail,
-    desc: 'Form subscribe',
+    desc: 'Subscribe form',
   },
 ];
 
@@ -666,11 +666,11 @@ export default function HomepageSettings({
   return (
     <AdminLayout
       breadcrumbs={[
-        { title: 'Pengaturan', href: '/admin/settings' },
+        { title: 'Settings', href: '/admin/settings' },
         { title: 'Homepage', href: '/admin/settings/homepage' },
       ]}
     >
-      <Head title="Pengaturan Homepage" />
+      <Head title="Homepage Settings" />
 
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
@@ -684,10 +684,10 @@ export default function HomepageSettings({
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-neutral-900">
-                Pengaturan Homepage
+                Homepage Settings
               </h1>
               <p className="mt-1 text-neutral-500">
-                Kelola tampilan halaman utama toko Anda
+                Manage the look and content of your storefront homepage
               </p>
             </div>
           </div>
@@ -703,11 +703,10 @@ export default function HomepageSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Logo Website (Ronica)
+                    Website Logo
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Kelola logo utama yang ditampilkan di Header, Mobile Menu,
-                    dan Footer
+                    Manage primary logo displayed in Header, Mobile Menu, and Footer
                   </p>
                 </div>
               </div>
@@ -717,12 +716,12 @@ export default function HomepageSettings({
               {/* Logo Preview Cards */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Preview Logo
+                  Logo Preview
                 </label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white p-4 text-center">
                     <span className="mb-2 text-xs font-medium text-neutral-400">
-                      Tampilan Terang
+                      Light Background
                     </span>
                     <img
                       src={siteLogoPreview}
@@ -732,7 +731,7 @@ export default function HomepageSettings({
                   </div>
                   <div className="flex flex-col items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900 p-4 text-center">
                     <span className="mb-2 text-xs font-medium text-neutral-400">
-                      Tampilan Gelap
+                      Dark Background
                     </span>
                     <img
                       src={siteLogoPreview}
@@ -746,7 +745,7 @@ export default function HomepageSettings({
               {/* Upload Dropzone */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Unggah Logo Baru
+                  Upload New Logo
                 </label>
                 <input
                   ref={logoInputRef}
@@ -781,17 +780,20 @@ export default function HomepageSettings({
                   {logoCompressing ? (
                     <div className="flex items-center gap-2 text-sm text-teal-600">
                       <Loader2 className="h-5 w-5 animate-spin" />
-                      <span>Memproses gambar...</span>
+                      <span>Processing image...</span>
                     </div>
                   ) : (
                     <>
                       <Upload className="mb-2 h-6 w-6 text-neutral-400" />
                       <p className="text-sm font-medium text-neutral-700">
-                        Klik atau seret logo baru ke sini
+                        Click or drag new logo here
                       </p>
                       <p className="mt-1 text-xs text-neutral-400">
-                        Format: PNG, WEBP, SVG, JPG (Maks 10MB)
+                        Format: PNG, WEBP, SVG, JPG (Max 10MB)
                       </p>
+                      <span className="mt-2 inline-flex items-center rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-medium text-teal-700 border border-teal-100">
+                        Recommended size: 300 × 80 px (transparent background)
+                      </span>
                     </>
                   )}
                 </div>
@@ -799,15 +801,15 @@ export default function HomepageSettings({
                 <div className="mt-3 flex items-center justify-between">
                   <span className="max-w-[200px] truncate text-xs text-neutral-500">
                     {siteLogoFile
-                      ? `File baru: ${siteLogoFile.name}`
-                      : `Logo aktif: ${siteLogoPreview}`}
+                      ? `New file: ${siteLogoFile.name}`
+                      : `Active logo: ${siteLogoPreview}`}
                   </span>
                   <button
                     type="button"
                     onClick={resetLogoToDefault}
                     className="text-xs font-medium text-neutral-500 underline hover:text-teal-600"
                   >
-                    Reset ke /ronica.png
+                    Reset to default
                   </button>
                 </div>
               </div>
@@ -827,7 +829,7 @@ export default function HomepageSettings({
                 <p className="text-sm text-neutral-500">
                   Editing:{' '}
                   <span className="font-medium text-teal-600">
-                    {locale === 'id' ? 'Bahasa Indonesia' : 'English'}
+                    {locale === 'id' ? 'Indonesian' : 'English'}
                   </span>{' '}
                   — switch language to edit the other version
                 </p>
@@ -842,7 +844,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.hero_badge}
                   onChange={(e) => setData('hero_badge', e.target.value)}
-                  placeholder="Koleksi Terbaru 2025"
+                  placeholder="Latest Collection 2025"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -854,25 +856,25 @@ export default function HomepageSettings({
                   type="text"
                   value={data.hero_product_name}
                   onChange={(e) => setData('hero_product_name', e.target.value)}
-                  placeholder="Kursi Santai Premium"
+                  placeholder="Premium Lounge Chair"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Judul Utama
+                  Main Title
                 </label>
                 <input
                   type="text"
                   value={data.hero_title}
                   onChange={(e) => setData('hero_title', e.target.value)}
-                  placeholder="Desain yang"
+                  placeholder="Designs that"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Judul Highlight
+                  Title Highlight
                 </label>
                 <input
                   type="text"
@@ -880,19 +882,19 @@ export default function HomepageSettings({
                   onChange={(e) =>
                     setData('hero_title_highlight', e.target.value)
                   }
-                  placeholder="bernafas."
+                  placeholder="breathe."
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Deskripsi Hero
+                  Hero Description
                 </label>
                 <textarea
                   value={data.hero_description}
                   onChange={(e) => setData('hero_description', e.target.value)}
                   rows={3}
-                  placeholder="Furniture minimalis dari bahan berkelanjutan..."
+                  placeholder="Minimalist furniture crafted from sustainable materials..."
                   className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -908,10 +910,10 @@ export default function HomepageSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Carousel Banner
+                    Carousel Banners
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Banner carousel di bawah hero section (maks 10)
+                    Carousel banners displayed below hero section (max 10)
                   </p>
                 </div>
               </div>
@@ -922,7 +924,7 @@ export default function HomepageSettings({
                 className="inline-flex items-center gap-2 rounded-lg bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-50"
               >
                 <Plus size={16} />
-                Tambah Banner
+                Add Banner
               </button>
             </div>
 
@@ -930,7 +932,7 @@ export default function HomepageSettings({
               <div className="rounded-lg border-2 border-dashed border-neutral-200 py-12 text-center">
                 <Image className="mx-auto mb-3 h-10 w-10 text-neutral-300" />
                 <p className="text-sm text-neutral-400">
-                  Belum ada banner. Klik "Tambah Banner" untuk memulai.
+                  No banners yet. Click "Add Banner" to get started.
                 </p>
               </div>
             ) : (
@@ -953,7 +955,7 @@ export default function HomepageSettings({
                             onClick={() => moveBanner(index, 'up')}
                             disabled={index === 0}
                             className="rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-600 disabled:opacity-30"
-                            title="Pindah ke atas"
+                            title="Move up"
                           >
                             <ArrowUp size={16} />
                           </button>
@@ -962,7 +964,7 @@ export default function HomepageSettings({
                             onClick={() => moveBanner(index, 'down')}
                             disabled={index === carouselBanners.length - 1}
                             className="rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-600 disabled:opacity-30"
-                            title="Pindah ke bawah"
+                            title="Move down"
                           >
                             <ArrowDown size={16} />
                           </button>
@@ -970,7 +972,7 @@ export default function HomepageSettings({
                             type="button"
                             onClick={() => removeBanner(index)}
                             className="rounded p-1 text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-500"
-                            title="Hapus banner"
+                            title="Delete banner"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -980,9 +982,14 @@ export default function HomepageSettings({
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {/* Media upload / preview */}
                         <div>
-                          <label className="mb-1 block text-xs text-neutral-500">
-                            Gambar / Video
-                          </label>
+                          <div className="mb-1 flex items-center justify-between">
+                            <label className="block text-xs text-neutral-500">
+                              Image / Video
+                            </label>
+                            <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200/60">
+                              Recommended size: 1920 × 600 px (16:5 ratio)
+                            </span>
+                          </div>
                           {displayImage ? (
                             <div className="relative">
                               {banner.media_type === 'video' ||
@@ -1021,7 +1028,7 @@ export default function HomepageSettings({
                             <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 bg-white transition-colors hover:border-neutral-400 hover:bg-neutral-100">
                               <Upload className="mb-1 h-6 w-6 text-neutral-400" />
                               <span className="text-xs font-medium text-neutral-600">
-                                Upload gambar / video
+                                Upload image / video
                               </span>
                               <span className="mt-0.5 text-[10px] text-neutral-400">
                                 JPG, PNG, WebP, MP4, WebM (max 50MB)
@@ -1051,7 +1058,7 @@ export default function HomepageSettings({
                                   detectMediaTypeFromUrl(url),
                                 );
                               }}
-                              placeholder="Atau masukkan URL gambar / video"
+                              placeholder="Or enter image / video URL"
                               className="mt-2 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                             />
                           )}
@@ -1060,7 +1067,7 @@ export default function HomepageSettings({
                         {/* Link input */}
                         <div>
                           <label className="mb-1 block text-xs text-neutral-500">
-                            Link (opsional)
+                            Target URL (optional)
                           </label>
                           <input
                             type="url"
@@ -1072,7 +1079,7 @@ export default function HomepageSettings({
                             className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                           />
                           <p className="mt-1 text-xs text-neutral-400">
-                            Klik banner akan membuka link ini di tab baru
+                            Clicking banner will open this URL in a new tab
                           </p>
                         </div>
                       </div>
@@ -1095,10 +1102,10 @@ export default function HomepageSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Nilai / Fitur Unggulan (Our Philosophy)
+                    Core Values & Philosophy
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Atur badge, judul utama, dan poin-poin filosofi/keunggulan
+                    Manage sub-badge, title, and key philosophy points
                   </p>
                 </div>
               </div>
@@ -1108,7 +1115,7 @@ export default function HomepageSettings({
                 className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700"
               >
                 <Plus size={16} />
-                Tambah Poin
+                Add Point
               </button>
             </div>
 
@@ -1116,7 +1123,7 @@ export default function HomepageSettings({
             <div className="mb-6 grid grid-cols-1 gap-4 rounded-xl border border-neutral-100 bg-neutral-50 p-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-700">
-                  Sub-Badge (opsional)
+                  Sub-Badge (optional)
                 </label>
                 <input
                   type="text"
@@ -1128,7 +1135,7 @@ export default function HomepageSettings({
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-700">
-                  Judul Utama
+                  Main Title
                 </label>
                 <input
                   type="text"
@@ -1149,7 +1156,7 @@ export default function HomepageSettings({
                 >
                   <div className="mb-3 flex items-center justify-between">
                     <span className="text-sm font-medium text-neutral-500">
-                      Poin {index + 1}
+                      Point {index + 1}
                     </span>
                     <button
                       type="button"
@@ -1171,19 +1178,19 @@ export default function HomepageSettings({
                         }
                         className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                       >
-                        <option value="leaf">🌿 Leaf (Bahan/Lingkungan)</option>
-                        <option value="truck">🚚 Truck (Pengiriman)</option>
+                        <option value="leaf">🌿 Leaf (Materials/Eco)</option>
+                        <option value="truck">🚚 Truck (Shipping)</option>
                         <option value="shield-check">
-                          🛡️ Shield Check (Garansi)
+                          🛡️ Shield Check (Warranty)
                         </option>
-                        <option value="heart">❤️ Heart (Kualitas)</option>
+                        <option value="heart">❤️ Heart (Quality)</option>
                         <option value="star">⭐ Star (Rating)</option>
-                        <option value="clock">⏰ Clock (Ketahanan)</option>
+                        <option value="clock">⏰ Clock (Durability)</option>
                       </select>
                     </div>
                     <div className="md:col-span-2">
                       <label className="mb-1 block text-xs text-neutral-500">
-                        Judul Poin
+                        Point Title
                       </label>
                       <input
                         type="text"
@@ -1197,7 +1204,7 @@ export default function HomepageSettings({
                     </div>
                     <div className="md:col-span-3">
                       <label className="mb-1 block text-xs text-neutral-500">
-                        Deskripsi
+                        Description
                       </label>
                       <textarea
                         value={value.desc}
@@ -1227,11 +1234,10 @@ export default function HomepageSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Craftsmanship Section (Handcrafted & Wood)
+                    Craftsmanship Section (Handcrafted & Materials)
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Kelola konten keahlian pengrajin, deskripsi bahan, dan
-                    galeri foto slider di homepage
+                    Manage artisan craftsmanship content, material descriptions, and photo sliders
                   </p>
                 </div>
               </div>
@@ -1242,13 +1248,13 @@ export default function HomepageSettings({
               <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
-                    Baris 1: Craftsmanship / Rotan (Teks Kiri, Slider Kanan)
+                    Row 1: Craftsmanship / Rattan (Text Left, Slider Right)
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
-                      Judul Baris 1
+                      Row 1 Title
                     </label>
                     <input
                       type="text"
@@ -1262,7 +1268,7 @@ export default function HomepageSettings({
                   </div>
                   <div className="md:col-span-2">
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
-                      Deskripsi Baris 1
+                      Row 1 Description
                     </label>
                     <textarea
                       value={data.craftsmanship_desc_1}
@@ -1278,9 +1284,14 @@ export default function HomepageSettings({
 
                 {/* Images Manager Row 1 */}
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Gambar Slider Baris 1
-                  </label>
+                  <div className="mb-2 flex items-center justify-between">
+                    <label className="block text-sm font-medium text-neutral-700">
+                      Row 1 Slider Images
+                    </label>
+                    <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200/60">
+                      Recommended size: 800 × 600 px (4:3 ratio)
+                    </span>
+                  </div>
                   <div className="space-y-3">
                     {craftsmanshipImages1.map((url, idx) => (
                       <div
@@ -1301,7 +1312,7 @@ export default function HomepageSettings({
                               updated[idx] = e.target.value;
                               setCraftsmanshipImages1(updated);
                             }}
-                            placeholder="URL Gambar (https://...)"
+                            placeholder="Image URL (https://...)"
                             className="w-full rounded-md border border-neutral-200 px-3 py-1.5 text-xs text-neutral-800 focus:border-teal-500 focus:outline-none"
                           />
                         </div>
@@ -1333,7 +1344,7 @@ export default function HomepageSettings({
                         type="text"
                         value={newCraft1Url}
                         onChange={(e) => setNewCraft1Url(e.target.value)}
-                        placeholder="Tambah URL gambar baru..."
+                        placeholder="Add new image URL..."
                         className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
                       <button
@@ -1341,7 +1352,7 @@ export default function HomepageSettings({
                         onClick={addCraftsmanshipImage1}
                         className="inline-flex items-center gap-1 rounded-lg bg-neutral-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-neutral-800"
                       >
-                        <Plus className="h-3.5 w-3.5" /> Tambah Gambar
+                        <Plus className="h-3.5 w-3.5" /> Add Image
                       </button>
                     </div>
                   </div>
@@ -1352,14 +1363,13 @@ export default function HomepageSettings({
               <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
-                    Baris 2: Strength of Nature / Kayu Jati (Slider Kiri, Teks
-                    Kanan)
+                    Row 2: Strength of Nature / Teak Wood (Slider Left, Text Right)
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
-                      Judul Baris 2
+                      Row 2 Title
                     </label>
                     <input
                       type="text"
@@ -1373,7 +1383,7 @@ export default function HomepageSettings({
                   </div>
                   <div className="md:col-span-2">
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
-                      Deskripsi Baris 2
+                      Row 2 Description
                     </label>
                     <textarea
                       value={data.craftsmanship_desc_2}
@@ -1389,9 +1399,14 @@ export default function HomepageSettings({
 
                 {/* Images Manager Row 2 */}
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Gambar Slider Baris 2
-                  </label>
+                  <div className="mb-2 flex items-center justify-between">
+                    <label className="block text-sm font-medium text-neutral-700">
+                      Row 2 Slider Images
+                    </label>
+                    <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200/60">
+                      Recommended size: 800 × 600 px (4:3 ratio)
+                    </span>
+                  </div>
                   <div className="space-y-3">
                     {craftsmanshipImages2.map((url, idx) => (
                       <div
@@ -1412,7 +1427,7 @@ export default function HomepageSettings({
                               updated[idx] = e.target.value;
                               setCraftsmanshipImages2(updated);
                             }}
-                            placeholder="URL Gambar (https://...)"
+                            placeholder="Image URL (https://...)"
                             className="w-full rounded-md border border-neutral-200 px-3 py-1.5 text-xs text-neutral-800 focus:border-teal-500 focus:outline-none"
                           />
                         </div>
@@ -1444,7 +1459,7 @@ export default function HomepageSettings({
                         type="text"
                         value={newCraft2Url}
                         onChange={(e) => setNewCraft2Url(e.target.value)}
-                        placeholder="Tambah URL gambar baru..."
+                        placeholder="Add new image URL..."
                         className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
                       <button
@@ -1452,7 +1467,7 @@ export default function HomepageSettings({
                         onClick={addCraftsmanshipImage2}
                         className="inline-flex items-center gap-1 rounded-lg bg-neutral-900 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-neutral-800"
                       >
-                        <Plus className="h-3.5 w-3.5" /> Tambah Gambar
+                        <Plus className="h-3.5 w-3.5" /> Add Image
                       </button>
                     </div>
                   </div>
@@ -1464,7 +1479,7 @@ export default function HomepageSettings({
           {/* Sticky Submit Bar */}
           <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
             <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-              Pastikan perubahan sudah sesuai sebelum menyimpan
+              Please ensure changes are accurate before saving
             </span>
             <button
               type="submit"
@@ -1472,7 +1487,7 @@ export default function HomepageSettings({
               className="ml-auto inline-flex items-center gap-2 rounded-xl bg-teal-600 px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-teal-700 active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
-              {processing ? 'Menyimpan...' : 'Simpan Pengaturan'}
+              {processing ? 'Saving...' : 'Save Settings'}
             </button>
           </div>
         </form>

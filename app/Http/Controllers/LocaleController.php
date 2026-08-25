@@ -15,11 +15,14 @@ class LocaleController extends Controller
             'locale' => ['required', 'string', 'in:id,en'],
         ]);
 
-        // Store in session (immediate, reliable) + cookie (persists across sessions)
-        session(['locale' => $validated['locale']]);
+        $locale = $validated['locale'];
+
+        // Store in session + cookie
+        session(['locale' => $locale]);
+        app()->setLocale($locale);
 
         return redirect()->back()->withCookie(
-            cookie('locale', $validated['locale'], 60 * 24 * 365)
+            cookie('locale', $locale, 60 * 24 * 365, null, null, false, false)
         );
     }
 }

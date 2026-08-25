@@ -32,20 +32,20 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
             <span className="text-xs font-semibold uppercase tracking-widest text-terra-600">
-              Blog & Jurnal
+              Blog & Journal
             </span>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Artikel & Berita Terbaru
+              Latest Articles & News
             </h2>
             <p className="mt-2 max-w-2xl text-base text-gray-600">
-              Temukan inspirasi, tren gaya hidup, dan cerita di balik koleksi furniture lüks Ronica.
+              Discover inspiration, lifestyle trends, and the stories behind Ronica luxury furniture collections.
             </p>
           </div>
           <Link
             href="/shop/articles"
             className="inline-flex items-center text-sm font-semibold text-terra-900 hover:text-wood transition-colors group"
           >
-            Lihat Semua Artikel
+            View All Articles
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
@@ -56,7 +56,7 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
             const formattedDate =
               article.formatted_published_at ||
               (article.published_at
-                ? new Date(article.published_at).toLocaleDateString('id-ID', {
+                ? new Date(article.published_at).toLocaleDateString('en-US', {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
@@ -109,7 +109,7 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
                       )}
                       <div className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5 text-terra-600" />
-                        <span>{article.read_time || 3} min baca</span>
+                        <span>{article.read_time || 3} min read</span>
                       </div>
                     </div>
 
@@ -132,7 +132,7 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
                       href={`/shop/articles/${article.slug}`}
                       className="inline-flex items-center text-xs font-semibold text-terra-900 group-hover:text-wood transition-colors"
                     >
-                      Baca Artikel
+                      Read Article
                       <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </div>
