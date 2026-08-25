@@ -12,6 +12,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import {
     AlertTriangle,
     Calendar,
+    Filter,
     Gift,
     Megaphone,
     Pencil,
@@ -61,6 +62,9 @@ export default function PromoBannersIndex({
     promoBanners,
 }: PromoBannersIndexProps) {
     const [search, setSearch] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [displayTypeFilter, setDisplayTypeFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [bannerToDelete, setBannerToDelete] = useState<PromoBanner | null>(
         null,
@@ -69,14 +73,38 @@ export default function PromoBannersIndex({
     const [togglingId, setTogglingId] = useState<number | null>(null);
 
     const filteredBanners = useMemo(() => {
-        if (!search) return promoBanners;
-        const searchLower = search.toLowerCase();
-        return promoBanners.filter(
-            (banner) =>
-                banner.title.toLowerCase().includes(searchLower) ||
-                banner.description?.toLowerCase().includes(searchLower),
-        );
-    }, [promoBanners, search]);
+        return promoBanners.filter((banner) => {
+            if (search) {
+                const searchLower = search.toLowerCase();
+                const matchesSearch =
+                    banner.title.toLowerCase().includes(searchLower) ||
+                    banner.description?.toLowerCase().includes(searchLower);
+                if (!matchesSearch) return false;
+            }
+
+            if (displayTypeFilter !== 'all') {
+                if (banner.display_type !== displayTypeFilter) return false;
+            }
+
+            if (statusFilter !== 'all') {
+                const isAktif = banner.status_label === 'Aktif' || banner.status_label === 'Active';
+                const isTerjadwal = banner.status_label === 'Terjadwal' || banner.status_label === 'Scheduled';
+                const isBerakhir = banner.status_label === 'Berakhir' || banner.status_label === 'Expired';
+                
+                if (statusFilter === 'active' && !isAktif) return false;
+                if (statusFilter === 'scheduled' && !isTerjadwal) return false;
+                if (statusFilter === 'expired' && !isBerakhir) return false;
+            }
+
+            return true;
+        });
+    }, [promoBanners, search, displayTypeFilter, statusFilter]);
+
+    const handleReset = () => {
+        setSearch('');
+        setDisplayTypeFilter('all');
+        setStatusFilter('all');
+    };
 
     const handleDeleteClick = (banner: PromoBanner) => {
         setBannerToDelete(banner);
@@ -227,7 +255,7 @@ export default function PromoBannersIndex({
                             <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
-                                placeholder="Cari promo..."
+                                placeholder="Search promos..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
@@ -235,13 +263,75 @@ export default function PromoBannersIndex({
                         </div>
                         <div className="flex items-center gap-2.5">
                             <button
+                                type="button"
+                                onClick={() => setShowFilters(!showFilters)}
+                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
+                                    showFilters
+                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                }`}
+                            >
+                                <Filter className="h-4 w-4 text-neutral-600" /> Filter
+                            </button>
+                            <button
                                 type="submit"
                                 className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
                             >
-                                Cari
+                                Search
                             </button>
                         </div>
                     </form>
+
+                    {showFilters && (
+                        <div className="mt-4 grid grid-cols-1 gap-4 border-t border-neutral-100 pt-4 sm:grid-cols-2 lg:grid-cols-4">
+                            <div>
+                                <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                    Display Type
+                                </label>
+                                <select
+                                    value={displayTypeFilter}
+                                    onChange={(e) => setDisplayTypeFilter(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 p-2.5 text-sm text-neutral-900 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                >
+                                    <option value="all">All Display Types</option>
+                                    <option value="banner">Banner</option>
+                                    <option value="popup">Popup</option>
+                                    <option value="both">Both</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                    Status
+                                </label>
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 p-2.5 text-sm text-neutral-900 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                >
+                                    <option value="all">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="scheduled">Scheduled</option>
+                                    <option value="expired">Expired</option>
+                                </select>
+                            </div>
+                            <div className="flex items-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowFilters(false)}
+                                    className="flex-1 rounded-xl bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none"
+                                >
+                                    Apply
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleReset}
+                                    className="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none"
+                                >
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Promo Banners List */}

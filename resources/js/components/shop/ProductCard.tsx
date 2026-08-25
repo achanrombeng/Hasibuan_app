@@ -26,7 +26,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {/* Product Card Container */}
             <div className="relative mb-4 overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-xs transition-all duration-500 group-hover:shadow-xl">
                 {/* Image Container */}
-                <div className="aspect-[4/5] overflow-hidden bg-white flex items-center justify-center p-2">
+                <div className="aspect-square overflow-hidden bg-white flex items-center justify-center p-3">
                     <img
                         src={
                             product.primary_image?.image_url ||
@@ -34,7 +34,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                             PLACEHOLDER_PRODUCTS[0]
                         }
                         alt={product.name}
-                        className="h-full w-full object-scale-down transition-transform duration-700 ease-out group-hover:scale-105"
+                        className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                 </div>
 

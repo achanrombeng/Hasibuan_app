@@ -18,9 +18,10 @@ class ImageService
      */
     /**
      * Store uploaded image.
-     * If the image has transparency (PNG/WebP/GIF with alpha channel) or solid black background,
-     * it flattens/converts the image background onto solid white (#FFFFFF).
-     * If the image already has a solid non-black background (opaque photo/scene), it stores as-is.
+     * 1. If the image has transparency (PNG/WebP/GIF with alpha channel) or solid black background,
+     *    it flattens/converts the image background onto solid white (#FFFFFF).
+     * 2. Centers the image on a 1:1 square white canvas ($maxDimension x $maxDimension)
+     *    so that every uploaded product photo fits card frames perfectly and uniformly.
      */
     public static function storeWithWhiteBackground(
         UploadedFile|string $file,
@@ -94,15 +95,14 @@ class ImageService
             }
         }
 
-        // If no transparency AND no black background, store original file as-is
-        if (! $hasTransparency && ! $hasBlackBackground) {
-            imagedestroy($srcImage);
+        // Determine 1:1 square canvas dimensions with 10% breathing margin scale
+        $maxDim = max($width, $height);
+        $squareSize = (int) ($maxDim * 1.10);
+        $dstX = (int) (($squareSize - $width) / 2);
+        $dstY = (int) (($squareSize - $height) / 2);
 
-            return $isUploaded ? $file->store($directory, $disk) : (string) $file;
-        }
-
-        // Create white canvas
-        $canvas = imagecreatetruecolor($width, $height);
+        // Create 1:1 square canvas filled with white background
+        $canvas = imagecreatetruecolor($squareSize, $squareSize);
         if (! $canvas) {
             imagedestroy($srcImage);
 
@@ -113,12 +113,11 @@ class ImageService
         imagefill($canvas, 0, 0, $white);
 
         if ($hasTransparency) {
-            // Composite transparent image onto white canvas
+            // Composite transparent image centered onto white square canvas
             imagealphablending($canvas, true);
-            imagecopy($canvas, $srcImage, 0, 0, 0, 0, $width, $height);
+            imagecopy($canvas, $srcImage, $dstX, $dstY, 0, 0, $width, $height);
         } elseif ($hasBlackBackground) {
-            // Copy source image to canvas and replace black background pixels with white
-            imagecopy($canvas, $srcImage, 0, 0, 0, 0, $width, $height);
+            // Copy source image centered to canvas and replace black background pixels with white
             for ($x = 0; $x < $width; $x++) {
                 for ($y = 0; $y < $height; $y++) {
                     $c = imagecolorat($srcImage, $x, $y);
@@ -126,20 +125,25 @@ class ImageService
                     $g = ($c >> 8) & 0xFF;
                     $b = $c & 0xFF;
                     if ($r < 25 && $g < 25 && $b < 25) {
-                        imagesetpixel($canvas, $x, $y, $white);
+                        imagesetpixel($canvas, $dstX + $x, $dstY + $y, $white);
+                    } else {
+                        imagesetpixel($canvas, $dstX + $x, $dstY + $y, $c);
                     }
                 }
             }
+        } else {
+            // Opaque photo - copy centered onto white square canvas
+            imagecopy($canvas, $srcImage, $dstX, $dstY, 0, 0, $width, $height);
         }
 
-        // Save processed output
+        // Save processed 1:1 square output
         ob_start();
         if ($mimeType === 'image/webp' && function_exists('imagewebp')) {
             imagewebp($canvas, null, 92);
             $extension = '.webp';
         } else {
-            imagepng($canvas, null, 6);
-            $extension = '.png';
+            imagejpeg($canvas, null, 92);
+            $extension = '.jpg';
         }
         $processedData = ob_get_clean();
 

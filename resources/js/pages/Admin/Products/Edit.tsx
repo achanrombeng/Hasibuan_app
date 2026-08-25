@@ -122,6 +122,8 @@ export default function EditProduct({
             : [],
     );
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     const { data, setData, processing, errors } = useForm({
         name: product.name,
@@ -316,6 +318,8 @@ export default function EditProduct({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitError(null);
 
         const formData = new FormData();
         formData.append('_method', 'PUT');
@@ -323,14 +327,20 @@ export default function EditProduct({
         formData.append('name', data.name);
         formData.append('sku', data.sku);
         formData.append('category_id', data.category_id);
-        formData.append('short_description', data.short_description);
-        formData.append('description', data.description);
-        formData.append('price', data.price);
+        if (data.short_description)
+            formData.append('short_description', data.short_description);
+        if (data.description)
+            formData.append('description', data.description);
+        if (data.price)
+            formData.append('price', data.price);
         if (data.compare_price)
             formData.append('compare_price', data.compare_price);
-        if (data.cost_price) formData.append('cost_price', data.cost_price);
-        formData.append('stock_quantity', data.stock_quantity);
-        formData.append('low_stock_threshold', data.low_stock_threshold);
+        if (data.cost_price)
+            formData.append('cost_price', data.cost_price);
+        if (data.stock_quantity)
+            formData.append('stock_quantity', data.stock_quantity);
+        if (data.low_stock_threshold)
+            formData.append('low_stock_threshold', data.low_stock_threshold);
         formData.append('track_stock', data.track_stock ? '1' : '0');
         formData.append('allow_backorder', data.allow_backorder ? '1' : '0');
         formData.append('is_pre_order', data.is_pre_order ? '1' : '0');
@@ -384,8 +394,20 @@ export default function EditProduct({
 
         router.post(`/admin/products/${product.id}`, formData, {
             forceFormData: true,
-            onError: (errors) => {
-                console.error('Form errors:', errors);
+            onSuccess: () => {
+                router.visit('/admin/products');
+            },
+            onError: (errs) => {
+                setIsSubmitting(false);
+                const firstErr = Object.values(errs)[0];
+                setSubmitError(
+                    typeof firstErr === 'string'
+                        ? firstErr
+                        : 'Terjadi kesalahan saat menyimpan perubahan. Silakan periksa kembali data formulir.',
+                );
+            },
+            onFinish: () => {
+                setIsSubmitting(false);
             },
         });
     };
@@ -424,6 +446,18 @@ export default function EditProduct({
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {submitError && (
+                        <div className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            <span>{submitError}</span>
+                            <button
+                                type="button"
+                                onClick={() => setSubmitError(null)}
+                                className="text-red-500 hover:text-red-700"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    )}
                     {/* 1. General Information */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
@@ -974,11 +1008,20 @@ export default function EditProduct({
                             </Link>
                             <button
                                 type="submit"
-                                disabled={processing}
-                                className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                                disabled={isSubmitting || processing}
+                                className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                             >
-                                <Save className="h-5 w-5" />
-                                {processing ? 'Saving...' : 'Save Changes'}
+                                {isSubmitting || processing ? (
+                                    <>
+                                        <Loader2 className="h-5 w-5 animate-spin" />
+                                        <span>Saving...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="h-5 w-5" />
+                                        <span>Save Changes</span>
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>

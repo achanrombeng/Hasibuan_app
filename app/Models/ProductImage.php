@@ -52,4 +52,9 @@ class ProductImage extends Model
     {
         return asset('storage/'.$this->image_path);
     }
+
+    public function getImageUrlAttribute(): string
+    {
+        return asset('storage/'.$this->image_path);
+    }
 }

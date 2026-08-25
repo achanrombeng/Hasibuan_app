@@ -19,7 +19,7 @@ class CreateCategoryAction
         $data['slug'] = $data['slug'] ?? Str::slug($data['name']);
 
         if ($image) {
-            $data['image_path'] = ImageService::storeWithWhiteBackground($image, 'categories', 'public');
+            $data['image_path'] = $image->store('categories', 'public');
         }
 
         /** @var Category $category */

@@ -19,6 +19,9 @@ class ProductUpdateRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $product = $this->route('product');
+        if (is_numeric($product)) {
+            $product = \App\Models\Product::find($product);
+        }
         $currentPrice = is_object($product) ? $product->price : 0;
         $currentStock = is_object($product) ? $product->stock_quantity : 0;
 
@@ -33,6 +36,45 @@ class ProductUpdateRequest extends FormRequest
             $mergeData['stock_quantity'] = $currentStock;
         } else {
             $mergeData['stock_quantity'] = (int) $this->stock_quantity;
+        }
+
+        if (is_string($this->specifications) && ! empty($this->specifications)) {
+            $decoded = json_decode($this->specifications, true);
+            if (is_array($decoded)) {
+                $mergeData['specifications'] = $decoded;
+            }
+        }
+
+        if ($this->compare_price === '' || $this->compare_price === null) {
+            $mergeData['compare_price'] = null;
+        } else {
+            $mergeData['compare_price'] = (int) $this->compare_price;
+        }
+
+        if ($this->cost_price === '' || $this->cost_price === null) {
+            $mergeData['cost_price'] = null;
+        } else {
+            $mergeData['cost_price'] = (int) $this->cost_price;
+        }
+
+        if ($this->low_stock_threshold === '' || $this->low_stock_threshold === null) {
+            $mergeData['low_stock_threshold'] = 0;
+        }
+
+        if ($this->shipping_class === '' || $this->shipping_class === null) {
+            $mergeData['shipping_class'] = null;
+        }
+
+        if ($this->discount_percentage === '' || $this->discount_percentage === null) {
+            $mergeData['discount_percentage'] = null;
+        }
+
+        if ($this->discount_starts_at === '' || $this->discount_starts_at === null) {
+            $mergeData['discount_starts_at'] = null;
+        }
+
+        if ($this->discount_ends_at === '' || $this->discount_ends_at === null) {
+            $mergeData['discount_ends_at'] = null;
         }
 
         $this->merge($mergeData);
@@ -52,36 +94,36 @@ class ProductUpdateRequest extends FormRequest
             'short_description' => ['nullable', 'string', 'max:500'],
             'description' => ['nullable', 'string'],
             'price' => ['nullable', 'integer', 'min:0'],
-            'compare_price' => ['nullable', 'integer', 'min:0', 'gt:price'],
+            'compare_price' => ['nullable', 'integer', 'min:0'],
             'cost_price' => ['nullable', 'integer', 'min:0'],
             'stock_quantity' => ['nullable', 'integer', 'min:0'],
             'low_stock_threshold' => ['nullable', 'integer', 'min:0'],
-            'track_stock' => ['boolean'],
-            'allow_backorder' => ['boolean'],
-            'is_pre_order' => ['boolean'],
+            'track_stock' => ['nullable'],
+            'allow_backorder' => ['nullable'],
+            'is_pre_order' => ['nullable'],
             'weight' => ['nullable', 'numeric', 'min:0'],
             'length' => ['nullable', 'numeric', 'min:0'],
             'width' => ['nullable', 'numeric', 'min:0'],
             'height' => ['nullable', 'numeric', 'min:0'],
             'shipping_class' => ['nullable', 'string', 'in:free_shipping,flat_rate,local_pickup'],
-            'material' => ['nullable', 'string', 'max:100'],
-            'color' => ['nullable', 'string', 'max:50'],
+            'material' => ['nullable', 'string', 'max:500'],
+            'color' => ['nullable', 'string', 'max:255'],
             'specifications' => ['nullable', 'array'],
             'status' => ['required', Rule::enum(ProductStatus::class)],
             'sale_type' => ['nullable', Rule::enum(SaleType::class)],
-            'is_featured' => ['boolean'],
-            'is_new_arrival' => ['boolean'],
+            'is_featured' => ['nullable'],
+            'is_new_arrival' => ['nullable'],
             'discount_percentage' => ['nullable', 'integer', 'min:0', 'max:100'],
             'discount_starts_at' => ['nullable', 'date'],
             'discount_ends_at' => ['nullable', 'date', 'after:discount_starts_at'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
             'meta_keywords' => ['nullable', 'string', 'max:255'],
-            'primary_image_id' => ['nullable', 'integer', 'exists:product_images,id'],
+            'primary_image_id' => ['nullable', 'integer'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'max:2048'],
             'delete_images' => ['nullable', 'array'],
-            'delete_images.*' => ['integer', 'exists:product_images,id'],
+            'delete_images.*' => ['integer'],
         ];
     }
 

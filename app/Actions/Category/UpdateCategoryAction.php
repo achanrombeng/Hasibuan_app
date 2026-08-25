@@ -36,7 +36,7 @@ class UpdateCategoryAction
                 Storage::disk('public')->delete($category->image_path);
             }
 
-            $data['image_path'] = ImageService::storeWithWhiteBackground($image, 'categories', 'public');
+            $data['image_path'] = $image->store('categories', 'public');
         }
 
         $category->update($data);

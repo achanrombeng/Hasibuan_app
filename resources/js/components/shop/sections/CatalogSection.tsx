@@ -78,7 +78,10 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
 
   const items: CategoryItem[] = React.useMemo(() => {
     if (categoriesList && categoriesList.length > 0) {
-      return categoriesList.map((c: ApiCategory, index: number) => {
+      const sorted = [...categoriesList].sort((a: ApiCategory, b: ApiCategory) =>
+        (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' }),
+      );
+      return sorted.map((c: ApiCategory, index: number) => {
         const defaultMatch = CATEGORY_ITEMS.find(
           (item) => item.slug === c.slug || item.title.toLowerCase() === c.name.toLowerCase(),
         );

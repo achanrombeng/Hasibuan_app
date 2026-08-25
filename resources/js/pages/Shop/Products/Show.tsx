@@ -14,6 +14,7 @@ import { ApiProduct, ProductImage, ProductReview } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+    ArrowLeft,
     Award,
     Check,
     ChevronLeft,
@@ -276,11 +277,10 @@ export default function ProductShow({
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
-                                    className={`mb-6 flex items-center justify-between rounded-xl px-5 py-3.5 text-sm font-medium shadow-sm border ${
-                                        cartMessage.type === 'success'
+                                    className={`mb-6 flex items-center justify-between rounded-xl px-5 py-3.5 text-sm font-medium shadow-sm border ${cartMessage.type === 'success'
                                             ? 'bg-teal-50 border-teal-200 text-teal-800'
                                             : 'bg-red-50 border-red-200 text-red-800'
-                                    }`}
+                                        }`}
                                 >
                                     <div className="flex items-center gap-2.5">
                                         {cartMessage.type === 'success' ? (
@@ -374,40 +374,60 @@ export default function ProductShow({
     );
 }
 
-// ==================== Breadcrumb ====================
+// ==================== Breadcrumb & Header Controls ====================
 function Breadcrumb({ product }: { product: ApiProduct }) {
+    const handleBack = () => {
+        if (typeof window !== 'undefined' && window.history.length > 1) {
+            window.history.back();
+        } else {
+            router.visit('/shop/products');
+        }
+    };
+
     return (
-        <nav className="mb-6 flex flex-wrap items-center gap-2 text-xs font-medium text-neutral-500">
-            <Link
-                href="/shop"
-                className="flex items-center gap-1 transition-colors hover:text-teal-700"
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <nav className="flex flex-wrap items-center gap-2 text-xs font-medium text-neutral-500">
+                <Link
+                    href="/shop"
+                    className="flex items-center gap-1 transition-colors hover:text-teal-700"
+                >
+                    <Home size={13} className="text-neutral-400" />
+                    <span>Beranda</span>
+                </Link>
+                <span className="text-neutral-300">/</span>
+                <Link
+                    href="/shop/products"
+                    className="transition-colors hover:text-teal-700"
+                >
+                    Produk
+                </Link>
+                {product.category && (
+                    <>
+                        <span className="text-neutral-300">/</span>
+                        <Link
+                            href={`/shop/products?filter[category]=${product.category.slug}`}
+                            className="transition-colors hover:text-teal-700"
+                        >
+                            {product.category.name}
+                        </Link>
+                    </>
+                )}
+                <span className="text-neutral-300">/</span>
+                <span className="max-w-[280px] truncate font-semibold text-neutral-900">
+                    {product.name}
+                </span>
+            </nav>
+
+            {/* Back Button on Top Right */}
+            <button
+                type="button"
+                onClick={handleBack}
+                className="group inline-flex items-center gap-2 rounded-xl border border-neutral-200/90 bg-white px-4 py-2 text-xs font-semibold text-neutral-700 shadow-xs transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900 active:scale-95 cursor-pointer"
             >
-                <Home size={13} className="text-neutral-400" />
-                <span>Beranda</span>
-            </Link>
-            <span className="text-neutral-300">/</span>
-            <Link
-                href="/shop/products"
-                className="transition-colors hover:text-teal-700"
-            >
-                Produk
-            </Link>
-            {product.category && (
-                <>
-                    <span className="text-neutral-300">/</span>
-                    <Link
-                        href={`/shop/products?filter[category]=${product.category.slug}`}
-                        className="transition-colors hover:text-teal-700"
-                    >
-                        {product.category.name}
-                    </Link>
-                </>
-            )}
-            <span className="text-neutral-300">/</span>
-            <span className="max-w-[280px] truncate font-semibold text-neutral-900">
-                {product.name}
-            </span>
-        </nav>
+                <ArrowLeft size={14} className="text-neutral-500 transition-transform duration-200 group-hover:-translate-x-1 group-hover:text-neutral-900" />
+                <span>Back</span>
+            </button>
+        </div>
     );
 }
 
@@ -465,11 +485,10 @@ function ImageGallery({
                             onWishlist();
                         }}
                         disabled={isTogglingWishlist}
-                        className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 ${
-                            isWishlisted
+                        className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 ${isWishlisted
                                 ? 'bg-red-500 text-white'
                                 : 'bg-white/90 text-neutral-600 hover:bg-white hover:text-red-500'
-                        }`}
+                            }`}
                         title={isWishlisted ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist'}
                     >
                         <Heart
@@ -531,11 +550,10 @@ function ImageGallery({
                         <button
                             key={img.id || idx}
                             onClick={() => setSelectedIndex(idx)}
-                            className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 bg-white p-1.5 transition-all duration-200 flex items-center justify-center ${
-                                idx === selectedIndex
+                            className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 bg-white p-1.5 transition-all duration-200 flex items-center justify-center ${idx === selectedIndex
                                     ? 'border-teal-600 shadow-sm ring-2 ring-teal-600/20 scale-102'
                                     : 'border-neutral-200/80 opacity-70 hover:border-neutral-400 hover:opacity-100'
-                            }`}
+                                }`}
                         >
                             <img
                                 src={img.image_url}
@@ -653,7 +671,7 @@ function ProductInfoSummary({
                     className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-teal-700 px-6 py-4 text-base font-semibold text-white shadow-md transition-all duration-300 hover:bg-teal-800 hover:shadow-lg active:scale-[0.99]"
                 >
                     <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
-                    <span>Konsultasi &amp; Pemesanan via WhatsApp</span>
+                    <span>Consultation &amp; Order via WhatsApp</span>
                 </a>
 
 
@@ -707,11 +725,10 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
             <div className="flex flex-wrap border-b border-neutral-200/80 bg-neutral-50/70 px-4 pt-3 sm:px-8">
                 <button
                     onClick={() => setActiveTab('overview')}
-                    className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${
-                        activeTab === 'overview'
+                    className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${activeTab === 'overview'
                             ? 'border-teal-600 text-teal-800 bg-white rounded-t-xl shadow-2xs'
                             : 'border-transparent text-neutral-500 hover:text-neutral-800'
-                    }`}
+                        }`}
                 >
                     <Info size={16} />
                     <span>Deskripsi &amp; Keunggulan</span>
@@ -719,11 +736,10 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
 
                 <button
                     onClick={() => setActiveTab('specs')}
-                    className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${
-                        activeTab === 'specs'
+                    className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${activeTab === 'specs'
                             ? 'border-teal-600 text-teal-800 bg-white rounded-t-xl shadow-2xs'
                             : 'border-transparent text-neutral-500 hover:text-neutral-800'
-                    }`}
+                        }`}
                 >
                     <Ruler size={16} />
                     <span>Spesifikasi &amp; Dimensi</span>
@@ -1176,11 +1192,10 @@ function ReviewForm({
             </h4>
             {message && (
                 <div
-                    className={`mb-3 rounded-lg p-2.5 text-xs font-medium ${
-                        message.type === 'success'
+                    className={`mb-3 rounded-lg p-2.5 text-xs font-medium ${message.type === 'success'
                             ? 'bg-green-50 text-green-700'
                             : 'bg-red-50 text-red-700'
-                    }`}
+                        }`}
                 >
                     {message.text}
                 </div>
@@ -1199,11 +1214,10 @@ function ReviewForm({
                             >
                                 <Star
                                     size={18}
-                                    className={`${
-                                        s <= (hoverRating || rating)
+                                    className={`${s <= (hoverRating || rating)
                                             ? 'fill-amber-400 text-amber-400'
                                             : 'text-neutral-300'
-                                    }`}
+                                        }`}
                                 />
                             </button>
                         ))}
