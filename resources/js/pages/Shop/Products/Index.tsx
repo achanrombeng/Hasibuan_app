@@ -1,5 +1,4 @@
 import { BreadcrumbStructuredData, SEOHead } from '@/components/seo';
-import { QuickViewModal } from '@/components/shop';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SharedData } from '@/types';
 import {
@@ -123,9 +122,6 @@ export default function ProductsIndex({
         min: safeFilters.filter?.price_min,
         max: safeFilters.filter?.price_max,
     });
-    const [quickViewProduct, setQuickViewProduct] = useState<ApiProduct | null>(
-        null,
-    );
 
     const applyFilters = useCallback(() => {
         const params: Record<string, string> = {};
@@ -483,7 +479,6 @@ export default function ProductsIndex({
                             <ProductGrid
                                 products={products.data}
                                 viewMode={viewMode}
-                                onQuickView={setQuickViewProduct}
                             />
                             <Pagination meta={products.meta} />
                         </div>
@@ -507,12 +502,6 @@ export default function ProductsIndex({
                     }}
                     onClear={clearFilters}
                     hasActiveFilters={!!hasActiveFilters}
-                />
-
-                <QuickViewModal
-                    product={quickViewProduct}
-                    isOpen={!!quickViewProduct}
-                    onClose={() => setQuickViewProduct(null)}
                 />
             </ShopLayout>
         </>
@@ -723,10 +712,9 @@ function FilterDrawer({
 interface ProductGridProps {
     products: ApiProduct[];
     viewMode: 'grid' | 'list';
-    onQuickView: (product: ApiProduct) => void;
 }
 
-function ProductGrid({ products, viewMode, onQuickView }: ProductGridProps) {
+function ProductGrid({ products, viewMode }: ProductGridProps) {
     if (products.length === 0) {
         return (
             <div className="py-20 text-center">
@@ -758,7 +746,6 @@ function ProductGrid({ products, viewMode, onQuickView }: ProductGridProps) {
                     product={product}
                     viewMode={viewMode}
                     index={index}
-                    onQuickView={onQuickView}
                 />
             ))}
         </div>
@@ -770,14 +757,12 @@ interface ProductCardProps {
     product: ApiProduct;
     viewMode: 'grid' | 'list';
     index: number;
-    onQuickView: (product: ApiProduct) => void;
 }
 
 function ProductCard({
     product,
     viewMode,
     index,
-    onQuickView,
 }: ProductCardProps) {
     const { auth } = usePage<SharedData>().props;
     const [isWishlisted, setIsWishlisted] = useState(product.is_wishlisted);
@@ -859,16 +844,6 @@ function ProductCard({
                             alt={product.name}
                             className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
                         />
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                onQuickView(product);
-                            }}
-                            className="absolute right-2 bottom-2 rounded-sm bg-white/90 p-2 text-neutral-900 opacity-0 transition-colors group-hover:opacity-100 hover:bg-white"
-                            title="Quick View"
-                        >
-                            <Eye size={16} />
-                        </button>
                     </div>
                     <div className="flex flex-1 flex-col justify-between py-2">
                         <div>
@@ -930,18 +905,12 @@ function ProductCard({
                         alt={product.name}
                         className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+                    <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10 flex items-center justify-center">
+                        <span className="translate-y-3 rounded-sm bg-white/95 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-800 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
+                            View Detail
+                        </span>
+                    </div>
                     <div className="absolute right-4 bottom-4 flex gap-2 opacity-0 transition-all duration-300 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100">
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                onQuickView(product);
-                            }}
-                            className="rounded-sm bg-white/95 p-3 text-neutral-900 shadow-md backdrop-blur-sm transition-colors hover:bg-white"
-                            title="Quick View"
-                        >
-                            <Eye size={18} />
-                        </button>
                         <button
                             onClick={handleWishlistToggle}
                             disabled={isTogglingWishlist}

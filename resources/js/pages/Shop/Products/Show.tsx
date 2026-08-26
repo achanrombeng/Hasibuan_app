@@ -278,8 +278,8 @@ export default function ProductShow({
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     className={`mb-6 flex items-center justify-between rounded-xl px-5 py-3.5 text-sm font-medium shadow-sm border ${cartMessage.type === 'success'
-                                            ? 'bg-teal-50 border-teal-200 text-teal-800'
-                                            : 'bg-red-50 border-red-200 text-red-800'
+                                        ? 'bg-teal-50 border-teal-200 text-teal-800'
+                                        : 'bg-red-50 border-red-200 text-red-800'
                                         }`}
                                 >
                                     <div className="flex items-center gap-2.5">
@@ -486,8 +486,8 @@ function ImageGallery({
                         }}
                         disabled={isTogglingWishlist}
                         className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 ${isWishlisted
-                                ? 'bg-red-500 text-white'
-                                : 'bg-white/90 text-neutral-600 hover:bg-white hover:text-red-500'
+                            ? 'bg-red-500 text-white'
+                            : 'bg-white/90 text-neutral-600 hover:bg-white hover:text-red-500'
                             }`}
                         title={isWishlisted ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist'}
                     >
@@ -507,7 +507,7 @@ function ImageGallery({
                     className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-xl bg-neutral-900/80 px-3.5 py-2 text-xs font-medium text-white shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-neutral-900 active:scale-95"
                 >
                     <ZoomIn size={15} />
-                    <span>Perbesar</span>
+                    <span>Zoom</span>
                 </button>
 
                 {/* Next / Prev Image Arrows */}
@@ -551,8 +551,8 @@ function ImageGallery({
                             key={img.id || idx}
                             onClick={() => setSelectedIndex(idx)}
                             className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl border-2 bg-white p-1.5 transition-all duration-200 flex items-center justify-center ${idx === selectedIndex
-                                    ? 'border-teal-600 shadow-sm ring-2 ring-teal-600/20 scale-102'
-                                    : 'border-neutral-200/80 opacity-70 hover:border-neutral-400 hover:opacity-100'
+                                ? 'border-teal-600 shadow-sm ring-2 ring-teal-600/20 scale-102'
+                                : 'border-neutral-200/80 opacity-70 hover:border-neutral-400 hover:opacity-100'
                                 }`}
                         >
                             <img
@@ -726,23 +726,23 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
                 <button
                     onClick={() => setActiveTab('overview')}
                     className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${activeTab === 'overview'
-                            ? 'border-teal-600 text-teal-800 bg-white rounded-t-xl shadow-2xs'
-                            : 'border-transparent text-neutral-500 hover:text-neutral-800'
+                        ? 'border-teal-600 text-teal-800 bg-white rounded-t-xl shadow-2xs'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-800'
                         }`}
                 >
                     <Info size={16} />
-                    <span>Deskripsi &amp; Keunggulan</span>
+                    <span>Description &amp; Benefits</span>
                 </button>
 
                 <button
                     onClick={() => setActiveTab('specs')}
                     className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${activeTab === 'specs'
-                            ? 'border-teal-600 text-teal-800 bg-white rounded-t-xl shadow-2xs'
-                            : 'border-transparent text-neutral-500 hover:text-neutral-800'
+                        ? 'border-teal-600 text-teal-800 bg-white rounded-t-xl shadow-2xs'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-800'
                         }`}
                 >
                     <Ruler size={16} />
-                    <span>Spesifikasi &amp; Dimensi</span>
+                    <span>Specification &amp; Dimension</span>
                 </button>
             </div>
 
@@ -844,9 +844,9 @@ function RelatedProducts({ products }: { products: ApiProduct[] }) {
             <div className="mb-8 flex items-center justify-between border-b border-neutral-200/80 pb-4">
                 <div>
                     <h2 className="font-display text-2xl font-bold tracking-tight text-neutral-900">
-                        Koleksi Terkait
+                        Related Products
                     </h2>
-                    <p className="mt-1 text-xs text-neutral-500">Pilihan produk pelengkap yang serasi untuk hunian Anda</p>
+                    <p className="mt-1 text-xs text-neutral-500">Complementary product selection that matches your home.</p>
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
@@ -1193,8 +1193,8 @@ function ReviewForm({
             {message && (
                 <div
                     className={`mb-3 rounded-lg p-2.5 text-xs font-medium ${message.type === 'success'
-                            ? 'bg-green-50 text-green-700'
-                            : 'bg-red-50 text-red-700'
+                        ? 'bg-green-50 text-green-700'
+                        : 'bg-red-50 text-red-700'
                         }`}
                 >
                     {message.text}
@@ -1215,8 +1215,8 @@ function ReviewForm({
                                 <Star
                                     size={18}
                                     className={`${s <= (hoverRating || rating)
-                                            ? 'fill-amber-400 text-amber-400'
-                                            : 'text-neutral-300'
+                                        ? 'fill-amber-400 text-amber-400'
+                                        : 'text-neutral-300'
                                         }`}
                                 />
                             </button>

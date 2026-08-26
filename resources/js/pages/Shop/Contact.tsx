@@ -49,9 +49,9 @@ export default function Contact() {
             title: t('shop.contact.info_email'),
             lines: siteSettings?.contact_email
                 ? [
-                      siteSettings.contact_email,
-                      ...(siteSettings.contact_email_2 ? [siteSettings.contact_email_2] : []),
-                  ]
+                    siteSettings.contact_email,
+                    ...(siteSettings.contact_email_2 ? [siteSettings.contact_email_2] : []),
+                ]
                 : [t('shop.contact.email_not_set')],
             type: 'email',
         },
@@ -173,11 +173,10 @@ export default function Contact() {
                                     <button
                                         type="button"
                                         onClick={() => setActiveMapTab('showroom')}
-                                        className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
-                                            activeMapTab === 'showroom'
+                                        className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${activeMapTab === 'showroom'
                                                 ? 'bg-[#8c6239] text-white shadow-sm'
                                                 : 'text-neutral-800 hover:bg-neutral-200/60 hover:text-neutral-900'
-                                        }`}
+                                            }`}
                                     >
                                         <Store size={18} />
                                         <span>
@@ -190,15 +189,14 @@ export default function Contact() {
                                     <button
                                         type="button"
                                         onClick={() => setActiveMapTab('factory')}
-                                        className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
-                                            activeMapTab === 'factory'
+                                        className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${activeMapTab === 'factory'
                                                 ? 'bg-[#8c6239] text-white shadow-sm'
                                                 : 'text-neutral-800 hover:bg-neutral-200/60 hover:text-neutral-900'
-                                        }`}
+                                            }`}
                                     >
                                         <Building2 size={18} />
                                         <span>
-                                            Pabrik
+                                            Factory
                                             {siteSettings?.factory_address
                                                 ? ` (${siteSettings.factory_address})`
                                                 : ''}

@@ -41,7 +41,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {/* Hover Overlay Badge */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/15">
                     <span className="translate-y-3 rounded-sm bg-white/95 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-800 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
-                        Lihat Detail
+                        View Detail
                     </span>
                 </div>
             </div>

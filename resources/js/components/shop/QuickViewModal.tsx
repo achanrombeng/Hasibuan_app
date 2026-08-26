@@ -38,14 +38,14 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
     const images = product.images?.length
         ? product.images
         : [
-              {
-                  id: 0,
-                  image_url:
-                      product.primary_image?.image_url ||
-                      '/images/placeholder-product.svg',
-                  alt_text: product.name,
-              },
-          ];
+            {
+                id: 0,
+                image_url:
+                    product.primary_image?.image_url ||
+                    '/images/placeholder-product.svg',
+                alt_text: product.name,
+            },
+        ];
 
     const handleAddToCart = async () => {
         setIsAddingToCart(true);
@@ -181,9 +181,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                                 size={16}
                                                 className={
                                                     s <=
-                                                    Math.round(
-                                                        product.average_rating,
-                                                    )
+                                                        Math.round(
+                                                            product.average_rating,
+                                                        )
                                                         ? 'fill-yellow-400 text-yellow-400'
                                                         : 'text-neutral-200'
                                                 }
@@ -256,7 +256,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                                 setQuantity(
                                                     Math.min(
                                                         product.stock_quantity ||
-                                                            99,
+                                                        99,
                                                         quantity + 1,
                                                     ),
                                                 )
@@ -298,7 +298,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                     className="mt-4 flex items-center justify-center gap-2 text-center text-sm text-teal-600 hover:text-teal-700"
                                 >
                                     <Eye size={16} />
-                                    Lihat Detail Lengkap
+                                    Show Detail
                                 </Link>
                             </div>
                         </div>
