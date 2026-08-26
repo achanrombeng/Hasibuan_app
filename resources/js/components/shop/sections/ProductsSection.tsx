@@ -13,6 +13,8 @@ const PLACEHOLDER_PRODUCTS = [
 
 interface ProductsSectionProps {
     products: ApiProduct[];
+    badge?: string;
+    title?: string;
 }
 
 // Animation variants
@@ -37,6 +39,8 @@ const itemVariants = {
 
 export const ProductsSection: React.FC<ProductsSectionProps> = ({
     products,
+    badge = 'Best Sellers',
+    title = 'Featured Products',
 }) => {
     if (products.length === 0) {
         return null;
@@ -51,27 +55,15 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.3 }}
                     variants={containerVariants}
-                    className="mb-16 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end"
+                    className="mb-16 flex flex-col items-center text-center"
                 >
                     <motion.div variants={itemVariants}>
                         <span className="text-xs font-medium tracking-[0.15em] text-teal-500 uppercase">
-                            Best Sellers
+                            {badge}
                         </span>
                         <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-neutral-800 md:text-5xl">
-                            Featured Products
+                            {title}
                         </h2>
-                    </motion.div>
-                    <motion.div variants={itemVariants}>
-                        <Link
-                            href="/shop/products"
-                            className="group flex items-center gap-2 font-medium text-neutral-800 transition-colors hover:text-teal-500"
-                        >
-                            View All
-                            <ArrowRight
-                                size={18}
-                                className="transition-transform group-hover:translate-x-1"
-                            />
-                        </Link>
                     </motion.div>
                 </motion.div>
 
@@ -80,6 +72,20 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                     {products.map((apiProduct) => (
                         <ProductCard key={apiProduct.id} product={apiProduct} />
                     ))}
+                </div>
+
+                {/* View All Button */}
+                <div className="mt-14 flex justify-center">
+                    <Link
+                        href="/shop/products"
+                        className="group inline-flex items-center gap-2 rounded-full border border-neutral-300 px-8 py-3 text-sm font-medium text-neutral-800 transition-all duration-300 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                    >
+                        View All Products
+                        <ArrowRight
+                            size={16}
+                            className="transition-transform group-hover:translate-x-1"
+                        />
+                    </Link>
                 </div>
             </div>
         </section>

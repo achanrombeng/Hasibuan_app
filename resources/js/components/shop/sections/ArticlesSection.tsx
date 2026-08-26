@@ -26,28 +26,19 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
   const displayArticles = articles.slice(0, 3);
 
   return (
-    <section className="bg-sand-50/50 py-16 md:py-24 border-t border-terra-100/60">
+    <section className=" py-16 md:py-24 border-t border-terra-100/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-terra-600">
-              Blog & Journal
-            </span>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Latest Articles & News
-            </h2>
-            <p className="mt-2 max-w-2xl text-base text-gray-600">
-              Discover inspiration, lifestyle trends, and the stories behind Ronica luxury furniture collections.
-            </p>
-          </div>
-          <Link
-            href="/shop/articles"
-            className="inline-flex items-center text-sm font-semibold text-terra-900 hover:text-wood transition-colors group"
-          >
-            View All Articles
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+        <div className="mb-14 text-center max-w-3xl mx-auto">
+          <span className="text-xs font-semibold uppercase tracking-widest text-terra-600">
+            Blog & Journal
+          </span>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Latest Articles & News
+          </h2>
+          <p className="mt-3 text-base text-gray-600 leading-relaxed">
+            Discover inspiration, lifestyle trends, and the stories behind Ronica luxury furniture collections.
+          </p>
         </div>
 
         {/* Articles Grid (3 columns) */}
@@ -57,10 +48,10 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
               article.formatted_published_at ||
               (article.published_at
                 ? new Date(article.published_at).toLocaleDateString('en-US', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })
                 : '');
 
             return (
@@ -140,6 +131,17 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
               </article>
             );
           })}
+        </div>
+
+        {/* View All Articles Button */}
+        <div className="mt-14 flex justify-center">
+          <Link
+            href="/shop/articles"
+            className="group inline-flex items-center gap-2 rounded-full border border-terra-200 bg-white px-8 py-3 text-sm font-medium text-terra-900 shadow-xs transition-all duration-300 hover:border-terra-900 hover:bg-terra-900 hover:text-white"
+          >
+            View All Articles
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>
