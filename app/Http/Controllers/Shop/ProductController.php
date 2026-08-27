@@ -184,4 +184,36 @@ class ProductController extends Controller
             'products' => ProductResource::collection($products),
         ]);
     }
+
+    public function search(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $query = trim((string) $request->input('q', ''));
+        if ($query === '') {
+            return response()->json(['data' => []]);
+        }
+
+        $term = mb_strtolower($query);
+        $likeTerm = "%{$term}%";
+
+        $products = Product::active()
+            ->where(function ($q) use ($likeTerm) {
+                $q->whereRaw('LOWER(name) LIKE ?', [$likeTerm])
+                    ->orWhereRaw('LOWER(sku) LIKE ?', [$likeTerm])
+                    ->orWhereRaw('LOWER(slug) LIKE ?', [$likeTerm])
+                    ->orWhereRaw('LOWER(short_description) LIKE ?', [$likeTerm])
+                    ->orWhereRaw('LOWER(material) LIKE ?', [$likeTerm])
+                    ->orWhereRaw('LOWER(color) LIKE ?', [$likeTerm])
+                    ->orWhereHas('category', function ($cq) use ($likeTerm) {
+                        $cq->whereRaw('LOWER(name) LIKE ?', [$likeTerm])
+                            ->orWhereRaw('LOWER(slug) LIKE ?', [$likeTerm]);
+                    });
+            })
+            ->with(['category', 'images'])
+            ->limit(12)
+            ->get();
+
+        return response()->json([
+            'data' => ProductResource::collection($products)->resolve(),
+        ]);
+    }
 }

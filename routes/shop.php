@@ -6,6 +6,7 @@ use App\Http\Controllers\Shop\AddressController;
 use App\Http\Controllers\Shop\ArticleController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
+use App\Http\Controllers\Shop\DealerController;
 use App\Http\Controllers\Shop\HomeController;
 use App\Http\Controllers\Shop\NewsletterController;
 use App\Http\Controllers\Shop\OrderController;
@@ -45,6 +46,7 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
 
     // Products
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
     Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
     // Categories
@@ -100,7 +102,8 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
         ]);
     })->name('about');
 
-    Route::get('/dealer', fn () => Inertia::render('Shop/Dealer'))->name('dealer');
+    Route::get('/dealer', [DealerController::class, 'index'])->name('dealer');
+    Route::post('/dealer', [DealerController::class, 'store'])->name('dealer.store');
     Route::get('/contact', fn () => Inertia::render('Shop/Contact'))->name('contact');
     Route::get('/faq', fn () => Inertia::render('Shop/FAQ'))->name('faq');
     Route::get('/privacy-policy', fn () => Inertia::render('Shop/PrivacyPolicy'))->name('privacy');

@@ -5,6 +5,7 @@ import { Star } from 'lucide-react';
 interface ProductCardProps {
     product: ApiProduct;
     className?: string;
+    onClick?: () => void;
 }
 
 // Placeholder images for products without images
@@ -17,10 +18,12 @@ const PLACEHOLDER_PRODUCTS = [
 export const ProductCard: React.FC<ProductCardProps> = ({
     product,
     className = '',
+    onClick,
 }) => {
     return (
         <Link
             href={`/shop/products/${product.slug}`}
+            onClick={onClick}
             className={`group block transition-all duration-400 ease-out hover:scale-105 hover:-translate-y-2 ${className}`}
         >
             {/* Product Card Container */}

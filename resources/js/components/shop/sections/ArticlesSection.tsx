@@ -30,7 +30,7 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-14 text-center max-w-3xl mx-auto">
-          <span className="text-xs font-semibold uppercase tracking-widest text-terra-600">
+          <span className="text-xs font-semibold uppercase tracking-widest text-teal-500">
             Blog & Journal
           </span>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">

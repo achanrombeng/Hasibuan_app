@@ -468,6 +468,7 @@
   "admin.sidebar.dashboard": "Dashboard",
   "admin.sidebar.products": "Products",
   "admin.sidebar.categories": "Categories",
+  "admin.sidebar.dealer_inquiries": "Dealer Inquiries",
   "admin.sidebar.orders": "Orders",
   "admin.sidebar.customers": "Customers",
   "admin.sidebar.reviews": "Reviews",

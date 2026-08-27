@@ -11,8 +11,10 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
     ArrowRight,
+    ChevronDown,
     ChevronLeft,
     ChevronRight,
+    ChevronUp,
     Eye,
     Grid3X3,
     Heart,
@@ -99,6 +101,13 @@ export default function ProductsIndex({
         currentCategory && 'data' in currentCategory
             ? (currentCategory as any).data
             : currentCategory;
+
+    const INITIAL_CATEGORY_LIMIT = 8;
+    const [visibleCategoryCount, setVisibleCategoryCount] = useState(INITIAL_CATEGORY_LIMIT);
+
+    const visibleCategories = useMemo(() => {
+        return normalizedCategories.slice(0, visibleCategoryCount);
+    }, [normalizedCategories, visibleCategoryCount]);
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [showFilters, setShowFilters] = useState(false);
@@ -300,11 +309,11 @@ export default function ProductsIndex({
 
                             {/* Category Cards Grid */}
                             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:gap-6">
-                                {normalizedCategories.map((cat: ApiCategory) => {
+                                {visibleCategories.map((cat: ApiCategory) => {
                                     const isSelected =
                                         selectedCategory === Number(cat.id) ||
                                         (normalizedCurrentCategory &&
-                                            Number(normalizedCurrentCategory.id) === Number(cat.id));
+                                             Number(normalizedCurrentCategory.id) === Number(cat.id));
                                     const bgImage = getCategoryImageUrl(cat);
                                     const targetHref = isSelected
                                         ? '/shop/products'
@@ -356,6 +365,35 @@ export default function ProductsIndex({
                                     );
                                 })}
                             </div>
+
+                            {/* Load More Categories Button */}
+                            {normalizedCategories.length > INITIAL_CATEGORY_LIMIT && (
+                                <div className="mt-8 flex justify-center">
+                                    {visibleCategoryCount < normalizedCategories.length ? (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setVisibleCategoryCount((prev) =>
+                                                    Math.min(prev + 8, normalizedCategories.length),
+                                                )
+                                            }
+                                            className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-7 py-3 text-sm font-semibold text-neutral-800 shadow-xs transition-all hover:border-teal-500 hover:bg-teal-50/60 hover:text-teal-700 active:scale-95 cursor-pointer"
+                                        >
+                                            <span>Load More Categories ({normalizedCategories.length - visibleCategoryCount} more)</span>
+                                            <ChevronDown size={16} />
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => setVisibleCategoryCount(INITIAL_CATEGORY_LIMIT)}
+                                            className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-7 py-3 text-sm font-semibold text-neutral-600 shadow-xs transition-all hover:bg-neutral-100 hover:text-neutral-900 active:scale-95 cursor-pointer"
+                                        >
+                                            <span>Show Less</span>
+                                            <ChevronUp size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Search & Controls Header */}

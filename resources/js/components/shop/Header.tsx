@@ -1,14 +1,17 @@
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { ProductCard } from '@/components/shop/ProductCard';
 import { NAV_ITEMS } from '@/data/constants';
 import { useTranslation } from '@/hooks/use-translation';
 import { SiteSettings } from '@/types';
-import { ApiCategory } from '@/types/shop';
+import { ApiCategory, ApiProduct } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+    ArrowRight,
     ChevronDown,
     Heart,
     LayoutDashboard,
+    Loader2,
     LogOut,
     Menu,
     Package,
@@ -16,6 +19,7 @@ import {
     Settings,
     ShieldCheck,
     ShoppingBag,
+    Sparkles,
     User,
     X,
 } from 'lucide-react';
@@ -75,6 +79,9 @@ export const Header: React.FC<HeaderProps> = ({
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<ApiProduct[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [hasSearched, setHasSearched] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
     const userMenuRef = useRef<HTMLDivElement>(null);
@@ -99,6 +106,57 @@ export const Header: React.FC<HeaderProps> = ({
             searchInputRef.current.focus();
         }
     }, [searchOpen]);
+
+    // Live search debounced query
+    useEffect(() => {
+        if (!searchOpen) {
+            setSearchQuery('');
+            setSearchResults([]);
+            setIsSearching(false);
+            setHasSearched(false);
+            return;
+        }
+
+        const query = searchQuery.trim();
+        if (!query) {
+            setSearchResults([]);
+            setIsSearching(false);
+            setHasSearched(false);
+            return;
+        }
+
+        setIsSearching(true);
+        const controller = new AbortController();
+        const timer = setTimeout(async () => {
+            try {
+                const response = await fetch(
+                    `/shop/products/search?q=${encodeURIComponent(query)}`,
+                    {
+                        signal: controller.signal,
+                        headers: {
+                            Accept: 'application/json',
+                        },
+                    },
+                );
+                if (response.ok) {
+                    const json = await response.json();
+                    setSearchResults(json.data || []);
+                    setHasSearched(true);
+                }
+            } catch (err: any) {
+                if (err.name !== 'AbortError') {
+                    console.error('Search error:', err);
+                }
+            } finally {
+                setIsSearching(false);
+            }
+        }, 200);
+
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
+    }, [searchQuery, searchOpen]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -235,6 +293,17 @@ export const Header: React.FC<HeaderProps> = ({
 
                     {/* Right Side Icons */}
                     <div className="flex items-center justify-end gap-1 md:gap-2">
+                        {/* Search Product Button */}
+                        <button
+                            type="button"
+                            onClick={() => setSearchOpen(true)}
+                            className="flex items-center justify-center rounded-lg p-2 text-neutral-700 transition-all hover:bg-neutral-100 hover:text-teal-600 active:scale-95 cursor-pointer"
+                            aria-label="Search products"
+                            title={t('shop.header.search_placeholder')}
+                        >
+                            <Search className="h-4 w-4 text-teal-600" />
+                        </button>
+
                         {/* Language Switcher */}
                         <LanguageSwitcher variant="toggle" className="hidden md:flex" />
 
@@ -360,24 +429,28 @@ export const Header: React.FC<HeaderProps> = ({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-24 backdrop-blur-sm"
+                        className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-16 md:pt-20 px-4 pb-8 backdrop-blur-sm"
                         onClick={() => setSearchOpen(false)}
                     >
                         <motion.div
                             initial={{ opacity: 0, y: -20, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                            className="mx-4 w-full max-w-2xl overflow-hidden rounded-sm bg-white shadow-2xl"
+                            className="w-full max-w-4xl max-h-[82vh] flex flex-col overflow-hidden rounded-2xl bg-white shadow-2xl border border-neutral-100"
                             onClick={(e) => e.stopPropagation()}
                         >
+                            {/* Search Input Bar */}
                             <form
                                 onSubmit={handleSearch}
-                                className="flex items-center gap-4 p-5"
+                                className="flex items-center gap-3 p-4 sm:p-5 border-b border-neutral-100 bg-white sticky top-0 z-10"
                             >
-                                <Search
-                                    size={22}
-                                    className="flex-shrink-0 text-neutral-400"
-                                />
+                                <div className="flex-shrink-0 text-neutral-400">
+                                    {isSearching ? (
+                                        <Loader2 size={22} className="animate-spin text-teal-600" />
+                                    ) : (
+                                        <Search size={22} className="text-teal-600" />
+                                    )}
+                                </div>
                                 <input
                                     ref={searchInputRef}
                                     type="text"
@@ -385,21 +458,123 @@ export const Header: React.FC<HeaderProps> = ({
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    placeholder={t('shop.header.search_placeholder')}
-                                    className="flex-1 text-lg outline-none placeholder:text-neutral-400"
+                                    placeholder={t('shop.header.search_placeholder') || 'Search furniture, chairs, tables...'}
+                                    className="flex-1 text-base sm:text-lg text-neutral-800 outline-none placeholder:text-neutral-400 bg-transparent"
                                 />
+                                {searchQuery && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setSearchQuery('')}
+                                        className="rounded-full p-1.5 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors"
+                                        title="Clear"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     onClick={() => setSearchOpen(false)}
-                                    className="rounded-sm p-2 transition-colors hover:bg-neutral-100"
+                                    className="rounded-lg p-2 text-neutral-500 hover:bg-neutral-100 transition-colors"
                                 >
-                                    <X size={20} className="text-neutral-500" />
+                                    <X size={20} />
                                 </button>
                             </form>
-                            <div className="border-t border-neutral-100 bg-neutral-50 px-5 py-3">
-                                <p className="text-xs text-neutral-500">
+
+                            {/* Search Content / Results Area */}
+                            <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-[220px]">
+                                {/* 1. Loading state with skeletons */}
+                                {isSearching && searchResults.length === 0 && (
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
+                                        {[...Array(4)].map((_, i) => (
+                                            <div key={i} className="animate-pulse space-y-3">
+                                                <div className="aspect-square rounded-xl bg-neutral-100" />
+                                                <div className="h-3 w-1/2 rounded bg-neutral-100" />
+                                                <div className="h-4 w-3/4 rounded bg-neutral-100" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* 2. Results Found */}
+                                {searchResults.length > 0 && (
+                                    <div>
+                                        <div className="mb-4 flex items-center justify-between">
+                                            <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                                {searchResults.length} {searchResults.length === 1 ? 'Product' : 'Products'} Found
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={handleSearch}
+                                                className="inline-flex items-center gap-1 text-xs font-medium text-teal-600 hover:text-teal-700 hover:underline cursor-pointer"
+                                            >
+                                                View all in catalog
+                                                <ArrowRight size={14} />
+                                            </button>
+                                        </div>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
+                                            {searchResults.map((product) => (
+                                                <ProductCard
+                                                    key={product.id}
+                                                    product={product}
+                                                    onClick={() => setSearchOpen(false)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* 3. No Results Found */}
+                                {!isSearching && hasSearched && searchResults.length === 0 && searchQuery.trim() && (
+                                    <div className="flex flex-col items-center justify-center py-12 text-center">
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 mb-3">
+                                            <Package size={30} />
+                                        </div>
+                                        <h4 className="text-base font-semibold text-neutral-800">
+                                            No products found
+                                        </h4>
+                                        <p className="mt-1 text-sm text-neutral-500 max-w-sm">
+                                            We couldn't find any products matching "{searchQuery}". Try searching with different keywords like chair, table, or sofa.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* 4. Empty initial state / Suggestions */}
+                                {!searchQuery.trim() && (
+                                    <div className="py-3">
+                                        <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
+                                            Popular Categories
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {activeCategoriesList.slice(0, 8).map((cat: any) => (
+                                                <button
+                                                    key={cat.id || cat.slug}
+                                                    type="button"
+                                                    onClick={() => setSearchQuery(cat.name)}
+                                                    className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50/70 px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:border-teal-500 hover:bg-teal-50 hover:text-teal-700 cursor-pointer"
+                                                >
+                                                    <Sparkles size={12} className="text-teal-600" />
+                                                    {cat.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Modal Footer */}
+                            <div className="flex items-center justify-between border-t border-neutral-100 bg-neutral-50 px-5 py-3 text-xs text-neutral-500">
+                                <span>
                                     {t('shop.header.search_hint', { key: 'Enter', esc: 'Esc' })}
-                                </p>
+                                </span>
+                                {searchResults.length > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={handleSearch}
+                                        className="font-semibold text-teal-600 hover:text-teal-700 cursor-pointer"
+                                    >
+                                        View all results →
+                                    </button>
+                                )}
                             </div>
                         </motion.div>
                     </motion.div>

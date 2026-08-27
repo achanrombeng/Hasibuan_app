@@ -1,6 +1,7 @@
 import { useTranslation } from '@/hooks/use-translation';
 import { Link, usePage } from '@inertiajs/react';
 import {
+  Briefcase,
   ChevronLeft,
   FileText,
   FolderTree,
@@ -45,6 +46,11 @@ const mainNavItems: NavItem[] = [
     href: '/admin/categories',
     icon: FolderTree,
     permission: 'view categories',
+  },
+  {
+    titleKey: 'admin.sidebar.dealer_inquiries',
+    href: '/admin/dealer-inquiries',
+    icon: Briefcase,
   },
   {
     titleKey: 'admin.sidebar.customers',

@@ -3,7 +3,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { Link, useForm, usePage } from '@inertiajs/react';
-import { CheckCircle, Armchair, Send } from 'lucide-react';
+import { CheckCircle, Armchair, Loader2, Send } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Dealer() {
@@ -11,9 +11,8 @@ export default function Dealer() {
     const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
     const siteName = siteSettings?.site_name || 'Ronica';
     const [isSuccess, setIsSuccess] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data, setData, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         phone: '',
@@ -22,12 +21,13 @@ export default function Dealer() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
-        setTimeout(() => {
-            setIsSubmitting(false);
-            setIsSuccess(true);
-            reset();
-        }, 1500);
+        post('/shop/dealer', {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsSuccess(true);
+                reset();
+            },
+        });
     };
 
     return (
@@ -122,6 +122,9 @@ export default function Dealer() {
                                                     placeholder="Write Your Name and Surname"
                                                     className="w-full rounded-lg border border-neutral-200/80 bg-neutral-100/70 px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 outline-none transition-all focus:border-[#a67c52] focus:bg-white focus:ring-2 focus:ring-[#a67c52]/20"
                                                 />
+                                                {errors.name && (
+                                                    <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+                                                )}
                                             </div>
 
                                             {/* E-mail */}
@@ -137,6 +140,9 @@ export default function Dealer() {
                                                     placeholder="Type Your E-mail Address"
                                                     className="w-full rounded-lg border border-neutral-200/80 bg-neutral-100/70 px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 outline-none transition-all focus:border-[#a67c52] focus:bg-white focus:ring-2 focus:ring-[#a67c52]/20"
                                                 />
+                                                {errors.email && (
+                                                    <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+                                                )}
                                             </div>
 
                                             {/* Phone */}
@@ -151,6 +157,9 @@ export default function Dealer() {
                                                     placeholder="Type Your Phone Number"
                                                     className="w-full rounded-lg border border-neutral-200/80 bg-neutral-100/70 px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 outline-none transition-all focus:border-[#a67c52] focus:bg-white focus:ring-2 focus:ring-[#a67c52]/20"
                                                 />
+                                                {errors.phone && (
+                                                    <p className="mt-1 text-xs text-red-500">{errors.phone}</p>
+                                                )}
                                             </div>
 
                                             {/* Message */}
@@ -166,22 +175,26 @@ export default function Dealer() {
                                                     placeholder="Write Your Message"
                                                     className="w-full resize-none rounded-lg border border-neutral-200/80 bg-neutral-100/70 px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 outline-none transition-all focus:border-[#a67c52] focus:bg-white focus:ring-2 focus:ring-[#a67c52]/20"
                                                 />
+                                                {errors.message && (
+                                                    <p className="mt-1 text-xs text-red-500">{errors.message}</p>
+                                                )}
                                             </div>
 
                                             {/* Submit Button */}
                                             <div className="pt-2">
                                                 <button
                                                     type="submit"
-                                                    disabled={isSubmitting}
-                                                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#272a2e] px-8 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#1a1c1e] active:scale-[0.98] disabled:opacity-50"
+                                                    disabled={processing}
+                                                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#272a2e] px-8 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-[#1a1c1e] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
                                                 >
-                                                    {isSubmitting ? (
+                                                    {processing ? (
                                                         <>
-                                                            <span className="animate-spin">⏳</span>
-                                                            Sending...
+                                                            <Loader2 size={16} className="animate-spin" />
+                                                            <span>Sending...</span>
                                                         </>
                                                     ) : (
                                                         <>
+                                                            <Send size={16} />
                                                             <span>Send</span>
                                                         </>
                                                     )}

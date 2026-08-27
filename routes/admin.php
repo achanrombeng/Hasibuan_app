@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DealerInquiryController;
 use App\Http\Controllers\Admin\GlobalSearchController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OrderController;
@@ -66,6 +67,9 @@ Route::middleware(['auth', 'verified', 'role:admin|super-admin|manager|staff'])-
 
     // Articles
     Route::resource('articles', ArticleController::class);
+
+    // Dealer Inquiries
+    Route::resource('dealer-inquiries', DealerInquiryController::class)->only(['index', 'update', 'destroy']);
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
