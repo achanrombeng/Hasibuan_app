@@ -15,14 +15,14 @@ import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import MDEditor from '@uiw/react-md-editor';
 import { ArrowLeft, Image as ImageIcon, Save, X } from 'lucide-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface CreateArticleProps {
     statuses: Array<{ value: string; label: string }>;
 }
 
 export default function CreateArticle({ statuses }: CreateArticleProps) {
-    const { auth } = usePage().props as any;
+    const { auth } = usePage<{ auth?: { user?: { name?: string; id?: number } } }>().props;
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -43,15 +43,19 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [showSeo, setShowSeo] = useState(false);
 
-    useEffect(() => {
-        if (formData.title && !formData.slug) {
-            const slug = formData.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '');
-            setFormData((prev) => ({ ...prev, slug }));
-        }
-    }, [formData.title]);
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const title = e.target.value;
+        const autoSlug = title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+
+        setFormData((prev) => ({
+            ...prev,
+            title,
+            slug: prev.slug === '' || prev.slug === prev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') ? autoSlug : prev.slug,
+        }));
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -138,12 +142,7 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                             <Input
                                 id="title"
                                 value={formData.title}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        title: e.target.value,
-                                    })
-                                }
+                                onChange={handleTitleChange}
                                 placeholder="Article title"
                             />
                             {errors.title && (

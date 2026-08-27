@@ -31,7 +31,7 @@ class DealerController extends Controller
 
         // Send Email Notification to Admin if recipient is configured
         try {
-            $adminEmail = Setting::get('contact_email') ?: config('mail.from.address');
+            $adminEmail = env('DEALER_NOTIFICATION_EMAIL') ?: config('mail.from.address') ?: Setting::get('contact_email');
             if ($adminEmail) {
                 Mail::to($adminEmail)->send(new DealerInquiryReceived($inquiry));
             }

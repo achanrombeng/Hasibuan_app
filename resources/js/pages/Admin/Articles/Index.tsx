@@ -10,14 +10,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { FileText, Filter, Pencil, Plus, Search, Trash2 } from 'lucide-react';

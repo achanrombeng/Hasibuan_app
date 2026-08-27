@@ -11,7 +11,6 @@ import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import {
     AlertTriangle,
-    ArrowUpDown,
     ChevronDown,
     ChevronRight,
     Filter,
@@ -407,7 +406,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                 <Filter className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
                                 <select
                                     value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as any)}
+                                    onChange={(e) => setSortBy(e.target.value as 'name_asc' | 'name_desc' | 'newest' | 'oldest')}
                                     className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pr-8 pl-9 text-sm font-medium text-neutral-700 shadow-sm transition-all hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
                                 >
                                     <option value="name_asc">Sort by: A - Z</option>
@@ -417,6 +416,20 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                 </select>
                                 <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             </div>
+                            <button
+                                type="button"
+                                onClick={expandAll}
+                                className="hidden sm:inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-700 shadow-sm hover:bg-neutral-50"
+                            >
+                                Expand All
+                            </button>
+                            <button
+                                type="button"
+                                onClick={collapseAll}
+                                className="hidden sm:inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-700 shadow-sm hover:bg-neutral-50"
+                            >
+                                Collapse All
+                            </button>
                             <button
                                 type="submit"
                                 className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"

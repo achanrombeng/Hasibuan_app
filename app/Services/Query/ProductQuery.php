@@ -17,6 +17,14 @@ class ProductQuery
         return QueryBuilder::for(Product::class, $request)
             ->allowedFilters([
                 AllowedFilter::partial('name'),
+                AllowedFilter::callback('search', function ($query, $value) {
+                    $query->where(function ($q) use ($value) {
+                        $q->where('name', 'like', "%{$value}%")
+                            ->orWhere('description', 'like', "%{$value}%")
+                            ->orWhere('short_description', 'like', "%{$value}%")
+                            ->orWhere('sku', 'like', "%{$value}%");
+                    });
+                }),
                 AllowedFilter::callback('category_id', function ($query, $value) {
                     $categoryIds = Category::where('id', $value)
                         ->orWhere('parent_id', $value)

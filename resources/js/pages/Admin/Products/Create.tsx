@@ -1,6 +1,5 @@
 import ImageCropDialog from '@/components/ImageCropDialog';
 import { Combobox } from '@/components/ui/combobox';
-import { Switch } from '@/components/ui/switch';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -570,6 +569,45 @@ export default function CreateProduct({
                                     ))}
                                 </div>
                             )}
+
+                            {previewImages.length > 0 && (
+                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200/80 bg-amber-50/60 p-3.5">
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={handleAiExtract}
+                                            disabled={isExtracting}
+                                            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:from-amber-600 hover:to-amber-700 disabled:opacity-50"
+                                        >
+                                            {isExtracting ? (
+                                                <>
+                                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                    <span>Analyzing Image with Gemini AI...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Sparkles className="h-3.5 w-3.5" />
+                                                    <span>Auto-Fill Details with AI</span>
+                                                </>
+                                            )}
+                                        </button>
+                                        <span className="text-xs text-amber-800">
+                                            Auto-generate title, description, material & specs
+                                        </span>
+                                    </div>
+                                    {extractError && (
+                                        <div className="flex items-center gap-1.5 text-xs text-red-600">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <span>{extractError}</span>
+                                        </div>
+                                    )}
+                                    {extractSuccess && (
+                                        <span className="text-xs font-medium text-emerald-600">
+                                            ✓ Product details successfully filled!
+                                        </span>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -680,9 +718,94 @@ export default function CreateProduct({
                         </div>
                     </div>
 
+                    {/* 3. Pricing & Inventory */}
+                    <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
+                        <h2 className="mb-4 text-lg font-semibold text-terra-900">
+                            Pricing & Inventory
+                        </h2>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                            <div>
+                                <label className={labelClass}>Price (Rp) *</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.price}
+                                    onChange={(e) => setData('price', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="e.g. 5000000"
+                                />
+                                {errors.price && (
+                                    <p className="mt-1 text-sm text-red-500">{errors.price}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Compare at Price (Rp)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.compare_price}
+                                    onChange={(e) => setData('compare_price', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="e.g. 6000000"
+                                />
+                                {errors.compare_price && (
+                                    <p className="mt-1 text-sm text-red-500">{errors.compare_price}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Cost per Item (Rp)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.cost_price}
+                                    onChange={(e) => setData('cost_price', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="e.g. 3500000"
+                                />
+                                {marginPercentage && (
+                                    <p className="mt-1.5 text-xs font-semibold text-emerald-600">
+                                        Gross Profit Margin: {marginPercentage}%
+                                    </p>
+                                )}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Stock Quantity</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.stock_quantity}
+                                    onChange={(e) => setData('stock_quantity', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="0"
+                                />
+                            </div>
+                            <div>
+                                <label className={labelClass}>Low Stock Threshold</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.low_stock_threshold}
+                                    onChange={(e) => setData('low_stock_threshold', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="5"
+                                />
+                            </div>
+                            <div>
+                                <label className={labelClass}>Discount (%)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value={data.discount_percentage}
+                                    onChange={(e) => setData('discount_percentage', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="0"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-
-                    {/* 3. Product Specifications */}
+                    {/* 4. Product Specifications */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
                             Product Specifications
@@ -854,6 +977,22 @@ export default function CreateProduct({
                                     placeholder="Select status"
                                     searchPlaceholder="Search status..."
                                     emptyText="No status found."
+                                />
+                            </div>
+                            <div>
+                                <label className={labelClass}>Sale Type</label>
+                                <Combobox
+                                    options={saleTypes.map((s) => ({
+                                        value: s.value,
+                                        label: s.name,
+                                    }))}
+                                    value={data.sale_type}
+                                    onChange={(val) =>
+                                        setData('sale_type', val)
+                                    }
+                                    placeholder="Select sale type"
+                                    searchPlaceholder="Search sale type..."
+                                    emptyText="No sale type found."
                                 />
                             </div>
                         </div>

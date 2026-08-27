@@ -260,6 +260,24 @@ export default function ProductsIndex({
                                 </select>
                             </div>
 
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-terra-700">
+                                    Sale Type
+                                </label>
+                                <select
+                                    value={saleType}
+                                    onChange={(e) => setSaleType(e.target.value)}
+                                    className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                                >
+                                    <option value="all">All Sale Types</option>
+                                    {saleTypes.map((s) => (
+                                        <option key={s.value} value={s.value}>
+                                            {s.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
                             <div className="flex items-end gap-2">
                                 <button
                                     onClick={() => handleSearch()}

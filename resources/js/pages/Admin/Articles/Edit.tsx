@@ -15,7 +15,7 @@ import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import MDEditor from '@uiw/react-md-editor';
 import { ArrowLeft, Image as ImageIcon, Save, X } from 'lucide-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface Article {
     id: number;
@@ -68,15 +68,13 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
         !!(article.meta_title || article.meta_description || article.meta_keywords),
     );
 
-    useEffect(() => {
-        if (formData.title && !formData.slug) {
-            const slug = formData.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '');
-            setFormData((prev) => ({ ...prev, slug }));
-        }
-    }, [formData.title]);
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const title = e.target.value;
+        setFormData((prev) => ({
+            ...prev,
+            title,
+        }));
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -176,12 +174,7 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
                             <Input
                                 id="title"
                                 value={formData.title}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        title: e.target.value,
-                                    })
-                                }
+                                onChange={handleTitleChange}
                                 placeholder="Article title"
                             />
                             {errors.title && (

@@ -3,7 +3,6 @@ import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     Globe,
-    Layers,
     Package,
     Pencil,
 } from 'lucide-react';

@@ -1,6 +1,5 @@
 import ImageCropDialog from '@/components/ImageCropDialog';
 import { Combobox } from '@/components/ui/combobox';
-import { Switch } from '@/components/ui/switch';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -558,9 +557,94 @@ export default function EditProduct({
                         </div>
                     </div>
 
+                    {/* 3. Pricing & Inventory */}
+                    <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
+                        <h2 className="mb-4 text-lg font-semibold text-terra-900">
+                            Pricing & Inventory
+                        </h2>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                            <div>
+                                <label className={labelClass}>Price (Rp) *</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.price}
+                                    onChange={(e) => setData('price', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="e.g. 5000000"
+                                />
+                                {errors.price && (
+                                    <p className="mt-1 text-sm text-red-500">{errors.price}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Compare at Price (Rp)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.compare_price}
+                                    onChange={(e) => setData('compare_price', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="e.g. 6000000"
+                                />
+                                {errors.compare_price && (
+                                    <p className="mt-1 text-sm text-red-500">{errors.compare_price}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Cost per Item (Rp)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.cost_price}
+                                    onChange={(e) => setData('cost_price', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="e.g. 3500000"
+                                />
+                                {marginPercentage && (
+                                    <p className="mt-1.5 text-xs font-semibold text-emerald-600">
+                                        Gross Profit Margin: {marginPercentage}%
+                                    </p>
+                                )}
+                            </div>
+                            <div>
+                                <label className={labelClass}>Stock Quantity</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.stock_quantity}
+                                    onChange={(e) => setData('stock_quantity', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="0"
+                                />
+                            </div>
+                            <div>
+                                <label className={labelClass}>Low Stock Threshold</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.low_stock_threshold}
+                                    onChange={(e) => setData('low_stock_threshold', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="5"
+                                />
+                            </div>
+                            <div>
+                                <label className={labelClass}>Discount (%)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value={data.discount_percentage}
+                                    onChange={(e) => setData('discount_percentage', e.target.value)}
+                                    className={inputClass}
+                                    placeholder="0"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-
-                    {/* 3. Product Specifications */}
+                    {/* 4. Product Specifications */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
                             Product Specifications
@@ -895,6 +979,22 @@ export default function EditProduct({
                                     placeholder="Select status"
                                     searchPlaceholder="Search status..."
                                     emptyText="No status found."
+                                />
+                            </div>
+                            <div>
+                                <label className={labelClass}>Sale Type</label>
+                                <Combobox
+                                    options={saleTypes.map((s) => ({
+                                        value: s.value,
+                                        label: s.name,
+                                    }))}
+                                    value={data.sale_type}
+                                    onChange={(val) =>
+                                        setData('sale_type', val)
+                                    }
+                                    placeholder="Select sale type"
+                                    searchPlaceholder="Search sale type..."
+                                    emptyText="No sale type found."
                                 />
                             </div>
                         </div>
