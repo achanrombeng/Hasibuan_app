@@ -711,12 +711,27 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
     if (product.sku) {
         specList.push({ label: 'Kode Produk (SKU)', value: product.sku });
     }
-    if (product.specifications && typeof product.specifications === 'object') {
-        Object.entries(product.specifications).forEach(([key, value]) => {
-            if (value && !specList.some((s) => s.label.toLowerCase() === key.toLowerCase())) {
-                specList.push({ label: key, value: String(value) });
-            }
-        });
+    if (product.specifications) {
+        if (Array.isArray(product.specifications)) {
+            product.specifications.forEach((item: any) => {
+                if (item && typeof item === 'object' && item.key && item.value) {
+                    const k = String(item.key);
+                    const v = String(item.value);
+                    if (!specList.some((s) => s.label.toLowerCase() === k.toLowerCase())) {
+                        specList.push({ label: k, value: v });
+                    }
+                }
+            });
+        } else if (typeof product.specifications === 'object') {
+            Object.entries(product.specifications).forEach(([key, value]) => {
+                if (value) {
+                    const v = typeof value === 'object' && value !== null ? String((value as any).value || '') : String(value);
+                    if (v && !specList.some((s) => s.label.toLowerCase() === key.toLowerCase())) {
+                        specList.push({ label: key, value: v });
+                    }
+                }
+            });
+        }
     }
 
     return (

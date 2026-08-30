@@ -65,6 +65,24 @@ interface ShowProductProps {
 
 
 export default function ShowProduct({ product }: ShowProductProps) {
+    const specEntries = Array.isArray(product.specifications)
+        ? product.specifications
+              .map((item: any) =>
+                  typeof item === 'object' && item !== null && 'key' in item
+                      ? { key: String(item.key), value: String(item.value) }
+                      : { key: '', value: '' },
+              )
+              .filter((item) => item.key !== '')
+        : product.specifications && typeof product.specifications === 'object'
+          ? Object.entries(product.specifications).map(([key, value]) => ({
+                key,
+                value:
+                    typeof value === 'object' && value !== null
+                        ? String((value as any).value || '')
+                        : String(value),
+            }))
+          : [];
+
     return (
         <AdminLayout
             breadcrumbs={[
@@ -167,9 +185,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                             product.color ||
                             product.weight ||
                             product.dimensions ||
-                            (product.specifications &&
-                                Object.keys(product.specifications).length >
-                                    0)) && (
+                            specEntries.length > 0) && (
                             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                                 <h2 className="mb-4 text-lg font-semibold text-terra-900">
                                     Spesifikasi Produk
@@ -219,32 +235,28 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                             </div>
                                         )}
                                 </div>
-                                {product.specifications &&
-                                    Object.keys(product.specifications).length >
-                                        0 && (
-                                        <div className="mt-4 border-t border-terra-100 pt-4">
-                                            <p className="mb-2 text-sm font-medium text-terra-500">
-                                                Detail Spesifikasi Tambahan
-                                            </p>
-                                            <dl className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                                                {Object.entries(
-                                                    product.specifications,
-                                                ).map(([key, value]) => (
-                                                    <div
-                                                        key={key}
-                                                        className="flex gap-2 text-sm"
-                                                    >
-                                                        <dt className="min-w-[120px] text-terra-500">
-                                                            {key}
-                                                        </dt>
-                                                        <dd className="font-medium text-terra-900">
-                                                            {value}
-                                                        </dd>
-                                                    </div>
-                                                ))}
-                                            </dl>
-                                        </div>
-                                    )}
+                                {specEntries.length > 0 && (
+                                    <div className="mt-4 border-t border-terra-100 pt-4">
+                                        <p className="mb-2 text-sm font-medium text-terra-500">
+                                            Detail Spesifikasi Tambahan
+                                        </p>
+                                        <dl className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                            {specEntries.map(({ key, value }) => (
+                                                <div
+                                                    key={key}
+                                                    className="flex gap-2 text-sm"
+                                                >
+                                                    <dt className="min-w-[120px] text-terra-500">
+                                                        {key}
+                                                    </dt>
+                                                    <dd className="font-medium text-terra-900">
+                                                        {value}
+                                                    </dd>
+                                                </div>
+                                            ))}
+                                        </dl>
+                                    </div>
+                                )}
                             </div>
                         )}
 

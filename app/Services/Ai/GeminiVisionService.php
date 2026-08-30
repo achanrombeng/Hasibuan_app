@@ -26,7 +26,7 @@ class GeminiVisionService
         $this->apiKey = $dbKey !== '' ? $dbKey : (string) config('services.gemini.api_key', '');
 
         $dbModel = (string) Setting::get('ai_model', '');
-        $this->model = $dbModel !== '' ? $dbModel : (string) config('services.gemini.model', 'gemini-2.0-flash');
+        $this->model = $dbModel !== '' ? $dbModel : (string) config('services.gemini.model', 'gemini-3.6-flash');
 
         $this->baseUrl = rtrim((string) config('services.gemini.base_url'), '/');
         $this->timeout = (int) config('services.gemini.timeout', 30);

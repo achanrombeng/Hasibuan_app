@@ -113,12 +113,23 @@ export default function EditProduct({
     const [specifications, setSpecifications] = useState<
         { key: string; value: string }[]
     >(
-        product.specifications
-            ? Object.entries(product.specifications).map(([key, value]) => ({
-                  key,
-                  value,
-              }))
-            : [],
+        Array.isArray(product.specifications)
+            ? product.specifications
+                  .map((item: any) =>
+                      typeof item === 'object' && item !== null && 'key' in item
+                          ? { key: String(item.key), value: String(item.value) }
+                          : { key: '', value: '' },
+                  )
+                  .filter((s) => s.key !== '')
+            : product.specifications && typeof product.specifications === 'object'
+              ? Object.entries(product.specifications).map(([key, value]) => ({
+                    key,
+                    value:
+                        typeof value === 'object' && value !== null
+                            ? String((value as any).value || '')
+                            : String(value),
+                }))
+              : [],
     );
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);

@@ -24,7 +24,7 @@ class ProductResource extends JsonResource
             'slug' => $this->slug,
             'short_description' => $this->getTranslation('short_description', app()->getLocale(), true),
             'description' => $this->getTranslation('description', app()->getLocale(), true),
-            'specifications' => $this->specifications,
+            'specifications' => $this->normalizeSpecifications($this->specifications),
             'price' => $this->price,
             'price_formatted' => $this->formatted_price,
             'compare_price' => $this->compare_price,
@@ -97,5 +97,37 @@ class ProductResource extends JsonResource
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];
+    }
+
+    /**
+     * Normalize specifications attribute to a key-value associative array.
+     *
+     * @param  mixed  $specs
+     * @return array<string, string>|null
+     */
+    protected function normalizeSpecifications(mixed $specs): ?array
+    {
+        if (empty($specs) || ! is_array($specs)) {
+            return null;
+        }
+
+        $result = [];
+        foreach ($specs as $key => $val) {
+            if (is_array($val) && isset($val['key'], $val['value'])) {
+                $k = trim((string) $val['key']);
+                $v = trim((string) $val['value']);
+                if ($k !== '' && $v !== '') {
+                    $result[$k] = $v;
+                }
+            } elseif (is_string($key) && (is_string($val) || is_numeric($val))) {
+                $k = trim($key);
+                $v = trim((string) $val);
+                if ($k !== '' && $v !== '') {
+                    $result[$k] = $v;
+                }
+            }
+        }
+
+        return $result !== [] ? $result : null;
     }
 }
