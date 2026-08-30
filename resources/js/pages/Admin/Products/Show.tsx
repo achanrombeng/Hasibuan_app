@@ -171,13 +171,25 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 Deskripsi Produk
                             </h2>
                             {product.short_description && (
-                                <p className="mb-4 text-sm text-terra-500 italic">
-                                    {product.short_description}
+                                <div
+                                    className="mb-4 text-sm text-terra-500 italic prose prose-sm max-w-none"
+                                    dangerouslySetInnerHTML={{
+                                        __html: product.short_description,
+                                    }}
+                                />
+                            )}
+                            {product.description ? (
+                                <div
+                                    className="prose prose-neutral max-w-none leading-relaxed text-terra-700 space-y-3"
+                                    dangerouslySetInnerHTML={{
+                                        __html: product.description,
+                                    }}
+                                />
+                            ) : (
+                                <p className="leading-relaxed text-terra-600">
+                                    Tidak ada deskripsi
                                 </p>
                             )}
-                            <p className="leading-relaxed text-terra-600">
-                                {product.description || 'Tidak ada deskripsi'}
-                            </p>
                         </div>
 
                         {/* Spesifikasi & Atribut */}

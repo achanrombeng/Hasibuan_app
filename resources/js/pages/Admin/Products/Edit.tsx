@@ -3,6 +3,7 @@ import { Combobox } from '@/components/ui/combobox';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import MDEditor from '@uiw/react-md-editor';
 import {
     ArrowLeft,
     Crop,
@@ -317,15 +318,6 @@ export default function EditProduct({
         );
     };
 
-    const marginPercentage =
-        data.price && data.cost_price
-            ? (
-                  ((Number(data.price) - Number(data.cost_price)) /
-                      Number(data.price)) *
-                  100
-              ).toFixed(1)
-            : null;
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -535,18 +527,19 @@ export default function EditProduct({
                                 <label className={labelClass}>
                                     Short Description
                                 </label>
-                                <textarea
-                                    value={data.short_description}
-                                    onChange={(e) =>
-                                        setData(
-                                            'short_description',
-                                            e.target.value.slice(0, 500),
-                                        )
-                                    }
-                                    rows={2}
-                                    className={inputClass + ' resize-none'}
-                                    placeholder="Brief summary about the product..."
-                                />
+                                <div data-color-mode="light">
+                                    <MDEditor
+                                        value={data.short_description}
+                                        onChange={(val) =>
+                                            setData(
+                                                'short_description',
+                                                (val || '').slice(0, 500),
+                                            )
+                                        }
+                                        height={180}
+                                        preview="edit"
+                                    />
+                                </div>
                                 <p className="mt-1 text-right text-xs text-terra-400">
                                     {data.short_description.length}/500
                                 </p>
@@ -555,102 +548,16 @@ export default function EditProduct({
                                 <label className={labelClass}>
                                     Full Description
                                 </label>
-                                <textarea
-                                    value={data.description}
-                                    onChange={(e) =>
-                                        setData('description', e.target.value)
-                                    }
-                                    rows={5}
-                                    className={inputClass + ' resize-none'}
-                                    placeholder="Detailed product description..."
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 3. Pricing & Inventory */}
-                    <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-                        <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                            Pricing & Inventory
-                        </h2>
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                            <div>
-                                <label className={labelClass}>Price (Rp) *</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={data.price}
-                                    onChange={(e) => setData('price', e.target.value)}
-                                    className={inputClass}
-                                    placeholder="e.g. 5000000"
-                                />
-                                {errors.price && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.price}</p>
-                                )}
-                            </div>
-                            <div>
-                                <label className={labelClass}>Compare at Price (Rp)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={data.compare_price}
-                                    onChange={(e) => setData('compare_price', e.target.value)}
-                                    className={inputClass}
-                                    placeholder="e.g. 6000000"
-                                />
-                                {errors.compare_price && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.compare_price}</p>
-                                )}
-                            </div>
-                            <div>
-                                <label className={labelClass}>Cost per Item (Rp)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={data.cost_price}
-                                    onChange={(e) => setData('cost_price', e.target.value)}
-                                    className={inputClass}
-                                    placeholder="e.g. 3500000"
-                                />
-                                {marginPercentage && (
-                                    <p className="mt-1.5 text-xs font-semibold text-emerald-600">
-                                        Gross Profit Margin: {marginPercentage}%
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label className={labelClass}>Stock Quantity</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={data.stock_quantity}
-                                    onChange={(e) => setData('stock_quantity', e.target.value)}
-                                    className={inputClass}
-                                    placeholder="0"
-                                />
-                            </div>
-                            <div>
-                                <label className={labelClass}>Low Stock Threshold</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={data.low_stock_threshold}
-                                    onChange={(e) => setData('low_stock_threshold', e.target.value)}
-                                    className={inputClass}
-                                    placeholder="5"
-                                />
-                            </div>
-                            <div>
-                                <label className={labelClass}>Discount (%)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    value={data.discount_percentage}
-                                    onChange={(e) => setData('discount_percentage', e.target.value)}
-                                    className={inputClass}
-                                    placeholder="0"
-                                />
+                                <div data-color-mode="light">
+                                    <MDEditor
+                                        value={data.description}
+                                        onChange={(val) =>
+                                            setData('description', val || '')
+                                        }
+                                        height={350}
+                                        preview="edit"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
