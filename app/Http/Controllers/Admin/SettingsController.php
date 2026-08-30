@@ -37,6 +37,9 @@ class SettingsController extends Controller
                 'facebook_url' => $settings['facebook_url'] ?? '',
                 'instagram_url' => $settings['instagram_url'] ?? '',
                 'tiktok_url' => $settings['tiktok_url'] ?? '',
+                'catalog_pdf_url' => array_key_exists('catalog_pdf_url', $settings) ? ($settings['catalog_pdf_url'] ?? '') : '/catalogs/ronica-catalog-2026.pdf',
+                'catalog_docx_url' => array_key_exists('catalog_docx_url', $settings) ? ($settings['catalog_docx_url'] ?? '') : '/catalogs/ronica-catalog-2026.docx',
+                'catalog_title' => $settings['catalog_title'] ?? 'Ronica Product Catalogue 2026',
             ],
         ]);
     }
@@ -60,6 +63,14 @@ class SettingsController extends Controller
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'instagram_url' => ['nullable', 'url', 'max:255'],
             'tiktok_url' => ['nullable', 'url', 'max:255'],
+            'catalog_title' => ['nullable', 'string', 'max:255'],
+            'catalog_pdf_url' => ['nullable', 'string', 'max:500'],
+            'catalog_docx_url' => ['nullable', 'string', 'max:500'],
+            'catalog_file' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:51200'],
+            'catalog_pdf_file' => ['nullable', 'file', 'mimes:pdf', 'max:51200'],
+            'catalog_docx_file' => ['nullable', 'file', 'mimes:doc,docx', 'max:51200'],
+            'delete_catalog_pdf' => ['nullable', 'boolean'],
+            'delete_catalog_docx' => ['nullable', 'boolean'],
         ]);
 
         if ($request->hasFile('site_logo_file')) {
@@ -68,6 +79,42 @@ class SettingsController extends Controller
             $validated['site_logo'] = '/storage/'.$path;
         }
         unset($validated['site_logo_file']);
+
+        if ($request->hasFile('catalog_file')) {
+            $file = $request->file('catalog_file');
+            $ext = strtolower($file->getClientOriginalExtension());
+            $path = $file->store('catalogs', 'public');
+            if ($ext === 'pdf') {
+                $validated['catalog_pdf_url'] = '/storage/'.$path;
+            } else {
+                $validated['catalog_docx_url'] = '/storage/'.$path;
+            }
+        }
+        unset($validated['catalog_file']);
+
+        if ($request->boolean('delete_catalog_pdf')) {
+            $validated['catalog_pdf_url'] = '';
+        }
+        unset($validated['delete_catalog_pdf']);
+
+        if ($request->hasFile('catalog_pdf_file')) {
+            $file = $request->file('catalog_pdf_file');
+            $path = $file->store('catalogs', 'public');
+            $validated['catalog_pdf_url'] = '/storage/'.$path;
+        }
+        unset($validated['catalog_pdf_file']);
+
+        if ($request->boolean('delete_catalog_docx')) {
+            $validated['catalog_docx_url'] = '';
+        }
+        unset($validated['delete_catalog_docx']);
+
+        if ($request->hasFile('catalog_docx_file')) {
+            $file = $request->file('catalog_docx_file');
+            $path = $file->store('catalogs', 'public');
+            $validated['catalog_docx_url'] = '/storage/'.$path;
+        }
+        unset($validated['catalog_docx_file']);
 
         foreach ($validated as $key => $value) {
             Setting::updateOrCreate(
@@ -82,6 +129,43 @@ class SettingsController extends Controller
         Cache::forget('site_settings.en');
 
         return back()->with('success', __('messages.settings_saved'));
+    }
+
+    /**
+     * Delete uploaded catalog file immediately
+     */
+    public function deleteCatalog(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'type' => ['required', 'string', 'in:pdf,docx,all'],
+        ]);
+
+        $type = $request->input('type');
+
+        if ($type === 'pdf' || $type === 'all') {
+            $pdfUrl = Setting::where('key', 'catalog_pdf_url')->value('value');
+            if ($pdfUrl && str_starts_with($pdfUrl, '/storage/')) {
+                $storagePath = str_replace('/storage/', '', $pdfUrl);
+                Storage::disk('public')->delete($storagePath);
+            }
+            Setting::updateOrCreate(['key' => 'catalog_pdf_url'], ['value' => '']);
+        }
+
+        if ($type === 'docx' || $type === 'all') {
+            $docxUrl = Setting::where('key', 'catalog_docx_url')->value('value');
+            if ($docxUrl && str_starts_with($docxUrl, '/storage/')) {
+                $storagePath = str_replace('/storage/', '', $docxUrl);
+                Storage::disk('public')->delete($storagePath);
+            }
+            Setting::updateOrCreate(['key' => 'catalog_docx_url'], ['value' => '']);
+        }
+
+        // Clear site settings cache
+        Cache::forget('site_settings');
+        Cache::forget('site_settings.id');
+        Cache::forget('site_settings.en');
+
+        return back()->with('success', 'Catalog document removed successfully.');
     }
 
     /**

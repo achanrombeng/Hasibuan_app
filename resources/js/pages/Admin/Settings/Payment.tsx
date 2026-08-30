@@ -62,23 +62,15 @@ export default function PaymentSettings({
     >
       <Head title="Pengaturan Pembayaran" />
 
-      <div className="mx-auto max-w-6xl space-y-6">
+      <div className="w-full space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/admin/settings"
-            className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-900">
-              Pengaturan Pembayaran
-            </h1>
-            <p className="mt-1 text-neutral-500">
-              Kelola metode pembayaran yang tersedia
-            </p>
-          </div>
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-900">
+            Pengaturan Pembayaran
+          </h1>
+          <p className="mt-1 text-neutral-500">
+            Kelola metode pembayaran yang tersedia
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

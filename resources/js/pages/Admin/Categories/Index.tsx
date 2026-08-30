@@ -16,6 +16,7 @@ import {
     Filter,
     FolderTree,
     Layers,
+    Package,
     Pencil,
     Plus,
     Search,
@@ -126,23 +127,6 @@ function CategoryTreeItem({
                             </p>
                         )}
                     </div>
-                </div>
-
-                {/* Status Badges */}
-                <div className="hidden items-center gap-2 md:flex">
-                    <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium ${category.is_active
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                            }`}
-                    >
-                        {category.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                    {category.is_featured && (
-                        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">
-                            Featured
-                        </span>
-                    )}
                 </div>
 
                 {/* Actions */}
@@ -302,13 +286,12 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
         setExpandedItems(new Set());
     };
 
-    // Count stats from the hierarchical data
-    const parentCategoriesCount = categoryData.length;
-    const childCategoriesCount = categoryData.reduce(
-        (acc, cat) => acc + (cat.children?.length || 0),
+    // Count stats from categories data
+    const totalCategories = categoryData.length;
+    const totalProductsCount = categoryData.reduce(
+        (acc, cat) => acc + (cat.products_count || 0),
         0,
     );
-    const totalCategories = parentCategoriesCount + childCategoriesCount;
 
     return (
         <AdminLayout
@@ -337,7 +320,8 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {/* Total Categories */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
                         <div className="flex items-center gap-3">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-terra-100">
@@ -353,32 +337,19 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             </div>
                         </div>
                     </div>
+
+                    {/* Total Products Linked */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
                         <div className="flex items-center gap-3">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wood/10">
-                                <FolderTree className="h-5 w-5 text-wood" />
+                                <Package className="h-5 w-5 text-wood" />
                             </div>
                             <div>
                                 <p className="text-2xl font-bold text-terra-900">
-                                    {parentCategoriesCount}
+                                    {totalProductsCount}
                                 </p>
                                 <p className="text-sm text-terra-500">
-                                    Main Categories
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100">
-                                <Layers className="h-5 w-5 text-teal-600" />
-                            </div>
-                            <div>
-                                <p className="text-2xl font-bold text-terra-900">
-                                    {childCategoriesCount}
-                                </p>
-                                <p className="text-sm text-terra-500">
-                                    Sub-Categories
+                                    Total Products Assigned
                                 </p>
                             </div>
                         </div>
@@ -386,7 +357,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                 </div>
 
                 {/* Search & Filter Bar */}
-                <div className="rounded-2xl border border-neutral-100 bg-white p-4 shadow-sm md:p-6">
+                <div className="rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm">
                     <form
                         onSubmit={(e) => e.preventDefault()}
                         className="flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -402,37 +373,24 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             />
                         </div>
                         <div className="flex items-center gap-2.5">
-                            <div className="relative">
-                                <Filter className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-500" />
+                            <div className="relative inline-flex items-center">
+                                <Filter className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
                                 <select
+                                    aria-label="Filter"
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value as 'name_asc' | 'name_desc' | 'newest' | 'oldest')}
-                                    className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pr-8 pl-9 text-sm font-medium text-neutral-700 shadow-sm transition-all hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                    className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pl-9.5 pr-8 text-sm font-medium text-neutral-700 shadow-sm transition-colors hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
                                 >
-                                    <option value="name_asc">Sort by: A - Z</option>
-                                    <option value="name_desc">Sort by: Z - A</option>
-                                    <option value="newest">Sort by: Newest</option>
-                                    <option value="oldest">Sort by: Oldest</option>
+                                    <option value="name_asc">A-Z</option>
+                                    <option value="name_desc">Z-A</option>
+                                    <option value="newest">Newest</option>
+                                    <option value="oldest">Latest</option>
                                 </select>
-                                <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             </div>
                             <button
-                                type="button"
-                                onClick={expandAll}
-                                className="hidden sm:inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-700 shadow-sm hover:bg-neutral-50"
-                            >
-                                Expand All
-                            </button>
-                            <button
-                                type="button"
-                                onClick={collapseAll}
-                                className="hidden sm:inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-medium text-neutral-700 shadow-sm hover:bg-neutral-50"
-                            >
-                                Collapse All
-                            </button>
-                            <button
                                 type="submit"
-                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98] cursor-pointer"
                             >
                                 Search
                             </button>

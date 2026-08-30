@@ -9,8 +9,10 @@ import {
 } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+import { CatalogModal } from '@/components/shop/CatalogModal';
 import {
     ArrowRight,
+    BookOpen,
     ChevronDown,
     ChevronLeft,
     ChevronRight,
@@ -102,7 +104,7 @@ export default function ProductsIndex({
             ? (currentCategory as any).data
             : currentCategory;
 
-    const INITIAL_CATEGORY_LIMIT = 8;
+    const INITIAL_CATEGORY_LIMIT = 4;
     const [visibleCategoryCount, setVisibleCategoryCount] = useState(INITIAL_CATEGORY_LIMIT);
 
     const visibleCategories = useMemo(() => {
@@ -111,6 +113,7 @@ export default function ProductsIndex({
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [showFilters, setShowFilters] = useState(false);
+    const [catalogModalOpen, setCatalogModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(
         safeFilters.filter?.name || '',
     );
@@ -285,9 +288,11 @@ export default function ProductsIndex({
                         <div className="mb-14">
                             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                                 <div>
-                                    <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-teal-50 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-teal-700">
-                                        <Layers size={14} />
-                                        <span>Product Categories</span>
+                                    <div className="flex flex-wrap items-center gap-2.5 mb-2">
+                                        <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-teal-700">
+                                            <Layers size={14} />
+                                            <span>Product Categories</span>
+                                        </div>
                                     </div>
                                     <h2 className="font-serif text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl">
                                         Explore by Category
@@ -296,15 +301,28 @@ export default function ProductsIndex({
                                         Select a furniture category to view our curated collection
                                     </p>
                                 </div>
-                                {selectedCategory && (
-                                    <Link
-                                        href="/shop/products"
-                                        className="inline-flex items-center gap-1.5 text-sm font-medium text-teal-600 transition-colors hover:text-teal-700 hover:underline"
+
+                                <div className="flex flex-wrap items-center gap-3">
+                                    {/* Action Button: E-Catalog PDF / Word */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setCatalogModalOpen(true)}
+                                        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-xs font-semibold text-white shadow-md transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-lg active:scale-95 cursor-pointer"
                                     >
-                                        <span>View All Products</span>
-                                        <ArrowRight size={16} />
-                                    </Link>
-                                )}
+                                        <BookOpen size={16} />
+                                        <span>E-CATALOG</span>
+                                    </button>
+
+                                    {selectedCategory && (
+                                        <Link
+                                            href="/shop/products"
+                                            className="inline-flex items-center gap-1.5 text-sm font-medium text-teal-600 transition-colors hover:text-teal-700 hover:underline"
+                                        >
+                                            <span>View All Products</span>
+                                            <ArrowRight size={16} />
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Category Cards Grid */}
@@ -313,7 +331,7 @@ export default function ProductsIndex({
                                     const isSelected =
                                         selectedCategory === Number(cat.id) ||
                                         (normalizedCurrentCategory &&
-                                             Number(normalizedCurrentCategory.id) === Number(cat.id));
+                                            Number(normalizedCurrentCategory.id) === Number(cat.id));
                                     const bgImage = getCategoryImageUrl(cat);
                                     const targetHref = isSelected
                                         ? '/shop/products'
@@ -323,11 +341,10 @@ export default function ProductsIndex({
                                         <Link
                                             key={cat.id}
                                             href={targetHref}
-                                            className={`group relative overflow-hidden rounded-2xl bg-neutral-900 text-left transition-all duration-400 ${
-                                                isSelected
-                                                    ? 'ring-4 ring-teal-500 shadow-2xl scale-[1.02]'
-                                                    : 'hover:-translate-y-1.5 hover:shadow-xl'
-                                            }`}
+                                            className={`group relative overflow-hidden rounded-2xl bg-neutral-900 text-left transition-all duration-400 ${isSelected
+                                                ? 'ring-4 ring-teal-500 shadow-2xl scale-[1.02]'
+                                                : 'hover:-translate-y-1.5 hover:shadow-xl'
+                                                }`}
                                         >
                                             <div className="relative aspect-[4/3] w-full overflow-hidden">
                                                 <img
@@ -374,7 +391,7 @@ export default function ProductsIndex({
                                             type="button"
                                             onClick={() =>
                                                 setVisibleCategoryCount((prev) =>
-                                                    Math.min(prev + 8, normalizedCategories.length),
+                                                    Math.min(prev + 4, normalizedCategories.length),
                                                 )
                                             }
                                             className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-7 py-3 text-sm font-semibold text-neutral-800 shadow-xs transition-all hover:border-teal-500 hover:bg-teal-50/60 hover:text-teal-700 active:scale-95 cursor-pointer"
@@ -540,6 +557,13 @@ export default function ProductsIndex({
                     }}
                     onClear={clearFilters}
                     hasActiveFilters={!!hasActiveFilters}
+                />
+                {/* Product Catalog Modal */}
+                <CatalogModal
+                    isOpen={catalogModalOpen}
+                    onClose={() => setCatalogModalOpen(false)}
+                    pdfUrl={siteSettings?.catalog_pdf_url}
+                    docxUrl={siteSettings?.catalog_docx_url}
                 />
             </ShopLayout>
         </>
@@ -901,8 +925,8 @@ function ProductCard({
                                     onClick={handleWishlistToggle}
                                     disabled={isTogglingWishlist}
                                     className={`rounded-sm border p-3 transition-colors disabled:cursor-not-allowed ${isWishlisted
-                                            ? 'border-red-200 bg-red-50 text-red-500'
-                                            : 'border-neutral-200 hover:border-neutral-900'
+                                        ? 'border-red-200 bg-red-50 text-red-500'
+                                        : 'border-neutral-200 hover:border-neutral-900'
                                         }`}
                                 >
                                     {isTogglingWishlist ? (
@@ -953,8 +977,8 @@ function ProductCard({
                             onClick={handleWishlistToggle}
                             disabled={isTogglingWishlist}
                             className={`rounded-sm p-3 shadow-md backdrop-blur-sm transition-colors disabled:cursor-not-allowed ${isWishlisted
-                                    ? 'bg-red-50 text-red-500'
-                                    : 'bg-white/95 text-neutral-900 hover:bg-white'
+                                ? 'bg-red-50 text-red-500'
+                                : 'bg-white/95 text-neutral-900 hover:bg-white'
                                 }`}
                         >
                             {isTogglingWishlist ? (
@@ -1054,8 +1078,8 @@ function Pagination({ meta }: PaginationProps) {
                             key={i}
                             onClick={() => goToPage(page)}
                             className={`h-10 w-10 rounded-sm font-medium transition-colors ${page === current
-                                    ? 'bg-teal-500 text-white'
-                                    : 'border border-neutral-200 hover:border-neutral-900'
+                                ? 'bg-teal-500 text-white'
+                                : 'border border-neutral-200 hover:border-neutral-900'
                                 }`}
                         >
                             {page}

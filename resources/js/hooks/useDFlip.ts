@@ -229,9 +229,18 @@ const useDFlip = (
                     containerRef.current.dataset.dflipInitialized = 'true';
 
                     // Initialize dFlip
-                    flipbookRef.current = window
+                    const instance = window
                         .jQuery(containerRef.current)
                         .flipBook(pdfURL, mergedOptions);
+                    flipbookRef.current = instance;
+
+                    // Trigger initial resize after slight delay to ensure stage alignment
+                    setTimeout(() => {
+                        if (instance && typeof instance.resize === 'function') {
+                            instance.resize();
+                        }
+                        window.dispatchEvent(new Event('resize'));
+                    }, 100);
                 }
             } catch (error) {
                 console.error('Error loading dFlip:', error);
@@ -240,8 +249,25 @@ const useDFlip = (
 
         initFlipbook();
 
+        // Setup ResizeObserver to keep flipbook centered on size/fullscreen changes
+        let resizeObserver: ResizeObserver | null = null;
+        if (containerRef.current && typeof ResizeObserver !== 'undefined') {
+            resizeObserver = new ResizeObserver(() => {
+                if (flipbookRef.current && typeof flipbookRef.current.resize === 'function') {
+                    flipbookRef.current.resize();
+                } else {
+                    window.dispatchEvent(new Event('resize'));
+                }
+            });
+            resizeObserver.observe(containerRef.current);
+        }
+
         // Cleanup function
         return () => {
+            if (resizeObserver) {
+                resizeObserver.disconnect();
+            }
+
             if (flipbookRef.current && flipbookRef.current.dispose) {
                 flipbookRef.current.dispose();
 

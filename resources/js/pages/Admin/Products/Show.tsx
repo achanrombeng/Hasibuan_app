@@ -86,7 +86,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Produk', href: '/admin/products' },
+                { title: 'Products', href: '/admin/products' },
                 {
                     title: product.name,
                     href: `/admin/products/${product.id}`,
@@ -95,7 +95,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
         >
             <Head title={product.name} />
 
-            <div className="space-y-6">
+            <div className="w-full space-y-6">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-4">
@@ -119,7 +119,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                         className="inline-flex items-center gap-2 rounded-xl bg-terra-900 px-4 py-2.5 font-medium text-white transition-all hover:bg-wood-dark"
                     >
                         <Pencil className="h-4 w-4" />
-                        Edit Produk
+                        Edit Product
                     </Link>
                 </div>
 
@@ -129,7 +129,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                         {/* Product Images */}
                         <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                             <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                Gambar Produk
+                                Product Images
                             </h2>
                             {product.images && product.images.length > 0 ? (
                                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -150,7 +150,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                             />
                                             {image.is_primary && (
                                                 <span className="absolute top-2 left-2 rounded-md bg-terra-900 px-2 py-1 text-xs text-white">
-                                                    Utama
+                                                    Primary
                                                 </span>
                                             )}
                                         </div>
@@ -160,7 +160,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 <div className="flex h-40 items-center justify-center rounded-xl bg-terra-50">
                                     <div className="text-center text-terra-400">
                                         <Package className="mx-auto mb-2 h-12 w-12" />
-                                        <p>Tidak ada gambar</p>
+                                        <p>No images available</p>
                                     </div>
                                 </div>
                             )}
@@ -168,7 +168,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
 
                         <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                             <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                Deskripsi Produk
+                                Product Description
                             </h2>
                             {product.short_description && (
                                 <div
@@ -187,12 +187,12 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 />
                             ) : (
                                 <p className="leading-relaxed text-terra-600">
-                                    Tidak ada deskripsi
+                                    No description provided
                                 </p>
                             )}
                         </div>
 
-                        {/* Spesifikasi & Atribut */}
+                        {/* Specifications & Attributes */}
                         {(product.material ||
                             product.color ||
                             product.weight ||
@@ -200,7 +200,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                             specEntries.length > 0) && (
                             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                                 <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                    Spesifikasi Produk
+                                    Product Specifications
                                 </h2>
                                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                                     {product.material && (
@@ -216,7 +216,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                     {product.color && (
                                         <div>
                                             <p className="text-sm text-terra-500">
-                                                Warna
+                                                Color
                                             </p>
                                             <p className="font-medium text-terra-900">
                                                 {product.color}
@@ -226,7 +226,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                     {product.weight && (
                                         <div>
                                             <p className="text-sm text-terra-500">
-                                                Berat
+                                                Weight
                                             </p>
                                             <p className="font-medium text-terra-900">
                                                 {product.weight} kg
@@ -239,10 +239,10 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                             product.dimensions.height) && (
                                             <div>
                                                 <p className="text-sm text-terra-500">
-                                                    Dimensi (P x L x T)
+                                                    Dimensions (L × W × H)
                                                 </p>
                                                 <p className="font-medium text-terra-900">
-                                                    {`${product.dimensions.length || 0} x ${product.dimensions.width || 0} x ${product.dimensions.height || 0} cm`}
+                                                    {`${product.dimensions.length || 0} × ${product.dimensions.width || 0} × ${product.dimensions.height || 0} cm`}
                                                 </p>
                                             </div>
                                         )}
@@ -250,7 +250,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 {specEntries.length > 0 && (
                                     <div className="mt-4 border-t border-terra-100 pt-4">
                                         <p className="mb-2 text-sm font-medium text-terra-500">
-                                            Detail Spesifikasi Tambahan
+                                            Additional Specifications
                                         </p>
                                         <dl className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                             {specEntries.map(({ key, value }) => (
@@ -337,12 +337,12 @@ export default function ShowProduct({ product }: ShowProductProps) {
                     <div className="space-y-6">
                         <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                             <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                Organisasi & Status
+                                Organization & Status
                             </h2>
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
                                     <span className="text-terra-600">
-                                        Kategori
+                                        Category
                                     </span>
                                     <span className="rounded-full bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-700">
                                         {product.category?.name || '-'}
@@ -350,7 +350,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-terra-600">
-                                        Status Produk
+                                        Product Status
                                     </span>
                                     <span
                                         className={`rounded-full px-2.5 py-1 text-xs font-medium ${product.status.value === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
@@ -362,7 +362,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 {product.discount_percentage && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-terra-600">
-                                            Diskon
+                                            Discount
                                         </span>
                                         <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
                                             {product.discount_percentage}%
@@ -374,17 +374,17 @@ export default function ShowProduct({ product }: ShowProductProps) {
 
                         <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                             <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                                Tanggal
+                                Timestamps
                             </h2>
                             <div className="space-y-3 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-terra-500">
-                                        Dibuat
+                                        Created
                                     </span>
                                     <span className="text-terra-900">
                                         {new Date(
                                             product.created_at,
-                                        ).toLocaleDateString('id-ID', {
+                                        ).toLocaleDateString('en-US', {
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric',
@@ -393,12 +393,12 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-terra-500">
-                                        Diperbarui
+                                        Updated
                                     </span>
                                     <span className="text-terra-900">
                                         {new Date(
                                             product.updated_at,
-                                        ).toLocaleDateString('id-ID', {
+                                        ).toLocaleDateString('en-US', {
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric',

@@ -1,7 +1,10 @@
+import { SiteSettings } from '@/types';
 import { ApiCategory } from '@/types/shop';
+import { usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { CatalogModal } from '../CatalogModal';
 
 interface CategoriesSectionProps {
   categories?: ApiCategory[];
@@ -132,8 +135,10 @@ const DEFAULT_SHOWCASE_ITEMS: ShowcaseSlide[] = [
 ];
 
 export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
-  categories,
+  categories = [],
 }) => {
+  const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
+  const [catalogModalOpen, setCatalogModalOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -196,9 +201,20 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
         <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
           {/* Left Column: Category Menu List ("Products") */}
           <div className="flex flex-col justify-start lg:col-span-3">
-            <h2 className="mb-6 border-b border-neutral-200/80 pb-2 font-serif text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl">
-              Products
-            </h2>
+            <div className="mb-6 flex items-center justify-between border-b border-neutral-200/80 pb-2">
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl">
+                Products
+              </h2>
+              <button
+                type="button"
+                onClick={() => setCatalogModalOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-md active:scale-95 cursor-pointer"
+                title="Buka & Preview E-Katalog Produk (PDF / 3D Flipbook)"
+              >
+                <BookOpen size={14} />
+                <span>E-CATALOG</span>
+              </button>
+            </div>
 
             {/* Category Navigation List */}
             <div
@@ -213,17 +229,16 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                     key={item.id}
                     onClick={() => setActiveIndex(index)}
                     onMouseEnter={() => setActiveIndex(index)}
-                    className={`group relative flex items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal ${
-                      isActive
+                    className={`group relative flex items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal ${isActive
                         ? 'pl-4 font-semibold text-neutral-900 lg:pl-3'
                         : 'font-normal text-neutral-500 hover:pl-2 hover:text-neutral-800'
-                    }`}
+                      }`}
                   >
                     {/* Active Bar Indicator */}
                     {isActive && (
                       <motion.div
                         layoutId="activeCategoryBar"
-                        className="absolute top-1/2 left-0 hidden h-6 w-1.5 -translate-y-1/2 rounded-r-sm bg-[#7c926a] lg:block"
+                        className="absolute top-1/2 left-0 hidden h-6 w-1.5 -translate-y-1/2 rounded-r-sm bg-teal-500 lg:block"
                         transition={{
                           type: 'spring',
                           stiffness: 300,
@@ -238,11 +253,10 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
 
                     <ArrowRight
                       size={15}
-                      className={`hidden transition-all duration-300 lg:block ${
-                        isActive
+                      className={`hidden transition-all duration-300 lg:block ${isActive
                           ? 'translate-x-0 text-[#7c926a] opacity-100'
                           : '-translate-x-2 opacity-0 group-hover:opacity-60'
-                      }`}
+                        }`}
                     />
                   </button>
                 );
@@ -302,11 +316,10 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                   <button
                     key={idx}
                     onClick={() => setActiveIndex(idx)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      idx === activeIndex
+                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeIndex
                         ? 'w-8 bg-white'
                         : 'w-2 bg-white/50 hover:bg-white/80'
-                    }`}
+                      }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
@@ -315,6 +328,14 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Interactive E-Catalog Modal */}
+      <CatalogModal
+        isOpen={catalogModalOpen}
+        onClose={() => setCatalogModalOpen(false)}
+        pdfUrl={siteSettings?.catalog_pdf_url}
+        docxUrl={siteSettings?.catalog_docx_url}
+      />
     </section>
   );
 };

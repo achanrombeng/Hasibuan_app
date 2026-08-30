@@ -867,41 +867,23 @@ export default function CreateProduct({
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
                             Publishing Status
                         </h2>
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                            <div>
-                                <label className={labelClass}>
-                                    Product Publication Status
-                                </label>
-                                <Combobox
-                                    options={statuses.map((s) => ({
-                                        value: s.value,
-                                        label: s.name,
-                                    }))}
-                                    value={data.status}
-                                    onChange={(val) =>
-                                        setData('status', val)
-                                    }
-                                    placeholder="Select status"
-                                    searchPlaceholder="Search status..."
-                                    emptyText="No status found."
-                                />
-                            </div>
-                            <div>
-                                <label className={labelClass}>Sale Type</label>
-                                <Combobox
-                                    options={saleTypes.map((s) => ({
-                                        value: s.value,
-                                        label: s.name,
-                                    }))}
-                                    value={data.sale_type}
-                                    onChange={(val) =>
-                                        setData('sale_type', val)
-                                    }
-                                    placeholder="Select sale type"
-                                    searchPlaceholder="Search sale type..."
-                                    emptyText="No sale type found."
-                                />
-                            </div>
+                        <div>
+                            <label className={labelClass}>
+                                Product Publication Status
+                            </label>
+                            <Combobox
+                                options={statuses.filter((s) => ['active', 'draft'].includes(s.value)).map((s) => ({
+                                    value: s.value,
+                                    label: s.name,
+                                }))}
+                                value={data.status}
+                                onChange={(val) =>
+                                    setData('status', val)
+                                }
+                                placeholder="Select status"
+                                searchPlaceholder="Search status..."
+                                emptyText="No status found."
+                            />
                         </div>
                     </div>
 

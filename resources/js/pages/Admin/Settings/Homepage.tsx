@@ -23,6 +23,7 @@ import {
   Users,
   X,
 } from 'lucide-react';
+import MDEditor from '@uiw/react-md-editor';
 import { useCallback, useRef, useState } from 'react';
 
 interface CarouselBanner {
@@ -672,24 +673,16 @@ export default function HomepageSettings({
     >
       <Head title="Homepage Settings" />
 
-      <div className="mx-auto max-w-6xl space-y-6">
+      <div className="w-full space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/settings"
-              className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-neutral-900">
-                Homepage Settings
-              </h1>
-              <p className="mt-1 text-neutral-500">
-                Manage the look and content of your storefront homepage
-              </p>
-            </div>
+          <div>
+            <h1 className="text-2xl font-bold text-neutral-900">
+              Homepage Settings
+            </h1>
+            <p className="mt-1 text-neutral-500">
+              Manage the look and content of your storefront homepage
+            </p>
           </div>
         </div>
 
@@ -1270,15 +1263,16 @@ export default function HomepageSettings({
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
                       Row 1 Description
                     </label>
-                    <textarea
-                      value={data.craftsmanship_desc_1}
-                      onChange={(e) =>
-                        setData('craftsmanship_desc_1', e.target.value)
-                      }
-                      rows={3}
-                      placeholder="Hand-woven traditional rattan forms the soul of Ronica furniture..."
-                      className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                    />
+                    <div data-color-mode="light">
+                      <MDEditor
+                        value={data.craftsmanship_desc_1}
+                        onChange={(val) =>
+                          setData('craftsmanship_desc_1', val || '')
+                        }
+                        height={180}
+                        preview="edit"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -1385,15 +1379,16 @@ export default function HomepageSettings({
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
                       Row 2 Description
                     </label>
-                    <textarea
-                      value={data.craftsmanship_desc_2}
-                      onChange={(e) =>
-                        setData('craftsmanship_desc_2', e.target.value)
-                      }
-                      rows={3}
-                      placeholder="The premium teak wood used in our furniture is one of nature's..."
-                      className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                    />
+                    <div data-color-mode="light">
+                      <MDEditor
+                        value={data.craftsmanship_desc_2}
+                        onChange={(val) =>
+                          setData('craftsmanship_desc_2', val || '')
+                        }
+                        height={180}
+                        preview="edit"
+                      />
+                    </div>
                   </div>
                 </div>
 

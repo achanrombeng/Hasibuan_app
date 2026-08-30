@@ -115,16 +115,19 @@ export default function CreateArticle({ statuses }: CreateArticleProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href="/admin/articles">
-                            <Button variant="outline" size="sm" type="button">
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back
-                            </Button>
+                        <Link
+                            href="/admin/articles"
+                            className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100"
+                        >
+                            <ArrowLeft className="h-5 w-5" />
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
-                                Add Article
+                            <h1 className="text-2xl font-bold text-neutral-900">
+                                Add New Article
                             </h1>
+                            <p className="mt-1 text-neutral-500">
+                                Write and publish a new article for your blog
+                            </p>
                         </div>
                     </div>
                 </div>

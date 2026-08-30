@@ -57,10 +57,10 @@ class ProductController extends Controller implements HasMiddleware
             'products' => ProductResource::collection($products),
             'categories' => CategoryResource::collection($categories),
             'filters' => $request->only(['filter', 'sort']),
-            'statuses' => collect(ProductStatus::cases())->map(fn ($status) => [
-                'value' => $status->value,
-                'name' => $status->label(),
-            ])->all(),
+            'statuses' => [
+                ['value' => 'active', 'name' => 'Active'],
+                ['value' => 'draft', 'name' => 'Draft'],
+            ],
             'saleTypes' => collect(SaleType::cases())->map(fn ($type) => [
                 'value' => $type->value,
                 'name' => $type->label(),
@@ -74,10 +74,10 @@ class ProductController extends Controller implements HasMiddleware
 
         return Inertia::render('Admin/Products/Create', [
             'categories' => CategoryResource::collection($categories)->resolve(),
-            'statuses' => collect(ProductStatus::cases())->map(fn ($status) => [
-                'value' => $status->value,
-                'name' => $status->label(),
-            ])->all(),
+            'statuses' => [
+                ['value' => 'active', 'name' => 'Active'],
+                ['value' => 'draft', 'name' => 'Draft'],
+            ],
             'saleTypes' => collect(SaleType::cases())->map(fn ($type) => [
                 'value' => $type->value,
                 'name' => $type->label(),
@@ -119,10 +119,10 @@ class ProductController extends Controller implements HasMiddleware
         return Inertia::render('Admin/Products/Edit', [
             'product' => (new ProductResource($product))->resolve(),
             'categories' => CategoryResource::collection($categories)->resolve(),
-            'statuses' => collect(ProductStatus::cases())->map(fn ($status) => [
-                'value' => $status->value,
-                'name' => $status->label(),
-            ])->all(),
+            'statuses' => [
+                ['value' => 'active', 'name' => 'Active'],
+                ['value' => 'draft', 'name' => 'Draft'],
+            ],
             'saleTypes' => collect(SaleType::cases())->map(fn ($type) => [
                 'value' => $type->value,
                 'name' => $type->label(),

@@ -54,6 +54,9 @@ export interface SiteSettings {
   footer_show_socials?: boolean;
   footer_privacy_url?: string;
   footer_terms_url?: string;
+  catalog_pdf_url?: string;
+  catalog_docx_url?: string;
+  catalog_title?: string;
 }
 
 export interface PromoBannerData {

@@ -67,9 +67,9 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({
                     </motion.div>
                 </motion.div>
 
-                {/* Product Grid - 3-4 columns per design.md */}
-                <div className="grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
-                    {products.map((apiProduct) => (
+                {/* Product Grid - 4 columns */}
+                <div className="grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
+                    {products.slice(0, 4).map((apiProduct) => (
                         <ProductCard key={apiProduct.id} product={apiProduct} />
                     ))}
                 </div>

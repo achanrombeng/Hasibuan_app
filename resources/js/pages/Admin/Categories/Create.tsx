@@ -10,6 +10,7 @@ import {
     Save,
     X,
 } from 'lucide-react';
+import MDEditor from '@uiw/react-md-editor';
 import { useState } from 'react';
 
 interface ParentCategory {
@@ -95,7 +96,7 @@ export default function CreateCategory({
         >
             <Head title="Add Category" />
 
-            <div className="mx-auto space-y-6">
+            <div className="w-full space-y-6">
                 {/* Header */}
                 <div className="flex items-center gap-4">
                     <Link
@@ -117,50 +118,6 @@ export default function CreateCategory({
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <div className="space-y-6">
-                            {/* Parent Category Selection */}
-                            <div>
-                                <label className="mb-2 block text-sm font-medium text-terra-700">
-                                    Parent Category
-                                </label>
-                                <p className="mb-3 text-sm text-terra-500">
-                                    Select parent category if this is a sub-category. Leave empty if this is a main category.
-                                </p>
-                                <div className="relative">
-                                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <FolderTree className="h-5 w-5 text-terra-400" />
-                                    </div>
-                                    <select
-                                        value={data.parent_id ?? ''}
-                                        onChange={(e) =>
-                                            setData(
-                                                'parent_id',
-                                                e.target.value
-                                                    ? Number(e.target.value)
-                                                    : null,
-                                            )
-                                        }
-                                        className="w-full appearance-none rounded-xl border border-terra-200 bg-sand-50 py-3 pr-10 pl-10 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                    >
-                                        <option value="">
-                                            — None (Main Category) —
-                                        </option>
-                                        {parentCategories.map((cat) => (
-                                            <option key={cat.id} value={cat.id}>
-                                                {cat.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                        <ChevronDown className="h-5 w-5 text-terra-400" />
-                                    </div>
-                                </div>
-                                {errors.parent_id && (
-                                    <p className="mt-1 text-sm text-red-500">
-                                        {errors.parent_id}
-                                    </p>
-                                )}
-                            </div>
-
                             {/* Category Name */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
@@ -187,15 +144,21 @@ export default function CreateCategory({
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
                                     Description
                                 </label>
-                                <textarea
-                                    value={data.description}
-                                    onChange={(e) =>
-                                        setData('description', e.target.value)
-                                    }
-                                    rows={4}
-                                    className="w-full resize-none rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 text-terra-900 transition-all placeholder:text-terra-400 focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                    placeholder="Category description (optional)"
-                                />
+                                <div data-color-mode="light">
+                                    <MDEditor
+                                        value={data.description}
+                                        onChange={(val) =>
+                                            setData('description', val || '')
+                                        }
+                                        height={200}
+                                        preview="edit"
+                                    />
+                                </div>
+                                {errors.description && (
+                                    <p className="mt-1 text-sm text-red-500">
+                                        {errors.description}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Image Upload */}
@@ -263,48 +226,6 @@ export default function CreateCategory({
                                         {errors.image}
                                     </p>
                                 )}
-                            </div>
-
-                            {/* Checkboxes */}
-                            <div className="space-y-3">
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.is_active}
-                                        onChange={(e) =>
-                                            setData(
-                                                'is_active',
-                                                e.target.checked,
-                                            )
-                                        }
-                                        className="h-5 w-5 rounded border-terra-300 text-terra-900 focus:ring-wood"
-                                    />
-                                    <span className="text-terra-700">
-                                        Active Category
-                                    </span>
-                                </label>
-
-                                <label className="flex cursor-pointer items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.is_featured}
-                                        onChange={(e) =>
-                                            setData(
-                                                'is_featured',
-                                                e.target.checked,
-                                            )
-                                        }
-                                        className="h-5 w-5 rounded border-terra-300 text-terra-900 focus:ring-wood"
-                                    />
-                                    <div>
-                                        <span className="text-terra-700">
-                                            Featured Category
-                                        </span>
-                                        <p className="text-xs text-terra-500">
-                                            Display in "Featured Rooms" section on homepage
-                                        </p>
-                                    </div>
-                                </label>
                             </div>
                         </div>
                     </div>

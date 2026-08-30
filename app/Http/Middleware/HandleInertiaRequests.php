@@ -227,6 +227,9 @@ class HandleInertiaRequests extends Middleware
                 'footer_show_socials' => filter_var($settings['footer_show_socials'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'footer_privacy_url' => $settings['footer_privacy_url'] ?? '',
                 'footer_terms_url' => $settings['footer_terms_url'] ?? '',
+                'catalog_pdf_url' => array_key_exists('catalog_pdf_url', $settings) ? ($settings['catalog_pdf_url'] ?? '') : '/catalogs/ronica-catalog-2026.pdf',
+                'catalog_docx_url' => array_key_exists('catalog_docx_url', $settings) ? ($settings['catalog_docx_url'] ?? '') : '/catalogs/ronica-catalog-2026.docx',
+                'catalog_title' => $settings['catalog_title'] ?? 'Ronica Product Catalogue 2026',
             ];
         });
     }

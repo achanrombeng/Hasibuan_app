@@ -156,7 +156,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
     >
       <Head title="Footer Settings" />
 
-      <div className="mx-auto max-w-6xl space-y-6">
+      <div className="w-full space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">

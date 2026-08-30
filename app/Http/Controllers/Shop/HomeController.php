@@ -20,12 +20,11 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        // Featured Products (6 items)
+        // Latest Products (4 newest items)
         $featuredProducts = Product::active()
-            ->featured()
             ->with(['category', 'images'])
-            ->orderByDesc('sold_count')
-            ->limit(6)
+            ->latest()
+            ->limit(4)
             ->get();
 
         // Active Root Categories (for storefront display)

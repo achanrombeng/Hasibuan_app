@@ -95,7 +95,7 @@ export default function CreatePromoBanner() {
         >
             <Head title="Add Promo Banner" />
 
-            <div className="mx-auto max-w-6xl space-y-6">
+            <div className="w-full space-y-6">
                 {/* Header */}
                 <div className="flex items-center gap-4">
                     <Link

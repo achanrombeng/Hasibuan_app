@@ -104,13 +104,13 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                             Manage admin users and staff
                         </p>
                     </div>
-                    <Link
+                    {/* <Link
                         href="/admin/users/create"
                         className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-wood-dark"
                     >
                         <Plus className="h-5 w-5" />
                         Add User
-                    </Link>
+                    </Link> */}
                 </div>
 
                 {/* Search & Filter Bar */}
@@ -123,7 +123,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                             <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
-                                placeholder="Cari berdasarkan nama atau email..."
+                                placeholder="Search user..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
@@ -134,7 +134,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                                 type="submit"
                                 className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
                             >
-                                Cari
+                                Search
                             </button>
                         </div>
                     </form>
@@ -184,8 +184,8 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                                                         ) ? (
                                                             <Shield className="h-5 w-5 text-red-600" />
                                                         ) : user.roles.includes(
-                                                              'admin',
-                                                          ) ? (
+                                                            'admin',
+                                                        ) ? (
                                                             <UserCog className="h-5 w-5 text-purple-600" />
                                                         ) : (
                                                             <User className="h-5 w-5 text-terra-600" />
@@ -232,18 +232,18 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
                                                     {!user.roles.includes(
                                                         'super-admin',
                                                     ) && (
-                                                        <button
-                                                            onClick={() =>
-                                                                confirmDelete(
-                                                                    user.id,
-                                                                )
-                                                            }
-                                                            className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50"
-                                                            title="Delete"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
-                                                    )}
+                                                            <button
+                                                                onClick={() =>
+                                                                    confirmDelete(
+                                                                        user.id,
+                                                                    )
+                                                                }
+                                                                className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50"
+                                                                title="Delete"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </button>
+                                                        )}
                                                 </div>
                                             </td>
                                         </tr>

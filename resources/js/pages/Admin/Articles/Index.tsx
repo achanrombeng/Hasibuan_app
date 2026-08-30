@@ -158,11 +158,10 @@ export default function ArticlesIndex({
                             <button
                                 type="button"
                                 onClick={() => setShowFilters(!showFilters)}
-                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${
-                                    showFilters
-                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
-                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
-                                }`}
+                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${showFilters
+                                    ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                    : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                    }`}
                             >
                                 <Filter className="h-4 w-4 text-neutral-600" /> Filter
                             </button>
@@ -170,7 +169,7 @@ export default function ArticlesIndex({
                                 type="submit"
                                 className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
                             >
-                                Cari
+                                Search
                             </button>
                         </div>
                     </form>
@@ -200,7 +199,7 @@ export default function ArticlesIndex({
                                     onClick={() => handleFilter()}
                                     className="flex-1 rounded-xl bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none"
                                 >
-                                    Terapkan
+                                    Apply
                                 </button>
                                 <button
                                     type="button"
@@ -275,15 +274,15 @@ export default function ArticlesIndex({
                                             <td className="px-6 py-4 text-sm text-gray-500">
                                                 {article.published_at
                                                     ? new Date(
-                                                          article.published_at,
-                                                      ).toLocaleDateString(
-                                                          'en-US',
-                                                          {
-                                                              day: 'numeric',
-                                                              month: 'short',
-                                                              year: 'numeric',
-                                                          },
-                                                      )
+                                                        article.published_at,
+                                                    ).toLocaleDateString(
+                                                        'en-US',
+                                                        {
+                                                            day: 'numeric',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                        },
+                                                    )
                                                     : '-'}
                                             </td>
                                             <td className="px-6 py-4 text-right text-sm">

@@ -2,6 +2,7 @@ import { CraftsmanshipSettings } from '@/types/shop';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const DEFAULT_CRAFT_IMAGES = [
   'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop',
@@ -65,9 +66,9 @@ export const CraftsmanshipSection: React.FC<CraftsmanshipSectionProps> = ({
             <h2 className="mb-6 font-serif text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl lg:text-5xl">
               {title1}
             </h2>
-            <p className="max-w-lg font-sans text-sm leading-relaxed text-neutral-600 md:text-base">
-              {desc1}
-            </p>
+            <div className="prose prose-sm max-w-lg font-sans text-sm leading-relaxed text-neutral-600 md:text-base">
+              <ReactMarkdown>{desc1}</ReactMarkdown>
+            </div>
           </div>
 
           {/* Right Image Carousel */}
@@ -150,9 +151,9 @@ export const CraftsmanshipSection: React.FC<CraftsmanshipSectionProps> = ({
             <h2 className="mb-6 font-serif text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl lg:text-5xl">
               {title2}
             </h2>
-            <p className="max-w-lg font-sans text-sm leading-relaxed text-neutral-600 md:text-base">
-              {desc2}
-            </p>
+            <div className="prose prose-sm max-w-lg font-sans text-sm leading-relaxed text-neutral-600 md:text-base">
+              <ReactMarkdown>{desc2}</ReactMarkdown>
+            </div>
           </div>
         </div>
       </div>

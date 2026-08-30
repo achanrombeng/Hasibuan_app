@@ -6,8 +6,10 @@ import { SiteSettings } from '@/types';
 import { ApiCategory, ApiProduct } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CatalogModal } from '@/components/shop/CatalogModal';
 import {
     ArrowRight,
+    BookOpen,
     ChevronDown,
     Heart,
     LayoutDashboard,
@@ -83,6 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
     const [isSearching, setIsSearching] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [catalogModalOpen, setCatalogModalOpen] = useState(false);
     const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
     const userMenuRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -761,6 +764,14 @@ export const Header: React.FC<HeaderProps> = ({
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Product Catalog Modal */}
+            <CatalogModal
+                isOpen={catalogModalOpen}
+                onClose={() => setCatalogModalOpen(false)}
+                pdfUrl={siteSettings?.catalog_pdf_url}
+                docxUrl={siteSettings?.catalog_docx_url}
+            />
         </header>
     );
 };

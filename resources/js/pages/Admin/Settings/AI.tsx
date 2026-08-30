@@ -57,23 +57,15 @@ export default function AiSettings({
     >
       <Head title="Pengaturan AI Auto-Fill" />
 
-      <div className="mx-auto max-w-6xl space-y-6">
+      <div className="w-full space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/admin/settings"
-            className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-900">
-              Pengaturan AI Auto-Fill
-            </h1>
-            <p className="mt-1 text-neutral-500">
-              Konfigurasi model Gemini dan prompt untuk fitur analisis gambar produk
-            </p>
-          </div>
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-900">
+            Pengaturan AI Auto-Fill
+          </h1>
+          <p className="mt-1 text-neutral-500">
+            Konfigurasi model Gemini dan prompt untuk fitur analisis gambar produk
+          </p>
         </div>
 
         {/* Info Banner */}

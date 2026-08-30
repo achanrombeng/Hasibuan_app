@@ -88,14 +88,12 @@ export default function ProductsIndex({
     const [search, setSearch] = useState(filterObj.name || '');
     const [category, setCategory] = useState(filterObj.category_id || 'all');
     const [status, setStatus] = useState(filterObj.status || 'all');
-    const [saleType, setSaleType] = useState(filterObj.sale_type || 'all');
     const [isFeatured, setIsFeatured] = useState(
         filterObj.is_featured || 'all',
     );
     const hasActiveFilters = Boolean(
         (filterObj.category_id && filterObj.category_id !== 'all') ||
         (filterObj.status && filterObj.status !== 'all') ||
-        (filterObj.sale_type && filterObj.sale_type !== 'all') ||
         (filterObj.is_featured && filterObj.is_featured !== 'all')
     );
     const [showFilters, setShowFilters] = useState(hasActiveFilters);
@@ -114,8 +112,6 @@ export default function ProductsIndex({
         if (category && category !== 'all')
             params['filter[category_id]'] = category;
         if (status && status !== 'all') params['filter[status]'] = status;
-        if (saleType && saleType !== 'all')
-            params['filter[sale_type]'] = saleType;
         if (isFeatured && isFeatured !== 'all')
             params['filter[is_featured]'] = isFeatured;
 
@@ -126,7 +122,6 @@ export default function ProductsIndex({
         setSearch('');
         setCategory('all');
         setStatus('all');
-        setSaleType('all');
         setIsFeatured('all');
         router.get('/admin/products', {}, { preserveState: true });
     };
@@ -221,7 +216,7 @@ export default function ProductsIndex({
                     </form>
 
                     {showFilters && (
-                        <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-2 lg:grid-cols-3">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-terra-700">
                                     Category
@@ -260,34 +255,16 @@ export default function ProductsIndex({
                                 </select>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-terra-700">
-                                    Sale Type
-                                </label>
-                                <select
-                                    value={saleType}
-                                    onChange={(e) => setSaleType(e.target.value)}
-                                    className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                >
-                                    <option value="all">All Sale Types</option>
-                                    {saleTypes.map((s) => (
-                                        <option key={s.value} value={s.value}>
-                                            {s.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
                             <div className="flex items-end gap-2">
                                 <button
                                     onClick={() => handleSearch()}
-                                    className="flex-1 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700 sm:flex-none"
+                                    className="flex-1 rounded-lg bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none cursor-pointer"
                                 >
                                     Apply
                                 </button>
                                 <button
                                     onClick={handleReset}
-                                    className="flex-1 rounded-lg border border-terra-200 px-4 py-2 text-sm font-medium text-terra-600 transition-colors hover:bg-terra-50 sm:flex-none"
+                                    className="flex-1 rounded-lg border border-terra-200 px-4 py-2 text-sm font-medium text-terra-600 transition-colors hover:bg-terra-50 sm:flex-none cursor-pointer"
                                 >
                                     Reset
                                 </button>
