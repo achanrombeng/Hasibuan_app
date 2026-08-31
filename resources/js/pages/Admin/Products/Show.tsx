@@ -180,7 +180,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                             )}
                             {product.description ? (
                                 <div
-                                    className="prose prose-neutral max-w-none leading-relaxed text-terra-700 space-y-3"
+                                    className="prose prose-neutral max-w-none leading-relaxed text-terra-700 whitespace-pre-line"
                                     dangerouslySetInnerHTML={{
                                         __html: product.description,
                                     }}

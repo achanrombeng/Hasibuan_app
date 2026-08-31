@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(Request $request): Response
     {
         $products = ProductQuery::shop($request)
-            ->paginate(12)
+            ->paginate(6)
             ->withQueryString();
 
         $categories = Category::active()
@@ -75,7 +75,7 @@ class ProductController extends Controller
     {
         $products = ProductQuery::shop($request)
             ->whereIn('category_id', $category->getDescendantIds())
-            ->paginate(12)
+            ->paginate(6)
             ->withQueryString();
 
         $categories = Category::active()

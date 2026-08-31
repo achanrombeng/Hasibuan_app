@@ -826,64 +826,6 @@ function ProductCard({
     viewMode,
     index,
 }: ProductCardProps) {
-    const { auth } = usePage<SharedData>().props;
-    const [isWishlisted, setIsWishlisted] = useState(product.is_wishlisted);
-    const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
-    const [isAddingToCart, setIsAddingToCart] = useState(false);
-
-    // Sync prop changes
-    useEffect(() => {
-        setIsWishlisted(product.is_wishlisted);
-    }, [product.is_wishlisted]);
-
-    const handleWishlistToggle = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!auth?.user) {
-            router.visit('/login');
-            return;
-        }
-
-        setIsTogglingWishlist(true);
-
-        router.post(
-            `/shop/wishlist/${product.id}`,
-            {},
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onFinish: () => {
-                    setIsTogglingWishlist(false);
-                },
-            },
-        );
-    };
-
-    const handleAddToCart = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!auth?.user) {
-            router.visit('/login');
-            return;
-        }
-
-        setIsAddingToCart(true);
-
-        router.post(
-            '/shop/cart',
-            { product_id: product.id, quantity: 1 },
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onFinish: () => {
-                    setIsAddingToCart(false);
-                },
-            },
-        );
-    };
-
     const imageUrl =
         product.primary_image?.image_url ||
         product.images?.[0]?.image_url ||
@@ -898,9 +840,9 @@ function ProductCard({
             >
                 <Link
                     href={`/shop/products/${product.slug}`}
-                    className="group flex gap-6 rounded-sm border border-neutral-100 bg-white p-4 transition-shadow hover:shadow-lg"
+                    className="group flex gap-6 rounded-2xl border border-neutral-100 bg-white p-5 transition-all duration-300 hover:shadow-lg hover:border-neutral-200"
                 >
-                    <div className="relative h-48 w-48 flex-shrink-0 overflow-hidden rounded-sm bg-neutral-100 flex items-center justify-center p-2">
+                    <div className="relative h-48 w-48 flex-shrink-0 overflow-hidden rounded-xl bg-neutral-50 flex items-center justify-center p-3">
                         <img
                             src={imageUrl}
                             alt={product.name}
@@ -909,43 +851,20 @@ function ProductCard({
                     </div>
                     <div className="flex flex-1 flex-col justify-between py-2">
                         <div>
-                            <p className="mb-1 text-sm text-neutral-500">
+                            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400">
                                 {product.category?.name}
                             </p>
-                            <h3 className="mb-2 font-serif text-xl text-neutral-900">
+                            <h3 className="mb-2 font-serif text-xl font-bold text-neutral-900 transition-colors group-hover:text-teal-700">
                                 {product.name}
                             </h3>
-                            <p className="line-clamp-2 text-sm text-neutral-600">
+                            <p className="line-clamp-2 text-sm text-neutral-600 leading-relaxed">
                                 {product.short_description}
                             </p>
                         </div>
-                        <div className="flex items-center justify-end">
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={handleWishlistToggle}
-                                    disabled={isTogglingWishlist}
-                                    className={`rounded-sm border p-3 transition-colors disabled:cursor-not-allowed ${isWishlisted
-                                        ? 'border-red-200 bg-red-50 text-red-500'
-                                        : 'border-neutral-200 hover:border-neutral-900'
-                                        }`}
-                                >
-                                    {isTogglingWishlist ? (
-                                        <Loader2
-                                            size={18}
-                                            className="animate-spin"
-                                        />
-                                    ) : (
-                                        <Heart
-                                            size={18}
-                                            className={
-                                                isWishlisted
-                                                    ? 'fill-current'
-                                                    : ''
-                                            }
-                                        />
-                                    )}
-                                </button>
-                            </div>
+                        <div className="flex items-center justify-end pt-2">
+                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-teal-600 group-hover:text-teal-700">
+                                View Details &rarr;
+                            </span>
                         </div>
                     </div>
                 </Link>
@@ -961,44 +880,23 @@ function ProductCard({
             className="group"
         >
             <Link href={`/shop/products/${product.slug}`} className="block transition-all duration-400 ease-out hover:scale-105 hover:-translate-y-2 hover:z-10">
-                <div className="relative mb-4 aspect-square overflow-hidden rounded-xl bg-white border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-2xl flex items-center justify-center p-3 sm:p-4">
+                <div className="relative mb-4 aspect-square overflow-hidden rounded-2xl bg-white border border-neutral-100 shadow-xs transition-all duration-500 group-hover:shadow-2xl flex items-center justify-center p-3 sm:p-4">
                     <img
                         src={imageUrl}
                         alt={product.name}
                         className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10 flex items-center justify-center">
-                        <span className="translate-y-3 rounded-sm bg-white/95 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-neutral-800 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
+                        <span className="translate-y-3 rounded-full bg-white/95 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-neutral-800 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
                             View Detail
                         </span>
                     </div>
-                    <div className="absolute right-4 bottom-4 flex gap-2 opacity-0 transition-all duration-300 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100">
-                        <button
-                            onClick={handleWishlistToggle}
-                            disabled={isTogglingWishlist}
-                            className={`rounded-sm p-3 shadow-md backdrop-blur-sm transition-colors disabled:cursor-not-allowed ${isWishlisted
-                                ? 'bg-red-50 text-red-500'
-                                : 'bg-white/95 text-neutral-900 hover:bg-white'
-                                }`}
-                        >
-                            {isTogglingWishlist ? (
-                                <Loader2 size={18} className="animate-spin" />
-                            ) : (
-                                <Heart
-                                    size={18}
-                                    className={
-                                        isWishlisted ? 'fill-current' : ''
-                                    }
-                                />
-                            )}
-                        </button>
-                    </div>
                 </div>
                 <div>
-                    <p className="mb-1 text-sm text-neutral-500">
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-neutral-400">
                         {product.category?.name}
                     </p>
-                    <h3 className="mb-2 font-serif text-lg text-neutral-900 transition-colors group-hover:text-teal-600">
+                    <h3 className="mb-1.5 font-serif text-lg font-bold text-neutral-900 transition-colors group-hover:text-teal-700">
                         {product.name}
                     </h3>
                 </div>
@@ -1060,15 +958,19 @@ function Pagination({ meta }: PaginationProps) {
     };
 
     return (
-        <div className="mt-12 flex items-center justify-between border-t border-neutral-100 pt-8">
-            <p className="text-sm text-neutral-500">
-                Menampilkan {meta.from}-{meta.to} dari {meta.total} produk
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-neutral-200/80 pt-8">
+            <p className="text-sm font-medium text-neutral-500">
+                Showing <span className="font-semibold text-neutral-900">{meta.from || 0}</span> to{' '}
+                <span className="font-semibold text-neutral-900">{meta.to || 0}</span> of{' '}
+                <span className="font-semibold text-neutral-900">{meta.total}</span> products
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
                 <button
+                    type="button"
                     onClick={() => goToPage(current - 1)}
                     disabled={current === 1}
-                    className="rounded-sm border border-neutral-200 p-2 transition-colors hover:border-neutral-900 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="Previous Page"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-600 transition-all hover:border-teal-500 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40 shadow-2xs cursor-pointer"
                 >
                     <ChevronLeft size={18} />
                 </button>
@@ -1076,24 +978,27 @@ function Pagination({ meta }: PaginationProps) {
                     typeof page === 'number' ? (
                         <button
                             key={i}
+                            type="button"
                             onClick={() => goToPage(page)}
-                            className={`h-10 w-10 rounded-sm font-medium transition-colors ${page === current
-                                ? 'bg-teal-500 text-white'
-                                : 'border border-neutral-200 hover:border-neutral-900'
+                            className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition-all shadow-2xs cursor-pointer ${page === current
+                                ? 'bg-teal-600 text-white shadow-sm'
+                                : 'border border-neutral-200 bg-white text-neutral-700 hover:border-teal-500 hover:text-teal-700'
                                 }`}
                         >
                             {page}
                         </button>
                     ) : (
-                        <span key={i} className="px-2 text-neutral-400">
+                        <span key={i} className="flex h-10 w-8 items-center justify-center text-neutral-400">
                             ...
                         </span>
                     ),
                 )}
                 <button
+                    type="button"
                     onClick={() => goToPage(current + 1)}
                     disabled={current === last}
-                    className="rounded-sm border border-neutral-200 p-2 transition-colors hover:border-neutral-900 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="Next Page"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-600 transition-all hover:border-teal-500 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40 shadow-2xs cursor-pointer"
                 >
                     <ChevronRight size={18} />
                 </button>

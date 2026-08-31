@@ -59,6 +59,7 @@ export default function CreateProduct({
     const [extractError, setExtractError] = useState<string | null>(null);
     const [extractSuccess, setExtractSuccess] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const autoExtractAfterUploadRef = useRef(false);
 
     const { data, setData, processing, errors } = useForm({
         name: '',
@@ -93,97 +94,23 @@ export default function CreateProduct({
         meta_keywords: '',
     });
 
-    const handleImageChange = async (
-        e: React.ChangeEvent<HTMLInputElement>,
+    const triggerAiExtract = async (
+        imagesToAnalyze: { file: File; preview: string }[],
+        targetPrimaryIndex = 0,
     ) => {
-        const files = e.target.files;
-        if (!files) return;
-
-        setIsCompressing(true);
-        try {
-            const fileArray = Array.from(files);
-            const compressedImages = await Promise.all(
-                fileArray.map(async (file) => {
-                    const compressedFile = await compressImage(file, {
-                        maxSizeMB: 2,
-                    });
-                    return {
-                        file: compressedFile,
-                        preview: URL.createObjectURL(compressedFile),
-                    };
-                }),
-            );
-            setPreviewImages((prev) => [...prev, ...compressedImages]);
-        } catch (error) {
-            console.error('Error compressing images:', error);
-        } finally {
-            setIsCompressing(false);
-        }
-    };
-
-    const removeImage = (index: number) => {
-        setPreviewImages((prev) => {
-            const newImages = [...prev];
-            URL.revokeObjectURL(newImages[index].preview);
-            newImages.splice(index, 1);
-            return newImages;
-        });
-        if (primaryIndex === index) {
-            setPrimaryIndex(0);
-        } else if (primaryIndex > index) {
-            setPrimaryIndex(primaryIndex - 1);
-        }
-    };
-
-    const handleCropped = async (croppedFile: File) => {
-        if (cropTargetIndex === null) return;
-        const compressed = await compressImage(croppedFile, { maxSizeMB: 2 });
-        setPreviewImages((prev) => {
-            const next = [...prev];
-            const current = next[cropTargetIndex];
-            if (!current) return prev;
-            URL.revokeObjectURL(current.preview);
-            next[cropTargetIndex] = {
-                file: compressed,
-                preview: URL.createObjectURL(compressed),
-            };
-            return next;
-        });
-    };
-
-    const addSpecification = () => {
-        setSpecifications((prev) => [...prev, { key: '', value: '' }]);
-    };
-
-    const removeSpecification = (index: number) => {
-        setSpecifications((prev) => prev.filter((_, i) => i !== index));
-    };
-
-    const updateSpecification = (
-        index: number,
-        field: 'key' | 'value',
-        value: string,
-    ) => {
-        setSpecifications((prev) =>
-            prev.map((spec, i) =>
-                i === index ? { ...spec, [field]: value } : spec,
-            ),
-        );
-    };
-
-    const handleAiExtract = async () => {
-        if (previewImages.length === 0 || isExtracting) return;
+        if (imagesToAnalyze.length === 0 || isExtracting) return;
 
         // Send up to 5 images with primary first; gives AI multi-angle context.
         const MAX_AI_IMAGES = 5;
         const orderedImages = [
-            previewImages[primaryIndex] ?? previewImages[0],
-            ...previewImages.filter((_, i) => i !== primaryIndex),
+            imagesToAnalyze[targetPrimaryIndex] ?? imagesToAnalyze[0],
+            ...imagesToAnalyze.filter((_, i) => i !== targetPrimaryIndex),
         ].slice(0, MAX_AI_IMAGES);
 
-        const csrfMeta = document
-            .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute('content') ?? '';
+        const csrfMeta =
+            document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content') ?? '';
 
         const formData = new FormData();
         formData.append('_token', csrfMeta);
@@ -324,40 +251,133 @@ export default function CreateProduct({
                 ),
             }));
 
-            // Merge specs: keep user-filled rows, append AI rows whose key is new.
-            if (Array.isArray(extracted.specifications)) {
-                const incoming = extracted.specifications.filter(
-                    (s: { key?: string; value?: string }) =>
-                        typeof s?.key === 'string' &&
-                        typeof s?.value === 'string' &&
-                        s.key.trim() !== '' &&
-                        s.value.trim() !== '',
-                ) as { key: string; value: string }[];
-
+            if (
+                Array.isArray(extracted.specifications) &&
+                extracted.specifications.length > 0
+            ) {
                 setSpecifications((prev) => {
                     const existingKeys = new Set(
-                        prev
-                            .map((s) => s.key.trim().toLowerCase())
-                            .filter((k) => k !== ''),
+                        prev.map((s) => s.key.toLowerCase().trim()),
                     );
-                    const toAdd = incoming.filter(
-                        (s) => !existingKeys.has(s.key.trim().toLowerCase()),
+                    const newSpecs = extracted.specifications.filter(
+                        (s: { key: string; value: string }) =>
+                            !existingKeys.has(s.key.toLowerCase().trim()),
                     );
-                    return [...prev, ...toAdd];
+                    return [...prev, ...newSpecs];
                 });
             }
 
             setExtractSuccess(true);
-        } catch (error) {
-            const message =
-                error instanceof Error
-                    ? error.message
-                    : 'Gagal menganalisis gambar.';
-            setExtractError(message);
+        } catch (err: unknown) {
+            const msg =
+                err instanceof Error
+                    ? err.message
+                    : 'Gagal menganalisis gambar. Silakan coba lagi.';
+            setExtractError(msg);
         } finally {
             setIsExtracting(false);
         }
     };
+
+    const handleAiExtract = () => {
+        if (previewImages.length === 0) {
+            autoExtractAfterUploadRef.current = true;
+            fileInputRef.current?.click();
+            return;
+        }
+        triggerAiExtract(previewImages, primaryIndex);
+    };
+
+    const handleImageChange = async (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        setIsCompressing(true);
+        try {
+            const fileArray = Array.from(files);
+            const compressedImages = await Promise.all(
+                fileArray.map(async (file) => {
+                    const compressedFile = await compressImage(file, {
+                        maxSizeMB: 2,
+                    });
+                    return {
+                        file: compressedFile,
+                        preview: URL.createObjectURL(compressedFile),
+                    };
+                }),
+            );
+
+            const shouldAutoExtract = autoExtractAfterUploadRef.current;
+            autoExtractAfterUploadRef.current = false;
+
+            setPreviewImages((prev) => {
+                const updated = [...prev, ...compressedImages];
+                if (shouldAutoExtract && updated.length > 0) {
+                    setTimeout(() => {
+                        triggerAiExtract(updated, primaryIndex);
+                    }, 100);
+                }
+                return updated;
+            });
+        } catch (error) {
+            console.error('Error compressing images:', error);
+        } finally {
+            setIsCompressing(false);
+        }
+    };
+
+    const removeImage = (index: number) => {
+        setPreviewImages((prev) => {
+            const newImages = [...prev];
+            URL.revokeObjectURL(newImages[index].preview);
+            newImages.splice(index, 1);
+            return newImages;
+        });
+        if (primaryIndex === index) {
+            setPrimaryIndex(0);
+        } else if (primaryIndex > index) {
+            setPrimaryIndex(primaryIndex - 1);
+        }
+    };
+
+    const handleCropped = async (croppedFile: File) => {
+        if (cropTargetIndex === null) return;
+        const compressed = await compressImage(croppedFile, { maxSizeMB: 2 });
+        setPreviewImages((prev) => {
+            const next = [...prev];
+            const current = next[cropTargetIndex];
+            if (!current) return prev;
+            URL.revokeObjectURL(current.preview);
+            next[cropTargetIndex] = {
+                file: compressed,
+                preview: URL.createObjectURL(compressed),
+            };
+            return next;
+        });
+    };
+
+    const addSpecification = () => {
+        setSpecifications((prev) => [...prev, { key: '', value: '' }]);
+    };
+
+    const removeSpecification = (index: number) => {
+        setSpecifications((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const updateSpecification = (
+        index: number,
+        field: 'key' | 'value',
+        value: string,
+    ) => {
+        setSpecifications((prev) =>
+            prev.map((spec, i) =>
+                i === index ? { ...spec, [field]: value } : spec,
+            ),
+        );
+    };
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -462,9 +482,15 @@ export default function CreateProduct({
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* 1. Media */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-                        <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                            Media
-                        </h2>
+                        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                            <h2 className="text-lg font-semibold text-terra-900">
+                                Media
+                            </h2>
+                            <span className="text-xs text-terra-500">
+                                PNG, JPG, WEBP (auto-compressed to 2MB)
+                            </span>
+                        </div>
+
                         <div className="space-y-4">
                             <div
                                 className={`cursor-pointer rounded-xl border-2 border-dashed border-terra-200 p-8 text-center transition-colors hover:border-wood ${isCompressing ? 'pointer-events-none opacity-50' : ''}`}
@@ -559,45 +585,6 @@ export default function CreateProduct({
                                             </div>
                                         </div>
                                     ))}
-                                </div>
-                            )}
-
-                            {previewImages.length > 0 && (
-                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200/80 bg-amber-50/60 p-3.5">
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={handleAiExtract}
-                                            disabled={isExtracting}
-                                            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:from-amber-600 hover:to-amber-700 disabled:opacity-50"
-                                        >
-                                            {isExtracting ? (
-                                                <>
-                                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                                    <span>Analyzing Image with Gemini AI...</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Sparkles className="h-3.5 w-3.5" />
-                                                    <span>Auto-Fill Details with AI</span>
-                                                </>
-                                            )}
-                                        </button>
-                                        <span className="text-xs text-amber-800">
-                                            Auto-generate title, description, material & specs
-                                        </span>
-                                    </div>
-                                    {extractError && (
-                                        <div className="flex items-center gap-1.5 text-xs text-red-600">
-                                            <AlertCircle className="h-4 w-4" />
-                                            <span>{extractError}</span>
-                                        </div>
-                                    )}
-                                    {extractSuccess && (
-                                        <span className="text-xs font-medium text-emerald-600">
-                                            ✓ Product details successfully filled!
-                                        </span>
-                                    )}
                                 </div>
                             )}
                         </div>

@@ -691,25 +691,25 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
     const specList: { label: string; value: string }[] = [];
 
     if (product.weight) {
-        specList.push({ label: 'Berat Total', value: `${product.weight} kg` });
+        specList.push({ label: 'Total Weight', value: `${product.weight} kg` });
     }
     if (length) {
-        specList.push({ label: 'Panjang', value: `${length} cm` });
+        specList.push({ label: 'Length', value: `${length} cm` });
     }
     if (width) {
-        specList.push({ label: 'Lebar', value: `${width} cm` });
+        specList.push({ label: 'Width', value: `${width} cm` });
     }
     if (height) {
-        specList.push({ label: 'Tinggi', value: `${height} cm` });
+        specList.push({ label: 'Height', value: `${height} cm` });
     }
     if (product.material) {
-        specList.push({ label: 'Material Utama', value: product.material });
+        specList.push({ label: 'Main Material', value: product.material });
     }
     if (product.color) {
-        specList.push({ label: 'Warna / Finishing', value: product.color });
+        specList.push({ label: 'Color / Finish', value: product.color });
     }
     if (product.sku) {
-        specList.push({ label: 'Kode Produk (SKU)', value: product.sku });
+        specList.push({ label: 'Product Code (SKU)', value: product.sku });
     }
     if (product.specifications) {
         if (Array.isArray(product.specifications)) {
@@ -774,7 +774,7 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
                         {/* Rich HTML Description */}
                         {product.description ? (
                             <div
-                                className="prose prose-neutral max-w-none text-sm sm:text-base leading-relaxed text-neutral-700"
+                                className="prose prose-neutral max-w-none text-sm sm:text-base leading-relaxed text-neutral-700 whitespace-pre-line"
                                 dangerouslySetInnerHTML={{
                                     __html: product.description,
                                 }}
@@ -782,7 +782,7 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
                         ) : (
                             <p className="text-neutral-600 leading-relaxed">
                                 {product.short_description ||
-                                    `Produk ${product.name} diproduksi menggunakan bahan kayu jati standar kualitas ekspor dengan pengerjaan presisi dan ketahanan cuaca tinggi.`}
+                                    `The ${product.name} is crafted from export-grade solid teak wood with precision joinery and high weather resistance.`}
                             </p>
                         )}
                     </motion.div>
@@ -799,25 +799,25 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
                         {/* Dimension Summary Cards */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Panjang</span>
+                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Length</span>
                                 <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
                                     {length ? `${length} cm` : '-'}
                                 </span>
                             </div>
                             <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Lebar</span>
+                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Width</span>
                                 <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
                                     {width ? `${width} cm` : '-'}
                                 </span>
                             </div>
                             <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Tinggi</span>
+                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Height</span>
                                 <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
                                     {height ? `${height} cm` : '-'}
                                 </span>
                             </div>
                             <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Berat</span>
+                                <span className="block text-[10px] uppercase font-semibold text-neutral-400">Weight</span>
                                 <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
                                     {product.weight ? `${product.weight} kg` : '-'}
                                 </span>

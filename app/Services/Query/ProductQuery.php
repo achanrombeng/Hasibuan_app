@@ -46,6 +46,7 @@ class ProductQuery
                 AllowedFilter::scope('price_max', 'priceMax'),
             ])
             ->allowedSorts(['name', 'price', 'created_at', 'sold_count', 'average_rating', 'discount_percentage'])
+            ->defaultSort('-created_at')
             ->active()
             ->with(['category', 'images']);
     }
