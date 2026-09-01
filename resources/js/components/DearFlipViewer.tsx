@@ -7,7 +7,7 @@ interface DearFlipViewerProps {
     className?: string;
 }
 
-const DearFlipViewer: React.FC<DearFlipViewerProps> = ({
+export const DearFlipViewer: React.FC<DearFlipViewerProps> = ({
     pdfURL,
     options = {},
     className = '',
@@ -28,3 +28,4 @@ const DearFlipViewer: React.FC<DearFlipViewerProps> = ({
 };
 
 export default DearFlipViewer;
+
