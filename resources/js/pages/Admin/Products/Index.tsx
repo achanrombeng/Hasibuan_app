@@ -160,124 +160,127 @@ export default function ProductsIndex({
             breadcrumbs={[{ title: 'Products', href: '/admin/products' }]}
         >
             <Head title="Manage Products" />
-            <div className="space-y-6">
-                {/* Header */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold text-terra-900">
-                            Manage Products
-                        </h1>
-                        <p className="mt-1 text-terra-500">
-                            Manage all products in your shop
-                        </p>
+            <div className="flex h-[calc(100dvh-5.5rem)] flex-col gap-4 sm:h-[calc(100dvh-7rem)] sm:gap-6">
+                {/* Fixed Top Section (Header & Filters) */}
+                <div className="shrink-0 space-y-4 sm:space-y-6">
+                    {/* Header */}
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-terra-900">
+                                Manage Products
+                            </h1>
+                            <p className="mt-1 text-terra-500">
+                                Manage all products in your shop
+                            </p>
+                        </div>
+                        <Link
+                            href="/admin/products/create"
+                            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-teal-700"
+                        >
+                            <Plus className="h-5 w-5" /> Add Product
+                        </Link>
                     </div>
-                    <Link
-                        href="/admin/products/create"
-                        className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-teal-700"
-                    >
-                        <Plus className="h-5 w-5" /> Add Product
-                    </Link>
-                </div>
 
-                {/* Filters */}
-                <div className="rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm">
-                    <form
-                        onSubmit={handleSearch}
-                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
-                    >
-                        <div className="relative flex-1">
-                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-                            <input
-                                type="text"
-                                placeholder="Search products..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
-                            />
-                        </div>
-                        <div className="flex items-center gap-2.5">
-                            <button
-                                type="button"
-                                onClick={() => setShowFilters(!showFilters)}
-                                className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${showFilters
-                                    ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
-                                    : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
-                                    }`}
-                            >
-                                <Filter className="h-4 w-4 text-neutral-600" /> Filter
-                            </button>
-                            <button
-                                type="submit"
-                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </form>
-
-                    {showFilters && (
-                        <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-2 lg:grid-cols-3">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-terra-700">
-                                    Category
-                                </label>
-                                <select
-                                    value={category}
-                                    onChange={(e) =>
-                                        setCategory(e.target.value)
-                                    }
-                                    className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                >
-                                    <option value="all">All Categories</option>
-                                    {categories.data.map((cat) => (
-                                        <option key={cat.id} value={cat.id}>
-                                            {cat.name}
-                                        </option>
-                                    ))}
-                                </select>
+                    {/* Filters */}
+                    <div className="rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm">
+                        <form
+                            onSubmit={handleSearch}
+                            className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                        >
+                            <div className="relative flex-1">
+                                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search products..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                />
                             </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-terra-700">
-                                    Status
-                                </label>
-                                <select
-                                    value={status}
-                                    onChange={(e) => setStatus(e.target.value)}
-                                    className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
-                                >
-                                    <option value="all">All Status</option>
-                                    {statuses.map((s) => (
-                                        <option key={s.value} value={s.value}>
-                                            {s.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="flex items-end gap-2">
+                            <div className="flex items-center gap-2.5">
                                 <button
-                                    onClick={() => handleSearch()}
-                                    className="flex-1 rounded-lg bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none cursor-pointer"
+                                    type="button"
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium shadow-sm transition-colors ${showFilters
+                                        ? 'border-neutral-300 bg-neutral-100 text-neutral-900'
+                                        : 'border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50'
+                                        }`}
                                 >
-                                    Apply
+                                    <Filter className="h-4 w-4 text-neutral-600" /> Filter
                                 </button>
                                 <button
-                                    onClick={handleReset}
-                                    className="flex-1 rounded-lg border border-terra-200 px-4 py-2 text-sm font-medium text-terra-600 transition-colors hover:bg-terra-50 sm:flex-none cursor-pointer"
+                                    type="submit"
+                                    className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
                                 >
-                                    Reset
+                                    Search
                                 </button>
                             </div>
-                        </div>
-                    )}
+                        </form>
+
+                        {showFilters && (
+                            <div className="grid animate-in grid-cols-1 gap-4 border-t border-terra-100 pt-4 duration-200 slide-in-from-top-2 sm:grid-cols-2 lg:grid-cols-3">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-terra-700">
+                                        Category
+                                    </label>
+                                    <select
+                                        value={category}
+                                        onChange={(e) =>
+                                            setCategory(e.target.value)
+                                        }
+                                        className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                                    >
+                                        <option value="all">All Categories</option>
+                                        {categories.data.map((cat) => (
+                                            <option key={cat.id} value={cat.id}>
+                                                {cat.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-terra-700">
+                                        Status
+                                    </label>
+                                    <select
+                                        value={status}
+                                        onChange={(e) => setStatus(e.target.value)}
+                                        className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                                    >
+                                        <option value="all">All Status</option>
+                                        {statuses.map((s) => (
+                                            <option key={s.value} value={s.value}>
+                                                {s.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="flex items-end gap-2">
+                                    <button
+                                        onClick={() => handleSearch()}
+                                        className="flex-1 rounded-lg bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none cursor-pointer"
+                                    >
+                                        Apply
+                                    </button>
+                                    <button
+                                        onClick={handleReset}
+                                        className="flex-1 rounded-lg border border-terra-200 px-4 py-2 text-sm font-medium text-terra-600 transition-colors hover:bg-terra-50 sm:flex-none cursor-pointer"
+                                    >
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                {/* Products Table */}
-                <div className="overflow-hidden rounded-2xl border border-terra-100 bg-white shadow-sm">
-                    <div className="overflow-x-auto">
+                {/* Scrollable Products Table Container */}
+                <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-terra-100 bg-white shadow-sm">
+                    <div className="flex-1 overflow-y-auto">
                         <table className="w-full">
-                            <thead className="border-b border-terra-100 bg-sand-50">
+                            <thead className="sticky top-0 z-10 border-b border-terra-100 bg-sand-50">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
                                         Produk
@@ -396,11 +399,13 @@ export default function ProductsIndex({
                         </table>
                     </div>
                     {/* Pagination */}
-                    <Pagination
-                        links={products.meta.links}
-                        meta={products.meta}
-                        className="border-t border-terra-100 px-6 py-4"
-                    />
+                    <div className="shrink-0">
+                        <Pagination
+                            links={products.meta.links}
+                            meta={products.meta}
+                            className="border-t border-terra-100 px-6 py-4"
+                        />
+                    </div>
                 </div>
             </div>
 

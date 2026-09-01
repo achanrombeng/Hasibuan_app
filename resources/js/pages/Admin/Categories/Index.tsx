@@ -299,107 +299,110 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
         >
             <Head title="Manage Categories" />
 
-            <div className="space-y-6">
-                {/* Header */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold text-terra-900">
-                            Manage Categories
-                        </h1>
-                        <p className="mt-1 text-terra-500">
-                            Manage product categories in your store
-                        </p>
+            <div className="flex h-[calc(100dvh-5.5rem)] flex-col gap-4 sm:h-[calc(100dvh-7rem)] sm:gap-6">
+                {/* Fixed Top Section (Header, Stats, Search/Filter) */}
+                <div className="shrink-0 space-y-4 sm:space-y-6">
+                    {/* Header */}
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-terra-900">
+                                Manage Categories
+                            </h1>
+                            <p className="mt-1 text-terra-500">
+                                Manage product categories in your store
+                            </p>
+                        </div>
+                        <Link
+                            href="/admin/categories/create"
+                            className="inline-flex items-center gap-2 rounded-xl bg-wood-dark px-4 py-2.5 font-medium text-white transition-all"
+                        >
+                            <Plus className="h-5 w-5" />
+                            Add Category
+                        </Link>
                     </div>
-                    <Link
-                        href="/admin/categories/create"
-                        className="inline-flex items-center gap-2 rounded-xl bg-wood-dark px-4 py-2.5 font-medium text-white transition-all"
-                    >
-                        <Plus className="h-5 w-5" />
-                        Add Category
-                    </Link>
-                </div>
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {/* Total Categories */}
-                    <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-terra-100">
-                                <Layers className="h-5 w-5 text-terra-600" />
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {/* Total Categories */}
+                        <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-terra-100">
+                                    <Layers className="h-5 w-5 text-terra-600" />
+                                </div>
+                                <div>
+                                    <p className="text-2xl font-bold text-terra-900">
+                                        {totalCategories}
+                                    </p>
+                                    <p className="text-sm text-terra-500">
+                                        Total Categories
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-2xl font-bold text-terra-900">
-                                    {totalCategories}
-                                </p>
-                                <p className="text-sm text-terra-500">
-                                    Total Categories
-                                </p>
+                        </div>
+
+                        {/* Total Products Linked */}
+                        <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
+                            <div className="flex items-center gap-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wood/10">
+                                    <Package className="h-5 w-5 text-wood" />
+                                </div>
+                                <div>
+                                    <p className="text-2xl font-bold text-terra-900">
+                                        {totalProductsCount}
+                                    </p>
+                                    <p className="text-sm text-terra-500">
+                                        Total Products Assigned
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Total Products Linked */}
-                    <div className="rounded-2xl border border-terra-100 bg-white p-4 shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-wood/10">
-                                <Package className="h-5 w-5 text-wood" />
+                    {/* Search & Filter Bar */}
+                    <div className="rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm">
+                        <form
+                            onSubmit={(e) => e.preventDefault()}
+                            className="flex flex-col gap-3 sm:flex-row sm:items-center"
+                        >
+                            <div className="relative flex-1">
+                                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search categories..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                                />
                             </div>
-                            <div>
-                                <p className="text-2xl font-bold text-terra-900">
-                                    {totalProductsCount}
-                                </p>
-                                <p className="text-sm text-terra-500">
-                                    Total Products Assigned
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Search & Filter Bar */}
-                <div className="rounded-2xl border border-neutral-200/80 bg-white p-3.5 shadow-sm">
-                    <form
-                        onSubmit={(e) => e.preventDefault()}
-                        className="flex flex-col gap-3 sm:flex-row sm:items-center"
-                    >
-                        <div className="relative flex-1">
-                            <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-                            <input
-                                type="text"
-                                placeholder="Search categories..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
-                            />
-                        </div>
-                        <div className="flex items-center gap-2.5">
-                            <div className="relative inline-flex items-center">
-                                <Filter className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
-                                <select
-                                    aria-label="Filter"
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as 'name_asc' | 'name_desc' | 'newest' | 'oldest')}
-                                    className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pl-9.5 pr-8 text-sm font-medium text-neutral-700 shadow-sm transition-colors hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                            <div className="flex items-center gap-2.5">
+                                <div className="relative inline-flex items-center">
+                                    <Filter className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-600" />
+                                    <select
+                                        aria-label="Filter"
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value as 'name_asc' | 'name_desc' | 'newest' | 'oldest')}
+                                        className="appearance-none rounded-xl border border-neutral-200 bg-white py-2.5 pl-9.5 pr-8 text-sm font-medium text-neutral-700 shadow-sm transition-colors hover:bg-neutral-50 focus:border-wood focus:ring-2 focus:ring-wood/20 focus:outline-none cursor-pointer"
+                                    >
+                                        <option value="name_asc">A-Z</option>
+                                        <option value="name_desc">Z-A</option>
+                                        <option value="newest">Newest</option>
+                                        <option value="oldest">Latest</option>
+                                    </select>
+                                    <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98] cursor-pointer"
                                 >
-                                    <option value="name_asc">A-Z</option>
-                                    <option value="name_desc">Z-A</option>
-                                    <option value="newest">Newest</option>
-                                    <option value="oldest">Latest</option>
-                                </select>
-                                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                                    Search
+                                </button>
                             </div>
-                            <button
-                                type="submit"
-                                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98] cursor-pointer"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
 
-                {/* Categories Tree */}
-                <div className="space-y-3">
+                {/* Scrollable Categories List */}
+                <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
                     {filteredCategories.map((category) => (
                         <CategoryTreeItem
                             key={category.id}
@@ -409,21 +412,21 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                             toggleExpand={toggleExpand}
                         />
                     ))}
-                </div>
 
-                {filteredCategories.length === 0 && (
-                    <div className="rounded-2xl border border-terra-100 bg-white p-12 text-center shadow-sm">
-                        <Layers className="mx-auto mb-4 h-12 w-12 text-terra-300" />
-                        <h3 className="text-lg font-medium text-terra-900">
-                            No categories found
-                        </h3>
-                        <p className="mt-1 text-terra-500">
-                            {search
-                                ? 'No categories match your search criteria'
-                                : 'Get started by adding a new category'}
-                        </p>
-                    </div>
-                )}
+                    {filteredCategories.length === 0 && (
+                        <div className="rounded-2xl border border-terra-100 bg-white p-12 text-center shadow-sm">
+                            <Layers className="mx-auto mb-4 h-12 w-12 text-terra-300" />
+                            <h3 className="text-lg font-medium text-terra-900">
+                                No categories found
+                            </h3>
+                            <p className="mt-1 text-terra-500">
+                                {search
+                                    ? 'No categories match your search criteria'
+                                    : 'Get started by adding a new category'}
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Delete Confirmation Dialog */}

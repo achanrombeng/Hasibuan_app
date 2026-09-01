@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(Request $request): Response
     {
         $products = ProductQuery::shop($request)
-            ->paginate(6)
+            ->paginate(15)
             ->withQueryString();
 
         $categories = Category::active()
@@ -75,7 +75,7 @@ class ProductController extends Controller
     {
         $products = ProductQuery::shop($request)
             ->whereIn('category_id', $category->getDescendantIds())
-            ->paginate(6)
+            ->paginate(15)
             ->withQueryString();
 
         $categories = Category::active()
@@ -96,7 +96,7 @@ class ProductController extends Controller
     {
         $products = ProductQuery::shop($request)
             ->where('sale_type', 'hot_sale')
-            ->paginate(12)
+            ->paginate(15)
             ->withQueryString();
 
         $categories = Category::active()
@@ -122,7 +122,7 @@ class ProductController extends Controller
     {
         $products = ProductQuery::shop($request)
             ->where('sale_type', 'clearance')
-            ->paginate(12)
+            ->paginate(15)
             ->withQueryString();
 
         $categories = Category::active()
@@ -148,7 +148,7 @@ class ProductController extends Controller
     {
         $products = ProductQuery::shop($request)
             ->where('sale_type', 'stock_sale')
-            ->paginate(12)
+            ->paginate(15)
             ->withQueryString();
 
         $categories = Category::active()

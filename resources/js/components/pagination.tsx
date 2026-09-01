@@ -130,7 +130,7 @@ export default function Pagination({
         {/* Info Text */}
         {currentMeta && (
           <div className="text-sm text-neutral-500">
-            Menampilkan{' '}
+            Showing{' '}
             <span className="font-medium text-neutral-900">
               {currentMeta.from || 0}
             </span>{' '}
@@ -138,7 +138,7 @@ export default function Pagination({
             <span className="font-medium text-neutral-900">
               {currentMeta.to || 0}
             </span>{' '}
-            dari{' '}
+            of{' '}
             <span className="font-medium text-neutral-900">
               {currentMeta.total}
             </span>
@@ -148,7 +148,7 @@ export default function Pagination({
         {/* Per Page Dropdown */}
         {showPerPage && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-neutral-500">Tampilkan</span>
+            <span className="text-sm text-neutral-500">Show</span>
             <select
               value={currentMeta?.per_page || 15}
               onChange={handlePerPageChange}
@@ -166,7 +166,7 @@ export default function Pagination({
 
       {/* Mobile info */}
       <div className="text-sm text-neutral-500 sm:hidden">
-        Halaman {currentMeta.current_page} dari {currentMeta.last_page}
+        Page {currentMeta.current_page} of {currentMeta.last_page}
       </div>
 
       {/* Controls */}
