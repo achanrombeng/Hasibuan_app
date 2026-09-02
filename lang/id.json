@@ -794,5 +794,13 @@
   "settings.appearance.system": "Sistem",
 
   "settings.addresses.title": "Alamat",
-  "settings.two_factor.title": "Autentikasi Dua Faktor"
+  "settings.two_factor.title": "Autentikasi Dua Faktor",
+
+  "shop.newsletter.title": "Bergabunglah dengan Keluarga :name",
+  "shop.newsletter.description": "Dapatkan akses eksklusif ke koleksi baru, tips desain, dan penawaran spesial.",
+  "shop.newsletter.placeholder": "Alamat email Anda",
+  "shop.newsletter.subscribe": "Berlangganan",
+  "shop.newsletter.processing": "Memproses...",
+  "shop.newsletter.success": "Terima kasih telah berlangganan! Anda akan menerima update terbaru dari kami.",
+  "shop.newsletter.privacy_note": "Dengan berlangganan, Anda menyetujui kebijakan privasi kami."
 }

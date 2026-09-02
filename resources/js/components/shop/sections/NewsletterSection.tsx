@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { SiteSettings } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
@@ -24,6 +25,7 @@ const itemVariants = {
 
 export const NewsletterSection = () => {
     const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
+    const { t } = useTranslation();
     const siteName = siteSettings?.site_name || 'Ronica';
     const [isSuccess, setIsSuccess] = useState(false);
     const [message, setMessage] = useState('');
@@ -39,18 +41,16 @@ export const NewsletterSection = () => {
             preserveScroll: true,
             onSuccess: () => {
                 setIsSuccess(true);
-                setMessage(
-                    'Thank you for subscribing! You will receive our latest updates.',
-                );
+                setMessage(t('shop.newsletter.success'));
                 reset();
                 setTimeout(() => {
                     setIsSuccess(false);
                     setMessage('');
-                }, 5000);
+                }, 6000);
             },
-            onError: (errors) => {
-                if (errors.email) {
-                    setMessage(errors.email);
+            onError: (errs) => {
+                if (errs.email) {
+                    setMessage(errs.email);
                 }
             },
         });
@@ -71,11 +71,10 @@ export const NewsletterSection = () => {
                         className="max-w-xl text-center lg:text-left"
                     >
                         <h2 className="font-display text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                            Join the {siteName} Family
+                            {t('shop.newsletter.title', { name: siteName })}
                         </h2>
                         <p className="mt-4 text-lg leading-relaxed text-teal-100">
-                            Get exclusive access to new collections, design
-                            tips, and special offers.
+                            {t('shop.newsletter.description')}
                         </p>
                     </motion.div>
                     <motion.div
@@ -83,8 +82,8 @@ export const NewsletterSection = () => {
                         className="w-full lg:w-auto"
                     >
                         {isSuccess ? (
-                            <div className="flex items-center gap-3 rounded-sm bg-white px-6 py-4 text-teal-600">
-                                <CheckCircle size={24} />
+                            <div className="flex items-center gap-3 rounded-sm bg-white px-6 py-4 text-teal-600 shadow-md">
+                                <CheckCircle size={24} className="flex-shrink-0" />
                                 <span className="font-medium">{message}</span>
                             </div>
                         ) : (
@@ -97,15 +96,17 @@ export const NewsletterSection = () => {
                                         />
                                         <input
                                             type="email"
+                                            required
                                             value={data.email}
                                             onChange={(e) =>
                                                 setData('email', e.target.value)
                                             }
-                                            placeholder="Your email address"
-                                            className={`w-full rounded-sm border-none bg-white py-4 pr-4 pl-12 sm:w-80 ${errors.email
+                                            placeholder={t('shop.newsletter.placeholder')}
+                                            className={`w-full rounded-sm border-none bg-white py-4 pr-4 pl-12 sm:w-80 ${
+                                                errors.email
                                                     ? 'ring-2 ring-red-500'
                                                     : ''
-                                                } transition-all focus:ring-2 focus:ring-teal-300 focus:outline-none`}
+                                            } transition-all focus:ring-2 focus:ring-teal-300 focus:outline-none`}
                                             disabled={processing}
                                         />
                                     </div>
@@ -120,11 +121,11 @@ export const NewsletterSection = () => {
                                                     size={18}
                                                     className="animate-spin"
                                                 />
-                                                Processing...
+                                                {t('shop.newsletter.processing')}
                                             </>
                                         ) : (
                                             <>
-                                                Subscribe
+                                                {t('shop.newsletter.subscribe')}
                                                 <ArrowRight size={18} />
                                             </>
                                         )}
@@ -141,8 +142,7 @@ export const NewsletterSection = () => {
                                     </p>
                                 )}
                                 <p className="mt-4 text-center text-xs text-teal-200 sm:text-left">
-                                    By subscribing, you agree to our privacy
-                                    policy.
+                                    {t('shop.newsletter.privacy_note')}
                                 </p>
                             </form>
                         )}

@@ -794,5 +794,13 @@
   "settings.appearance.system": "System",
 
   "settings.addresses.title": "Addresses",
-  "settings.two_factor.title": "Two-Factor Authentication"
+  "settings.two_factor.title": "Two-Factor Authentication",
+
+  "shop.newsletter.title": "Join the :name Family",
+  "shop.newsletter.description": "Get exclusive access to new collections, design tips, and special offers.",
+  "shop.newsletter.placeholder": "Your email address",
+  "shop.newsletter.subscribe": "Subscribe",
+  "shop.newsletter.processing": "Processing...",
+  "shop.newsletter.success": "Thank you for subscribing! You will receive our latest updates.",
+  "shop.newsletter.privacy_note": "By subscribing, you agree to our privacy policy."
 }
