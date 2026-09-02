@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -44,6 +46,9 @@ export default function CreateCategory({
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isCompressing, setIsCompressing] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { t } = useTranslation();
 
     const handleImageChange = async (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -72,6 +77,11 @@ export default function CreateCategory({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
+
+    const confirmSave = () => {
+        setIsSubmitting(true);
         router.post(
             '/admin/categories',
             {
@@ -81,7 +91,12 @@ export default function CreateCategory({
             {
                 forceFormData: true,
                 onError: (errors) => {
+                    setIsSubmitting(false);
+                    setShowConfirmDialog(false);
                     console.error('Form errors:', errors);
+                },
+                onFinish: () => {
+                    setIsSubmitting(false);
                 },
             },
         );
@@ -254,6 +269,19 @@ export default function CreateCategory({
                     </div>
                 </form>
             </div>
+
+            {/* Confirm Save Category Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.categories.confirm_save_title')}
+                description={t('admin.categories.confirm_save_desc')}
+                confirmText={t('admin.categories.confirm_save_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={isSubmitting}
+                onConfirm={confirmSave}
+            />
         </AdminLayout>
     );
 }

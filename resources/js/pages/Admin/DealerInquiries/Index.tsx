@@ -1,3 +1,4 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import {
     Dialog,
     DialogClose,
@@ -7,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
@@ -94,6 +96,9 @@ export default function DealerInquiriesIndex({ inquiries, filters, stats }: Prop
     const [inquiryToDelete, setInquiryToDelete] = useState<DealerInquiryItem | null>(null);
     const [notes, setNotes] = useState('');
     const [updateStatus, setUpdateStatus] = useState<string>('new');
+    const [showSaveConfirmDialog, setShowSaveConfirmDialog] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const { t } = useTranslation();
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -119,15 +124,27 @@ export default function DealerInquiriesIndex({ inquiries, filters, stats }: Prop
         setNotes(inquiry.notes || '');
     };
 
-    const handleSaveStatus = () => {
+    const handleSaveClick = () => {
+        setShowSaveConfirmDialog(true);
+    };
+
+    const confirmSaveStatus = () => {
         if (!selectedInquiry) return;
+        setIsSaving(true);
         router.put(
             `/admin/dealer-inquiries/${selectedInquiry.id}`,
             { status: updateStatus, notes },
             {
                 preserveScroll: true,
                 onSuccess: () => {
+                    setShowSaveConfirmDialog(false);
                     setSelectedInquiry(null);
+                },
+                onError: () => {
+                    setShowSaveConfirmDialog(false);
+                },
+                onFinish: () => {
+                    setIsSaving(false);
                 },
             },
         );
@@ -440,8 +457,8 @@ export default function DealerInquiriesIndex({ inquiries, filters, stats }: Prop
                         </DialogClose>
                         <button
                             type="button"
-                            onClick={handleSaveStatus}
-                            className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+                            onClick={handleSaveClick}
+                            className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 cursor-pointer"
                         >
                             Save Changes
                         </button>
@@ -479,6 +496,19 @@ export default function DealerInquiriesIndex({ inquiries, filters, stats }: Prop
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Confirm Save Changes Dialog */}
+            <ConfirmDialog
+                open={showSaveConfirmDialog}
+                onOpenChange={setShowSaveConfirmDialog}
+                title={t('admin.dealer_inquiries.confirm_save_title')}
+                description={t('admin.dealer_inquiries.confirm_save_desc')}
+                confirmText={t('admin.dealer_inquiries.confirm_save_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={isSaving}
+                onConfirm={confirmSaveStatus}
+            />
         </AdminLayout>
     );
 }

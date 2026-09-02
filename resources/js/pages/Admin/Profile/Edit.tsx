@@ -1,8 +1,6 @@
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import DeleteUserForm from './Partials/DeleteUserForm';
-import TwoFactorAuthenticationForm from './Partials/TwoFactorAuthenticationForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 
@@ -15,7 +13,6 @@ interface EditProps {
 export default function Edit({
     mustVerifyEmail,
     status,
-    twoFactorEnabled,
 }: EditProps) {
     const { auth } = usePage<SharedData>().props;
 
@@ -43,10 +40,6 @@ export default function Edit({
                     />
 
                     <UpdatePasswordForm />
-
-                    {twoFactorEnabled && <TwoFactorAuthenticationForm />}
-
-                    <DeleteUserForm />
                 </div>
             </div>
         </AdminLayout>

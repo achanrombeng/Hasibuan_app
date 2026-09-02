@@ -1,5 +1,8 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import {
   AlertTriangle,
   Bot,
@@ -36,9 +39,20 @@ export default function AiSettings({
     ai_temperature: settings.ai_temperature ?? 0.4,
   });
 
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { t } = useTranslation();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/admin/settings/ai');
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSaveAi = () => {
+    post('/admin/settings/ai', {
+      onError: () => {
+        setShowConfirmDialog(false);
+      },
+    });
   };
 
   const handleResetPrompt = () => {
@@ -321,6 +335,19 @@ export default function AiSettings({
           </div>
         </form>
       </div>
+
+      {/* Confirm Save AI Settings Dialog */}
+      <ConfirmDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={t('admin.settings.confirm_save_title')}
+        description={t('admin.settings.confirm_save_desc')}
+        confirmText={t('admin.settings.confirm_save_button')}
+        cancelText={t('common.cancel')}
+        variant="default"
+        isLoading={processing}
+        onConfirm={confirmSaveAi}
+      />
     </AdminLayout>
   );
 }

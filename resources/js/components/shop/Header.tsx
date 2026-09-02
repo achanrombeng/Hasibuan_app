@@ -1,5 +1,6 @@
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { ProductCard } from '@/components/shop/ProductCard';
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { NAV_ITEMS } from '@/data/constants';
 import { useTranslation } from '@/hooks/use-translation';
 import { SiteSettings } from '@/types';
@@ -86,6 +87,7 @@ export const Header: React.FC<HeaderProps> = ({
     const [hasSearched, setHasSearched] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [catalogModalOpen, setCatalogModalOpen] = useState(false);
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
     const userMenuRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -204,6 +206,12 @@ export const Header: React.FC<HeaderProps> = ({
             : [];
 
     const handleLogout = () => {
+        setUserMenuOpen(false);
+        setMobileMenuOpen(false);
+        setShowLogoutDialog(true);
+    };
+
+    const confirmLogout = () => {
         router.post('/logout');
     };
 
@@ -771,6 +779,18 @@ export const Header: React.FC<HeaderProps> = ({
                 onClose={() => setCatalogModalOpen(false)}
                 pdfUrl={siteSettings?.catalog_pdf_url}
                 docxUrl={siteSettings?.catalog_docx_url}
+            />
+
+            {/* Logout Confirmation Alert */}
+            <ConfirmDialog
+                open={showLogoutDialog}
+                onOpenChange={setShowLogoutDialog}
+                title={t('common.logout_confirm_title')}
+                description={t('common.logout_confirm_desc')}
+                confirmText={t('common.logout_confirm_button')}
+                cancelText={t('common.cancel')}
+                variant="danger"
+                onConfirm={confirmLogout}
             />
         </header>
     );

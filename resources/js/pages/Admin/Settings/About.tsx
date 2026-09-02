@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, useForm } from '@inertiajs/react';
 import {
@@ -59,6 +61,9 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
         about_mission_4: settings.about_mission_4 || '',
     });
 
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -73,8 +78,15 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
+
+    const confirmSaveAbout = () => {
         post('/admin/settings/about', {
             preserveScroll: true,
+            onError: () => {
+                setShowConfirmDialog(false);
+            },
         });
     };
 
@@ -406,6 +418,19 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
                     </div>
                 </form>
             </div>
+
+            {/* Confirm Save Settings Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.settings.confirm_save_about_title')}
+                description={t('admin.settings.confirm_save_about_desc')}
+                confirmText={t('admin.settings.confirm_save_about_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={processing}
+                onConfirm={confirmSaveAbout}
+            />
         </AdminLayout>
     );
 }

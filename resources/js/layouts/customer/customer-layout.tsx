@@ -1,5 +1,7 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import { SharedData, SiteSettings } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import {
     ChevronRight,
     Heart,
@@ -10,7 +12,7 @@ import {
     ShoppingBag,
     User,
 } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 
 interface CustomerLayoutProps {
     children: ReactNode;
@@ -36,6 +38,8 @@ export default function CustomerLayout({
     title,
 }: CustomerLayoutProps) {
     const { auth } = usePage<SharedData>().props;
+    const { t } = useTranslation();
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const currentPath = window.location.pathname;
 
     const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
@@ -66,14 +70,14 @@ export default function CustomerLayout({
                             <span className="text-sm text-terra-600">
                                 Halo, {auth.user.name}
                             </span>
-                            <Link
-                                href="/logout"
-                                method="post"
-                                as="button"
-                                className="rounded-lg p-2 text-terra-500 transition-colors hover:bg-terra-50"
+                            <button
+                                type="button"
+                                onClick={() => setShowLogoutDialog(true)}
+                                className="rounded-lg p-2 text-terra-500 transition-colors hover:bg-terra-50 cursor-pointer"
+                                title={t('common.logout')}
                             >
                                 <LogOut className="h-5 w-5" />
-                            </Link>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -141,6 +145,18 @@ export default function CustomerLayout({
                     <main className="min-w-0 flex-1">{children}</main>
                 </div>
             </div>
+
+            {/* Logout Confirmation Alert */}
+            <ConfirmDialog
+                open={showLogoutDialog}
+                onOpenChange={setShowLogoutDialog}
+                title={t('common.logout_confirm_title')}
+                description={t('common.logout_confirm_desc')}
+                confirmText={t('common.logout_confirm_button')}
+                cancelText={t('common.cancel')}
+                variant="danger"
+                onConfirm={() => router.post('/logout')}
+            />
         </div>
     );
 }

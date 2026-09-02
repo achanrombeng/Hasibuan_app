@@ -17,8 +17,7 @@ class ArticleController extends Controller
     {
         $query = Article::query()
             ->published()
-            ->with('author:id,name')
-            ->latest('published_at');
+            ->with('author:id,name');
 
         if ($request->filled('search')) {
             $query->search($request->search);
@@ -28,11 +27,30 @@ class ArticleController extends Controller
             $query->byTag($request->tag);
         }
 
-        $articles = $query->paginate(9)->withQueryString();
+        $sort = $request->input('sort', 'latest');
+        if ($sort === 'oldest') {
+            $query->oldest('published_at');
+        } elseif ($sort === 'popular') {
+            $query->orderByDesc('views')->latest('published_at');
+        } else {
+            $query->latest('published_at');
+        }
+
+        $articles = $query->paginate(6)->withQueryString();
+
+        $availableTags = Article::published()
+            ->pluck('tags')
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->values()
+            ->take(20)
+            ->all();
 
         return Inertia::render('Shop/Articles/Index', [
             'articles' => ArticleResource::collection($articles),
-            'filters' => $request->only(['search', 'tag']),
+            'filters' => (object) array_filter($request->only(['search', 'tag', 'sort']), fn($v) => !is_null($v) && $v !== ''),
+            'availableTags' => $availableTags,
         ]);
     }
 

@@ -1,6 +1,9 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, ChevronDown, Gift, Percent, Save, Truck } from 'lucide-react';
+import { useState } from 'react';
 
 interface PromoBanner {
     id: number;
@@ -100,10 +103,18 @@ export default function EditPromoBanner({ promoBanner }: EditPromoBannerProps) {
         ends_at: formatDateTimeLocal(promoBanner.ends_at),
     });
 
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
+
+    const confirmUpdatePromo = () => {
         router.put(`/admin/promo-banners/${promoBanner.id}`, data, {
             onError: (errors) => {
+                setShowConfirmDialog(false);
                 console.error('Form errors:', errors);
             },
         });
@@ -447,6 +458,19 @@ export default function EditPromoBanner({ promoBanner }: EditPromoBannerProps) {
                     </div>
                 </form>
             </div>
+
+            {/* Confirm Update Promo Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.promo_banners.confirm_update_title')}
+                description={t('admin.promo_banners.confirm_update_desc')}
+                confirmText={t('admin.promo_banners.confirm_update_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={processing}
+                onConfirm={confirmUpdatePromo}
+            />
         </AdminLayout>
     );
 }

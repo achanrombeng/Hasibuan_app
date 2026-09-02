@@ -89,11 +89,25 @@ export default function Home({
             postalCode: '59411',
             country: 'ID',
           },
-          socialMedia: [
-            siteSettings?.facebook_url,
-            siteSettings?.instagram_url,
-            siteSettings?.tiktok_url,
-          ].filter(Boolean) as string[],
+          socialMedia: (() => {
+            if (siteSettings?.social_links) {
+              try {
+                const parsed = JSON.parse(siteSettings.social_links);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  return parsed
+                    .map((i: { url?: string }) => i.url)
+                    .filter(Boolean) as string[];
+                }
+              } catch {
+                // ignore
+              }
+            }
+            return [
+              siteSettings?.facebook_url,
+              siteSettings?.instagram_url,
+              siteSettings?.tiktok_url,
+            ].filter(Boolean) as string[];
+          })(),
         }}
       />
 

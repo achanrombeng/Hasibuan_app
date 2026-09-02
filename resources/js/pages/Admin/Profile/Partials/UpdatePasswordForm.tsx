@@ -1,10 +1,12 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Transition } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
-import { FormEventHandler, useRef } from 'react';
+import { FormEventHandler, useRef, useState } from 'react';
+import { useTranslation } from '@/hooks/use-translation';
 import { update as userPasswordUpdate } from '@/routes/user-password';
 import { Save } from 'lucide-react';
 
@@ -15,6 +17,8 @@ export default function UpdatePasswordForm({
 }) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
 
     const {
         data,
@@ -32,11 +36,15 @@ export default function UpdatePasswordForm({
 
     const updatePassword: FormEventHandler = (e) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
 
+    const confirmSavePassword = () => {
         put(userPasswordUpdate.url(), {
             preserveScroll: true,
             onSuccess: () => reset(),
             onError: (errors) => {
+                setShowConfirmDialog(false);
                 if (errors.password) {
                     reset('password', 'password_confirmation');
                     passwordInput.current?.focus();
@@ -130,6 +138,19 @@ export default function UpdatePasswordForm({
                     </Transition>
                 </div>
             </form>
+
+            {/* Confirm Save Password Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.profile.confirm_save_password_title')}
+                description={t('admin.profile.confirm_save_password_desc')}
+                confirmText={t('admin.profile.confirm_save_password_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={processing}
+                onConfirm={confirmSavePassword}
+            />
         </section>
     );
 }

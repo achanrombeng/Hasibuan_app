@@ -1,4 +1,5 @@
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { useInitials } from '@/hooks/use-initials';
 import { useTranslation } from '@/hooks/use-translation';
 import { type BreadcrumbItem, type SharedData } from '@/types';
@@ -18,9 +19,15 @@ export default function AdminHeader({
     const { auth } = usePage<SharedData>().props;
     const { t } = useTranslation();
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const getInitials = useInitials();
 
     const handleLogout = () => {
+        setShowUserMenu(false);
+        setShowLogoutDialog(true);
+    };
+
+    const confirmLogout = () => {
         router.post('/logout');
     };
 
@@ -159,6 +166,18 @@ export default function AdminHeader({
                     </div>
                 </div>
             </div>
+
+            {/* Logout Confirmation Alert */}
+            <ConfirmDialog
+                open={showLogoutDialog}
+                onOpenChange={setShowLogoutDialog}
+                title={t('common.logout_confirm_title')}
+                description={t('common.logout_confirm_desc')}
+                confirmText={t('common.logout_confirm_button')}
+                cancelText={t('common.cancel')}
+                variant="danger"
+                onConfirm={confirmLogout}
+            />
         </header>
     );
 }

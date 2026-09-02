@@ -100,6 +100,11 @@ Route::get('/quick-populate', function () {
 // Root route - displays shop homepage
 Route::get('/', [HomeController::class, 'index'])->middleware('share.cart')->name('home');
 
+// Aliases for articles & blog
+Route::redirect('/articles', '/shop/articles');
+Route::redirect('/blog', '/shop/articles');
+Route::redirect('/news', '/shop/articles');
+
 // Sitemap Routes
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/sitemap-pages.xml', [SitemapController::class, 'pages'])->name('sitemap.pages');

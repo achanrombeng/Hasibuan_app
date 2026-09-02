@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Category;
+use App\Models\DealerInquiry;
 use App\Models\PromoBanner;
 use App\Models\Setting;
 use Illuminate\Foundation\Inspiring;
@@ -110,6 +111,7 @@ class HandleInertiaRequests extends Middleware
             'locale' => $locale,
             'translations' => fn () => $this->getTranslations($locale, $request),
             'wishlistCount' => $user ? $user->wishlists()->count() : 0,
+            'newDealerInquiriesCount' => $user ? DealerInquiry::where('status', 'new')->count() : 0,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'siteSettings' => fn () => $this->getSiteSettings(),
             'featuredCategories' => $featuredCategories,
@@ -212,6 +214,8 @@ class HandleInertiaRequests extends Middleware
                 'instagram_url' => $settings['instagram_url'] ?? '',
                 'tiktok_url' => $settings['tiktok_url'] ?? '',
                 'youtube_url' => $settings['youtube_url'] ?? '',
+                'linkedin_url' => $settings['linkedin_url'] ?? '',
+                'social_links' => $settings['social_links'] ?? '',
                 'footer_description' => $settings['footer_description'] ?? '',
                 'footer_copyright' => $settings['footer_copyright'] ?? '',
                 'footer_col1_title' => $settings['footer_col1_title'] ?? '',

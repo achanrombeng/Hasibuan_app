@@ -22,6 +22,13 @@ export interface NavItem {
   isActive?: boolean;
 }
 
+export interface SocialLinkItem {
+  id?: string;
+  platform: string;
+  url: string;
+  label?: string;
+}
+
 export interface SiteSettings {
   site_name: string;
   site_logo?: string;
@@ -39,6 +46,8 @@ export interface SiteSettings {
   instagram_url: string;
   tiktok_url: string;
   youtube_url?: string;
+  linkedin_url?: string;
+  social_links?: string;
   footer_description?: string;
   footer_copyright?: string;
   footer_col1_title?: string;
@@ -80,6 +89,7 @@ export interface SharedData {
   siteSettings: SiteSettings;
   featuredCategories: any[]; // Using any[] to avoid circular dependency or import issues for now, or import ApiCategory if easy
   activePromoBanners: PromoBannerData[];
+  newDealerInquiriesCount?: number;
   [key: string]: unknown;
 }
 

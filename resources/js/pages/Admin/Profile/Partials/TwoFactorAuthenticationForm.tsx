@@ -3,6 +3,7 @@ import TwoFactorSetupModal from '@/components/two-factor-setup-modal';
 import { ConfirmDialog, useConfirmDialog } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/hooks/use-translation';
 import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
 import { disable, enable } from '@/routes/two-factor';
 import { SharedData } from '@/types';
@@ -18,6 +19,7 @@ export default function TwoFactorAuthenticationForm({
 }) {
   const { auth } = usePage<SharedData>().props;
   const twoFactorEnabled = auth.user.two_factor_enabled;
+  const { t } = useTranslation();
 
   // We need to re-implement the hook usage or import it if possible
   // The previous file used a hook `useTwoFactorAuth`. Let's assume it works.
@@ -38,25 +40,32 @@ export default function TwoFactorAuthenticationForm({
   const { state: confirmState, showConfirm, closeConfirm } = useConfirmDialog();
 
   const handleEnable = () => {
-    setEnabling(true);
-    router.post(
-      enable.url(),
-      {},
-      {
-        preserveScroll: true,
-        onSuccess: () => {
-          setShowSetupModal(true);
-          setEnabling(false);
-        },
-        onError: () => setEnabling(false),
+    showConfirm(
+      t('admin.profile.confirm_enable_2fa_title'),
+      t('admin.profile.confirm_enable_2fa_desc'),
+      () => {
+        setEnabling(true);
+        router.post(
+          enable.url(),
+          {},
+          {
+            preserveScroll: true,
+            onSuccess: () => {
+              setShowSetupModal(true);
+              setEnabling(false);
+            },
+            onError: () => setEnabling(false),
+          },
+        );
       },
+      'default',
     );
   };
 
   const handleDisable = () => {
     showConfirm(
-      'Disable 2FA',
-      'Are you sure you want to disable two-factor authentication?',
+      t('admin.profile.confirm_disable_2fa_title'),
+      t('admin.profile.confirm_disable_2fa_desc'),
       () => {
         setDisabling(true);
         router.delete(disable.url(), {

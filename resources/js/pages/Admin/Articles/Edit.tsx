@@ -1,3 +1,4 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { TagInput } from '@/components/TagInput';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +12,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import MDEditor from '@uiw/react-md-editor';
@@ -63,10 +65,12 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
     );
     const [removeImage, setRemoveImage] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [showSeo, setShowSeo] = useState(
         !!(article.meta_title || article.meta_description || article.meta_keywords),
     );
+    const { t } = useTranslation();
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const title = e.target.value;
@@ -97,6 +101,10 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
+
+    const confirmUpdateArticle = () => {
         setIsSubmitting(true);
         setErrors({});
 
@@ -129,6 +137,7 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
             onError: (errors) => {
                 setErrors(errors);
                 setIsSubmitting(false);
+                setShowConfirmDialog(false);
             },
         });
     };
@@ -500,6 +509,19 @@ export default function EditArticle({ article, statuses }: EditArticleProps) {
                     </div>
                 </div>
             </form>
+
+            {/* Confirm Update Article Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.articles.confirm_update_title')}
+                description={t('admin.articles.confirm_update_desc')}
+                confirmText={t('admin.articles.confirm_update_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={isSubmitting}
+                onConfirm={confirmUpdateArticle}
+            />
         </AdminLayout>
     );
 }

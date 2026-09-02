@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -61,6 +63,9 @@ export default function EditCategory({
     );
     const [removeCurrentImage, setRemoveCurrentImage] = useState(false);
     const [isCompressing, setIsCompressing] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { t } = useTranslation();
 
     const handleImageChange = async (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -91,6 +96,11 @@ export default function EditCategory({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
+
+    const confirmUpdate = () => {
+        setIsSubmitting(true);
         router.post(
             `/admin/categories/${category.id}`,
             {
@@ -102,7 +112,12 @@ export default function EditCategory({
             {
                 forceFormData: true,
                 onError: (errors) => {
+                    setIsSubmitting(false);
+                    setShowConfirmDialog(false);
                     console.error('Form errors:', errors);
+                },
+                onFinish: () => {
+                    setIsSubmitting(false);
                 },
             },
         );
@@ -275,6 +290,19 @@ export default function EditCategory({
                     </div>
                 </form>
             </div>
+
+            {/* Confirm Update Category Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.categories.confirm_update_title')}
+                description={t('admin.categories.confirm_update_desc')}
+                confirmText={t('admin.categories.confirm_update_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={isSubmitting}
+                onConfirm={confirmUpdate}
+            />
         </AdminLayout>
     );
 }

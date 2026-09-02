@@ -1,5 +1,8 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import {
   AlertTriangle,
   CheckCircle,
@@ -48,9 +51,20 @@ export default function PaymentSettings({
     payment_deadline_hours: settings.payment_deadline_hours ?? 24,
   });
 
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { t } = useTranslation();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/admin/settings/payment');
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSavePayment = () => {
+    post('/admin/settings/payment', {
+      onError: () => {
+        setShowConfirmDialog(false);
+      },
+    });
   };
 
   return (
@@ -450,6 +464,19 @@ export default function PaymentSettings({
           </div>
         </form>
       </div>
+
+      {/* Confirm Save Payment Settings Dialog */}
+      <ConfirmDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={t('admin.settings.confirm_save_title')}
+        description={t('admin.settings.confirm_save_desc')}
+        confirmText={t('admin.settings.confirm_save_button')}
+        cancelText={t('common.cancel')}
+        variant="default"
+        isLoading={processing}
+        onConfirm={confirmSavePayment}
+      />
     </AdminLayout>
   );
 }

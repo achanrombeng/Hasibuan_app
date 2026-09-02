@@ -9,6 +9,8 @@ use App\Http\Requests\StoreDealerInquiryRequest;
 use App\Mail\DealerInquiryReceived;
 use App\Models\DealerInquiry;
 use App\Models\Setting;
+use App\Models\User;
+use App\Notifications\NewDealerInquiryNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +30,16 @@ class DealerController extends Controller
         $validated['ip_address'] = $request->ip();
 
         $inquiry = DealerInquiry::create($validated);
+
+        // Notify Admins
+        try {
+            $admins = User::role('admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new NewDealerInquiryNotification($inquiry));
+            }
+        } catch (\Throwable $e) {
+            Log::error('Failed to notify admins of new dealer inquiry: ' . $e->getMessage());
+        }
 
         // Send Email Notification to Admin if recipient is configured
         try {

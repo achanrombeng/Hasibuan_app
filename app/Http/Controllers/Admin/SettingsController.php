@@ -37,6 +37,8 @@ class SettingsController extends Controller
                 'facebook_url' => $settings['facebook_url'] ?? '',
                 'instagram_url' => $settings['instagram_url'] ?? '',
                 'tiktok_url' => $settings['tiktok_url'] ?? '',
+                'linkedin_url' => $settings['linkedin_url'] ?? '',
+                'social_links' => $settings['social_links'] ?? '',
                 'catalog_pdf_url' => array_key_exists('catalog_pdf_url', $settings) ? ($settings['catalog_pdf_url'] ?? '') : '/catalogs/ronica-catalog-2026.pdf',
                 'catalog_docx_url' => array_key_exists('catalog_docx_url', $settings) ? ($settings['catalog_docx_url'] ?? '') : '/catalogs/ronica-catalog-2026.docx',
                 'catalog_title' => $settings['catalog_title'] ?? 'Ronica Product Catalogue 2026',
@@ -60,9 +62,11 @@ class SettingsController extends Controller
             'maps_showroom_url' => ['nullable', 'string', 'max:2000'],
             'maps_factory_url' => ['nullable', 'string', 'max:2000'],
             'address' => ['nullable', 'string', 'max:500'],
-            'facebook_url' => ['nullable', 'url', 'max:255'],
-            'instagram_url' => ['nullable', 'url', 'max:255'],
-            'tiktok_url' => ['nullable', 'url', 'max:255'],
+            'facebook_url' => ['nullable', 'string', 'max:500'],
+            'instagram_url' => ['nullable', 'string', 'max:500'],
+            'tiktok_url' => ['nullable', 'string', 'max:500'],
+            'linkedin_url' => ['nullable', 'string', 'max:500'],
+            'social_links' => ['nullable', 'string'],
             'catalog_title' => ['nullable', 'string', 'max:255'],
             'catalog_pdf_url' => ['nullable', 'string', 'max:500'],
             'catalog_docx_url' => ['nullable', 'string', 'max:500'],
@@ -72,6 +76,40 @@ class SettingsController extends Controller
             'delete_catalog_pdf' => ['nullable', 'boolean'],
             'delete_catalog_docx' => ['nullable', 'boolean'],
         ]);
+
+        if ($request->has('social_links')) {
+            $rawLinks = $request->input('social_links');
+            $decoded = json_decode((string) $rawLinks, true);
+            if (is_array($decoded)) {
+                $cleaned = array_values(array_filter($decoded, function ($item) {
+                    return !empty(trim($item['url'] ?? ''));
+                }));
+                $validated['social_links'] = json_encode($cleaned);
+
+                // Auto-sync legacy fields for backward compatibility
+                $fb = '';
+                $ig = '';
+                $tt = '';
+                $yt = '';
+                $li = '';
+                foreach ($cleaned as $item) {
+                    $platform = strtolower($item['platform'] ?? '');
+                    $url = trim($item['url'] ?? '');
+                    if ($platform === 'facebook' && empty($fb)) $fb = $url;
+                    if ($platform === 'instagram' && empty($ig)) $ig = $url;
+                    if ($platform === 'tiktok' && empty($tt)) $tt = $url;
+                    if ($platform === 'youtube' && empty($yt)) $yt = $url;
+                    if ($platform === 'linkedin' && empty($li)) $li = $url;
+                }
+                $validated['facebook_url'] = $fb;
+                $validated['instagram_url'] = $ig;
+                $validated['tiktok_url'] = $tt;
+                $validated['linkedin_url'] = $li;
+                if (!empty($yt)) {
+                    $validated['youtube_url'] = $yt;
+                }
+            }
+        }
 
         if ($request->hasFile('site_logo_file')) {
             $file = $request->file('site_logo_file');

@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { SiteSettings } from '@/types';
+import { SharedData, SiteSettings } from '@/types';
 
 interface NavItem {
   titleKey: string;
@@ -134,8 +134,9 @@ export default function AdminSidebar({
   const currentPath =
     typeof window !== 'undefined' ? window.location.pathname : '';
 
-  // Get site settings
-  const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
+  // Get site settings & notifications count
+  const { siteSettings, newDealerInquiriesCount } =
+    usePage<SharedData>().props;
   const siteName = siteSettings?.site_name || 'Ronica';
 
   // Check if user has permission (simplified - will be enhanced later)
@@ -221,25 +222,49 @@ export default function AdminSidebar({
           )}
           {mainNavItems
             .filter((item) => hasPermission(item.permission))
-            .map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={handleNavClick}
-                className={cn(
-                  'flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition-all',
-                  !isMobile && collapsed ? 'justify-center px-2' : 'px-3',
-                  isActive(item.href)
-                    ? 'bg-white/15 text-white shadow-lg'
-                    : 'text-white/70 hover:bg-white/10 hover:text-white',
-                )}
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {(isMobile || !collapsed) && (
-                  <span className="truncate">{t(item.titleKey)}</span>
-                )}
-              </Link>
-            ))}
+            .map((item) => {
+              const isDealerInquiries = item.href === '/admin/dealer-inquiries';
+              const hasNewInquiries =
+                isDealerInquiries && (newDealerInquiriesCount ?? 0) > 0;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={handleNavClick}
+                  className={cn(
+                    'group relative flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition-all',
+                    !isMobile && collapsed ? 'justify-center px-2' : 'px-3',
+                    isActive(item.href)
+                      ? 'bg-white/15 text-white shadow-lg'
+                      : 'text-white/70 hover:bg-white/10 hover:text-white',
+                  )}
+                  title={
+                    !isMobile && collapsed && hasNewInquiries
+                      ? `${t(item.titleKey)} (${newDealerInquiriesCount} new)`
+                      : undefined
+                  }
+                >
+                  <div className="relative flex items-center justify-center">
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    {!isMobile && collapsed && hasNewInquiries && (
+                      <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-[#705335]"></span>
+                      </span>
+                    )}
+                  </div>
+                  {(isMobile || !collapsed) && (
+                    <span className="flex-1 truncate">{t(item.titleKey)}</span>
+                  )}
+                  {(isMobile || !collapsed) && hasNewInquiries && (
+                    <span className="ml-auto inline-flex items-center justify-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white shadow-sm ring-1 ring-amber-400/40">
+                      {newDealerInquiriesCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
         </div>
 
         {/* Settings Menu */}

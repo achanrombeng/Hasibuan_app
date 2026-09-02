@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, useForm } from '@inertiajs/react';
 import {
@@ -142,9 +144,20 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
     setData('footer_col2_links', JSON.stringify(updated));
   };
 
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { t } = useTranslation();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/admin/settings/footer');
+    setShowConfirmDialog(true);
+  };
+
+  const confirmSaveFooter = () => {
+    post('/admin/settings/footer', {
+      onError: () => {
+        setShowConfirmDialog(false);
+      },
+    });
   };
 
   return (
@@ -581,6 +594,19 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
           </div>
         </form>
       </div>
+
+      {/* Confirm Save Footer Settings Dialog */}
+      <ConfirmDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={t('admin.settings.confirm_save_footer_title')}
+        description={t('admin.settings.confirm_save_footer_desc')}
+        confirmText={t('admin.settings.confirm_save_footer_button')}
+        cancelText={t('common.cancel')}
+        variant="default"
+        isLoading={processing}
+        onConfirm={confirmSaveFooter}
+      />
     </AdminLayout>
   );
 }

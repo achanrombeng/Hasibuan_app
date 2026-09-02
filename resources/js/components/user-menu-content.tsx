@@ -1,3 +1,4 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -6,11 +7,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
-import { logout } from '@/routes';
-import { edit } from '@/routes/profile';
+import { useTranslation } from '@/hooks/use-translation';
 import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { LayoutGrid, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { useState } from 'react';
 
 interface UserMenuContentProps {
     user: User;
@@ -18,13 +19,21 @@ interface UserMenuContentProps {
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
+    const { t } = useTranslation();
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const isAdmin = (user as any)?.roles?.some((role: string) =>
         ['admin', 'super-admin', 'manager', 'staff'].includes(role),
     );
 
-    const handleLogout = () => {
+    const handleLogoutClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setShowLogoutDialog(true);
+    };
+
+    const confirmLogout = () => {
         cleanup();
         router.flushAll();
+        router.post('/logout');
     };
 
     return (
@@ -77,17 +86,27 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <Link
-                    className="block w-full"
-                    href={logout()}
-                    as="button"
-                    onClick={handleLogout}
+                <button
+                    type="button"
+                    className="flex w-full items-center px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 cursor-pointer"
+                    onClick={handleLogoutClick}
                     data-test="logout-button"
                 >
-                    <LogOut className="mr-2" />
-                    Log out
-                </Link>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t('common.logout')}
+                </button>
             </DropdownMenuItem>
+
+            <ConfirmDialog
+                open={showLogoutDialog}
+                onOpenChange={setShowLogoutDialog}
+                title={t('common.logout_confirm_title')}
+                description={t('common.logout_confirm_desc')}
+                confirmText={t('common.logout_confirm_button')}
+                cancelText={t('common.cancel')}
+                variant="danger"
+                onConfirm={confirmLogout}
+            />
         </>
     );
 }

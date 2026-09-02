@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -213,6 +215,8 @@ export default function HomepageSettings({
   const [siteLogoFile, setSiteLogoFile] = useState<File | null>(null);
   const [logoCompressing, setLogoCompressing] = useState(false);
   const [logoDragging, setLogoDragging] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { t } = useTranslation();
   const logoInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogoFileSelect = useCallback(async (file: File) => {
@@ -356,7 +360,10 @@ export default function HomepageSettings({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowConfirmDialog(true);
+  };
 
+  const confirmSaveHomepage = () => {
     const formData = new FormData();
     formData.append('hero_badge', data.hero_badge);
     formData.append('hero_title', data.hero_title);
@@ -455,6 +462,10 @@ export default function HomepageSettings({
     router.post('/admin/settings/homepage', formData, {
       forceFormData: true,
       onStart: () => setProcessing(true),
+      onError: () => {
+        setProcessing(false);
+        setShowConfirmDialog(false);
+      },
       onFinish: () => setProcessing(false),
     });
   };
@@ -1487,6 +1498,19 @@ export default function HomepageSettings({
           </div>
         </form>
       </div>
+
+      {/* Confirm Save Settings Dialog */}
+      <ConfirmDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        title={t('admin.settings.confirm_save_title')}
+        description={t('admin.settings.confirm_save_desc')}
+        confirmText={t('admin.settings.confirm_save_button')}
+        cancelText={t('common.cancel')}
+        variant="default"
+        isLoading={processing}
+        onConfirm={confirmSaveHomepage}
+      />
     </AdminLayout>
   );
 }

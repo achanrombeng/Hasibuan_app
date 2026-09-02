@@ -1,5 +1,7 @@
 import ImageCropDialog from '@/components/ImageCropDialog';
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { Combobox } from '@/components/ui/combobox';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -135,6 +137,8 @@ export default function EditProduct({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
 
     const { data, setData, processing, errors } = useForm({
         name: product.name,
@@ -320,6 +324,10 @@ export default function EditProduct({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
+
+    const confirmUpdate = () => {
         setIsSubmitting(true);
         setSubmitError(null);
 
@@ -401,6 +409,7 @@ export default function EditProduct({
             },
             onError: (errs) => {
                 setIsSubmitting(false);
+                setShowConfirmDialog(false);
                 const firstErr = Object.values(errs)[0];
                 setSubmitError(
                     typeof firstErr === 'string'
@@ -1033,6 +1042,19 @@ export default function EditProduct({
                 file={cropTarget?.file ?? null}
                 onClose={() => setCropTarget(null)}
                 onCropped={handleCropped}
+            />
+
+            {/* Confirm Update Product Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.products.confirm_update_title')}
+                description={t('admin.products.confirm_update_desc')}
+                confirmText={t('admin.products.confirm_update_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={isSubmitting}
+                onConfirm={confirmUpdate}
             />
         </AdminLayout>
     );

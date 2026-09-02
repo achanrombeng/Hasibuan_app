@@ -1,10 +1,12 @@
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { useTranslation } from '@/hooks/use-translation';
 import { SharedData } from '@/types';
 import { update as profileUpdate } from '@/routes/profile';
 import { send as verificationSend } from '@/routes/verification';
@@ -20,6 +22,8 @@ export default function UpdateProfileInformationForm({
     className?: string;
 }) {
     const user = usePage<SharedData>().props.auth.user;
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -29,7 +33,15 @@ export default function UpdateProfileInformationForm({
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        patch(profileUpdate.url());
+        setShowConfirmDialog(true);
+    };
+
+    const confirmSaveProfile = () => {
+        patch(profileUpdate.url(), {
+            onError: () => {
+                setShowConfirmDialog(false);
+            },
+        });
     };
 
     return (
@@ -118,6 +130,19 @@ export default function UpdateProfileInformationForm({
                     </Transition>
                 </div>
             </form>
+
+            {/* Confirm Save Profile Info Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.profile.confirm_save_info_title')}
+                description={t('admin.profile.confirm_save_info_desc')}
+                confirmText={t('admin.profile.confirm_save_info_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={processing}
+                onConfirm={confirmSaveProfile}
+            />
         </section>
     );
 }

@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Save } from 'lucide-react';
@@ -17,6 +19,8 @@ const roleLabels: Record<string, string> = {
 
 export default function CreateUser({ roles }: CreateUserProps) {
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -26,7 +30,15 @@ export default function CreateUser({ roles }: CreateUserProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/admin/users');
+        setShowConfirmDialog(true);
+    };
+
+    const confirmSaveUser = () => {
+        post('/admin/users', {
+            onError: () => {
+                setShowConfirmDialog(false);
+            },
+        });
     };
 
     return (
@@ -178,6 +190,19 @@ export default function CreateUser({ roles }: CreateUserProps) {
                     </div>
                 </form>
             </div>
+
+            {/* Confirm Save User Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.users.confirm_save_title')}
+                description={t('admin.users.confirm_save_desc')}
+                confirmText={t('admin.users.confirm_save_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={processing}
+                onConfirm={confirmSaveUser}
+            />
         </AdminLayout>
     );
 }

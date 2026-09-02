@@ -1,3 +1,5 @@
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Save } from 'lucide-react';
@@ -25,6 +27,8 @@ const roleLabels: Record<string, string> = {
 
 export default function EditUser({ user, roles }: EditUserProps) {
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const { t } = useTranslation();
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
@@ -34,7 +38,15 @@ export default function EditUser({ user, roles }: EditUserProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/admin/users/${user.id}`);
+        setShowConfirmDialog(true);
+    };
+
+    const confirmUpdateUser = () => {
+        put(`/admin/users/${user.id}`, {
+            onError: () => {
+                setShowConfirmDialog(false);
+            },
+        });
     };
 
     return (
@@ -189,6 +201,19 @@ export default function EditUser({ user, roles }: EditUserProps) {
                     </div>
                 </form>
             </div>
+
+            {/* Confirm Update User Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.users.confirm_update_title')}
+                description={t('admin.users.confirm_update_desc')}
+                confirmText={t('admin.users.confirm_update_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={processing}
+                onConfirm={confirmUpdateUser}
+            />
         </AdminLayout>
     );
 }

@@ -1,5 +1,7 @@
 import ImageCropDialog from '@/components/ImageCropDialog';
+import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { Combobox } from '@/components/ui/combobox';
+import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -58,6 +60,9 @@ export default function CreateProduct({
     const [isExtracting, setIsExtracting] = useState(false);
     const [extractError, setExtractError] = useState<string | null>(null);
     const [extractSuccess, setExtractSuccess] = useState(false);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { t } = useTranslation();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const autoExtractAfterUploadRef = useRef(false);
 
@@ -381,7 +386,11 @@ export default function CreateProduct({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setShowConfirmDialog(true);
+    };
 
+    const confirmSave = () => {
+        setIsSubmitting(true);
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('sku', data.sku);
@@ -440,7 +449,12 @@ export default function CreateProduct({
         router.post('/admin/products', formData, {
             forceFormData: true,
             onError: (errors) => {
+                setIsSubmitting(false);
+                setShowConfirmDialog(false);
                 console.error('Form errors:', errors);
+            },
+            onFinish: () => {
+                setIsSubmitting(false);
             },
         });
     };
@@ -1005,6 +1019,19 @@ export default function CreateProduct({
                 }
                 onClose={() => setCropTargetIndex(null)}
                 onCropped={handleCropped}
+            />
+
+            {/* Confirm Save Product Dialog */}
+            <ConfirmDialog
+                open={showConfirmDialog}
+                onOpenChange={setShowConfirmDialog}
+                title={t('admin.products.confirm_save_title')}
+                description={t('admin.products.confirm_save_desc')}
+                confirmText={t('admin.products.confirm_save_button')}
+                cancelText={t('common.cancel')}
+                variant="default"
+                isLoading={isSubmitting}
+                onConfirm={confirmSave}
             />
         </AdminLayout>
     );
