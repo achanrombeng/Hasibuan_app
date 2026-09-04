@@ -70,10 +70,6 @@ class ExtractProductFromImageAction
             'category_id' => $categoryId ? (string) $categoryId : '',
             'description' => (string) ($extracted['description'] ?? ''),
             'short_description' => Str::limit((string) ($extracted['description'] ?? ''), 280, ''),
-            'price' => $this->normaliseInteger($extracted['price_idr'] ?? null),
-            'compare_price' => $this->normaliseInteger($extracted['compare_price_idr'] ?? null),
-            'cost_price' => $this->normaliseInteger($extracted['cost_price_idr'] ?? null),
-            'stock_quantity' => $this->normaliseInteger($extracted['stock_quantity'] ?? null),
             'weight' => $this->normaliseNumeric($extracted['weight_kg'] ?? null, 0.01, 2),
             'length' => $this->normaliseNumeric($extracted['length_cm'] ?? null, 0.1, 2),
             'width' => $this->normaliseNumeric($extracted['width_cm'] ?? null, 0.1, 2),
@@ -133,11 +129,7 @@ Aturan keluaran JSON (hanya relevan jika is_furniture = true):
 - "length_cm": estimasi panjang dalam sentimeter (sisi terpanjang saat dilihat dari atas).
 - "width_cm": estimasi lebar dalam sentimeter (sisi kedua saat dilihat dari atas).
 - "height_cm": estimasi tinggi dalam sentimeter (dari dasar ke puncak).
-- "price_idr": estimasi harga jual dalam Rupiah (integer, tanpa titik/koma) berdasarkan material, ukuran, dan gaya. Gunakan harga pasar Indonesia yang wajar untuk furnitur sejenis (bukan harga impor premium).
-- "compare_price_idr": harga coret (sebelum diskon) dalam Rupiah. Harus LEBIH BESAR dari price_idr — biasanya 15%-30% di atas price_idr untuk kesan promo.
-- "cost_price_idr": estimasi harga modal/HPP dalam Rupiah. Harus LEBIH KECIL dari price_idr — biasanya 50%-65% dari price_idr (margin retail furnitur 35%-50%).
 - "shipping_class": pilih TEPAT salah satu dari: "free_shipping" (item kecil & ringan, <5 kg, aksesoris), "flat_rate" (default untuk mayoritas furnitur ukuran sedang), "local_pickup" (item besar/berat seperti lemari besar, tempat tidur king, sofa besar >80 kg).
-- "stock_quantity": saran stok awal yang realistis untuk toko furnitur retail (integer). Pedoman: item kecil/aksesoris (kursi, meja kecil, rak) 10-20 unit, item ukuran sedang (meja makan, lemari sedang, sofa single) 5-10 unit, item besar/custom (lemari besar, sofa L, tempat tidur king, furniture mewah) 2-5 unit. Jangan lebih dari 30.
 - "material": material utama (contoh: "Kayu Jati", "MDF dilapisi HPL", "Besi & Kayu").
 - "color": warna dominan dalam Bahasa Indonesia (contoh: "Coklat Tua", "Putih Natural").
 - "meta_title": judul SEO maksimum 60 karakter.
@@ -158,15 +150,11 @@ Aturan keluaran JSON (hanya relevan jika is_furniture = true):
             'name' => 'Nama produk',
             'description' => 'Deskripsi lengkap',
             'short_description' => 'Deskripsi singkat',
-            'price' => 'Harga jual (Rp)',
-            'compare_price' => 'Harga coret (Rp)',
-            'cost_price' => 'Harga modal (Rp)',
             'weight' => 'Berat (kg)',
             'length' => 'Panjang (cm)',
             'width' => 'Lebar (cm)',
             'height' => 'Tinggi (cm)',
             'shipping_class' => 'Kelas pengiriman',
-            'stock_quantity' => 'Jumlah stok',
             'material' => 'Material',
             'color' => 'Warna',
             'meta_title' => 'Meta title',
@@ -221,15 +209,11 @@ Aturan keluaran JSON (hanya relevan jika is_furniture = true):
                 'name' => ['type' => 'STRING'],
                 'category' => ['type' => 'STRING'],
                 'description' => ['type' => 'STRING'],
-                'price_idr' => ['type' => 'NUMBER'],
-                'compare_price_idr' => ['type' => 'NUMBER'],
-                'cost_price_idr' => ['type' => 'NUMBER'],
                 'weight_kg' => ['type' => 'NUMBER'],
                 'length_cm' => ['type' => 'NUMBER'],
                 'width_cm' => ['type' => 'NUMBER'],
                 'height_cm' => ['type' => 'NUMBER'],
                 'shipping_class' => ['type' => 'STRING'],
-                'stock_quantity' => ['type' => 'NUMBER'],
                 'material' => ['type' => 'STRING'],
                 'color' => ['type' => 'STRING'],
                 'meta_title' => ['type' => 'STRING'],

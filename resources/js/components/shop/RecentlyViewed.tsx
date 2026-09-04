@@ -12,10 +12,6 @@ export interface RecentlyViewedProduct {
     id: number;
     name: string;
     slug: string;
-    price_formatted: string;
-    final_price_formatted: string;
-    has_discount: boolean;
-    discount_percentage: number;
     image_url: string;
     average_rating: number;
     viewedAt: number;
@@ -35,10 +31,6 @@ export function saveToRecentlyViewed(product: ApiProduct) {
             id: product.id,
             name: product.name,
             slug: product.slug,
-            price_formatted: product.price_formatted,
-            final_price_formatted: product.final_price_formatted,
-            has_discount: product.has_discount,
-            discount_percentage: product.discount_percentage,
             image_url: product.primary_image?.image_url || product.images?.[0]?.image_url || PLACEHOLDER_PRODUCT,
             average_rating: product.average_rating,
             viewedAt: Date.now(),
@@ -128,9 +120,6 @@ export function RecentlyViewedSection({ excludeProductId, maxItems = 6, classNam
                             <Link href={`/shop/products/${product.slug}`} className="group block bg-white rounded-sm overflow-hidden border border-terra-100 hover:shadow-lg transition-all">
                                 <div className="relative aspect-square overflow-hidden">
                                     <img src={product.image_url || '/images/placeholder-product.svg'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    {product.has_discount && (
-                                        <span className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">-{product.discount_percentage}%</span>
-                                    )}
                                 </div>
                                 <div className="p-3">
                                     <h3 className="font-medium text-terra-900 text-sm line-clamp-2 mb-1 group-hover:text-wood transition-colors">{product.name}</h3>
@@ -138,10 +127,7 @@ export function RecentlyViewedSection({ excludeProductId, maxItems = 6, classNam
                                         <Star size={12} className="fill-yellow-400 text-yellow-400" />
                                         <span className="text-xs text-terra-500">{Number(product.average_rating || 0).toFixed(1)}</span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold text-terra-900 text-sm">{product.final_price_formatted}</span>
-                                        {product.has_discount && <span className="text-xs text-terra-400 line-through">{product.price_formatted}</span>}
-                                    </div>
+                                    <span className="text-xs text-wood font-medium">Lihat Detail &rarr;</span>
                                 </div>
                             </Link>
                         </motion.div>

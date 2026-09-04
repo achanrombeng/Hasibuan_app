@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -65,74 +64,10 @@ describe('Product Model', function () {
         expect($product->slug)->toBe('kursi-makan-modern');
     });
 
-    it('calculates final price with discount', function () {
-        $product = Product::factory()->create([
-            'price' => 1000000,
-            'sale_type' => SaleType::HOT_SALE,
-            'discount_percentage' => 20,
-            'discount_starts_at' => now()->subDay(),
-            'discount_ends_at' => now()->addDay(),
-        ]);
-
-        expect($product->final_price)->toBe(800000);
-    });
-
-    it('returns original price when no active discount', function () {
-        $product = Product::factory()->create([
-            'price' => 1000000,
-            'discount_percentage' => null,
-        ]);
-
-        expect($product->final_price)->toBe(1000000);
-    });
-
-    it('returns original price when discount expired', function () {
-        $product = Product::factory()->create([
-            'price' => 1000000,
-            'discount_percentage' => 20,
-            'discount_starts_at' => now()->subWeek(),
-            'discount_ends_at' => now()->subDay(),
-        ]);
-
-        expect($product->final_price)->toBe(1000000);
-    });
-
     it('can check if in stock', function () {
-        $inStock = Product::factory()->create([
-            'track_stock' => true,
-            'stock_quantity' => 10,
-        ]);
+        $product = Product::factory()->create();
 
-        $outOfStock = Product::factory()->create([
-            'track_stock' => true,
-            'stock_quantity' => 0,
-            'allow_backorder' => false,
-        ]);
-
-        expect($inStock->isInStock())->toBeTrue()
-            ->and($outOfStock->isInStock())->toBeFalse();
-    });
-
-    it('can reduce stock', function () {
-        $product = Product::factory()->create([
-            'track_stock' => true,
-            'stock_quantity' => 10,
-        ]);
-
-        $product->reduceStock(3);
-
-        expect($product->fresh()->stock_quantity)->toBe(7);
-    });
-
-    it('can add stock', function () {
-        $product = Product::factory()->create([
-            'track_stock' => true,
-            'stock_quantity' => 10,
-        ]);
-
-        $product->addStock(5);
-
-        expect($product->fresh()->stock_quantity)->toBe(15);
+        expect($product->isInStock())->toBeTrue();
     });
 
     it('scopes active products', function () {
@@ -148,13 +83,5 @@ describe('Product Model', function () {
         Product::factory()->create(['is_featured' => false]);
 
         expect(Product::featured()->count())->toBe(1);
-    });
-
-    it('formats price correctly', function () {
-        $product = Product::factory()->create(['price' => 1500000]);
-
-        // Money library formats IDR with subunits (1500000 = Rp 15.000,00)
-        expect($product->formatted_price)->toBeString()
-            ->and($product->formatted_price)->toContain('Rp');
     });
 });

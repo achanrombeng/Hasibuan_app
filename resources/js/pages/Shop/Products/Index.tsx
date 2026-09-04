@@ -130,13 +130,6 @@ export default function ProductsIndex({
     const [selectedSort, setSelectedSort] = useState(
         safeFilters.sort || '-created_at',
     );
-    const [priceRange, setPriceRange] = useState<{
-        min?: number;
-        max?: number;
-    }>({
-        min: safeFilters.filter?.price_min,
-        max: safeFilters.filter?.price_max,
-    });
 
     const applyFilters = useCallback(() => {
         const params: Record<string, string> = {};
@@ -144,17 +137,13 @@ export default function ProductsIndex({
         if (searchQuery) params['filter[name]'] = searchQuery;
         if (selectedCategory)
             params['filter[category_id]'] = String(selectedCategory);
-        if (priceRange.min)
-            params['filter[price_min]'] = String(priceRange.min);
-        if (priceRange.max)
-            params['filter[price_max]'] = String(priceRange.max);
         if (selectedSort) params['sort'] = selectedSort;
 
         router.get('/shop/products', params, {
             preserveState: true,
             preserveScroll: true,
         });
-    }, [searchQuery, selectedCategory, priceRange, selectedSort]);
+    }, [searchQuery, selectedCategory, selectedSort]);
 
     const handleCategorySelect = (categoryId: number | null) => {
         const newCat = selectedCategory === categoryId ? null : categoryId;
@@ -163,8 +152,6 @@ export default function ProductsIndex({
         const params: Record<string, string> = {};
         if (searchQuery) params['filter[name]'] = searchQuery;
         if (newCat) params['filter[category_id]'] = String(newCat);
-        if (priceRange.min) params['filter[price_min]'] = String(priceRange.min);
-        if (priceRange.max) params['filter[price_max]'] = String(priceRange.max);
         if (selectedSort) params['sort'] = selectedSort;
 
         router.get('/shop/products', params, {
@@ -176,7 +163,6 @@ export default function ProductsIndex({
     const clearFilters = () => {
         setSearchQuery('');
         setSelectedCategory(null);
-        setPriceRange({});
         setSelectedSort('-created_at');
         router.get('/shop/products', {}, { preserveState: true });
     };
@@ -195,10 +181,6 @@ export default function ProductsIndex({
             if (searchQuery) params['filter[name]'] = searchQuery;
             if (selectedCategory)
                 params['filter[category_id]'] = String(selectedCategory);
-            if (priceRange.min)
-                params['filter[price_min]'] = String(priceRange.min);
-            if (priceRange.max)
-                params['filter[price_max]'] = String(priceRange.max);
             if (selectedSort) params['sort'] = selectedSort;
 
             router.get('/shop/products', params, {
@@ -211,8 +193,7 @@ export default function ProductsIndex({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchQuery]);
 
-    const hasActiveFilters =
-        searchQuery || selectedCategory || priceRange.min || priceRange.max;
+    const hasActiveFilters = searchQuery || selectedCategory;
 
     // SEO Data
     const pageTitle = normalizedCurrentCategory
@@ -513,16 +494,6 @@ export default function ProductsIndex({
                                     </button>
                                 )}
 
-                                {(priceRange.min || priceRange.max) && (
-                                    <button
-                                        onClick={() => setPriceRange({})}
-                                        className="flex items-center gap-1 rounded-sm bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100"
-                                    >
-                                        Price
-                                        <X size={14} />
-                                    </button>
-                                )}
-
                                 <button
                                     onClick={clearFilters}
                                     className="text-sm text-neutral-500 underline hover:text-neutral-900"
@@ -550,8 +521,6 @@ export default function ProductsIndex({
                     featuredCategories={sharedCategories}
                     selectedCategory={selectedCategory}
                     setSelectedCategory={setSelectedCategory}
-                    priceRange={priceRange}
-                    setPriceRange={setPriceRange}
                     selectedSort={selectedSort}
                     setSelectedSort={setSelectedSort}
                     onApply={() => {
@@ -581,30 +550,12 @@ interface FilterDrawerProps {
     featuredCategories?: ApiCategory[];
     selectedCategory: number | null;
     setSelectedCategory: (id: number | null) => void;
-    priceRange: { min?: number; max?: number };
-    setPriceRange: (range: { min?: number; max?: number }) => void;
     selectedSort: string;
     setSelectedSort: (sort: string) => void;
     onApply: () => void;
     onClear: () => void;
     hasActiveFilters: boolean;
 }
-
-// ... (imports remain the same, just removing createPortal usually) but since I can't edit multiple distinct blocks easily without multi_replace, I will focus on the component function first.
-
-// wait, I can do it in two steps or use standard replace for the component.
-
-// Re-add import for createPortal if missing (I'll do it in a separate step or assume it's there? It was removed. Need to add it back).
-// Actually, I can replace the component first, then add the import.
-
-// Import CATEGORIES from constants at the top (need separate tool or do it here if possible? I cannot add import easily without messing up top of file. I will just use the prop categories first. If user insists on data, I will suggest checking backend)
-// Wait, I can add fallback if I import it. I'll add the import in a previous step?
-// No, I'll rewrite the component first.
-// Actually, I can use the replace_file_content to replace the FilterDrawer AND the ShopLayout usage.
-
-// First, let's fix the FilterDrawer component.
-
-// Import CATEGORIES
 
 function FilterDrawer({
     isOpen,
@@ -613,8 +564,6 @@ function FilterDrawer({
     featuredCategories,
     selectedCategory,
     setSelectedCategory,
-    priceRange,
-    setPriceRange,
     selectedSort,
     setSelectedSort,
     onApply,

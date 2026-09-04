@@ -38,11 +38,6 @@ interface StatusOption {
     name: string;
 }
 
-interface SaleTypeOption {
-    value: string;
-    name: string;
-}
-
 interface Product {
     id: number;
     name: string;
@@ -50,13 +45,6 @@ interface Product {
     sku: string;
     short_description: string | null;
     description: string | null;
-    price: number;
-    compare_price: number | null;
-    cost_price: number | null;
-    discount_percentage: number | null;
-    discount_starts_at: string | null;
-    discount_ends_at: string | null;
-    stock_quantity: number;
     low_stock_threshold: number;
     track_stock: boolean;
     allow_backorder: boolean;
@@ -69,7 +57,6 @@ interface Product {
     specifications: Record<string, string> | null;
     category_id: number | null;
     status: { value: string; label: string };
-    sale_type: { value: string; label: string };
     is_featured: boolean;
     is_new_arrival: boolean;
     meta_title: string | null;
@@ -82,25 +69,12 @@ interface EditProductProps {
     product: Product;
     categories: Category[];
     statuses: StatusOption[];
-    saleTypes: SaleTypeOption[];
-}
-
-function toDatetimeLocal(iso: string | null): string {
-    if (!iso) return '';
-    try {
-        const d = new Date(iso);
-        const pad = (n: number) => String(n).padStart(2, '0');
-        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    } catch {
-        return '';
-    }
 }
 
 export default function EditProduct({
     product,
     categories,
     statuses,
-    saleTypes,
 }: EditProductProps) {
     const [existingImages, setExistingImages] = useState<ProductImage[]>(
         product.images || [],
@@ -146,12 +120,6 @@ export default function EditProduct({
         category_id: String(product.category_id || ''),
         short_description: product.short_description || '',
         description: product.description || '',
-        price: String(product.price),
-        compare_price: product.compare_price
-            ? String(product.compare_price)
-            : '',
-        cost_price: product.cost_price ? String(product.cost_price) : '',
-        stock_quantity: String(product.stock_quantity),
         low_stock_threshold: String(product.low_stock_threshold),
         track_stock: product.track_stock,
         allow_backorder: product.allow_backorder,
@@ -170,14 +138,8 @@ export default function EditProduct({
         material: product.material || '',
         color: product.color || '',
         status: product.status.value,
-        sale_type: product.sale_type?.value || 'regular',
         is_featured: product.is_featured,
         is_new_arrival: product.is_new_arrival ?? false,
-        discount_percentage: product.discount_percentage
-            ? String(product.discount_percentage)
-            : '',
-        discount_starts_at: toDatetimeLocal(product.discount_starts_at),
-        discount_ends_at: toDatetimeLocal(product.discount_ends_at),
         meta_title: product.meta_title || '',
         meta_description: product.meta_description || '',
         meta_keywords: product.meta_keywords || '',
@@ -341,14 +303,6 @@ export default function EditProduct({
             formData.append('short_description', data.short_description);
         if (data.description)
             formData.append('description', data.description);
-        if (data.price)
-            formData.append('price', data.price);
-        if (data.compare_price)
-            formData.append('compare_price', data.compare_price);
-        if (data.cost_price)
-            formData.append('cost_price', data.cost_price);
-        if (data.stock_quantity)
-            formData.append('stock_quantity', data.stock_quantity);
         if (data.low_stock_threshold)
             formData.append('low_stock_threshold', data.low_stock_threshold);
         formData.append('track_stock', data.track_stock ? '1' : '0');
@@ -375,15 +329,8 @@ export default function EditProduct({
         }
 
         formData.append('status', data.status);
-        formData.append('sale_type', data.sale_type);
         formData.append('is_featured', data.is_featured ? '1' : '0');
         formData.append('is_new_arrival', data.is_new_arrival ? '1' : '0');
-        if (data.discount_percentage)
-            formData.append('discount_percentage', data.discount_percentage);
-        if (data.discount_starts_at)
-            formData.append('discount_starts_at', data.discount_starts_at);
-        if (data.discount_ends_at)
-            formData.append('discount_ends_at', data.discount_ends_at);
         if (data.meta_title) formData.append('meta_title', data.meta_title);
         if (data.meta_description)
             formData.append('meta_description', data.meta_description);

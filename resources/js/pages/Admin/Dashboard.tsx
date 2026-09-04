@@ -26,7 +26,7 @@ interface DashboardProps {
         ordersGrowth: number;
         revenueGrowth: number;
     };
-    recentOrders: {
+    recentOrders?: {
         data: Array<{
             id: number;
             order_number: string;
@@ -42,7 +42,7 @@ interface DashboardProps {
         to: number;
         total: number;
     };
-    lowStockProducts: {
+    lowStockProducts?: {
         data: Array<{
             id: number;
             name: string;
@@ -68,8 +68,6 @@ const statusColors: Record<string, string> = {
 
 export default function Dashboard({
     stats,
-    recentOrders,
-    lowStockProducts,
 }: DashboardProps) {
     const { t } = useTranslation();
 

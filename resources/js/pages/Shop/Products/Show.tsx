@@ -226,8 +226,6 @@ export default function ProductShow({
                 url={productUrl}
                 type="product"
                 product={{
-                    price: product.final_price,
-                    currency: 'IDR',
                     availability: product.is_in_stock
                         ? 'in stock'
                         : 'out of stock',
@@ -247,8 +245,6 @@ export default function ProductShow({
                     sku: product.sku,
                     brand: siteName,
                     category: product.category?.name,
-                    price: product.final_price,
-                    priceCurrency: 'IDR',
                     availability: product.is_in_stock
                         ? 'InStock'
                         : 'OutOfStock',

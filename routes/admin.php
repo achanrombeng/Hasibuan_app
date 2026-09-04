@@ -56,6 +56,12 @@ Route::middleware(['auth', 'verified', 'role:admin|super-admin|manager|staff'])-
         ->name('products.import.template');
     Route::post('products/import', [ProductImportController::class, 'import'])
         ->name('products.import');
+    Route::post('products/bulk-images/match', [\App\Http\Controllers\Admin\ProductBulkImageController::class, 'match'])
+        ->name('products.bulk-images.match');
+    Route::get('products/bulk-images/search', [\App\Http\Controllers\Admin\ProductBulkImageController::class, 'search'])
+        ->name('products.bulk-images.search');
+    Route::post('products/bulk-images/upload', [\App\Http\Controllers\Admin\ProductBulkImageController::class, 'upload'])
+        ->name('products.bulk-images.upload');
     Route::resource('products', ProductController::class);
 
     // Orders

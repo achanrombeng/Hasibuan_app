@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -199,15 +198,10 @@ class ImportRonicaProductsCommand extends Command
                 'slug' => $slug,
                 'short_description' => $shortDesc,
                 'description' => $descriptionHtml ?: $descriptionText,
-                'price' => $estimatedPrice,
-                'compare_price' => (int) ($estimatedPrice * 1.15),
-                'cost_price' => (int) ($estimatedPrice * 0.6),
-                'stock_quantity' => rand(5, 25),
                 'low_stock_threshold' => 3,
                 'track_stock' => true,
                 'allow_backorder' => false,
                 'status' => ProductStatus::ACTIVE,
-                'sale_type' => SaleType::REGULAR,
                 'is_featured' => rand(0, 1) === 1,
                 'is_new_arrival' => true,
                 'material' => 'Teak Wood & Rattan',

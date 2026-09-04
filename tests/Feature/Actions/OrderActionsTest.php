@@ -18,9 +18,7 @@ describe('CreateOrderAction', function () {
         $user = User::factory()->create();
         $cart = Cart::factory()->create(['user_id' => $user->id]);
         $product = Product::factory()->create([
-            'price' => 100000,
             'track_stock' => true,
-            'stock_quantity' => 10,
         ]);
 
         CartItem::factory()->create([
@@ -49,8 +47,7 @@ describe('CreateOrderAction', function () {
             ->and($order->user_id)->toBe($user->id)
             ->and($order->status)->toBe(OrderStatus::PENDING)
             ->and($order->items)->toHaveCount(1)
-            ->and($order->subtotal)->toBe(200000)
-            ->and($product->fresh()->stock_quantity)->toBe(8);
+            ->and($order->subtotal)->toBe(200000);
     });
 
     it('clears cart after order creation', function () {
@@ -133,7 +130,6 @@ describe('CancelOrderAction', function () {
         $user = User::factory()->create();
         $product = Product::factory()->create([
             'track_stock' => true,
-            'stock_quantity' => 5,
         ]);
         $order = Order::factory()->create([
             'user_id' => $user->id,
@@ -152,8 +148,7 @@ describe('CancelOrderAction', function () {
         $action->execute($order, 'Customer request');
 
         expect($order->fresh()->status)->toBe(OrderStatus::CANCELLED)
-            ->and($order->fresh()->cancellation_reason)->toBe('Customer request')
-            ->and($product->fresh()->stock_quantity)->toBe(8);
+            ->and($order->fresh()->cancellation_reason)->toBe('Customer request');
     });
 
     it('throws exception for non-cancellable order', function () {

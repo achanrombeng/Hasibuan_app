@@ -166,10 +166,8 @@ export default function HotSale({
                                 className="rounded-sm border border-neutral-200 bg-white px-4 py-2 outline-none focus:border-teal-500"
                             >
                                 <option value="">Sort By</option>
-                                <option value="-discount_percentage">
-                                    Biggest Discount
-                                </option>
                                 <option value="-sold_count">Best Seller</option>
+                                <option value="-created_at">Newest</option>
                             </select>
                         </div>
 
@@ -285,11 +283,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {product.has_discount && (
-                    <span className="absolute top-3 left-3 rounded-sm bg-red-500 px-3 py-1 text-sm font-bold text-white">
-                        -{product.discount_percentage}%
-                    </span>
-                )}
                 <span className="absolute top-3 right-3 flex items-center gap-1 rounded-sm bg-accent-500 px-3 py-1 text-xs font-medium text-neutral-800">
                     <Flame size={14} />
                     HOT
@@ -315,16 +308,9 @@ function ProductCard({ product }: { product: ApiProduct }) {
                         ({product.review_count})
                     </span>
                 </div>
-                <div className="flex items-end gap-2">
-                    <span className="text-lg font-bold text-teal-500">
-                        {product.final_price_formatted}
-                    </span>
-                    {product.has_discount && (
-                        <span className="text-sm text-neutral-400 line-through">
-                            {product.price_formatted}
-                        </span>
-                    )}
-                </div>
+                <span className="text-xs font-medium text-teal-600">
+                    View Details &rarr;
+                </span>
             </div>
         </Link>
     );

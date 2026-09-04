@@ -55,18 +55,6 @@ class DashboardController extends Controller
                 'created_at' => $order->created_at->diffForHumans(),
             ]);
 
-        // Low stock products
-        $lowStockProducts = Product::where('track_stock', true)
-            ->whereColumn('stock_quantity', '<=', 'low_stock_threshold')
-            ->orderBy('stock_quantity')
-            ->paginate(5, ['*'], 'products_page')
-            ->through(fn (Product $product) => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'stock' => $product->stock_quantity,
-                'sku' => $product->sku,
-            ]);
-
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
                 'totalProducts' => $totalProducts,
@@ -79,7 +67,6 @@ class DashboardController extends Controller
                 'revenueGrowth' => $revenueGrowth,
             ],
             'recentOrders' => $recentOrders,
-            'lowStockProducts' => $lowStockProducts,
         ]);
     }
 }

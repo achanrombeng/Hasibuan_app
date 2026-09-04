@@ -1,3 +1,4 @@
+import ProductBulkImageModal from '@/components/admin/ProductBulkImageModal';
 import ProductImportModal from '@/components/admin/ProductImportModal';
 import Pagination from '@/components/pagination';
 import {
@@ -16,6 +17,7 @@ import {
   Eye,
   FileSpreadsheet,
   Filter,
+  Images,
   Package,
   Pencil,
   Plus,
@@ -29,11 +31,7 @@ interface Product {
   name: string;
   slug: string;
   sku: string;
-  price: number;
-  price_formatted: string;
-  stock_quantity: number;
   status: { value: string; label: string };
-  sale_type: { value: string; label: string };
   category: { id: number; name: string } | null;
   primary_image: { id: number; image_url: string } | null;
   images: Array<{ id: number; image_url: string }>;
@@ -98,6 +96,7 @@ export default function ProductsIndex({
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showBulkImageModal, setShowBulkImageModal] = useState(false);
 
   const productData = products.data;
 
@@ -168,7 +167,15 @@ export default function ProductsIndex({
                 Manage all products in your shop
               </p>
             </div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setShowBulkImageModal(true)}
+                className="inline-flex items-center gap-2 rounded-xl border border-sand-300 bg-sand-50/80 px-4 py-2.5 text-sm font-semibold text-terra-900 shadow-sm transition-all hover:bg-sand-100 active:scale-[0.98]"
+              >
+                <Images className="h-4 w-4 text-terra-800" />
+                <span>Upload Foto Massal</span>
+              </button>
               <button
                 type="button"
                 onClick={() => setShowImportModal(true)}
@@ -441,6 +448,11 @@ export default function ProductsIndex({
       <ProductImportModal
         isOpen={showImportModal}
         onClose={() => setShowImportModal(false)}
+      />
+
+      <ProductBulkImageModal
+        isOpen={showBulkImageModal}
+        onClose={() => setShowBulkImageModal(false)}
       />
     </AdminLayout>
   );

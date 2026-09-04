@@ -23,16 +23,6 @@ interface Product {
     short_description: string | null;
     description: string | null;
     specifications: Record<string, string> | null;
-    price: number;
-    price_formatted: string;
-    compare_price: number | null;
-    compare_price_formatted: string | null;
-    cost_price: number | null;
-    cost_price_formatted: string | null;
-    final_price_formatted: string;
-    has_discount: boolean;
-    discount_percentage: number | null;
-    stock_quantity: number;
     low_stock_threshold: number;
     track_stock: boolean;
     allow_backorder: boolean;
@@ -46,7 +36,6 @@ interface Product {
     view_count: number;
     category: { id: number; name: string } | null;
     status: { value: string; label: string };
-    sale_type: { value: string; label: string };
     is_featured: boolean;
     is_new_arrival: boolean;
     meta_title: string | null;
@@ -358,17 +347,6 @@ export default function ShowProduct({ product }: ShowProductProps) {
                                         {product.status.label}
                                     </span>
                                 </div>
-
-                                {product.discount_percentage && (
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-terra-600">
-                                            Discount
-                                        </span>
-                                        <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
-                                            {product.discount_percentage}%
-                                        </span>
-                                    </div>
-                                )}
                             </div>
                         </div>
 

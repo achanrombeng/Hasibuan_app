@@ -150,11 +150,6 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                         </div>
                                     </>
                                 )}
-                                {product.has_discount && (
-                                    <span className="absolute top-4 left-4 rounded-sm bg-teal-600 px-3 py-1 text-sm font-bold text-white">
-                                        -{product.discount_percentage}%
-                                    </span>
-                                )}
                             </div>
 
                             {/* Info Section */}
@@ -193,27 +188,6 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                     <span className="text-sm text-neutral-500">
                                         ({product.review_count} ulasan)
                                     </span>
-                                    <span className="text-neutral-300">|</span>
-                                    <span className="text-sm text-neutral-500">
-                                        {product.sold_count} terjual
-                                    </span>
-                                </div>
-
-                                <div className="mb-4 border-y border-neutral-100 py-4">
-                                    {product.has_discount ? (
-                                        <div className="flex items-end gap-3">
-                                            <span className="text-2xl font-bold text-neutral-900 md:text-3xl">
-                                                {product.final_price_formatted}
-                                            </span>
-                                            <span className="text-lg text-neutral-400 line-through">
-                                                {product.price_formatted}
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <span className="text-2xl font-bold text-neutral-900 md:text-3xl">
-                                            {product.price_formatted}
-                                        </span>
-                                    )}
                                 </div>
 
                                 {product.short_description && (
@@ -227,7 +201,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                         className={`rounded-sm px-3 py-1 text-xs font-medium ${product.is_in_stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                                     >
                                         {product.is_in_stock
-                                            ? `Stok: ${product.stock_quantity}`
+                                            ? 'Tersedia'
                                             : 'Stok Habis'}
                                     </span>
                                 </div>
@@ -254,11 +228,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                                         <button
                                             onClick={() =>
                                                 setQuantity(
-                                                    Math.min(
-                                                        product.stock_quantity ||
-                                                        99,
-                                                        quantity + 1,
-                                                    ),
+                                                    Math.min(99, quantity + 1),
                                                 )
                                             }
                                             className="flex h-10 w-10 items-center justify-center border-l border-neutral-200 hover:bg-neutral-50"

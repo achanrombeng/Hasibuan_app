@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -53,7 +52,7 @@ return new class extends Migration
 
             // Status & visibility
             $table->string('status')->default(ProductStatus::DRAFT->value);
-            $table->string('sale_type')->default(SaleType::REGULAR->value);
+            $table->string('sale_type')->default('regular');
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_new_arrival')->default(false);
 

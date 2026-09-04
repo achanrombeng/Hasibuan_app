@@ -170,23 +170,7 @@ export default function Compare({ products }: Props) {
                                     ))}
                                 </div>
 
-                                {/* Price */}
-                                <CompareRow
-                                    label="Harga"
-                                    products={products}
-                                    render={(p) => (
-                                        <div>
-                                            <span className="text-xl font-bold text-terra-900">
-                                                {p.final_price_formatted}
-                                            </span>
-                                            {p.has_discount && (
-                                                <span className="ml-2 text-sm text-terra-400 line-through">
-                                                    {p.price_formatted}
-                                                </span>
-                                            )}
-                                        </div>
-                                    )}
-                                />
+
 
                                 {/* Rating */}
                                 <CompareRow
@@ -226,7 +210,7 @@ export default function Compare({ products }: Props) {
                                             className={`rounded-full px-3 py-1 text-sm ${p.is_in_stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                                         >
                                             {p.is_in_stock
-                                                ? `Tersedia (${p.stock_quantity})`
+                                                ? 'Tersedia'
                                                 : 'Habis'}
                                         </span>
                                     )}

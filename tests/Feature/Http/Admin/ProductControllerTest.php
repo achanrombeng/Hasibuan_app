@@ -73,10 +73,8 @@ describe('Admin ProductController', function () {
             'sku' => 'KRS-001',
             'description' => 'Kursi makan dengan desain modern',
             'category_id' => $category->id,
-            'price' => 1500000,
             'status' => ProductStatus::ACTIVE->value,
             'track_stock' => true,
-            'stock_quantity' => 10,
         ]);
 
         $response->assertRedirect(route('admin.products.index'))
@@ -135,10 +133,8 @@ describe('Admin ProductController', function () {
             'sku' => $product->sku,
             'description' => 'Updated description',
             'category_id' => $category->id,
-            'price' => 2000000,
             'status' => ProductStatus::ACTIVE->value,
             'track_stock' => $product->track_stock,
-            'stock_quantity' => $product->stock_quantity,
         ]);
 
         $response->assertRedirect(route('admin.products.index'))

@@ -24,11 +24,7 @@ describe('CartController', function () {
     });
 
     it('adds product to cart for guest', function () {
-        $product = Product::factory()->create([
-            'price' => 100000,
-            'track_stock' => true,
-            'stock_quantity' => 10,
-        ]);
+        $product = Product::factory()->create();
 
         $response = $this->postJson(route('shop.cart.store'), [
             'product_id' => $product->id,

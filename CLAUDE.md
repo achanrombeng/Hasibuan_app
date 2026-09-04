@@ -146,7 +146,6 @@ Type-safe enums in `app/Enums/`:
 - `PaymentMethod`: bank_transfer, credit_card, e_wallet, cod, qris
 - `PaymentStatus`: pending, paid, failed, refunded
 - `ProductStatus`: draft, published, archived
-- `SaleType`: normal, hot_sale, clearance, stock_sale
 
 ### Middleware
 

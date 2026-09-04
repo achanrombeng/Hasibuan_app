@@ -41,11 +41,8 @@ class ProductQuery
                         $query->whereIn('category_id', $categoryIds);
                     }
                 }),
-                AllowedFilter::exact('sale_type'),
-                AllowedFilter::scope('price_min', 'priceMin'),
-                AllowedFilter::scope('price_max', 'priceMax'),
             ])
-            ->allowedSorts(['name', 'price', 'created_at', 'sold_count', 'average_rating', 'discount_percentage'])
+            ->allowedSorts(['name', 'created_at', 'sold_count', 'average_rating'])
             ->defaultSort('-created_at')
             ->active()
             ->with(['category', 'images']);
@@ -58,11 +55,9 @@ class ProductQuery
                 AllowedFilter::partial('name'),
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::exact('status'),
-                AllowedFilter::exact('sale_type'),
                 AllowedFilter::exact('is_featured'),
-                AllowedFilter::scope('stock'),
             ])
-            ->allowedSorts(['name', 'price', 'stock_quantity', 'created_at', 'sold_count'])
+            ->allowedSorts(['name', 'created_at', 'sold_count'])
             ->with(['category', 'images']);
     }
 }

@@ -9,7 +9,6 @@ use App\Actions\Product\DeleteProductAction;
 use App\Actions\Product\ExtractProductFromImageAction;
 use App\Actions\Product\UpdateProductAction;
 use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use App\Exceptions\NonFurnitureImageException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductExtractRequest;
@@ -61,10 +60,6 @@ class ProductController extends Controller implements HasMiddleware
                 ['value' => 'active', 'name' => 'Active'],
                 ['value' => 'draft', 'name' => 'Draft'],
             ],
-            'saleTypes' => collect(SaleType::cases())->map(fn ($type) => [
-                'value' => $type->value,
-                'name' => $type->label(),
-            ])->all(),
         ]);
     }
 
@@ -78,10 +73,6 @@ class ProductController extends Controller implements HasMiddleware
                 ['value' => 'active', 'name' => 'Active'],
                 ['value' => 'draft', 'name' => 'Draft'],
             ],
-            'saleTypes' => collect(SaleType::cases())->map(fn ($type) => [
-                'value' => $type->value,
-                'name' => $type->label(),
-            ])->all(),
         ]);
     }
 
@@ -123,10 +114,6 @@ class ProductController extends Controller implements HasMiddleware
                 ['value' => 'active', 'name' => 'Active'],
                 ['value' => 'draft', 'name' => 'Draft'],
             ],
-            'saleTypes' => collect(SaleType::cases())->map(fn ($type) => [
-                'value' => $type->value,
-                'name' => $type->label(),
-            ])->all(),
         ]);
     }
 

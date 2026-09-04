@@ -95,7 +95,7 @@ class ProductController extends Controller
     public function hotSale(Request $request): Response
     {
         $products = ProductQuery::shop($request)
-            ->where('sale_type', 'hot_sale')
+            ->where('is_featured', true)
             ->paginate(15)
             ->withQueryString();
 
@@ -121,7 +121,7 @@ class ProductController extends Controller
     public function clearance(Request $request): Response
     {
         $products = ProductQuery::shop($request)
-            ->where('sale_type', 'clearance')
+            ->where('is_new_arrival', false)
             ->paginate(15)
             ->withQueryString();
 
@@ -147,7 +147,6 @@ class ProductController extends Controller
     public function stockSale(Request $request): Response
     {
         $products = ProductQuery::shop($request)
-            ->where('sale_type', 'stock_sale')
             ->paginate(15)
             ->withQueryString();
 

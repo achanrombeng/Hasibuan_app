@@ -109,19 +109,6 @@ export interface ApiProduct {
     short_description: string | null;
     description: string | null;
     specifications: Record<string, string> | null;
-    price: number;
-    price_formatted: string;
-    compare_price: number | null;
-    compare_price_formatted: string | null;
-    cost_price: number | null;
-    cost_price_formatted: string | null;
-    discount_percentage: number;
-    discount_starts_at: string | null;
-    discount_ends_at: string | null;
-    final_price: number;
-    final_price_formatted: string;
-    has_discount: boolean;
-    stock_quantity: number;
     low_stock_threshold: number;
     track_stock: boolean;
     allow_backorder: boolean;
@@ -142,10 +129,6 @@ export interface ApiProduct {
     material: string | null;
     color: string | null;
     status: {
-        value: string;
-        label: string;
-    };
-    sale_type: {
         value: string;
         label: string;
     };
@@ -201,9 +184,6 @@ export interface ProductFilters {
     filter?: {
         name?: string;
         category_id?: number;
-        sale_type?: string;
-        price_min?: number;
-        price_max?: number;
     };
     sort?: string;
 }

@@ -1,6 +1,6 @@
 import { SiteSettings } from '@/types';
 import { ApiCategory } from '@/types/shop';
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -230,11 +230,11 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
               {items.map((item, index) => {
                 const isActive = index === activeIndex;
                 return (
-                  <button
+                  <Link
                     key={item.id}
-                    onClick={() => setActiveIndex(index)}
+                    href={`/shop/category/${item.slug}`}
                     onMouseEnter={() => setActiveIndex(index)}
-                    className={`group relative flex items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal ${isActive
+                    className={`group relative flex items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal cursor-pointer ${isActive
                         ? 'pl-4 font-semibold text-neutral-900 lg:pl-3'
                         : 'font-normal text-neutral-500 hover:pl-2 hover:text-neutral-800'
                       }`}
@@ -263,7 +263,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                           : '-translate-x-2 opacity-0 group-hover:opacity-60'
                         }`}
                     />
-                  </button>
+                  </Link>
                 );
               })}
             </div>
@@ -276,31 +276,47 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
               onMouseEnter={() => setIsAutoPlaying(false)}
               onMouseLeave={() => setIsAutoPlaying(true)}
             >
-              {/* Background Image Carousel with Fade Animation */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentSlide.id}
-                  initial={{ opacity: 0, scale: 1.03 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
-                  className="absolute inset-0 h-full w-full"
-                >
-                  <img
-                    src={currentSlide.image}
-                    alt={currentSlide.categoryName}
-                    className="h-full w-full object-cover object-center brightness-[0.96]"
-                  />
-                  {/* Subtle Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
-                </motion.div>
-              </AnimatePresence>
+              {/* Clickable Banner Link */}
+              <Link
+                href={`/shop/category/${currentSlide.slug}`}
+                className="absolute inset-0 z-10 block cursor-pointer"
+                aria-label={`Lihat semua produk kategori ${currentSlide.categoryName}`}
+              >
+                {/* Background Image Carousel with Fade Animation */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentSlide.id}
+                    initial={{ opacity: 0, scale: 1.03 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
+                    className="absolute inset-0 h-full w-full"
+                  >
+                    <img
+                      src={currentSlide.image}
+                      alt={currentSlide.categoryName}
+                      className="h-full w-full object-cover object-center brightness-[0.96] transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {/* Subtle Gradient Overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Floating "Explore Collection" Badge */}
+                <div className="absolute bottom-6 right-6 z-20 hidden items-center gap-2 rounded-xl bg-white/90 px-4 py-2.5 text-sm font-semibold text-neutral-900 shadow-lg backdrop-blur-md transition-all group-hover:bg-white group-hover:shadow-xl sm:inline-flex">
+                  <span>Lihat Produk {currentSlide.categoryName}</span>
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </div>
+              </Link>
 
               {/* Slider Navigation Arrow Buttons */}
               <button
                 type="button"
-                onClick={handlePrev}
-                className="absolute top-1/2 left-4 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white active:scale-95"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrev();
+                }}
+                className="absolute top-1/2 left-4 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white active:scale-95"
                 aria-label="Previous category"
               >
                 <ChevronLeft size={22} />
@@ -308,19 +324,25 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
 
               <button
                 type="button"
-                onClick={handleNext}
-                className="absolute top-1/2 right-4 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white active:scale-95"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
+                className="absolute top-1/2 right-4 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white active:scale-95"
                 aria-label="Next category"
               >
                 <ChevronRight size={22} />
               </button>
 
               {/* Bottom Carousel Indicator Dots */}
-              <div className="absolute bottom-4 left-6 z-20 flex items-center gap-2">
+              <div className="absolute bottom-4 left-6 z-30 flex items-center gap-2">
                 {items.map((_, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setActiveIndex(idx)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveIndex(idx);
+                    }}
                     className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeIndex
                         ? 'w-8 bg-white'
                         : 'w-2 bg-white/50 hover:bg-white/80'

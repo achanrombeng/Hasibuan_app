@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,10 +30,6 @@ use Spatie\Translatable\HasTranslations;
  * @property string $slug
  * @property string|null $short_description
  * @property string|null $description
- * @property int $price
- * @property int|null $compare_price
- * @property int|null $cost_price
- * @property int $stock_quantity
  * @property int $low_stock_threshold
  * @property bool $track_stock
  * @property bool $allow_backorder
@@ -46,12 +41,8 @@ use Spatie\Translatable\HasTranslations;
  * @property string|null $color
  * @property array|null $specifications
  * @property ProductStatus $status
- * @property SaleType $sale_type
  * @property bool $is_featured
  * @property bool $is_new_arrival
- * @property int|null $discount_percentage
- * @property Carbon|null $discount_starts_at
- * @property Carbon|null $discount_ends_at
  * @property string|null $meta_title
  * @property string|null $meta_description
  * @property string|null $meta_keywords
@@ -128,10 +119,6 @@ class Product extends Model implements HasMedia
         'slug',
         'short_description',
         'description',
-        'price',
-        'compare_price',
-        'cost_price',
-        'stock_quantity',
         'low_stock_threshold',
         'track_stock',
         'allow_backorder',
@@ -145,12 +132,8 @@ class Product extends Model implements HasMedia
         'color',
         'specifications',
         'status',
-        'sale_type',
         'is_featured',
         'is_new_arrival',
-        'discount_percentage',
-        'discount_starts_at',
-        'discount_ends_at',
         'meta_title',
         'meta_description',
         'meta_keywords',
@@ -163,10 +146,6 @@ class Product extends Model implements HasMedia
     protected function casts(): array
     {
         return [
-            'price' => 'integer',
-            'compare_price' => 'integer',
-            'cost_price' => 'integer',
-            'stock_quantity' => 'integer',
             'low_stock_threshold' => 'integer',
             'track_stock' => 'boolean',
             'allow_backorder' => 'boolean',
@@ -177,12 +156,8 @@ class Product extends Model implements HasMedia
             'height' => 'decimal:2',
             'specifications' => 'array',
             'status' => ProductStatus::class,
-            'sale_type' => SaleType::class,
             'is_featured' => 'boolean',
             'is_new_arrival' => 'boolean',
-            'discount_percentage' => 'integer',
-            'discount_starts_at' => 'datetime',
-            'discount_ends_at' => 'datetime',
             'view_count' => 'integer',
             'sold_count' => 'integer',
             'average_rating' => 'decimal:2',
@@ -248,92 +223,17 @@ class Product extends Model implements HasMedia
         return $query->where('is_new_arrival', true);
     }
 
-    public function scopeOnSale($query)
-    {
-        return $query->whereNotNull('discount_percentage')
-            ->where('discount_percentage', '>', 0)
-            ->where(function ($q) {
-                $q->whereNull('discount_starts_at')
-                    ->orWhere('discount_starts_at', '<=', now());
-            })
-            ->where(function ($q) {
-                $q->whereNull('discount_ends_at')
-                    ->orWhere('discount_ends_at', '>=', now());
-            });
-    }
-
-    public function scopeBySaleType($query, SaleType $saleType)
-    {
-        return $query->where('sale_type', $saleType);
-    }
-
     public function scopeInStock($query)
     {
-        return $query->where(function ($q) {
-            $q->where('track_stock', false)
-                ->orWhere('stock_quantity', '>', 0)
-                ->orWhere('allow_backorder', true);
-        });
-    }
-
-    /**
-     * @param  Builder<Product>  $query
-     * @return Builder<Product>
-     */
-    public function scopePriceMin($query, int $minPrice)
-    {
-        return $query->where('price', '>=', $minPrice);
-    }
-
-    /**
-     * @param  Builder<Product>  $query
-     * @return Builder<Product>
-     */
-    public function scopePriceMax($query, int $maxPrice)
-    {
-        return $query->where('price', '<=', $maxPrice);
+        return $query->where('status', ProductStatus::ACTIVE);
     }
 
     public function scopeStock($query, $status)
     {
-        if ($status === 'low') {
-            return $query->where('track_stock', true)
-                ->whereColumn('stock_quantity', '<=', 'low_stock_threshold');
-        }
-
         return $query;
     }
 
     // ==================== Accessors ====================
-
-    public function getFinalPriceAttribute(): int
-    {
-        if (! $this->hasActiveDiscount()) {
-            return $this->price;
-        }
-
-        return (int) round($this->price * (1 - $this->discount_percentage / 100));
-    }
-
-    public function getSavingsAttribute(): int
-    {
-        return $this->price - $this->final_price;
-    }
-
-    public function getFormattedPriceAttribute(): string
-    {
-        return format_rupiah($this->price);
-    }
-
-    public function getFormattedComparePriceAttribute(): ?string
-    {
-        return $this->compare_price ? format_rupiah($this->compare_price) : null;
-    }
-
-    public function getFormattedFinalPriceAttribute(): string
-    {
-        return format_rupiah($this->final_price);
-    }
 
     public function getPrimaryImageAttribute(): ?ProductImage
     {
@@ -362,46 +262,19 @@ class Product extends Model implements HasMedia
 
     // ==================== Helper Methods ====================
 
-    public function hasActiveDiscount(): bool
-    {
-        if (! $this->discount_percentage || $this->discount_percentage <= 0) {
-            return false;
-        }
-
-        $now = now();
-
-        if ($this->discount_starts_at && $this->discount_starts_at > $now) {
-            return false;
-        }
-
-        if ($this->discount_ends_at && $this->discount_ends_at < $now) {
-            return false;
-        }
-
-        return $this->sale_type->hasDiscount();
-    }
-
     public function isInStock(): bool
     {
-        if (! $this->track_stock) {
-            return true;
-        }
-
-        if ($this->stock_quantity > 0) {
-            return true;
-        }
-
-        return $this->allow_backorder;
+        return true;
     }
 
     public function isLowStock(): bool
     {
-        return $this->track_stock && $this->stock_quantity <= $this->low_stock_threshold;
+        return false;
     }
 
     public function isSellable(): bool
     {
-        return $this->status->isSellable() && $this->isInStock();
+        return $this->status->isSellable();
     }
 
     public function incrementViewCount(): void
@@ -428,9 +301,7 @@ class Product extends Model implements HasMedia
      */
     public function reduceStock(int $quantity): void
     {
-        if ($this->track_stock && $this->stock_quantity >= $quantity) {
-            $this->decrement('stock_quantity', $quantity);
-        }
+        // No-op without stock_quantity column
     }
 
     /**
@@ -438,9 +309,7 @@ class Product extends Model implements HasMedia
      */
     public function addStock(int $quantity): void
     {
-        if ($this->track_stock) {
-            $this->increment('stock_quantity', $quantity);
-        }
+        // No-op without stock_quantity column
     }
 
     /**

@@ -32,21 +32,14 @@ interface StatusOption {
     name: string;
 }
 
-interface SaleTypeOption {
-    value: string;
-    name: string;
-}
-
 interface CreateProductProps {
     categories: Category[];
     statuses: StatusOption[];
-    saleTypes: SaleTypeOption[];
 }
 
 export default function CreateProduct({
     categories,
     statuses,
-    saleTypes,
 }: CreateProductProps) {
     const [previewImages, setPreviewImages] = useState<
         { file: File; preview: string }[]
@@ -72,10 +65,6 @@ export default function CreateProduct({
         category_id: '',
         short_description: '',
         description: '',
-        price: '',
-        compare_price: '',
-        cost_price: '',
-        stock_quantity: '',
         low_stock_threshold: '5',
         track_stock: true,
         allow_backorder: false,
@@ -88,12 +77,8 @@ export default function CreateProduct({
         material: '',
         color: '',
         status: 'active',
-        sale_type: 'regular',
         is_featured: false,
         is_new_arrival: false,
-        discount_percentage: '',
-        discount_starts_at: '',
-        discount_ends_at: '',
         meta_title: '',
         meta_description: '',
         meta_keywords: '',
@@ -129,10 +114,6 @@ export default function CreateProduct({
             'category_id',
             'description',
             'short_description',
-            'price',
-            'compare_price',
-            'cost_price',
-            'stock_quantity',
             'weight',
             'length',
             'width',
@@ -218,19 +199,6 @@ export default function CreateProduct({
                 short_description: preferExisting(
                     prev.short_description,
                     extracted.short_description,
-                ),
-                price: preferExisting(prev.price, extracted.price),
-                compare_price: preferExisting(
-                    prev.compare_price,
-                    extracted.compare_price,
-                ),
-                cost_price: preferExisting(
-                    prev.cost_price,
-                    extracted.cost_price,
-                ),
-                stock_quantity: preferExisting(
-                    prev.stock_quantity,
-                    extracted.stock_quantity,
                 ),
                 weight: preferExisting(prev.weight, extracted.weight),
                 length: preferExisting(prev.length, extracted.length),
@@ -397,11 +365,6 @@ export default function CreateProduct({
         formData.append('category_id', data.category_id);
         formData.append('short_description', data.short_description);
         formData.append('description', data.description);
-        formData.append('price', data.price);
-        if (data.compare_price)
-            formData.append('compare_price', data.compare_price);
-        if (data.cost_price) formData.append('cost_price', data.cost_price);
-        formData.append('stock_quantity', data.stock_quantity);
         formData.append('low_stock_threshold', data.low_stock_threshold);
         formData.append('track_stock', data.track_stock ? '1' : '0');
         formData.append('allow_backorder', data.allow_backorder ? '1' : '0');
@@ -427,15 +390,8 @@ export default function CreateProduct({
         }
 
         formData.append('status', data.status);
-        formData.append('sale_type', data.sale_type);
         formData.append('is_featured', data.is_featured ? '1' : '0');
         formData.append('is_new_arrival', data.is_new_arrival ? '1' : '0');
-        if (data.discount_percentage)
-            formData.append('discount_percentage', data.discount_percentage);
-        if (data.discount_starts_at)
-            formData.append('discount_starts_at', data.discount_starts_at);
-        if (data.discount_ends_at)
-            formData.append('discount_ends_at', data.discount_ends_at);
         if (data.meta_title) formData.append('meta_title', data.meta_title);
         if (data.meta_description)
             formData.append('meta_description', data.meta_description);

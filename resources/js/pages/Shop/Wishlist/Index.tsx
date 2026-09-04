@@ -155,13 +155,6 @@ function WishlistCard({
         )}
       </button>
 
-      {/* Discount Badge */}
-      {product.has_discount && (
-        <span className="absolute top-3 left-3 rounded-sm bg-red-500 px-2 py-1 text-xs font-medium text-white">
-          -{product.discount_percentage}%
-        </span>
-      )}
-
       {/* Content */}
       <div className="p-4">
         {product.category && (
@@ -175,14 +168,9 @@ function WishlistCard({
           </h3>
         </Link>
         <div className="mt-2 flex items-center gap-2">
-          <span className="font-semibold text-neutral-900">
-            {product.final_price_formatted}
-          </span>
-          {product.has_discount && (
-            <span className="text-sm text-neutral-400 line-through">
-              {product.price_formatted}
-            </span>
-          )}
+          <Link href={`/shop/products/${product.slug}`} className="text-xs font-medium text-teal-700 hover:underline">
+            Lihat Detail &rarr;
+          </Link>
         </div>
 
         {/* Stock Status */}

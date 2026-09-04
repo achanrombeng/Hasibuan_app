@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Enums\ProductStatus;
-use App\Enums\SaleType;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -35,29 +34,23 @@ class ProductImportService
     private const FIELD_ALIASES = [
         'sku' => ['sku', 'kode', 'kode_produk', 'kode_barang', 'product_code'],
         'name' => ['name', 'nama', 'nama_produk', 'product_name', 'title', 'judul'],
-        'category' => ['category', 'kategori', 'kategori_produk', 'category_name'],
-        'price' => ['price', 'harga', 'harga_jual', 'selling_price', 'price_idr'],
-        'compare_price' => ['compare_price', 'harga_coret', 'harga_asli', 'original_price', 'harga_sebelum_diskon'],
-        'cost_price' => ['cost_price', 'harga_modal', 'modal', 'hpp'],
-        'stock_quantity' => ['stock_quantity', 'stock', 'stok', 'qty', 'quantity', 'jumlah_stok'],
-        'material' => ['material', 'bahan', 'material_furniture'],
+        'category' => ['category', 'kategori', 'kategori_produk', 'category_name', 'nama_kategori'],
+        'material' => ['material', 'bahan', 'material_furniture', 'bahan_baku'],
         'color' => ['color', 'warna', 'colour'],
         'weight' => ['weight', 'berat', 'berat_kg', 'weight_kg'],
         'length' => ['length', 'panjang', 'panjang_cm', 'length_cm'],
         'width' => ['width', 'lebar', 'lebar_cm', 'width_cm'],
         'height' => ['height', 'tinggi', 'tinggi_cm', 'height_cm'],
         'short_description' => ['short_description', 'deskripsi_singkat', 'ringkasan', 'summary'],
-        'description' => ['description', 'deskripsi', 'detail', 'keterangan'],
+        'description' => ['description', 'deskripsi', 'detail', 'keterangan', 'deskripsi_lengkap'],
         'status' => ['status', 'status_produk'],
-        'sale_type' => ['sale_type', 'tipe_penjualan', 'jenis_diskon', 'promo_type'],
-        'discount_percentage' => ['discount_percentage', 'discount', 'diskon', 'persen_diskon', 'potongan'],
         'is_featured' => ['is_featured', 'featured', 'unggulan', 'produk_unggulan'],
         'is_new_arrival' => ['is_new_arrival', 'new_arrival', 'produk_baru', 'baru'],
-        'image_urls' => ['image_urls', 'images', 'foto', 'gambar', 'url_gambar', 'image_url', 'photos'],
+        'image_urls' => ['image_urls', 'images', 'foto', 'gambar', 'url_gambar', 'image_url', 'photos', 'url_foto'],
     ];
 
     /**
-     * Generate template spreadsheet with styling, notes, and sample data.
+     * Generate template spreadsheet with styling, notes, sample data, and instructions.
      */
     public function generateTemplate(string $format = 'xlsx'): string
     {
@@ -69,11 +62,7 @@ class ProductImportService
             'sku' => 'SKU (Opsional)',
             'name' => 'Nama Produk *',
             'category' => 'Kategori *',
-            'price' => 'Harga (Rp) *',
-            'compare_price' => 'Harga Coret (Rp)',
-            'cost_price' => 'Harga Modal (Rp)',
-            'stock_quantity' => 'Stok',
-            'material' => 'Material',
+            'material' => 'Material / Bahan',
             'color' => 'Warna',
             'weight' => 'Berat (kg)',
             'length' => 'Panjang (cm)',
@@ -82,8 +71,6 @@ class ProductImportService
             'short_description' => 'Deskripsi Singkat',
             'description' => 'Deskripsi Lengkap',
             'status' => 'Status (active/draft)',
-            'sale_type' => 'Tipe Penjualan',
-            'discount_percentage' => 'Diskon (%)',
             'is_featured' => 'Unggulan (1/0)',
             'is_new_arrival' => 'Produk Baru (1/0)',
             'image_urls' => 'URL Foto (Pisahkan ;)',
@@ -130,10 +117,6 @@ class ProductImportService
                 'sku' => 'SFA-001',
                 'name' => 'Sofa Minimalis 3 Seater Grey',
                 'category' => 'Sofa & Bench',
-                'price' => 4500000,
-                'compare_price' => 5200000,
-                'cost_price' => 2800000,
-                'stock_quantity' => 12,
                 'material' => 'Kayu Jati Solid, Kain Fabric',
                 'color' => 'Abu-abu Charcoal',
                 'weight' => 45.0,
@@ -143,8 +126,6 @@ class ProductImportService
                 'short_description' => 'Sofa 3 seater elegan dengan rangka kayu jati pilihan dan busa empuk tahan lama.',
                 'description' => 'Sofa minimalis berkonsep skandinavia dengan bahan kain premium dan bantalan ergonomis. Cocok untuk mempercantik ruang tamu modern.',
                 'status' => 'active',
-                'sale_type' => 'regular',
-                'discount_percentage' => 0,
                 'is_featured' => 1,
                 'is_new_arrival' => 1,
                 'image_urls' => 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800',
@@ -153,10 +134,6 @@ class ProductImportService
                 'sku' => 'TBL-DIN-002',
                 'name' => 'Meja Makan Jati Scandinavian 6 Kursi',
                 'category' => 'Dining Sets',
-                'price' => 8200000,
-                'compare_price' => 9500000,
-                'cost_price' => 5100000,
-                'stock_quantity' => 8,
                 'material' => '100% Solid Teak Wood',
                 'color' => 'Natural Wood Walnut',
                 'weight' => 65.0,
@@ -166,8 +143,6 @@ class ProductImportService
                 'short_description' => 'Set meja makan jati solid dengan finishing natural melamine yang halus dan anti gores.',
                 'description' => 'Meja makan bernuansa hangat dengan konstruksi kayu jati utuh, dikerjakan pengrajin berpengalaman. Sudah termasuk 6 kursi yang serasi.',
                 'status' => 'active',
-                'sale_type' => 'hot_sale',
-                'discount_percentage' => 10,
                 'is_featured' => 1,
                 'is_new_arrival' => 0,
                 'image_urls' => 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800',
@@ -176,10 +151,6 @@ class ProductImportService
                 'sku' => 'CHR-ARM-003',
                 'name' => 'Armchair Lounge Rotan Sintetis',
                 'category' => 'Chairs',
-                'price' => 1850000,
-                'compare_price' => 2200000,
-                'cost_price' => 1100000,
-                'stock_quantity' => 20,
                 'material' => 'Rotan Sintetis UV-Resistant & Alumunium',
                 'color' => 'Beige Sandy',
                 'weight' => 12.5,
@@ -189,8 +160,6 @@ class ProductImportService
                 'short_description' => 'Kursi santai outdoor rotan sintetis yang tahan terhadap cuaca panas dan hujan.',
                 'description' => 'Armchair stylish cocok untuk teras, kolam renang, maupun ruang keluarga. Rangka alumunium kokoh, ringan dan anti karat.',
                 'status' => 'active',
-                'sale_type' => 'regular',
-                'discount_percentage' => 0,
                 'is_featured' => 0,
                 'is_new_arrival' => 1,
                 'image_urls' => '',
@@ -207,36 +176,230 @@ class ProductImportService
                 $sheet->setCellValue("{$colLetter}{$rowIndex}", $val);
                 $col++;
             }
+            $sheet->getRowDimension($rowIndex)->setRowHeight(22);
             $rowIndex++;
         }
 
         // Auto-size columns
-        for ($i = 1; $i <= count($headers); $i++) {
-            $colLetter = Coordinate::stringFromColumnIndex($i);
+        foreach (range(1, count($headers)) as $colIndex) {
+            $colLetter = Coordinate::stringFromColumnIndex($colIndex);
             $sheet->getColumnDimension($colLetter)->setAutoSize(true);
         }
 
-        // Save to temp file
-        $tempDir = storage_path('app/temp');
-        if (! file_exists($tempDir)) {
-            mkdir($tempDir, 0755, true);
+        // Zebra striping for samples
+        $dataRange = "A2:{$highestColumn}".(count($samples) + 1);
+        $sheet->getStyle($dataRange)->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['rgb' => 'E5E7EB'],
+                ],
+            ],
+            'alignment' => [
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+
+        // Add instructions guide sheet for XLSX format
+        if ($format === 'xlsx') {
+            $guideSheet = $spreadsheet->createSheet();
+            $guideSheet->setTitle('Petunjuk Pengisian');
+
+            $guideHeaders = ['Nama Kolom', 'Keterangan', 'Wajib / Opsional', 'Contoh Nilai'];
+            foreach ($guideHeaders as $gIdx => $gTitle) {
+                $gCol = Coordinate::stringFromColumnIndex($gIdx + 1);
+                $guideSheet->setCellValue("{$gCol}1", $gTitle);
+            }
+
+            $guideSheet->getStyle('A1:D1')->applyFromArray([
+                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+                'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '7A2E1E']],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+            ]);
+            $guideSheet->getRowDimension(1)->setRowHeight(26);
+
+            $guideRows = [
+                ['sku', 'Kode unik produk. Jika dikosongkan, sistem akan otomatis menghasilkan SKU unik.', 'Opsional', 'SFA-001'],
+                ['name', 'Nama lengkap produk furniture.', 'Wajib', 'Sofa Minimalis 3 Seater Grey'],
+                ['category', 'Nama kategori produk. Jika belum ada di sistem, kategori akan dibuat otomatis.', 'Wajib', 'Sofa & Bench'],
+                ['material', 'Jenis bahan / material utama.', 'Opsional', 'Kayu Jati Solid, Kain Fabric'],
+                ['color', 'Warna produk.', 'Opsional', 'Abu-abu Charcoal'],
+                ['weight', 'Berat produk dalam kilogram (kg).', 'Opsional', '45.0'],
+                ['length', 'Panjang dimensi produk dalam centimeter (cm).', 'Opsional', '210'],
+                ['width', 'Lebar dimensi produk dalam centimeter (cm).', 'Opsional', '85'],
+                ['height', 'Tinggi dimensi produk dalam centimeter (cm).', 'Opsional', '80'],
+                ['short_description', 'Ringkasan singkat tentang keunggulan produk.', 'Opsional', 'Sofa 3 seater elegan berangka jati solid...'],
+                ['description', 'Deskripsi detail spesifikasi dan kegunaan produk.', 'Opsional', 'Sofa minimalis berkonsep skandinavia...'],
+                ['status', 'Status tayang produk: active atau draft.', 'Opsional (Default: active)', 'active'],
+                ['is_featured', 'Tandai sebagai produk unggulan (1 = Ya, 0 = Tidak).', 'Opsional (Default: 0)', '1'],
+                ['is_new_arrival', 'Tandai sebagai produk baru (1 = Ya, 0 = Tidak).', 'Opsional (Default: 0)', '1'],
+                ['image_urls', 'Link URL foto produk di internet. Pisahkan dengan tanda titik koma (;) jika lebih dari 1 foto.', 'Opsional', 'https://example.com/img1.jpg;https://example.com/img2.jpg'],
+            ];
+
+            $gRowNum = 2;
+            foreach ($guideRows as $gRow) {
+                foreach ($gRow as $gColIdx => $gVal) {
+                    $gCol = Coordinate::stringFromColumnIndex($gColIdx + 1);
+                    $guideSheet->setCellValue("{$gCol}{$gRowNum}", $gVal);
+                }
+                $guideSheet->getRowDimension($gRowNum)->setRowHeight(20);
+                $gRowNum++;
+            }
+
+            $guideRange = 'A2:D'.(count($guideRows) + 1);
+            $guideSheet->getStyle($guideRange)->applyFromArray([
+                'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'E5E7EB']]],
+                'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
+            ]);
+
+            foreach (range(1, 4) as $colIdx) {
+                $gCol = Coordinate::stringFromColumnIndex($colIdx);
+                $guideSheet->getColumnDimension($gCol)->setAutoSize(true);
+            }
+
+            // Set the first sheet as active by default
+            $spreadsheet->setActiveSheetIndex(0);
         }
 
-        $format = strtolower($format);
+        $filename = 'template-import-produk-'.date('YmdHis');
+
         if ($format === 'csv') {
-            $fileName = 'ronica_template_produk.csv';
-            $filePath = $tempDir.'/'.$fileName;
             $writer = new Csv($spreadsheet);
-            $writer->setUseBOM(true);
-            $writer->save($filePath);
-        } else {
-            $fileName = 'ronica_template_produk.xlsx';
-            $filePath = $tempDir.'/'.$fileName;
-            $writer = new Xlsx($spreadsheet);
-            $writer->save($filePath);
+            $writer->setDelimiter(',');
+            $writer->setEnclosure('"');
+            $writer->setLineEnding("\r\n");
+            $writer->setSheetIndex(0);
+            $path = storage_path("app/{$filename}.csv");
+            $writer->save($path);
+
+            return $path;
         }
 
-        return $filePath;
+        $writer = new Xlsx($spreadsheet);
+        $path = storage_path("app/{$filename}.xlsx");
+        $writer->save($path);
+
+        return $path;
+    }
+
+    /**
+     * Preview an uploaded spreadsheet without writing to the database.
+     *
+     * @return array{
+     *     headers: array<string, string>,
+     *     rows: array<int, array<string, mixed>>,
+     *     total: int,
+     *     valid_count: int,
+     *     invalid_count: int,
+     *     categories_found: array<int, string>,
+     *     sample_errors: array<int, string>
+     * }
+     */
+    public function preview(UploadedFile $file): array
+    {
+        $spreadsheet = IOFactory::load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray(null, true, true, true);
+
+        if (empty($rows)) {
+            throw new Exception('File kosong atau tidak dapat dibaca.');
+        }
+
+        // Row 1 is header
+        $headerRow = array_shift($rows);
+        $columnMap = $this->determineColumnMapping($headerRow);
+
+        if (! isset($columnMap['name'])) {
+            throw new Exception("Kolom 'name' / 'nama_produk' tidak ditemukan pada header file.");
+        }
+
+        $parsedRows = [];
+        $validCount = 0;
+        $invalidCount = 0;
+        $categoriesFound = [];
+        $sampleErrors = [];
+
+        $rowNum = 1;
+        foreach ($rows as $row) {
+            $rowNum++;
+
+            $rowData = [];
+            foreach ($columnMap as $fieldKey => $colLetter) {
+                $rowData[$fieldKey] = $row[$colLetter] ?? null;
+            }
+
+            if ($this->isRowEmpty($rowData)) {
+                continue;
+            }
+
+            // Validation check
+            $errors = [];
+            if (empty($rowData['name'])) {
+                $errors[] = 'Nama produk wajib diisi';
+            }
+
+            $category = (string) ($rowData['category'] ?? '');
+            if (! empty($category)) {
+                $categoriesFound[$category] = true;
+            }
+
+            $isValid = empty($errors);
+            if ($isValid) {
+                $validCount++;
+            } else {
+                $invalidCount++;
+                if (count($sampleErrors) < 5) {
+                    $sampleErrors[] = "Baris {$rowNum}: ".implode(', ', $errors);
+                }
+            }
+
+            $parsedRows[] = array_merge($rowData, [
+                '_row' => $rowNum,
+                '_is_valid' => $isValid,
+                '_errors' => $errors,
+            ]);
+        }
+
+        return [
+            'headers' => array_flip($columnMap),
+            'rows' => array_slice($parsedRows, 0, 100), // Max 100 rows for preview UI
+            'total' => count($parsedRows),
+            'valid_count' => $validCount,
+            'invalid_count' => $invalidCount,
+            'categories_found' => array_keys($categoriesFound),
+            'sample_errors' => $sampleErrors,
+        ];
+    }
+
+    /**
+     * Map spreadsheet column letters to internal field names based on fuzzy matching.
+     *
+     * @param  array<string, mixed>  $headerRow
+     * @return array<string, string> Field name => Column letter
+     */
+    private function determineColumnMapping(array $headerRow): array
+    {
+        $map = [];
+
+        foreach ($headerRow as $colLetter => $headerText) {
+            if (empty($headerText) || ! is_string($headerText)) {
+                continue;
+            }
+
+            $cleanHeader = strtolower(trim($headerText));
+            // Remove special characters, accents, and extra spaces
+            $cleanHeader = preg_replace('/[^a-z0-9_]/', '_', $cleanHeader) ?? $cleanHeader;
+            $cleanHeader = trim($cleanHeader, '_');
+
+            foreach (self::FIELD_ALIASES as $fieldKey => $fieldAliases) {
+                if (in_array($cleanHeader, $fieldAliases, true) || $cleanHeader === $fieldKey) {
+                    $map[$fieldKey] = $colLetter;
+                    break;
+                }
+            }
+        }
+
+        return $map;
     }
 
     /**
@@ -268,7 +431,7 @@ class ProductImportService
 
         // 1. Identify header mapping
         $headerRow = array_shift($rawRows);
-        $columnMapping = $this->mapHeaders($headerRow);
+        $columnMapping = $this->determineColumnMapping($headerRow);
 
         if (! isset($columnMapping['name'])) {
             throw new Exception("Kolom 'name' atau 'Nama Produk' wajib ada pada file spreadsheet.");
@@ -341,38 +504,7 @@ class ProductImportService
     }
 
     /**
-     * Map spreadsheet header row to recognized field names using alias lookup.
-     *
-     * @param  array<string, mixed>  $headerRow
-     * @return array<string, string> Key is field name, Value is column letter (e.g. 'name' => 'B')
-     */
-    private function mapHeaders(array $headerRow): array
-    {
-        $mapping = [];
-
-        foreach ($headerRow as $colLetter => $rawHeader) {
-            if (! is_string($rawHeader) || trim($rawHeader) === '') {
-                continue;
-            }
-
-            // Normalize header text (lowercase, remove asterisks and symbols)
-            $cleanHeader = strtolower(trim($rawHeader));
-            $cleanHeader = preg_replace('/[\(\)\*\#\:\_\-\s]+/', '_', $cleanHeader);
-            $cleanHeader = trim($cleanHeader, '_');
-
-            foreach (self::FIELD_ALIASES as $field => $aliases) {
-                if (in_array($cleanHeader, $aliases, true)) {
-                    $mapping[$field] = $colLetter;
-                    break;
-                }
-            }
-        }
-
-        return $mapping;
-    }
-
-    /**
-     * Check if extracted row data is empty.
+     * Check if a data row is completely empty.
      *
      * @param  array<string, mixed>  $data
      */
@@ -419,14 +551,7 @@ class ProductImportService
         $categoryName = (string) ($data['category'] ?? 'General');
         $category = $this->resolveCategory($categoryName);
 
-        // 3. Format numeric values
-        $price = $this->parseInteger($data['price'] ?? 0);
-        $comparePrice = ! empty($data['compare_price']) ? $this->parseInteger($data['compare_price']) : null;
-        $costPrice = ! empty($data['cost_price']) ? $this->parseInteger($data['cost_price']) : null;
-        $stockQuantity = $this->parseInteger($data['stock_quantity'] ?? 0);
-        $discountPct = ! empty($data['discount_percentage']) ? (int) $data['discount_percentage'] : null;
-
-        // 4. Status and SaleType enums
+        // 3. Status enum
         $rawStatus = strtolower((string) ($data['status'] ?? 'active'));
         $status = match ($rawStatus) {
             'draft' => ProductStatus::DRAFT,
@@ -436,21 +561,12 @@ class ProductImportService
             default => ProductStatus::ACTIVE,
         };
 
-        $rawSaleType = strtolower((string) ($data['sale_type'] ?? 'regular'));
-        $saleType = match ($rawSaleType) {
-            'clearance' => SaleType::CLEARANCE,
-            'stock_sale' => SaleType::STOCK_SALE,
-            'custom' => SaleType::CUSTOM,
-            'hot_sale' => SaleType::HOT_SALE,
-            default => SaleType::REGULAR,
-        };
-
-        // 5. Generate SKU if missing
+        // 4. Generate SKU if missing
         if (empty($sku)) {
             $sku = $existing?->sku ?: $this->generateUniqueSku($categoryName);
         }
 
-        // 6. Descriptions & translatable texts
+        // 5. Descriptions & translatable texts
         $shortDesc = (string) ($data['short_description'] ?? '');
         $desc = (string) ($data['description'] ?? '');
         $material = ! empty($data['material']) ? (string) $data['material'] : null;
@@ -462,10 +578,6 @@ class ProductImportService
             'name' => ['id' => $name, 'en' => $name],
             'short_description' => ['id' => $shortDesc, 'en' => $shortDesc],
             'description' => ['id' => $desc, 'en' => $desc],
-            'price' => $price,
-            'compare_price' => $comparePrice,
-            'cost_price' => $costPrice,
-            'stock_quantity' => $stockQuantity,
             'low_stock_threshold' => 5,
             'track_stock' => true,
             'weight' => ! empty($data['weight']) ? (float) $data['weight'] : null,
@@ -475,12 +587,8 @@ class ProductImportService
             'material' => $material ? ['id' => $material, 'en' => $material] : null,
             'color' => $color ? ['id' => $color, 'en' => $color] : null,
             'status' => $status,
-            'sale_type' => $saleType,
             'is_featured' => ! empty($data['is_featured']) && (bool) $data['is_featured'],
             'is_new_arrival' => ! empty($data['is_new_arrival']) && (bool) $data['is_new_arrival'],
-            'discount_percentage' => $discountPct,
-            'discount_starts_at' => $discountPct ? now() : null,
-            'discount_ends_at' => $discountPct ? now()->addDays(30) : null,
         ];
 
         return DB::transaction(function () use ($existing, $productPayload, $data) {

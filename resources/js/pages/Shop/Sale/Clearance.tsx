@@ -145,10 +145,8 @@ export default function Clearance({
                                 className="rounded-sm border border-neutral-200 bg-white px-4 py-2 outline-none focus:border-teal-500"
                             >
                                 <option value="">Sort By</option>
-                                <option value="-discount_percentage">
-                                    Biggest Discount
-                                </option>
                                 <option value="-sold_count">Best Seller</option>
+                                <option value="-created_at">Newest</option>
                             </select>
                         </div>
 
@@ -167,7 +165,7 @@ export default function Clearance({
                                         onClick={() =>
                                             handleCategoryFilter(null)
                                         }
-                                        className={`rounded-sm px-4 py-2 text-sm ${!safeFilters.filter?.category_id ? 'bg-teal-500 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
+                                        className={`rounded-sm px-4 py-2 text-sm transition-colors ${!safeFilters.filter?.category_id ? 'bg-teal-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}`}
                                     >
                                         All
                                     </button>
@@ -178,7 +176,7 @@ export default function Clearance({
                                                 onClick={() =>
                                                     handleCategoryFilter(cat.id)
                                                 }
-                                                className={`rounded-sm px-4 py-2 text-sm ${safeFilters.filter?.category_id === String(cat.id) ? 'bg-teal-500 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
+                                                className={`rounded-sm px-4 py-2 text-sm transition-colors ${safeFilters.filter?.category_id === String(cat.id) ? 'bg-teal-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}`}
                                             >
                                                 {cat.name}
                                             </button>
@@ -190,21 +188,14 @@ export default function Clearance({
 
                         {/* Products Grid */}
                         {products.data.length > 0 ? (
-                            <motion.div
-                                initial="hidden"
-                                animate="visible"
-                                variants={containerVariants}
-                                className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4"
-                            >
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                                 {products.data.map((product) => (
-                                    <motion.div
+                                    <ClearanceCard
                                         key={product.id}
-                                        variants={itemVariants}
-                                    >
-                                        <ProductCard product={product} />
-                                    </motion.div>
+                                        product={product}
+                                    />
                                 ))}
-                            </motion.div>
+                            </div>
                         ) : (
                             <div className="rounded-sm bg-white py-20 text-center">
                                 <Tag
@@ -248,7 +239,7 @@ export default function Clearance({
     );
 }
 
-function ProductCard({ product }: { product: ApiProduct }) {
+function ClearanceCard({ product }: { product: ApiProduct }) {
     const imageUrl =
         product.primary_image?.image_url ||
         product.images?.[0]?.image_url ||
@@ -256,7 +247,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
     return (
         <Link
             href={`/shop/products/${product.slug}`}
-            className="group overflow-hidden rounded-sm border border-neutral-100 bg-white transition-all hover:shadow-lg"
+            className="group block overflow-hidden rounded-sm bg-white shadow-sm transition-shadow hover:shadow-md"
         >
             <div className="relative aspect-square overflow-hidden">
                 <img
@@ -264,11 +255,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {product.has_discount && (
-                    <span className="absolute top-3 left-3 rounded-sm bg-red-500 px-3 py-1 text-sm font-bold text-white">
-                        -{product.discount_percentage}%
-                    </span>
-                )}
                 <span className="absolute top-3 right-3 rounded-sm bg-neutral-800 px-3 py-1 text-xs font-medium text-white">
                     CLEARANCE
                 </span>
@@ -298,16 +284,9 @@ function ProductCard({ product }: { product: ApiProduct }) {
                         ({product.review_count})
                     </span>
                 </div>
-                <div className="flex items-end gap-2">
-                    <span className="text-lg font-bold text-teal-500">
-                        {product.final_price_formatted}
-                    </span>
-                    {product.has_discount && (
-                        <span className="text-sm text-neutral-400 line-through">
-                            {product.price_formatted}
-                        </span>
-                    )}
-                </div>
+                <span className="text-xs font-medium text-teal-600">
+                    View Details &rarr;
+                </span>
             </div>
         </Link>
     );

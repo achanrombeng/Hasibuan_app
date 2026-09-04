@@ -26,7 +26,7 @@ export interface ProductSchema {
     sku: string;
     brand?: string;
     category?: string;
-    price: number;
+    price?: number;
     priceCurrency?: string;
     availability?: 'InStock' | 'OutOfStock' | 'PreOrder';
     url: string;
@@ -78,7 +78,7 @@ export const OrganizationStructuredData: React.FC<{ data: OrganizationSchema }> 
 };
 
 export const ProductStructuredData: React.FC<{ data: ProductSchema }> = ({ data }) => {
-    const schema = {
+    const schema: Record<string, any> = {
         '@context': 'https://schema.org',
         '@type': 'Product',
         name: data.name,
@@ -89,10 +89,12 @@ export const ProductStructuredData: React.FC<{ data: ProductSchema }> = ({ data 
         category: data.category,
         offers: {
             '@type': 'Offer',
-            price: data.price,
-            priceCurrency: data.priceCurrency || 'IDR',
             availability: `https://schema.org/${data.availability || 'InStock'}`,
             url: data.url,
+            ...(data.price !== undefined ? {
+                price: data.price,
+                priceCurrency: data.priceCurrency || 'IDR',
+            } : {}),
         },
         aggregateRating: data.rating ? {
             '@type': 'AggregateRating',

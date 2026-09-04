@@ -41,14 +41,6 @@ return [
         'discontinued' => 'Discontinued',
     ],
 
-    'sale_type' => [
-        'regular' => 'Regular',
-        'clearance' => 'Clearance Sale',
-        'stock_sale' => 'Stock Sale',
-        'custom' => 'Custom Order',
-        'hot_sale' => 'Hot Sale',
-    ],
-
     'article_status' => [
         'draft' => 'Draft',
         'published' => 'Published',

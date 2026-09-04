@@ -250,11 +250,6 @@ function ProductCard({ product }: { product: ApiProduct }) {
                     <Package size={14} />
                     STOCK
                 </span>
-                {product.stock_quantity && product.stock_quantity > 0 && (
-                    <span className="absolute bottom-3 left-3 rounded-full bg-wood px-3 py-1 text-xs text-white">
-                        Stok: {product.stock_quantity}
-                    </span>
-                )}
             </div>
             <div className="p-4">
                 <h3 className="mb-2 line-clamp-2 font-medium text-terra-900 transition-colors group-hover:text-wood">
@@ -276,16 +271,9 @@ function ProductCard({ product }: { product: ApiProduct }) {
                         ({product.review_count})
                     </span>
                 </div>
-                <div className="flex items-end gap-2">
-                    <span className="text-lg font-bold text-terra-900">
-                        {product.final_price_formatted}
-                    </span>
-                    {product.has_discount && (
-                        <span className="text-sm text-terra-400 line-through">
-                            {product.price_formatted}
-                        </span>
-                    )}
-                </div>
+                <span className="text-xs font-medium text-wood">
+                    Lihat Detail &rarr;
+                </span>
             </div>
         </Link>
     );
