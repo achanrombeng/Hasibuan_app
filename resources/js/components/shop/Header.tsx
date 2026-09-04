@@ -196,13 +196,17 @@ export const Header: React.FC<HeaderProps> = ({
                             ? c.name.id || c.name.en || Object.values(c.name)[0]
                             : c.name,
                     slug: c.slug,
+                    sort_order: typeof c.sort_order === 'number' ? c.sort_order : 0,
                     href: `/shop/products?filter[category]=${c.slug}`,
                 }))
-                .sort((a: any, b: any) =>
-                    (a.name || '').localeCompare(b.name || '', undefined, {
+                .sort((a: any, b: any) => {
+                    const orderA = typeof a.sort_order === 'number' ? a.sort_order : 0;
+                    const orderB = typeof b.sort_order === 'number' ? b.sort_order : 0;
+                    if (orderA !== orderB) return orderA - orderB;
+                    return (a.name || '').localeCompare(b.name || '', undefined, {
                         sensitivity: 'base',
-                    }),
-                )
+                    });
+                })
             : [];
 
     const handleLogout = () => {

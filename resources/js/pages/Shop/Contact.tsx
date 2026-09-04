@@ -10,13 +10,11 @@ import {
     Phone,
     Store,
 } from 'lucide-react';
-import { useState } from 'react';
 
 export default function Contact() {
     const { t } = useTranslation();
     const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
     const siteName = siteSettings?.site_name || 'Ronica';
-    const [activeMapTab, setActiveMapTab] = useState<'showroom' | 'factory'>('showroom');
 
     // Build contact info from settings
     const contactInfo = [
@@ -163,70 +161,98 @@ export default function Contact() {
                             </div>
                         )}
 
-                        {/* Map Section */}
+                        {/* Map Section - Split into 2 columns (Left: Showroom, Right: Factory) */}
                         <div>
-                            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="mb-8">
                                 <h2 className="font-serif text-2xl text-terra-900">
                                     {t('shop.contact.our_location')}
                                 </h2>
-                                <div className="inline-flex items-center gap-1.5 rounded-2xl border border-neutral-200/80 bg-neutral-100/60 p-1.5 shadow-sm">
-                                    <button
-                                        type="button"
-                                        onClick={() => setActiveMapTab('showroom')}
-                                        className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${activeMapTab === 'showroom'
-                                                ? 'bg-[#8c6239] text-white shadow-sm'
-                                                : 'text-neutral-800 hover:bg-neutral-200/60 hover:text-neutral-900'
-                                            }`}
-                                    >
-                                        <Store size={18} />
-                                        <span>
-                                            Showroom
-                                            {siteSettings?.showroom_address
-                                                ? ` (${siteSettings.showroom_address})`
-                                                : ''}
-                                        </span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setActiveMapTab('factory')}
-                                        className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${activeMapTab === 'factory'
-                                                ? 'bg-[#8c6239] text-white shadow-sm'
-                                                : 'text-neutral-800 hover:bg-neutral-200/60 hover:text-neutral-900'
-                                            }`}
-                                    >
-                                        <Building2 size={18} />
-                                        <span>
-                                            Factory
-                                            {siteSettings?.factory_address
-                                                ? ` (${siteSettings.factory_address})`
-                                                : ''}
-                                        </span>
-                                    </button>
-                                </div>
                             </div>
-                            <div className="aspect-[21/9] overflow-hidden rounded-2xl border border-terra-200 bg-sand-100 shadow-sm">
-                                <iframe
-                                    src={(() => {
-                                        const type = activeMapTab;
-                                        const rawUrl = type === 'showroom' ? siteSettings?.maps_showroom_url : siteSettings?.maps_factory_url;
-                                        const address = type === 'showroom'
-                                            ? (siteSettings?.showroom_address || 'Jepara, Indonesia')
-                                            : (siteSettings?.factory_address || 'Cirebon, Indonesia');
 
-                                        if (rawUrl && (rawUrl.includes('embed') || rawUrl.includes('output=embed'))) {
-                                            return rawUrl;
-                                        }
+                            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                                {/* Left: Showroom Map */}
+                                <div className="flex flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                                    <div className="mb-4 flex items-start gap-4">
+                                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                                            <Store size={24} />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-serif text-xl font-bold text-terra-900">
+                                                    Showroom
+                                                </h3>
+                                                <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-terra-700">
+                                                    {t('shop.contact.showroom_address')}
+                                                </span>
+                                            </div>
+                                            <p className="mt-1 text-sm text-terra-600 leading-relaxed">
+                                                {siteSettings?.showroom_address || 'Jepara, Indonesia'}
+                                            </p>
+                                        </div>
+                                    </div>
 
-                                        return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
-                                    })()}
-                                    width="100%"
-                                    height="100%"
-                                    style={{ border: 0 }}
-                                    allowFullScreen
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    title={`Lokasi ${activeMapTab === 'showroom' ? 'Showroom' : 'Pabrik'} ${siteName}`}
-                                ></iframe>
+                                    <div className="relative aspect-[16/10] min-h-[280px] w-full overflow-hidden rounded-xl border border-terra-100 bg-sand-100 shadow-inner">
+                                        <iframe
+                                            src={(() => {
+                                                const rawUrl = siteSettings?.maps_showroom_url;
+                                                const address = siteSettings?.showroom_address || 'Jepara, Indonesia';
+                                                if (rawUrl && (rawUrl.includes('embed') || rawUrl.includes('output=embed'))) {
+                                                    return rawUrl;
+                                                }
+                                                return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+                                            })()}
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            title={`Lokasi Showroom ${siteName}`}
+                                        ></iframe>
+                                    </div>
+                                </div>
+
+                                {/* Right: Factory Map */}
+                                <div className="flex flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
+                                    <div className="mb-4 flex items-start gap-4">
+                                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                                            <Building2 size={24} />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-serif text-xl font-bold text-terra-900">
+                                                    Factory
+                                                </h3>
+                                                <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-terra-700">
+                                                    {t('shop.contact.factory_address')}
+                                                </span>
+                                            </div>
+                                            <p className="mt-1 text-sm text-terra-600 leading-relaxed">
+                                                {siteSettings?.factory_address || 'Cirebon, Indonesia'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="relative aspect-[16/10] min-h-[280px] w-full overflow-hidden rounded-xl border border-terra-100 bg-sand-100 shadow-inner">
+                                        <iframe
+                                            src={(() => {
+                                                const rawUrl = siteSettings?.maps_factory_url;
+                                                const address = siteSettings?.factory_address || 'Cirebon, Indonesia';
+                                                if (rawUrl && (rawUrl.includes('embed') || rawUrl.includes('output=embed'))) {
+                                                    return rawUrl;
+                                                }
+                                                return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+                                            })()}
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            title={`Lokasi Pabrik / Factory ${siteName}`}
+                                        ></iframe>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

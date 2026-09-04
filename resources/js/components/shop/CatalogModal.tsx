@@ -42,9 +42,8 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
     return (
         <AnimatePresence>
             <div
-                className={`fixed inset-0 z-50 flex items-center justify-center overflow-hidden ${
-                    isFullscreen ? 'p-0' : 'p-2 sm:p-4 md:p-6'
-                }`}
+                className={`fixed inset-0 z-50 flex items-center justify-center overflow-hidden ${isFullscreen ? 'p-0' : 'p-2 sm:p-4 md:p-6'
+                    }`}
             >
                 {/* Backdrop overlay */}
                 <motion.div
@@ -61,11 +60,10 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 10 }}
                     transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                    className={`relative z-10 flex flex-col w-full bg-neutral-900 border border-neutral-800 shadow-2xl overflow-hidden transition-all duration-300 ${
-                        isFullscreen
+                    className={`relative z-10 flex flex-col w-full bg-neutral-900 border border-neutral-800 shadow-2xl overflow-hidden transition-all duration-300 ${isFullscreen
                             ? 'fixed inset-0 h-screen w-screen max-w-none rounded-none z-50'
                             : 'h-[92vh] max-w-7xl rounded-2xl'
-                    }`}
+                        }`}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Modal Header */}
@@ -101,11 +99,10 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setViewMode('3d')}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
-                                        viewMode === '3d'
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${viewMode === '3d'
                                             ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md'
                                             : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
-                                    }`}
+                                        }`}
                                     title="Tampilan 3D Flipbook Interaktif"
                                 >
                                     <Layers size={14} />
@@ -114,11 +111,10 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                                 <button
                                     type="button"
                                     onClick={() => setViewMode('pdf')}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
-                                        viewMode === 'pdf'
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${viewMode === 'pdf'
                                             ? 'bg-neutral-800 text-white shadow-md border border-neutral-700'
                                             : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
-                                    }`}
+                                        }`}
                                     title="Tampilan Dokumen PDF Standar"
                                 >
                                     <FileText size={14} />
@@ -165,6 +161,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                                         duration: 700,
                                         soundEnable: true,
                                         enableSound: true,
+                                        height: '100%',
                                     }}
                                     className="w-full h-full"
                                 />
@@ -205,7 +202,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                             {viewMode === '3d' ? (
                                 <span className="inline-flex items-center gap-1.5 text-neutral-300">
                                     <span className="w-2 h-2 rounded-full bg-teal-400 animate-ping" />
-                                    💡 <em>Gunakan drag mouse / swipe untuk membalik halaman secara 3D, atau tombol panah navigasi.</em>
+                                    💡 <em>Use mouse drag / swipe to flip pages in 3D, or navigation arrow buttons.</em>
                                 </span>
                             ) : (
                                 <span>Tampilan dokumen PDF scroll standar.</span>

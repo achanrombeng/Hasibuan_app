@@ -205,7 +205,7 @@ const useDFlip = (
                         autoEnableThumbnail: false,
                         overwritePDFOutline: false,
                         soundEnable: false,
-                        backgroundColor: 'rgb(30, 30, 30)',
+                        backgroundColor: '#121212',
                         autoPlay: false,
                         autoPlayDuration: 5000,
                         autoPlayStart: false,
@@ -219,7 +219,7 @@ const useDFlip = (
                         duration: 800,
                         zoom: 1,
                         enableSound: false,
-                        height: 'auto',
+                        height: '100%',
                     };
 
                     // Combine default options with user-provided options
@@ -234,13 +234,19 @@ const useDFlip = (
                         .flipBook(pdfURL, mergedOptions);
                     flipbookRef.current = instance;
 
-                    // Trigger initial resize after slight delay to ensure stage alignment
+                    // Trigger resize after animations to ensure proper stage centering
                     setTimeout(() => {
                         if (instance && typeof instance.resize === 'function') {
                             instance.resize();
                         }
                         window.dispatchEvent(new Event('resize'));
                     }, 100);
+                    setTimeout(() => {
+                        if (instance && typeof instance.resize === 'function') {
+                            instance.resize();
+                        }
+                        window.dispatchEvent(new Event('resize'));
+                    }, 350);
                 }
             } catch (error) {
                 console.error('Error loading dFlip:', error);

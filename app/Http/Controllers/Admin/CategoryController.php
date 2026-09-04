@@ -26,9 +26,27 @@ class CategoryController extends Controller implements HasMiddleware
         return [
             new Middleware('permission:view categories', only: ['index', 'show']),
             new Middleware('permission:create categories', only: ['create', 'store']),
-            new Middleware('permission:edit categories', only: ['edit', 'update']),
+            new Middleware('permission:edit categories', only: ['edit', 'update', 'reorder']),
             new Middleware('permission:delete categories', only: ['destroy']),
         ];
+    }
+
+    public function reorder(\Illuminate\Http\Request $request): RedirectResponse
+    {
+        $request->validate([
+            'items' => ['required', 'array'],
+            'items.*.id' => ['required', 'integer', 'exists:categories,id'],
+            'items.*.sort_order' => ['required', 'integer'],
+        ]);
+
+        foreach ($request->input('items') as $item) {
+            Category::where('id', $item['id'])->update(['sort_order' => $item['sort_order']]);
+        }
+
+        \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.id');
+        \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.en');
+
+        return back()->with('success', 'Urutan kategori berhasil diperbarui.');
     }
 
     public function index(): Response

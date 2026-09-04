@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\GlobalSearchController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductImportController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PromoBannerController;
 use App\Http\Controllers\Admin\ReportController;
@@ -45,11 +46,16 @@ Route::middleware(['auth', 'verified', 'role:admin|super-admin|manager|staff'])-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
     // Categories
+    Route::post('categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
     Route::resource('categories', CategoryController::class)->except(['show']);
 
     // Products
     Route::post('products/ai-extract', [ProductController::class, 'extractFromImage'])
         ->name('products.ai-extract');
+    Route::get('products/import/template', [ProductImportController::class, 'downloadTemplate'])
+        ->name('products.import.template');
+    Route::post('products/import', [ProductImportController::class, 'import'])
+        ->name('products.import');
     Route::resource('products', ProductController::class);
 
     // Orders

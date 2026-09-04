@@ -615,24 +615,37 @@ class SettingsController extends Controller
     {
         $settings = Setting::all()->pluck('value', 'key')->toArray();
 
+        $storyContent = $settings['about_story_content'] ?? null;
+        if (empty($storyContent)) {
+            $paragraphs = array_filter([
+                $settings['about_story_p1'] ?? null,
+                $settings['about_story_p2'] ?? null,
+                $settings['about_story_p3'] ?? null,
+                $settings['about_story_p4'] ?? null,
+                $settings['about_story_p5'] ?? null,
+            ]);
+            if (!empty($paragraphs)) {
+                $storyContent = implode("\n\n", $paragraphs);
+            } else {
+                $storyContent = "Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.\n\nBringing together the tradition of Cirebon's hand knitting and Jepara's deep-rooted woodwork, Ronica brings two great craft cultures together under one roof. This combination reveals durable and aesthetic products that carry the trace of craftsmanship in each furniture. Each detail is the result of a design understanding that is shaped in the hands of the masters.\n\nOnly high-end materials suitable for outdoor conditions are used in Ronica. Perhutani-sourced teak wood, Rehau and Viro synthetic rattan, Sunproof, Ateja, Sunbrella and Agora fabrics; as well as QuickDry technology sponges are carefully selected for longevity and comfort. All materials are UV treated, proven with laboratory tests and supported by a three-year warranty from suppliers.\n\nToday, Ronica exports to more than 15 countries, including the USA, Europe, the Middle East and Australia. While offering fast delivery to its customers thanks to its Mersin warehouse in Turkey, it has become a reliable solution partner in the international arena with private hotel and housing projects in Maldives, Qatar, Australia and the USA.\n\nAs a family business, Ronica is always passionate about quality, sustainability and customer satisfaction. Each collection is prepared with nature-respecting materials and innovative designs. Ronica brings not only comfort but also a lasting elegance to the outdoor life.";
+            }
+        }
+
+        $storyImages = json_decode($settings['about_story_images'] ?? '[]', true);
+        if (empty($storyImages) || !is_array($storyImages)) {
+            $storyImages = array_values(array_filter([
+                $settings['about_story_image_1'] ?? ($settings['about_story_image'] ?? '/images/about/about-banner-01.webp'),
+                $settings['about_story_image_2'] ?? '/images/about/about-banner-02.webp',
+                $settings['about_story_image_3'] ?? '/images/about/about-banner-03.webp',
+            ]));
+        }
+
         return Inertia::render('Admin/Settings/About', [
             'settings' => [
-                'about_hero_title' => $settings['about_hero_title'] ?? 'Welcome to Ronica Outdoor Furniture',
-                'about_hero_subtitle' => $settings['about_hero_subtitle'] ?? 'Delivering premium quality furniture with the touch of traditional Indonesian craftsmanship',
-                'about_story_title' => $settings['about_story_title'] ?? 'Our Story',
-                'about_story_p1' => $settings['about_story_p1'] ?? 'Ronica Outdoor Furniture was born from a love for high-quality furniture and traditional craftsmanship.',
-                'about_story_p2' => $settings['about_story_p2'] ?? 'Every product we create is the result of a perfect blend of traditional techniques and modern design.',
-                'about_story_p3' => $settings['about_story_p3'] ?? 'At Ronica Outdoor Furniture, we believe that furniture is not just an item, but a long-term investment.',
-                'about_story_image' => $settings['about_story_image'] ?? '/images/placeholder-about.svg',
-                'about_years_experience' => $settings['about_years_experience'] ?? '14+',
-                'about_years_experience_label' => $settings['about_years_experience_label'] ?? 'Years of Experience',
-                'about_vision_title' => $settings['about_vision_title'] ?? 'Our Vision',
-                'about_vision_text' => $settings['about_vision_text'] ?? 'To become a pioneer in Indonesia\'s premium furniture industry.',
-                'about_mission_title' => $settings['about_mission_title'] ?? 'Our Mission',
-                'about_mission_1' => $settings['about_mission_1'] ?? 'Deliver premium quality furniture at competitive prices',
-                'about_mission_2' => $settings['about_mission_2'] ?? 'Preserve traditional Indonesian craftsmanship techniques',
-                'about_mission_3' => $settings['about_mission_3'] ?? 'Use sustainable and environmentally friendly materials',
-                'about_mission_4' => $settings['about_mission_4'] ?? 'Provide the best service to every customer',
+                'about_story_title' => $settings['about_story_title'] ?? 'Extending From Indonesia To The World',
+                'about_story_subtitle' => $settings['about_story_subtitle'] ?? 'Handicraft Story',
+                'about_story_content' => $storyContent,
+                'about_story_images' => $storyImages,
             ],
         ]);
     }
@@ -643,43 +656,47 @@ class SettingsController extends Controller
     public function updateAbout(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'about_hero_title' => ['required', 'string', 'max:255'],
-            'about_hero_subtitle' => ['nullable', 'string', 'max:500'],
             'about_story_title' => ['nullable', 'string', 'max:255'],
-            'about_story_p1' => ['nullable', 'string', 'max:2000'],
-            'about_story_p2' => ['nullable', 'string', 'max:2000'],
-            'about_story_p3' => ['nullable', 'string', 'max:2000'],
-            'about_story_image' => ['nullable', 'string', 'max:500'],
-            'about_story_image_file' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,svg,gif'],
-            'about_years_experience' => ['nullable', 'string', 'max:50'],
-            'about_years_experience_label' => ['nullable', 'string', 'max:255'],
-            'about_vision_title' => ['nullable', 'string', 'max:255'],
-            'about_vision_text' => ['nullable', 'string', 'max:2000'],
-            'about_mission_title' => ['nullable', 'string', 'max:255'],
-            'about_mission_1' => ['nullable', 'string', 'max:500'],
-            'about_mission_2' => ['nullable', 'string', 'max:500'],
-            'about_mission_3' => ['nullable', 'string', 'max:500'],
-            'about_mission_4' => ['nullable', 'string', 'max:500'],
+            'about_story_subtitle' => ['nullable', 'string', 'max:255'],
+            'about_story_content' => ['nullable', 'string', 'max:20000'],
+            'existing_images' => ['nullable', 'array'],
+            'existing_images.*' => ['string'],
+            'new_images' => ['nullable', 'array'],
+            'new_images.*' => ['file', 'max:10240', 'mimes:jpg,jpeg,png,webp,svg,gif'],
         ]);
 
-        if ($request->hasFile('about_story_image_file')) {
-            $file = $request->file('about_story_image_file');
-            $path = $file->store('settings/about', 'public');
-            $validated['about_story_image'] = '/storage/'.$path;
+        $images = $request->input('existing_images', []);
+        if ($request->hasFile('new_images')) {
+            foreach ($request->file('new_images') as $file) {
+                $path = $file->store('settings/about', 'public');
+                $images[] = '/storage/'.$path;
+            }
         }
-        unset($validated['about_story_image_file']);
 
-        foreach ($validated as $key => $value) {
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value ?? '']
-            );
+        Setting::updateOrCreate(
+            ['key' => 'about_story_images'],
+            ['value' => json_encode(array_values($images))]
+        );
+
+        // Also save individual image keys for backwards compatibility
+        Setting::updateOrCreate(['key' => 'about_story_image_1'], ['value' => $images[0] ?? '']);
+        Setting::updateOrCreate(['key' => 'about_story_image_2'], ['value' => $images[1] ?? '']);
+        Setting::updateOrCreate(['key' => 'about_story_image_3'], ['value' => $images[2] ?? '']);
+
+        if ($request->has('about_story_title')) {
+            Setting::updateOrCreate(['key' => 'about_story_title'], ['value' => $request->input('about_story_title') ?? '']);
+        }
+        if ($request->has('about_story_subtitle')) {
+            Setting::updateOrCreate(['key' => 'about_story_subtitle'], ['value' => $request->input('about_story_subtitle') ?? '']);
+        }
+        if ($request->has('about_story_content')) {
+            Setting::updateOrCreate(['key' => 'about_story_content'], ['value' => $request->input('about_story_content') ?? '']);
         }
 
         // Clear site settings cache
         Cache::forget('site_settings');
 
-        return back()->with('success', 'Pengaturan Halaman About Us berhasil disimpan');
+        return back()->with('success', 'About Us page settings saved successfully');
     }
 
     /**

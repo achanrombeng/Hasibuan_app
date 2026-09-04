@@ -189,7 +189,7 @@ class Category extends Model
      */
     public function scopeOrdered(Builder $query): Builder
     {
-        return $query->orderBy('sort_order');
+        return $query->orderBy('sort_order')->orderBy('id');
     }
 
     /**

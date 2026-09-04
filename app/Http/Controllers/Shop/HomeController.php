@@ -32,6 +32,7 @@ class HomeController extends Controller
             ->whereNull('parent_id')
             ->withCount('products')
             ->orderBy('sort_order')
+            ->orderBy('id')
             ->get();
 
         // Featured Categories (for navbar/hero display if featured, otherwise fallback)
@@ -39,6 +40,7 @@ class HomeController extends Controller
             ->where('is_featured', true)
             ->whereNull('parent_id')
             ->orderBy('sort_order')
+            ->orderBy('id')
             ->get();
 
         $displayCategories = $featuredCategories->isNotEmpty() ? $featuredCategories : $allActiveCategories;

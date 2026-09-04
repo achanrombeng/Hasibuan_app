@@ -94,9 +94,12 @@ export default function ProductsIndex({
         : (categories as any)?.data || [];
 
     const normalizedCategories = useMemo(() => {
-        return [...rawCategories].sort((a, b) =>
-            (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' }),
-        );
+        return [...rawCategories].sort((a, b) => {
+            const orderA = typeof a.sort_order === 'number' ? a.sort_order : 0;
+            const orderB = typeof b.sort_order === 'number' ? b.sort_order : 0;
+            if (orderA !== orderB) return orderA - orderB;
+            return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+        });
     }, [rawCategories]);
 
     const normalizedCurrentCategory =

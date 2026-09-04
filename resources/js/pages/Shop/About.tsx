@@ -3,272 +3,208 @@ import { useTranslation } from '@/hooks/use-translation';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { Award, Clock, Heart, Leaf, Target, Users } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface AboutProps {
     aboutSettings?: {
-        hero_title?: string;
-        hero_subtitle?: string;
-        story_title?: string;
-        story_p1?: string;
-        story_p2?: string;
-        story_p3?: string;
-        story_image?: string;
-        years_experience?: string;
-        years_experience_label?: string;
-        vision_title?: string;
-        vision_text?: string;
-        mission_title?: string;
-        mission_1?: string;
-        mission_2?: string;
-        mission_3?: string;
-        mission_4?: string;
+        story_title?: string | null;
+        story_subtitle?: string | null;
+        story_content?: string | null;
+        story_images?: string[] | null;
+        story_image_1?: string | null;
+        story_image_2?: string | null;
+        story_image_3?: string | null;
     };
 }
 
 export default function About({ aboutSettings }: AboutProps) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
     const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
     const siteName = siteSettings?.site_name || 'Ronica';
 
-    const VALUES = [
-        {
-            icon: Award,
-            title: t('shop.about.value_quality_title'),
-            desc: t('shop.about.value_quality_desc'),
-        },
-        {
-            icon: Leaf,
-            title: t('shop.about.value_eco_title'),
-            desc: t('shop.about.value_eco_desc'),
-        },
-        {
-            icon: Heart,
-            title: t('shop.about.value_love_title'),
-            desc: t('shop.about.value_love_desc'),
-        },
-        {
-            icon: Users,
-            title: t('shop.about.value_expert_title'),
-            desc: t('shop.about.value_expert_desc'),
-        },
-    ];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-    const MILESTONES = [
-        {
-            year: '2010',
-            title: t('shop.about.milestone_2010_title'),
-            desc: t('shop.about.milestone_2010_desc'),
-        },
-        {
-            year: '2015',
-            title: t('shop.about.milestone_2015_title'),
-            desc: t('shop.about.milestone_2015_desc'),
-        },
-        {
-            year: '2020',
-            title: t('shop.about.milestone_2020_title'),
-            desc: t('shop.about.milestone_2020_desc'),
-        },
-        {
-            year: '2024',
-            title: t('shop.about.milestone_2024_title'),
-            desc: t('shop.about.milestone_2024_desc'),
-        },
-    ];
+    const isIndonesian = locale === 'id';
+
+    const carouselImages = (
+        aboutSettings?.story_images && aboutSettings.story_images.length > 0
+            ? aboutSettings.story_images
+            : [
+                  aboutSettings?.story_image_1 || '/images/about/about-banner-01.webp',
+                  aboutSettings?.story_image_2 || '/images/about/about-banner-02.webp',
+                  aboutSettings?.story_image_3 || '/images/about/about-banner-03.webp',
+              ]
+    ).filter(Boolean) as string[];
+
+    const handlePrev = () => {
+        setCurrentImageIndex((prev) =>
+            prev === 0 ? carouselImages.length - 1 : prev - 1,
+        );
+    };
+
+    const handleNext = () => {
+        setCurrentImageIndex((prev) =>
+            prev === carouselImages.length - 1 ? 0 : prev + 1,
+        );
+    };
+
+    // Auto-advance carousel every 5 seconds
+    useEffect(() => {
+        if (!isAutoPlaying || carouselImages.length <= 1) return;
+        const interval = setInterval(handleNext, 5000);
+        return () => clearInterval(interval);
+    }, [isAutoPlaying, currentImageIndex, carouselImages.length]);
+
+    const storyTitle =
+        aboutSettings?.story_title ||
+        (isIndonesian
+            ? 'Melangkah Dari Indonesia Untuk Dunia'
+            : 'Extending From Indonesia To The World');
+    const storySubtitle =
+        aboutSettings?.story_subtitle ||
+        (isIndonesian ? 'Kisah Kerajinan Tangan' : 'Handicraft Story');
+
+    const defaultContent = isIndonesian
+        ? `Didirikan pada tahun 2016 di Cirebon, Indonesia, Ronica adalah representasi keanggunan furnitur luar ruangan yang diproduksi secara buatan tangan (handmade). Merek yang mengkhususkan diri dalam pembuatan furnitur rotan berkualitas tinggi, tali (rope), dan aluminium sejak awal berdiri, berpindah ke pabrik barunya yang berteknologi modern pada tahun 2021 serta memperluas jangkauan produksinya hingga mencakup kayu jati kelas A. Kayu jati diperoleh dari kawasan jati paling eksklusif di Indonesia, Perhutani Blora, dan memperoleh kualitas istimewa melalui proses pengolahan serta pengeringan di fasilitas milik Ronica sendiri.
+
+Memadukan tradisi anyaman tangan Cirebon dan keahlian perkayuan Jepara yang berakar mendalam, Ronica menyatukan dua budaya kerajinan agung di bawah satu atap. Perpaduan ini melahirkan produk yang kokoh dan berestetika tinggi yang memancarkan jejak keahlian pada setiap furnitur. Setiap detail adalah wujud pemahaman desain yang dibentuk langsung oleh tangan para master perajin.
+
+Hanya material kelas premium yang cocok untuk kondisi luar ruangan yang digunakan di Ronica. Kayu jati bersertifikasi Perhutani, rotan sintetis Rehau dan Viro, kain Sunproof, Ateja, Sunbrella, dan Agora; serta spons teknologi QuickDry dipilih secara seksama demi ketahanan dan kenyamanan maksimal. Seluruh material telah melalui uji laboratorium tahan sinar UV dan didukung garansi tiga tahun dari pemasok.
+
+Kini, Ronica mengekspor ke lebih dari 15 negara, termasuk Amerika Serikat, Eropa, Timur Tengah, dan Australia. Dengan keunggulan pengiriman cepat melalui gudang Mersin di Turki, Ronica telah menjadi mitra solusi terpercaya di kancah internasional untuk proyek hotel dan residensial eksklusif di Maladewa, Qatar, Australia, dan AS.
+
+Sebagai bisnis keluarga, Ronica senantiasa berdedikasi terhadap mutu terbaik, keberlanjutan, dan kepuasan pelanggan. Setiap koleksi dirancang dengan material yang ramah lingkungan serta desain yang inovatif. Ronica tidak hanya menghadirkan kenyamanan, melainkan juga keanggunan yang abadi untuk gaya hidup luar ruangan Anda.`
+        : `Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.
+
+Bringing together the tradition of Cirebon's hand knitting and Jepara's deep-rooted woodwork, Ronica brings two great craft cultures together under one roof. This combination reveals durable and aesthetic products that carry the trace of craftsmanship in each furniture. Each detail is the result of a design understanding that is shaped in the hands of the masters.
+
+Only high-end materials suitable for outdoor conditions are used in Ronica. Perhutani-sourced teak wood, Rehau and Viro synthetic rattan, Sunproof, Ateja, Sunbrella and Agora fabrics; as well as QuickDry technology sponges are carefully selected for longevity and comfort. All materials are UV treated, proven with laboratory tests and supported by a three-year warranty from suppliers.
+
+Today, Ronica exports to more than 15 countries, including the USA, Europe, the Middle East and Australia. While offering fast delivery to its customers thanks to its Mersin warehouse in Turkey, it has become a reliable solution partner in the international arena with private hotel and housing projects in Maldives, Qatar, Australia and the USA.
+
+As a family business, Ronica is always passionate about quality, sustainability and customer satisfaction. Each collection is prepared with nature-respecting materials and innovative designs. Ronica brings not only comfort but also a lasting elegance to the outdoor life.`;
+
+    const rawContent = aboutSettings?.story_content || defaultContent;
+    const paragraphs = rawContent
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean);
 
     return (
         <>
             <SEOHead
-                title={t('shop.about.title')}
+                title={isIndonesian ? 'Tentang Kami' : 'About Us'}
                 description={t('shop.about.seo_description', { siteName })}
                 keywords={[
                     'tentang kami',
-                    'furnitur jepara',
-                    'mebel indonesia',
-                    'furniture premium',
-                    'pengrajin mebel',
+                    'about ronica',
+                    'outdoor furniture',
+                    'furnitur rotan',
+                    'teak wood indonesia',
+                    'handicraft story',
                 ]}
             />
             <div className="bg-noise" />
             <ShopLayout>
                 <main className="min-h-screen bg-sand-50 pb-20">
-                    {/* Hero */}
-                    <div className="mb-16 bg-gradient-to-r from-teal-600 to-teal-700 py-20 text-white">
+                    {/* Fixed Nature/Wood Banner Header */}
+                    <div className="mb-12 md:mb-16 bg-[#96724d] py-11 md:py-13 text-white">
                         <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-                            <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                                {aboutSettings?.hero_title || t('shop.about.hero_title', { siteName })}
+                            <h1 className="mb-2 text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-[2.1rem]">
+                                {isIndonesian ? 'Tentang Kami' : 'About Us'}
                             </h1>
-                            <p className="mx-auto max-w-2xl text-xl opacity-90">
-                                {aboutSettings?.hero_subtitle || t('shop.about.hero_subtitle')}
+                            <p className="mx-auto max-w-xl text-xs md:text-sm tracking-wide text-white/90">
+                                {isIndonesian
+                                    ? 'Pelajari lebih lanjut tentang kisah kerajinan dan dedikasi furnitur kami'
+                                    : 'Discover the story of Ronica’s handcrafted outdoor furniture'}
                             </p>
                         </div>
                     </div>
 
+                    {/* Main Content Section */}
                     <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-                        {/* Story Section */}
-                        <div className="mb-20 grid items-center gap-12 md:grid-cols-2">
-                            <div>
-                                <h2 className="mb-6 font-serif text-3xl text-terra-900">
-                                    {aboutSettings?.story_title || t('shop.about.story_title')}
-                                </h2>
-                                <div className="space-y-4 leading-relaxed text-terra-600">
-                                    {aboutSettings?.story_p1 && <p>{aboutSettings.story_p1}</p>}
-                                    {aboutSettings?.story_p2 && <p>{aboutSettings.story_p2}</p>}
-                                    {aboutSettings?.story_p3 && <p>{aboutSettings.story_p3}</p>}
-                                    {!aboutSettings?.story_p1 && (
+                        <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm md:p-10 lg:p-12">
+                            <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+                                {/* Left Column: Image Carousel */}
+                                <div
+                                    className="relative min-h-[380px] w-full overflow-hidden rounded-xl bg-neutral-100 shadow-inner sm:min-h-[460px] lg:col-span-5 xl:col-span-5"
+                                    onMouseEnter={() => setIsAutoPlaying(false)}
+                                    onMouseLeave={() => setIsAutoPlaying(true)}
+                                >
+                                    <AnimatePresence mode="wait">
+                                        <motion.img
+                                            key={currentImageIndex}
+                                            src={carouselImages[currentImageIndex]}
+                                            alt={`Ronica Craftsmanship ${currentImageIndex + 1}`}
+                                            initial={{ opacity: 0, scale: 1.05 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.98 }}
+                                            transition={{ duration: 0.5, ease: 'easeOut' }}
+                                            className="h-full w-full object-cover object-center"
+                                        />
+                                    </AnimatePresence>
+
+                                    {/* Navigation Arrows */}
+                                    {carouselImages.length > 1 && (
                                         <>
-                                            <p>{t('shop.about.story_p1', { siteName })}</p>
-                                            <p>{t('shop.about.story_p2')}</p>
-                                            <p>{t('shop.about.story_p3', { siteName })}</p>
+                                            <button
+                                                type="button"
+                                                onClick={handlePrev}
+                                                className="absolute top-1/2 left-3 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-md backdrop-blur-xs transition-all hover:bg-white hover:scale-105 active:scale-95 cursor-pointer"
+                                                aria-label="Previous image"
+                                            >
+                                                <ChevronLeft size={20} />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleNext}
+                                                className="absolute top-1/2 right-3 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-md backdrop-blur-xs transition-all hover:bg-white hover:scale-105 active:scale-95 cursor-pointer"
+                                                aria-label="Next image"
+                                            >
+                                                <ChevronRight size={20} />
+                                            </button>
+
+                                            {/* Carousel Pagination Dots */}
+                                            <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/30 px-3 py-1.5 backdrop-blur-xs">
+                                                {carouselImages.map((_, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        type="button"
+                                                        onClick={() => setCurrentImageIndex(idx)}
+                                                        className={`h-2 rounded-full transition-all cursor-pointer ${
+                                                            idx === currentImageIndex
+                                                                ? 'w-6 bg-white'
+                                                                : 'w-2 bg-white/50 hover:bg-white/80'
+                                                        }`}
+                                                        aria-label={`Slide ${idx + 1}`}
+                                                    />
+                                                ))}
+                                            </div>
                                         </>
                                     )}
                                 </div>
-                            </div>
-                            <div className="relative">
-                                <div className="aspect-[4/3] overflow-hidden rounded-sm bg-neutral-200">
-                                    <img
-                                        src={aboutSettings?.story_image || '/images/placeholder-about.svg'}
-                                        alt="Workshop"
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div>
-                                <div className="absolute -bottom-6 -left-6 rounded-sm bg-teal-600 p-6 text-white">
-                                    <div className="text-3xl font-bold">
-                                        {aboutSettings?.years_experience || '14+'}
+
+                                {/* Right Column: Story Text Content */}
+                                <div className="flex flex-col justify-center lg:col-span-7 xl:col-span-7">
+                                    <h2 className="mb-6 font-serif text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl lg:text-[2rem] leading-tight">
+                                        {storyTitle}
+                                        {storySubtitle && (
+                                            <span className="block mt-1 font-sans text-xl md:text-2xl font-semibold text-neutral-800">
+                                                {storySubtitle}
+                                            </span>
+                                        )}
+                                    </h2>
+
+                                    <div className="space-y-4 text-sm leading-relaxed text-neutral-700 md:text-[15px] lg:text-base lg:leading-relaxed">
+                                        {paragraphs.map((paragraph, idx) => (
+                                            <p key={idx}>{paragraph}</p>
+                                        ))}
                                     </div>
-                                    <div className="text-sm opacity-80">
-                                        {aboutSettings?.years_experience_label || t('shop.about.years_experience')}
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* Vision & Mission */}
-                        <div className="mb-20 grid gap-8 md:grid-cols-2">
-                            <div className="rounded-sm border border-terra-100 bg-white p-8">
-                                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-sm bg-teal-100">
-                                    <Target
-                                        size={28}
-                                        className="text-teal-600"
-                                    />
-                                </div>
-                                <h3 className="mb-4 font-serif text-2xl text-terra-900">
-                                    {aboutSettings?.vision_title || t('shop.about.vision_title')}
-                                </h3>
-                                <p className="leading-relaxed text-terra-600">
-                                    {aboutSettings?.vision_text || t('shop.about.vision_text')}
-                                </p>
-                            </div>
-                            <div className="rounded-sm border border-terra-100 bg-white p-8">
-                                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-sm bg-teal-100">
-                                    <Clock
-                                        size={28}
-                                        className="text-teal-600"
-                                    />
-                                </div>
-                                <h3 className="mb-4 font-serif text-2xl text-terra-900">
-                                    {aboutSettings?.mission_title || t('shop.about.mission_title')}
-                                </h3>
-                                <ul className="space-y-2 text-terra-600">
-                                    <li className="flex items-start gap-2">
-                                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {aboutSettings?.mission_1 || t('shop.about.mission_1')}
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {aboutSettings?.mission_2 || t('shop.about.mission_2')}
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {aboutSettings?.mission_3 || t('shop.about.mission_3')}
-                                    </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-teal-500"></span>
-                                        {aboutSettings?.mission_4 || t('shop.about.mission_4')}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Values */}
-                        <div className="mb-20">
-                            <h2 className="mb-12 text-center font-serif text-3xl text-terra-900">
-                                {t('shop.about.values_title')}
-                            </h2>
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                                {VALUES.map((v, i) => (
-                                    <div
-                                        key={i}
-                                        className="rounded-sm border border-terra-100 bg-white p-6 text-center transition-shadow hover:shadow-lg"
-                                    >
-                                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
-                                            <v.icon
-                                                size={32}
-                                                className="text-teal-600"
-                                            />
-                                        </div>
-                                        <h3 className="mb-2 font-medium text-terra-900">
-                                            {v.title}
-                                        </h3>
-                                        <p className="text-sm text-terra-500">
-                                            {v.desc}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Timeline */}
-                        <div className="mb-20">
-                            <h2 className="mb-12 text-center font-serif text-3xl text-terra-900">
-                                {t('shop.about.journey_title')}
-                            </h2>
-                            <div className="relative">
-                                <div className="absolute top-0 bottom-0 left-1/2 hidden w-0.5 bg-terra-200 md:block"></div>
-                                <div className="space-y-8">
-                                    {MILESTONES.map((m, i) => (
-                                        <div
-                                            key={i}
-                                            className={`flex items-center gap-8 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                                        >
-                                            <div
-                                                className={`flex-1 ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}
-                                            >
-                                                <div className="inline-block rounded-sm border border-terra-100 bg-white p-6">
-                                                    <div className="mb-1 text-xl font-bold text-teal-600">
-                                                        {m.year}
-                                                    </div>
-                                                    <h4 className="mb-1 font-medium text-terra-900">
-                                                        {m.title}
-                                                    </h4>
-                                                    <p className="text-sm text-terra-500">
-                                                        {m.desc}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="z-10 hidden h-4 w-4 rounded-full border-4 border-sand-50 bg-wood md:flex"></div>
-                                            <div className="hidden flex-1 md:block"></div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* CTA */}
-                        <div className="rounded-sm bg-teal-700 p-12 text-center text-white">
-                            <h2 className="mb-4 font-serif text-3xl">
-                                {t('shop.about.cta_title')}
-                            </h2>
-                            <p className="mx-auto mb-8 max-w-xl opacity-80">
-                                {t('shop.about.cta_subtitle')}
-                            </p>
-                            <a
-                                href="/shop/products"
-                                className="inline-flex items-center gap-2 rounded-sm bg-white px-8 py-4 font-medium text-teal-700 transition-colors hover:bg-teal-50"
-                            >
-                                {t('shop.about.cta_button')}
-                            </a>
                         </div>
                     </div>
                 </main>

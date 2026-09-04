@@ -280,3 +280,16 @@
         transform: translateY(-20px);
     }
 }
+
+/* dFlip Flipbook 3D Viewer Full Height & Centering */
+.dflip-container,
+.df-container {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+}
+
+.df-container .df-viewer {
+    height: 100% !important;
+}
+

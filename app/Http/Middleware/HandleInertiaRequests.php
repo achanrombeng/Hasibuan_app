@@ -55,10 +55,10 @@ class HandleInertiaRequests extends Middleware
                 ->active()
                 ->root() // Only top level
                 ->with(['children' => function ($query) {
-                    $query->active()->orderBy('sort_order');
+                    $query->active()->orderBy('sort_order')->orderBy('id');
                 }])
                 ->orderBy('sort_order')
-                ->limit(11) // Limit logic updated to match shop page
+                ->orderBy('id')
                 ->get()
                 ->map(function ($category) {
                     return [
@@ -68,11 +68,13 @@ class HandleInertiaRequests extends Middleware
                         'description' => $category->description,
                         'image_url' => $category->image_url,
                         'is_featured' => $category->is_featured,
+                        'sort_order' => $category->sort_order,
                         'children' => $category->children->map(function ($child) {
                             return [
                                 'id' => $child->id,
                                 'name' => $child->name,
                                 'slug' => $child->slug,
+                                'sort_order' => $child->sort_order,
                             ];
                         }),
                     ];

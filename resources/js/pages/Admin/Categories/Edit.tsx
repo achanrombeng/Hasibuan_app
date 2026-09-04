@@ -29,6 +29,7 @@ interface Category {
     description: string | null;
     is_active: boolean;
     is_featured: boolean;
+    sort_order?: number;
     image_path: string | null;
     image_url: string | null;
 }
@@ -48,6 +49,7 @@ export default function EditCategory({
         parent_id: number | null;
         is_active: boolean;
         is_featured: boolean;
+        sort_order: number | '';
         image: File | null;
     }>({
         name: category.name,
@@ -55,6 +57,7 @@ export default function EditCategory({
         parent_id: category.parent_id,
         is_active: category.is_active,
         is_featured: category.is_featured || false,
+        sort_order: category.sort_order ?? 0,
         image: null,
     });
 
@@ -171,6 +174,35 @@ export default function EditCategory({
                                 {errors.name && (
                                     <p className="mt-1 text-sm text-red-500">
                                         {errors.name}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Sort Order */}
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-terra-700">
+                                    Urutan Tampilan (Sort Order)
+                                </label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={data.sort_order}
+                                    onChange={(e) =>
+                                        setData(
+                                            'sort_order',
+                                            e.target.value === ''
+                                                ? ''
+                                                : parseInt(e.target.value, 10),
+                                        )
+                                    }
+                                    className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-3 text-terra-900 transition-all placeholder:text-terra-400 focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
+                                />
+                                <p className="mt-1 text-xs text-terra-500">
+                                    Semakin kecil nilainya (misal 1, 2, 3), kategori akan muncul lebih awal di menu navbar Products & daftar katalog.
+                                </p>
+                                {errors.sort_order && (
+                                    <p className="mt-1 text-sm text-red-500">
+                                        {errors.sort_order}
                                     </p>
                                 )}
                             </div>

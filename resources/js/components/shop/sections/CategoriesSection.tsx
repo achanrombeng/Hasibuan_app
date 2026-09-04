@@ -17,6 +17,7 @@ interface ShowcaseSlide {
   productTag: string;
   image: string;
   slug: string;
+  sort_order?: number;
   hotspot: { x: number; y: number };
 }
 
@@ -148,29 +149,33 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
       ? categories
       : (categories as any)?.data;
     if (categoryList && categoryList.length > 0) {
-      return categoryList
-        .map((c: ApiCategory) => {
-          const match = DEFAULT_SHOWCASE_ITEMS.find(
-            (item) =>
-              item.slug === c.slug ||
-              item.categoryName.toLowerCase() === c.name.toLowerCase(),
-          );
-          return {
-            id: c.slug || `cat-${c.id}`,
-            categoryName: c.name,
-            collectionTitle: match?.collectionTitle || c.name.toUpperCase(),
-            productTag: match?.productTag || c.name,
-            image:
-              c.image_url ||
-              match?.image ||
-              'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1600&auto=format&fit=crop',
-            slug: c.slug,
-            hotspot: match?.hotspot || { x: 50, y: 50 },
-          };
-        })
-        .sort((a: ShowcaseSlide, b: ShowcaseSlide) =>
-          a.categoryName.localeCompare(b.categoryName),
+      const sorted = [...categoryList].sort((a: any, b: any) => {
+        const orderA = typeof a.sort_order === 'number' ? a.sort_order : 0;
+        const orderB = typeof b.sort_order === 'number' ? b.sort_order : 0;
+        if (orderA !== orderB) return orderA - orderB;
+        return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+      });
+
+      return sorted.map((c: ApiCategory) => {
+        const match = DEFAULT_SHOWCASE_ITEMS.find(
+          (item) =>
+            item.slug === c.slug ||
+            item.categoryName.toLowerCase() === c.name.toLowerCase(),
         );
+        return {
+          id: c.slug || `cat-${c.id}`,
+          categoryName: c.name,
+          collectionTitle: match?.collectionTitle || c.name.toUpperCase(),
+          productTag: match?.productTag || c.name,
+          image:
+            c.image_url ||
+            match?.image ||
+            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1600&auto=format&fit=crop',
+          slug: c.slug,
+          sort_order: typeof c.sort_order === 'number' ? c.sort_order : 0,
+          hotspot: match?.hotspot || { x: 50, y: 50 },
+        };
+      });
     }
     return DEFAULT_SHOWCASE_ITEMS;
   }, [categories]);
