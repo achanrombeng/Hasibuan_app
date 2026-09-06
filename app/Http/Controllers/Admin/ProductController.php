@@ -66,9 +66,18 @@ class ProductController extends Controller implements HasMiddleware
     public function create(): Response
     {
         $categories = Category::where('is_active', true)->orderBy('name')->get();
+        $allProducts = Product::select('id', 'name', 'sku')
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'sku' => $p->sku,
+            ]);
 
         return Inertia::render('Admin/Products/Create', [
             'categories' => CategoryResource::collection($categories)->resolve(),
+            'allProducts' => $allProducts,
             'statuses' => [
                 ['value' => 'active', 'name' => 'Active'],
                 ['value' => 'draft', 'name' => 'Draft'],
@@ -95,7 +104,7 @@ class ProductController extends Controller implements HasMiddleware
 
     public function show(Product $product): Response
     {
-        $product->load(['category', 'images', 'reviews.user']);
+        $product->load(['category', 'images', 'reviews.user', 'linkedProducts.images', 'linkedProducts.category']);
 
         return Inertia::render('Admin/Products/Show', [
             'product' => (new ProductResource($product))->resolve(),
@@ -104,12 +113,22 @@ class ProductController extends Controller implements HasMiddleware
 
     public function edit(Product $product): Response
     {
-        $product->load(['category', 'images']);
+        $product->load(['category', 'images', 'linkedProducts']);
         $categories = Category::where('is_active', true)->orderBy('name')->get();
+        $allProducts = Product::where('id', '!=', $product->id)
+            ->select('id', 'name', 'sku')
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'sku' => $p->sku,
+            ]);
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => (new ProductResource($product))->resolve(),
             'categories' => CategoryResource::collection($categories)->resolve(),
+            'allProducts' => $allProducts,
             'statuses' => [
                 ['value' => 'active', 'name' => 'Active'],
                 ['value' => 'draft', 'name' => 'Draft'],

@@ -1,3 +1,4 @@
+import { LinkedProductsSelector, ProductOption } from '@/components/admin/LinkedProductsSelector';
 import ImageCropDialog from '@/components/ImageCropDialog';
 import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { Combobox } from '@/components/ui/combobox';
@@ -35,11 +36,13 @@ interface StatusOption {
 interface CreateProductProps {
     categories: Category[];
     statuses: StatusOption[];
+    allProducts?: ProductOption[];
 }
 
 export default function CreateProduct({
     categories,
     statuses,
+    allProducts = [],
 }: CreateProductProps) {
     const [previewImages, setPreviewImages] = useState<
         { file: File; preview: string }[]
@@ -50,6 +53,7 @@ export default function CreateProduct({
     const [specifications, setSpecifications] = useState<
         { key: string; value: string }[]
     >([]);
+    const [selectedLinkedProductIds, setSelectedLinkedProductIds] = useState<number[]>([]);
     const [isExtracting, setIsExtracting] = useState(false);
     const [extractError, setExtractError] = useState<string | null>(null);
     const [extractSuccess, setExtractSuccess] = useState(false);
@@ -172,7 +176,7 @@ export default function CreateProduct({
                 throw new Error(
                     firstValidationError ??
                         payload?.message ??
-                        'Gagal menganalisis gambar. Silakan coba lagi.',
+                        'Failed to analyze image. Please try again.',
                 );
             }
 
@@ -245,7 +249,7 @@ export default function CreateProduct({
             const msg =
                 err instanceof Error
                     ? err.message
-                    : 'Gagal menganalisis gambar. Silakan coba lagi.';
+                    : 'Failed to analyze image. Please try again.';
             setExtractError(msg);
         } finally {
             setIsExtracting(false);
@@ -387,6 +391,10 @@ export default function CreateProduct({
         });
         if (Object.keys(specsObj).length > 0) {
             formData.append('specifications', JSON.stringify(specsObj));
+        }
+
+        if (selectedLinkedProductIds.length > 0) {
+            formData.append('linked_product_ids', JSON.stringify(selectedLinkedProductIds));
         }
 
         formData.append('status', data.status);
@@ -819,7 +827,14 @@ export default function CreateProduct({
                         </div>
                     </div>
 
-                    {/* 7. Product Status */}
+                    {/* 5. Linked / Collection Products */}
+                    <LinkedProductsSelector
+                        allProducts={allProducts}
+                        selectedIds={selectedLinkedProductIds}
+                        onChange={setSelectedLinkedProductIds}
+                    />
+
+                    {/* 6. Product Status */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
                             Publishing Status

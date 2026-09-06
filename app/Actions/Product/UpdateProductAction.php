@@ -22,9 +22,13 @@ class UpdateProductAction
     public function execute(Product $product, array $data, array $newImages = [], array $deleteImageIds = []): Product
     {
         return DB::transaction(function () use ($product, $data, $newImages, $deleteImageIds) {
-            // Extract primary_image_id before updating product
+            // Extract primary_image_id and linked_product_ids before updating product
             $primaryImageId = $data['primary_image_id'] ?? null;
             unset($data['primary_image_id']);
+
+            $hasLinkedProductsKey = array_key_exists('linked_product_ids', $data);
+            $linkedProductIds = $data['linked_product_ids'] ?? [];
+            unset($data['linked_product_ids']);
 
             // Generate slug if name changed and slug not provided
             if (isset($data['name']) && ! isset($data['slug'])) {
@@ -32,6 +36,15 @@ class UpdateProductAction
             }
 
             $product->update($data);
+
+            // Sync linked products if provided in request
+            if ($hasLinkedProductsKey) {
+                $syncData = [];
+                foreach ($linkedProductIds as $order => $linkedId) {
+                    $syncData[$linkedId] = ['sort_order' => $order];
+                }
+                $product->linkedProducts()->sync($syncData);
+            }
 
             // Set primary image
             if ($primaryImageId) {

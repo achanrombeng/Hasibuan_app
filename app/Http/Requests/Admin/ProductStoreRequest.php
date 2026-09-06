@@ -26,6 +26,13 @@ class ProductStoreRequest extends FormRequest
             }
         }
 
+        if (is_string($this->linked_product_ids) && ! empty($this->linked_product_ids)) {
+            $decoded = json_decode($this->linked_product_ids, true);
+            if (is_array($decoded)) {
+                $mergeData['linked_product_ids'] = $decoded;
+            }
+        }
+
         if ($this->shipping_class === '' || $this->shipping_class === null) {
             $mergeData['shipping_class'] = null;
         }
@@ -55,6 +62,8 @@ class ProductStoreRequest extends FormRequest
             'material' => ['nullable', 'string', 'max:500'],
             'color' => ['nullable', 'string', 'max:255'],
             'specifications' => ['nullable', 'array'],
+            'linked_product_ids' => ['nullable', 'array'],
+            'linked_product_ids.*' => ['integer', 'exists:products,id'],
             'status' => ['required', Rule::enum(ProductStatus::class)],
             'is_featured' => ['nullable'],
             'is_new_arrival' => ['nullable'],

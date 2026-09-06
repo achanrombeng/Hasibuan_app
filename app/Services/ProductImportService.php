@@ -46,6 +46,8 @@ class ProductImportService
         'status' => ['status', 'status_produk'],
         'is_featured' => ['is_featured', 'featured', 'unggulan', 'produk_unggulan'],
         'is_new_arrival' => ['is_new_arrival', 'new_arrival', 'produk_baru', 'baru'],
+        'is_pre_order' => ['is_pre_order', 'pre_order', 'preorder', 'po', 'indent'],
+        'linked_skus' => ['linked_skus', 'linked_products', 'produk_terkait', 'koleksi_produk', 'linked_sku', 'produk_koleksi', 'sku_tertaut'],
         'image_urls' => ['image_urls', 'images', 'foto', 'gambar', 'url_gambar', 'image_url', 'photos', 'url_foto'],
     ];
 
@@ -73,6 +75,8 @@ class ProductImportService
             'status' => 'Status (active/draft)',
             'is_featured' => 'Unggulan (1/0)',
             'is_new_arrival' => 'Produk Baru (1/0)',
+            'is_pre_order' => 'Pre-Order (1/0)',
+            'linked_skus' => 'SKU Koleksi Tertaut (Pisahkan ;)',
             'image_urls' => 'URL Foto (Pisahkan ;)',
         ];
 
@@ -114,38 +118,42 @@ class ProductImportService
         // Sample Data Rows
         $samples = [
             [
-                'sku' => 'SFA-001',
-                'name' => 'Sofa Minimalis 3 Seater Grey',
-                'category' => 'Sofa & Bench',
-                'material' => 'Kayu Jati Solid, Kain Fabric',
-                'color' => 'Abu-abu Charcoal',
-                'weight' => 45.0,
-                'length' => 210,
-                'width' => 85,
-                'height' => 80,
-                'short_description' => 'Sofa 3 seater elegan dengan rangka kayu jati pilihan dan busa empuk tahan lama.',
-                'description' => 'Sofa minimalis berkonsep skandinavia dengan bahan kain premium dan bantalan ergonomis. Cocok untuk mempercantik ruang tamu modern.',
+                'sku' => 'LIV-COL-001',
+                'name' => 'Living Collection Luxury Teak',
+                'category' => 'Living Collection',
+                'material' => 'Solid Teak Wood & Sunproof Fabric',
+                'color' => 'Natural Honey Teak / Beige Sand',
+                'weight' => 115.0,
+                'length' => 320,
+                'width' => 210,
+                'height' => 85,
+                'short_description' => 'Koleksi terpadu ruang keluarga outdoor mewah yang terdiri dari sofa 3-seater, lounger chair, dan coffee table.',
+                'description' => 'Koleksi Living Collection menghadirkan keselarasan desain furniture luar ruang dengan konstruksi kayu jati solid tahan segala cuaca. Sangat cocok untuk villa, resort, dan hunian mewah.',
                 'status' => 'active',
                 'is_featured' => 1,
                 'is_new_arrival' => 1,
-                'image_urls' => 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800',
+                'is_pre_order' => 0,
+                'linked_skus' => 'SFA-001;CHR-ARM-003;SBD-001',
+                'image_urls' => '',
             ],
             [
-                'sku' => 'TBL-DIN-002',
-                'name' => 'Meja Makan Jati Scandinavian 6 Kursi',
-                'category' => 'Dining Sets',
-                'material' => '100% Solid Teak Wood',
-                'color' => 'Natural Wood Walnut',
-                'weight' => 65.0,
-                'length' => 180,
-                'width' => 90,
-                'height' => 76,
-                'short_description' => 'Set meja makan jati solid dengan finishing natural melamine yang halus dan anti gores.',
-                'description' => 'Meja makan bernuansa hangat dengan konstruksi kayu jati utuh, dikerjakan pengrajin berpengalaman. Sudah termasuk 6 kursi yang serasi.',
+                'sku' => 'SFA-001',
+                'name' => 'Outdoor Sofa Minimalis 3-Seater Teak',
+                'category' => 'Living Set',
+                'material' => 'Kayu Jati Solid Grade-A & QuickDry Foam',
+                'color' => 'Natural Wood / Light Grey',
+                'weight' => 48.0,
+                'length' => 215,
+                'width' => 85,
+                'height' => 80,
+                'short_description' => 'Sofa 3 dudukan outdoor dengan rangka kayu jati kokoh dan bantalan busa anti air.',
+                'description' => 'Sofa minimalis berkonsep skandinavia dengan bahan kain premium dan bantalan ergonomis tahan UV dan air hujan.',
                 'status' => 'active',
                 'is_featured' => 1,
-                'is_new_arrival' => 0,
-                'image_urls' => 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800',
+                'is_new_arrival' => 1,
+                'is_pre_order' => 0,
+                'linked_skus' => '',
+                'image_urls' => '',
             ],
             [
                 'sku' => 'CHR-ARM-003',
@@ -162,6 +170,46 @@ class ProductImportService
                 'status' => 'active',
                 'is_featured' => 0,
                 'is_new_arrival' => 1,
+                'is_pre_order' => 0,
+                'linked_skus' => '',
+                'image_urls' => '',
+            ],
+            [
+                'sku' => 'TBL-DIN-002',
+                'name' => 'Meja Makan Jati Scandinavian 6 Kursi',
+                'category' => 'Dining Sets',
+                'material' => '100% Solid Teak Wood',
+                'color' => 'Natural Wood Walnut',
+                'weight' => 65.0,
+                'length' => 180,
+                'width' => 90,
+                'height' => 76,
+                'short_description' => 'Set meja makan jati solid dengan finishing natural melamine yang halus dan anti gores.',
+                'description' => 'Meja makan bernuansa hangat dengan konstruksi kayu jati utuh, dikerjakan pengrajin berpengalaman. Sudah termasuk 6 kursi yang serasi.',
+                'status' => 'active',
+                'is_featured' => 1,
+                'is_new_arrival' => 0,
+                'is_pre_order' => 0,
+                'linked_skus' => '',
+                'image_urls' => '',
+            ],
+            [
+                'sku' => 'SBD-001',
+                'name' => 'Sunbed Lounger Teak Adjustable',
+                'category' => 'Sunbed',
+                'material' => 'Kayu Jati Solid TPK Perhutani',
+                'color' => 'Natural Weathered Teak',
+                'weight' => 28.0,
+                'length' => 200,
+                'width' => 65,
+                'height' => 35,
+                'short_description' => 'Kursi berjemur tepi kolam renang dengan sandaran multi-posisi dan roda praktis.',
+                'description' => 'Sunbed ergonomis premium terbuat dari kayu jati pilihan, tahan air dan sinar matahari sepanjang tahun.',
+                'status' => 'active',
+                'is_featured' => 1,
+                'is_new_arrival' => 0,
+                'is_pre_order' => 0,
+                'linked_skus' => '',
                 'image_urls' => '',
             ],
         ];
@@ -219,21 +267,23 @@ class ProductImportService
             $guideSheet->getRowDimension(1)->setRowHeight(26);
 
             $guideRows = [
-                ['sku', 'Kode unik produk. Jika dikosongkan, sistem akan otomatis menghasilkan SKU unik.', 'Opsional', 'SFA-001'],
-                ['name', 'Nama lengkap produk furniture.', 'Wajib', 'Sofa Minimalis 3 Seater Grey'],
-                ['category', 'Nama kategori produk. Jika belum ada di sistem, kategori akan dibuat otomatis.', 'Wajib', 'Sofa & Bench'],
-                ['material', 'Jenis bahan / material utama.', 'Opsional', 'Kayu Jati Solid, Kain Fabric'],
-                ['color', 'Warna produk.', 'Opsional', 'Abu-abu Charcoal'],
-                ['weight', 'Berat produk dalam kilogram (kg).', 'Opsional', '45.0'],
-                ['length', 'Panjang dimensi produk dalam centimeter (cm).', 'Opsional', '210'],
+                ['sku', 'Kode unik produk. Jika dikosongkan, sistem akan otomatis membuat SKU unik.', 'Opsional', 'SFA-001'],
+                ['name', 'Nama lengkap produk furniture.', 'Wajib', 'Outdoor Sofa Minimalis 3-Seater Teak'],
+                ['category', 'Nama kategori produk (misal: Living Collection, Living Set, Dining Sets, Sunbed, Chairs). Jika belum ada, kategori akan otomatis dibuat.', 'Wajib', 'Living Set'],
+                ['material', 'Jenis bahan / material utama.', 'Opsional', 'Kayu Jati Solid Grade-A, QuickDry Foam'],
+                ['color', 'Warna produk atau finishing.', 'Opsional', 'Natural Honey / Light Grey'],
+                ['weight', 'Berat produk dalam kilogram (kg).', 'Opsional', '48.0'],
+                ['length', 'Panjang dimensi produk dalam centimeter (cm).', 'Opsional', '215'],
                 ['width', 'Lebar dimensi produk dalam centimeter (cm).', 'Opsional', '85'],
                 ['height', 'Tinggi dimensi produk dalam centimeter (cm).', 'Opsional', '80'],
-                ['short_description', 'Ringkasan singkat tentang keunggulan produk.', 'Opsional', 'Sofa 3 seater elegan berangka jati solid...'],
-                ['description', 'Deskripsi detail spesifikasi dan kegunaan produk.', 'Opsional', 'Sofa minimalis berkonsep skandinavia...'],
-                ['status', 'Status tayang produk: active atau draft.', 'Opsional (Default: active)', 'active'],
+                ['short_description', 'Ringkasan singkat tentang produk furniture.', 'Opsional', 'Sofa 3 dudukan outdoor dengan kayu jati kokoh...'],
+                ['description', 'Deskripsi lengkap spesifikasi dan keunggulan produk.', 'Opsional', 'Sofa minimalis dengan bahan kain premium...'],
+                ['status', 'Status tayang produk di toko: active atau draft.', 'Opsional (Default: active)', 'active'],
                 ['is_featured', 'Tandai sebagai produk unggulan (1 = Ya, 0 = Tidak).', 'Opsional (Default: 0)', '1'],
                 ['is_new_arrival', 'Tandai sebagai produk baru (1 = Ya, 0 = Tidak).', 'Opsional (Default: 0)', '1'],
-                ['image_urls', 'Link URL foto produk di internet. Pisahkan dengan tanda titik koma (;) jika lebih dari 1 foto.', 'Opsional', 'https://example.com/img1.jpg;https://example.com/img2.jpg'],
+                ['is_pre_order', 'Tandai produk memerlukan pesanan awal / Pre-Order (1 = Ya, 0 = Tidak).', 'Opsional (Default: 0)', '0'],
+                ['linked_skus', 'SKU produk yang tergabung / ditautkan dalam koleksi ini. Pisahkan dengan tanda titik koma (;). Produk tertaut akan otomatis ditampilkan di halaman detail produk koleksi.', 'Opsional', 'SFA-001;CHR-ARM-003;SBD-001'],
+                ['image_urls', 'Link URL foto produk di internet (pisahkan dengan titik koma ; jika lebih dari 1 foto). Jika dikosongkan, sistem akan otomatis menampilkan nama & SKU produk.', 'Opsional', 'https://example.com/img1.jpg;https://example.com/img2.jpg'],
             ];
 
             $gRowNum = 2;
@@ -445,6 +495,8 @@ class ProductImportService
             'errors' => [],
         ];
 
+        $deferredLinks = []; // [ ['product_id' => int, 'linked_skus' => string] ]
+
         $rowNumber = 1; // starts at 2 after header
         foreach ($rawRows as $row) {
             $rowNumber++;
@@ -477,13 +529,21 @@ class ProductImportService
             }
 
             try {
-                $result = $this->processRow($data, $updateExisting);
-                if ($result === 'imported') {
+                $processResult = $this->processRow($data, $updateExisting);
+                $statusType = $processResult['status'];
+                if ($statusType === 'imported') {
                     $report['imported']++;
-                } elseif ($result === 'updated') {
+                } elseif ($statusType === 'updated') {
                     $report['updated']++;
                 } else {
                     $report['skipped']++;
+                }
+
+                if ($processResult['product_id'] && ! empty($data['linked_skus'])) {
+                    $deferredLinks[] = [
+                        'product_id' => $processResult['product_id'],
+                        'linked_skus' => (string) $data['linked_skus'],
+                    ];
                 }
             } catch (Throwable $e) {
                 Log::error("Error importing product at row {$rowNumber}: ".$e->getMessage(), [
@@ -499,6 +559,9 @@ class ProductImportService
                 $report['skipped']++;
             }
         }
+
+        // Process deferred collection/product links after all products exist
+        $this->processDeferredLinks($deferredLinks);
 
         return $report;
     }
@@ -523,9 +586,9 @@ class ProductImportService
      * Process a single product record.
      *
      * @param  array<string, mixed>  $data
-     * @return 'imported'|'updated'|'skipped'
+     * @return array{status: 'imported'|'updated'|'skipped', product_id: int|null}
      */
-    private function processRow(array $data, bool $updateExisting): string
+    private function processRow(array $data, bool $updateExisting): array
     {
         $name = (string) ($data['name'] ?? '');
         $sku = (string) ($data['sku'] ?? '');
@@ -544,7 +607,7 @@ class ProductImportService
         }
 
         if ($existing && ! $updateExisting) {
-            return 'skipped';
+            return ['status' => 'skipped', 'product_id' => $existing->id];
         }
 
         // 2. Resolve Category
@@ -589,6 +652,7 @@ class ProductImportService
             'status' => $status,
             'is_featured' => ! empty($data['is_featured']) && (bool) $data['is_featured'],
             'is_new_arrival' => ! empty($data['is_new_arrival']) && (bool) $data['is_new_arrival'],
+            'is_pre_order' => ! empty($data['is_pre_order']) && (bool) $data['is_pre_order'],
         ];
 
         return DB::transaction(function () use ($existing, $productPayload, $data) {
@@ -608,8 +672,42 @@ class ProductImportService
                 $this->attachImagesFromUrls($product, (string) $data['image_urls']);
             }
 
-            return $actionType;
+            return ['status' => $actionType, 'product_id' => $product->id];
         });
+    }
+
+    /**
+     * Process deferred collection and product links.
+     *
+     * @param  array<int, array{product_id: int, linked_skus: string}>  $deferredLinks
+     */
+    private function processDeferredLinks(array $deferredLinks): void
+    {
+        foreach ($deferredLinks as $item) {
+            $productId = $item['product_id'];
+            $rawSkus = $item['linked_skus'];
+
+            $skuList = array_filter(array_map('trim', preg_split('/[;,\|]+/', $rawSkus) ?: []));
+            if (empty($skuList)) {
+                continue;
+            }
+
+            $linkedIds = Product::whereIn('sku', $skuList)
+                ->where('id', '!=', $productId)
+                ->pluck('id')
+                ->toArray();
+
+            if (! empty($linkedIds)) {
+                $syncData = [];
+                foreach ($linkedIds as $index => $linkedId) {
+                    $syncData[$linkedId] = ['sort_order' => $index + 1];
+                }
+
+                /** @var Product|null $product */
+                $product = Product::find($productId);
+                $product?->linkedProducts()->sync($syncData);
+            }
+        }
     }
 
     /**

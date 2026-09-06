@@ -4,6 +4,8 @@ import { X, GitCompare, Trash2, Star, ChevronUp, ChevronDown } from 'lucide-reac
 import { useState } from 'react';
 import { useCompare } from '@/contexts/CompareContext';
 
+import { ProductImagePlaceholder } from '@/components/shop/ProductImagePlaceholder';
+
 export const CompareDrawer: React.FC = () => {
     const { compareItems, removeFromCompare, clearCompare, maxItems } = useCompare();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -27,18 +29,30 @@ export const CompareDrawer: React.FC = () => {
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                         <div className="p-6">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                {compareItems.map((product) => (
-                                    <div key={product.id} className="relative bg-sand-50 rounded-sm p-3">
-                                        <button onClick={() => removeFromCompare(product.id)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 z-10">
-                                            <X size={14} />
-                                        </button>
-                                        <div className="aspect-square rounded-lg overflow-hidden mb-2">
-                                            <img src={product.primary_image?.image_url || product.images?.[0]?.image_url || '/images/placeholder-product.svg'} alt={product.name} className="w-full h-full object-cover" />
+                                {compareItems.map((product) => {
+                                    const imgUrl = product.primary_image?.image_url || product.images?.[0]?.image_url;
+                                    return (
+                                        <div key={product.id} className="relative bg-sand-50 rounded-sm p-3">
+                                            <button onClick={() => removeFromCompare(product.id)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 z-10">
+                                                <X size={14} />
+                                            </button>
+                                            <div className="aspect-square rounded-lg overflow-hidden mb-2 flex items-center justify-center">
+                                                {imgUrl ? (
+                                                    <img src={imgUrl} alt={product.name} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <ProductImagePlaceholder
+                                                        name={product.name}
+                                                        sku={product.sku}
+                                                        category={product.category?.name}
+                                                        size="sm"
+                                                    />
+                                                )}
+                                            </div>
+                                            <h4 className="text-sm font-medium text-terra-900 line-clamp-2 mb-1">{product.name}</h4>
+                                            <span className="text-xs text-terra-500">{product.category?.name}</span>
                                         </div>
-                                        <h4 className="text-sm font-medium text-terra-900 line-clamp-2 mb-1">{product.name}</h4>
-                                        <span className="text-xs text-terra-500">{product.category?.name}</span>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                                 {/* Empty Slots */}
                                 {Array.from({ length: maxItems - compareItems.length }).map((_, i) => (
                                     <div key={`empty-${i}`} className="aspect-square bg-terra-50 rounded-sm border-2 border-dashed border-terra-200 flex items-center justify-center">

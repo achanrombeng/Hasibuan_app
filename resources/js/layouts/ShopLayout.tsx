@@ -2,6 +2,7 @@ import {
     CustomCursor,
     Footer,
     Header,
+    ProductImagePlaceholder,
     WhatsAppButton,
 } from '@/components/shop';
 import { useTranslation } from '@/hooks/use-translation';
@@ -23,6 +24,7 @@ interface CartItem {
         id: number;
         name: string;
         slug: string;
+        sku?: string;
         price: number;
         final_price: number;
         has_discount?: boolean;
@@ -233,21 +235,25 @@ export function ShopLayout({
                                                         : ''
                                                 }`}
                                             >
-                                                <div className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-sm bg-neutral-100">
-                                                    <img
-                                                        src={
-                                                            item.product
-                                                                ?.primary_image
-                                                                ?.image_url ||
-                                                            '/images/placeholder-product.svg'
-                                                        }
-                                                        alt={
-                                                            item.product
-                                                                ?.name ||
-                                                            'Product'
-                                                        }
-                                                        className="h-full w-full object-cover"
-                                                    />
+                                                <div className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-sm bg-neutral-100 flex items-center justify-center">
+                                                    {item.product?.primary_image?.image_url ? (
+                                                        <img
+                                                            src={item.product.primary_image.image_url}
+                                                            alt={
+                                                                item.product
+                                                                    ?.name ||
+                                                                'Product'
+                                                            }
+                                                            className="h-full w-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <ProductImagePlaceholder
+                                                            name={item.product?.name}
+                                                            sku={item.product?.sku}
+                                                            category={item.product?.category?.name}
+                                                            size="sm"
+                                                        />
+                                                    )}
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <h4 className="truncate font-medium text-neutral-800">

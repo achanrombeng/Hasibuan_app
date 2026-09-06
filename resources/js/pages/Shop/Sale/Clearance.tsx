@@ -1,4 +1,5 @@
 import { SEOHead } from '@/components/seo';
+import { ProductImagePlaceholder } from '@/components/shop';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { ApiCategory, ApiProduct, PaginatedResponse } from '@/types/shop';
@@ -242,19 +243,27 @@ export default function Clearance({
 function ClearanceCard({ product }: { product: ApiProduct }) {
     const imageUrl =
         product.primary_image?.image_url ||
-        product.images?.[0]?.image_url ||
-        '/images/placeholder-product.svg';
+        product.images?.[0]?.image_url;
     return (
         <Link
             href={`/shop/products/${product.slug}`}
             className="group block overflow-hidden rounded-sm bg-white shadow-sm transition-shadow hover:shadow-md"
         >
-            <div className="relative aspect-square overflow-hidden">
-                <img
-                    src={imageUrl}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+            <div className="relative aspect-square overflow-hidden flex items-center justify-center">
+                {imageUrl ? (
+                    <img
+                        src={imageUrl}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                ) : (
+                    <ProductImagePlaceholder
+                        name={product.name}
+                        sku={product.sku}
+                        category={product.category?.name}
+                        size="md"
+                    />
+                )}
                 <span className="absolute top-3 right-3 rounded-sm bg-neutral-800 px-3 py-1 text-xs font-medium text-white">
                     CLEARANCE
                 </span>

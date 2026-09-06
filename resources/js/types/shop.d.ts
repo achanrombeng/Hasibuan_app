@@ -144,6 +144,8 @@ export interface ApiProduct {
     images?: ProductImage[];
     primary_image?: ProductImage | null;
     reviews?: ProductReview[];
+    linked_products?: ApiProduct[];
+    linked_product_ids?: number[];
     is_wishlisted?: boolean;
     rating_counts?: { star: number; count: number }[];
     created_at: string;

@@ -24,8 +24,20 @@ class CreateProductAction
             $data['slug'] = $data['slug'] ?? Str::slug($data['name']).'-'.Str::random(5);
             $data['status'] = $data['status'] ?? ProductStatus::DRAFT;
 
+            $linkedProductIds = $data['linked_product_ids'] ?? [];
+            unset($data['linked_product_ids']);
+
             /** @var Product $product */
             $product = Product::create($data);
+
+            // Sync linked products
+            if (! empty($linkedProductIds)) {
+                $syncData = [];
+                foreach ($linkedProductIds as $order => $linkedId) {
+                    $syncData[$linkedId] = ['sort_order' => $order];
+                }
+                $product->linkedProducts()->sync($syncData);
+            }
 
             // Handle images
             foreach ($images as $index => $image) {
@@ -40,7 +52,7 @@ class CreateProductAction
                 ]);
             }
 
-            return $product->fresh()->load('images', 'category');
+            return $product->fresh()->load('images', 'category', 'linkedProducts');
         });
     }
 }

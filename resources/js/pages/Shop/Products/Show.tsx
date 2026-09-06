@@ -5,6 +5,7 @@ import {
 } from '@/components/seo';
 import {
     ProductCard,
+    ProductImagePlaceholder,
     saveToRecentlyViewed,
     ShareModal,
 } from '@/components/shop';
@@ -15,6 +16,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowLeft,
+    ArrowRight,
     Award,
     Check,
     ChevronLeft,
@@ -83,15 +85,7 @@ export default function ProductShow({
         }
     }, [cartMessage]);
 
-    const images = product.images?.length
-        ? product.images
-        : [
-            {
-                id: 0,
-                image_url: '/images/placeholder-product.svg',
-                alt_text: product.name,
-            } as ProductImage,
-        ];
+    const images = product.images?.length ? product.images : [];
 
     const handleAddToCart = async () => {
         setIsAddingToCart(true);
@@ -106,14 +100,14 @@ export default function ProductShow({
                 onSuccess: () => {
                     setCartMessage({
                         type: 'success',
-                        text: 'Produk berhasil ditambahkan ke keranjang!',
+                        text: 'Product added to cart successfully!',
                     });
                 },
                 onError: (errors) => {
                     console.error('Error adding to cart:', errors);
                     setCartMessage({
                         type: 'error',
-                        text: 'Gagal menambahkan produk ke keranjang',
+                        text: 'Failed to add product to cart',
                     });
                 },
                 onFinish: () => {
@@ -146,14 +140,14 @@ export default function ProductShow({
                     setCartMessage({
                         type: 'success',
                         text: newStatus
-                            ? 'Produk berhasil ditambahkan ke wishlist!'
-                            : 'Produk berhasil dihapus dari wishlist',
+                            ? 'Product added to wishlist!'
+                            : 'Product removed from wishlist',
                     });
                 },
                 onError: () => {
                     setCartMessage({
                         type: 'error',
-                        text: 'Gagal mengupdate wishlist',
+                        text: 'Failed to update wishlist',
                     });
                 },
                 onFinish: () => {
@@ -171,14 +165,14 @@ export default function ProductShow({
     const productImages = images.map((img) => img.image_url);
     const breadcrumbItems = [
         {
-            name: 'Beranda',
+            name: 'Home',
             url:
                 typeof window !== 'undefined'
                     ? `${window.location.origin}/shop`
                     : '/shop',
         },
         {
-            name: 'Produk',
+            name: 'Products',
             url:
                 typeof window !== 'undefined'
                     ? `${window.location.origin}/shop/products`
@@ -208,7 +202,7 @@ export default function ProductShow({
                     product.description
                         ?.replace(/<[^>]*>/g, '')
                         .substring(0, 160) ||
-                    `Beli ${product.name} dengan harga terbaik di ${siteName}`
+                    `Discover ${product.name} by ${siteName}. Premium outdoor & teak furniture.`
                 }
                 keywords={
                     [
@@ -324,6 +318,14 @@ export default function ProductShow({
                             </div>
                         </div>
 
+                        {/* Collection Bundle / Linked Products Section */}
+                        {product.linked_products && product.linked_products.length > 0 && (
+                            <CollectionBundleSection
+                                linkedProducts={product.linked_products}
+                                collectionName={product.name}
+                            />
+                        )}
+
                         {/* Full-width Product Details & Tabs Section */}
                         <div className="mb-16">
                             <ProductDetailTabs product={product} />
@@ -388,14 +390,14 @@ function Breadcrumb({ product }: { product: ApiProduct }) {
                     className="flex items-center gap-1 transition-colors hover:text-teal-700"
                 >
                     <Home size={13} className="text-neutral-400" />
-                    <span>Beranda</span>
+                    <span>Home</span>
                 </Link>
                 <span className="text-neutral-300">/</span>
                 <Link
                     href="/shop/products"
                     className="transition-colors hover:text-teal-700"
                 >
-                    Produk
+                    Products
                 </Link>
                 {product.category && (
                     <>
@@ -449,31 +451,46 @@ function ImageGallery({
     onWishlist,
     isTogglingWishlist,
 }: ImageGalleryProps) {
+    const hasImages = images && images.length > 0;
+
     return (
         <div className="space-y-4 lg:sticky lg:top-28">
             {/* Main Image Showcase Card */}
             <div
-                className="group relative aspect-[4/3] sm:aspect-[16/11] cursor-zoom-in overflow-hidden rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md flex items-center justify-center"
-                onClick={onZoom}
+                className={`group relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md flex items-center justify-center ${hasImages ? 'cursor-zoom-in' : ''}`}
+                onClick={hasImages ? onZoom : undefined}
             >
-                <AnimatePresence mode="wait">
-                    <motion.img
-                        key={selectedIndex}
-                        src={images[selectedIndex]?.image_url}
-                        alt={images[selectedIndex]?.alt_text || product.name}
-                        className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
-                        initial={{ opacity: 0, scale: 0.97 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.25 }}
+                {hasImages ? (
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={selectedIndex}
+                            src={images[selectedIndex]?.image_url}
+                            alt={images[selectedIndex]?.alt_text || product.name}
+                            className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
+                            initial={{ opacity: 0, scale: 0.97 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                        />
+                    </AnimatePresence>
+                ) : (
+                    <ProductImagePlaceholder
+                        name={product.name}
+                        sku={product.sku}
+                        category={product.category?.name}
+                        size="xl"
                     />
-                </AnimatePresence>
+                )}
 
                 {/* Top Action Overlay: Wishlist & Image Badge */}
                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                    <span className="pointer-events-auto rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-700 shadow-xs backdrop-blur-md border border-neutral-100">
-                        {selectedIndex + 1} / {images.length}
-                    </span>
+                    {hasImages ? (
+                        <span className="pointer-events-auto rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-700 shadow-xs backdrop-blur-md border border-neutral-100">
+                            {selectedIndex + 1} / {images.length}
+                        </span>
+                    ) : (
+                        <span />
+                    )}
 
                     <button
                         onClick={(e) => {
@@ -485,7 +502,7 @@ function ImageGallery({
                             ? 'bg-red-500 text-white'
                             : 'bg-white/90 text-neutral-600 hover:bg-white hover:text-red-500'
                             }`}
-                        title={isWishlisted ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist'}
+                        title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
                     >
                         <Heart
                             size={18}
@@ -495,16 +512,18 @@ function ImageGallery({
                 </div>
 
                 {/* Bottom Zoom Button Badge */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onZoom();
-                    }}
-                    className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-xl bg-neutral-900/80 px-3.5 py-2 text-xs font-medium text-white shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-neutral-900 active:scale-95"
-                >
-                    <ZoomIn size={15} />
-                    <span>Zoom</span>
-                </button>
+                {hasImages && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onZoom();
+                        }}
+                        className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-xl bg-neutral-900/80 px-3.5 py-2 text-xs font-medium text-white shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-neutral-900 active:scale-95"
+                    >
+                        <ZoomIn size={15} />
+                        <span>Zoom</span>
+                    </button>
+                )}
 
                 {/* Next / Prev Image Arrows */}
                 {images.length > 1 && (
@@ -582,7 +601,7 @@ function ProductInfoSummary({
 }: ProductInfoSummaryProps) {
     const { siteSettings } = usePage<SharedData>().props;
     const whatsappNumber = siteSettings?.contact_whatsapp || '6281234567890';
-    const waText = `Halo Ronica Outdoor Furniture, saya berminat dengan produk *${product.name}* (SKU: ${product.sku || '-'}). Mohon informasi pemesanan & katalog lengkap.`;
+    const waText = `Hello Ronica Outdoor Furniture, I am interested in the product *${product.name}* (SKU: ${product.sku || '-'}). Please provide ordering information and full catalog.`;
     const waUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`;
 
     return (
@@ -646,7 +665,7 @@ function ProductInfoSummary({
                     {product.color && (
                         <div className="inline-flex items-center gap-2 rounded-xl border border-neutral-200/70 bg-neutral-50/80 px-3.5 py-2 text-xs font-medium text-neutral-700">
                             <span className="text-[10px] uppercase tracking-wider text-neutral-400">
-                                Warna
+                                Color
                             </span>
                             <span className="font-semibold text-neutral-900">
                                 {product.color}
@@ -656,7 +675,23 @@ function ProductInfoSummary({
                 </div>
             )}
 
-
+            {/* Linked Collection Bundle Info Link */}
+            {product.linked_products && product.linked_products.length > 0 && (
+                <a
+                    href="#collection-items"
+                    className="flex items-center justify-between rounded-2xl border border-teal-200 bg-teal-50/80 p-3.5 text-xs font-medium text-teal-900 transition-colors hover:bg-teal-100/80"
+                >
+                    <div className="flex items-center gap-2.5">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-teal-600 text-white">
+                            <Layers size={14} />
+                        </span>
+                        <span>
+                            This collection includes <strong>{product.linked_products.length} integrated products</strong>
+                        </span>
+                    </div>
+                    <span className="font-semibold text-teal-700 underline">View All ↓</span>
+                </a>
+            )}
 
             {/* Primary Action Button: WhatsApp Inquiry */}
             <div className="space-y-3 pt-2">
@@ -839,12 +874,116 @@ function ProductDetailTabs({ product }: { product: ApiProduct }) {
                                 </table>
                             </div>
                         ) : (
-                            <p className="text-sm text-neutral-500">Spesifikasi rinci untuk produk ini tersedia melalui layanan konsultasi.</p>
+                            <p className="text-sm text-neutral-500">Detailed specifications for this product are available upon consultation.</p>
                         )}
                     </motion.div>
                 )}
             </div>
         </div>
+    );
+}
+
+// ==================== Collection / Included Products Section ====================
+function CollectionBundleSection({
+    linkedProducts,
+    collectionName,
+}: {
+    linkedProducts: ApiProduct[];
+    collectionName: string;
+}) {
+    if (!linkedProducts || linkedProducts.length === 0) return null;
+
+    return (
+        <section id="collection-items" className="mb-16 rounded-3xl border border-teal-200/80 bg-gradient-to-br from-teal-50/40 via-white to-sand-50/50 p-6 sm:p-10 shadow-sm">
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-teal-100 pb-5">
+                <div>
+                    <div className="inline-flex items-center gap-2 rounded-full bg-teal-100/70 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-teal-800 mb-2">
+                        <Layers size={14} />
+                        <span>Integrated Collection &bull; {linkedProducts.length} Items</span>
+                    </div>
+                    <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900">
+                        Products in This Collection
+                    </h2>
+                    <p className="mt-1 text-sm text-neutral-600 max-w-2xl">
+                        The <span className="font-semibold text-neutral-900">{collectionName}</span> collection consists of the following products. Click on any product to view its detailed specifications and full gallery.
+                    </p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {linkedProducts.map((item, idx) => {
+                    const imgUrl =
+                        item.primary_image?.image_url ||
+                        item.images?.[0]?.image_url;
+
+                    return (
+                        <div
+                            key={item.id || idx}
+                            className="group relative flex flex-col rounded-2xl border border-neutral-200/90 bg-white overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-teal-400"
+                        >
+                            {/* Product Thumbnail */}
+                            <Link
+                                href={`/shop/products/${item.slug}`}
+                                className="relative aspect-4/3 w-full overflow-hidden bg-neutral-50 flex items-center justify-center p-3"
+                            >
+                                {imgUrl ? (
+                                    <img
+                                        src={imgUrl}
+                                        alt={item.name}
+                                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <ProductImagePlaceholder
+                                        name={item.name}
+                                        sku={item.sku}
+                                        category={item.category?.name}
+                                        size="sm"
+                                    />
+                                )}
+                                {item.category && (
+                                    <span className="absolute top-3 left-3 rounded-full bg-neutral-900/80 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white shadow-xs">
+                                        {item.category.name}
+                                    </span>
+                                )}
+                                <span className="absolute bottom-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-teal-600 text-white shadow-sm opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-110">
+                                    <ArrowRight size={14} />
+                                </span>
+                            </Link>
+
+                            {/* Product Info */}
+                            <div className="flex flex-1 flex-col justify-between p-5">
+                                <div>
+                                    <p className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+                                        SKU: {item.sku || '-'}
+                                    </p>
+                                    <Link
+                                        href={`/shop/products/${item.slug}`}
+                                        className="mt-1 block font-serif text-base font-bold text-neutral-900 transition-colors hover:text-teal-600 line-clamp-2"
+                                    >
+                                        {item.name}
+                                    </Link>
+                                    {item.material && (
+                                        <p className="mt-1 text-xs text-neutral-500 line-clamp-1">
+                                            {item.material}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="mt-4 pt-3 border-t border-neutral-100">
+                                    <Link
+                                        href={`/shop/products/${item.slug}`}
+                                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-900 group-hover:underline"
+                                    >
+                                        <span>View Product Details</span>
+                                        <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </section>
     );
 }
 
@@ -910,7 +1049,7 @@ function CustomerReviews({
     return (
         <section className="mb-16 rounded-3xl border border-neutral-200/80 bg-white p-6 sm:p-10 shadow-xs">
             <h2 className="mb-8 font-display text-2xl font-bold tracking-tight text-neutral-900">
-                Ulasan Pelanggan
+                Customer Reviews
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
                 {/* Rating Summary Card */}
@@ -932,7 +1071,7 @@ function CustomerReviews({
                                 />
                             ))}
                         </div>
-                        <p className="mt-2 text-xs font-medium text-neutral-500">{reviewCount} ulasan diverifikasi</p>
+                        <p className="mt-2 text-xs font-medium text-neutral-500">{reviewCount} verified reviews</p>
                     </div>
 
                     <div className="space-y-2 border-t border-neutral-200/60 pt-4">
@@ -979,7 +1118,7 @@ function CustomerReviews({
                                     </div>
                                     <div>
                                         <p className="font-bold text-sm text-neutral-900">
-                                            {review.user?.name || 'Pelanggan'}
+                                            {review.user?.name || 'Customer'}
                                         </p>
                                         <div className="flex gap-0.5 mt-0.5">
                                             {[1, 2, 3, 4, 5].map((s) => (
@@ -997,7 +1136,7 @@ function CustomerReviews({
                                     </div>
                                 </div>
                                 <span className="text-xs text-neutral-400">
-                                    {new Date(review.created_at).toLocaleDateString('id-ID', {
+                                    {new Date(review.created_at).toLocaleDateString('en-US', {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric',
@@ -1121,7 +1260,7 @@ function ReviewForm({
         if (rating === 0) {
             setMessage({
                 type: 'error',
-                text: 'Silakan pilih rating bintang.',
+                text: 'Please select a star rating.',
             });
             return;
         }
@@ -1138,7 +1277,7 @@ function ReviewForm({
                     onSuccess: () => {
                         setMessage({
                             type: 'success',
-                            text: 'Ulasan Anda berhasil diperbarui!',
+                            text: 'Your review has been updated successfully!',
                         });
                     },
                     onError: (errors) => {
@@ -1146,7 +1285,7 @@ function ReviewForm({
                             type: 'error',
                             text:
                                 Object.values(errors)[0] ||
-                                'Gagal memperbarui ulasan.',
+                                'Failed to update review.',
                         });
                     },
                     onFinish: () => setIsSubmitting(false),
@@ -1161,7 +1300,7 @@ function ReviewForm({
                     onSuccess: () => {
                         setMessage({
                             type: 'success',
-                            text: 'Ulasan Anda berhasil dikirim!',
+                            text: 'Your review has been submitted successfully!',
                         });
                         setRating(0);
                         setComment('');
@@ -1171,7 +1310,7 @@ function ReviewForm({
                             type: 'error',
                             text:
                                 Object.values(errors)[0] ||
-                                'Gagal mengirim ulasan.',
+                                'Failed to submit review.',
                         });
                     },
                     onFinish: () => setIsSubmitting(false),
@@ -1184,13 +1323,13 @@ function ReviewForm({
         return (
             <div className="mt-6 rounded-xl bg-neutral-100/80 p-4 text-center text-xs">
                 <p className="mb-2 text-neutral-600">
-                    Masuk akun untuk memberikan ulasan.
+                    Log in to leave a product review.
                 </p>
                 <Link
                     href="/login"
                     className="inline-block rounded-lg bg-teal-700 px-4 py-1.5 font-semibold text-white transition-colors hover:bg-teal-800"
                 >
-                    Masuk
+                    Log In
                 </Link>
             </div>
         );
@@ -1199,7 +1338,7 @@ function ReviewForm({
     return (
         <div className="mt-6 border-t border-neutral-200/60 pt-4 text-left">
             <h4 className="mb-2 font-bold text-xs text-neutral-800 uppercase tracking-wider">
-                {existingReview ? 'Edit Ulasan Anda' : 'Tulis Ulasan Anda'}
+                {existingReview ? 'Edit Your Review' : 'Write a Review'}
             </h4>
             {message && (
                 <div
@@ -1240,7 +1379,7 @@ function ReviewForm({
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                         className="w-full rounded-xl border border-neutral-200/80 p-2.5 text-xs focus:border-teal-600 focus:ring-teal-600"
-                        placeholder="Tuliskan pengalaman Anda mengenai produk ini..."
+                        placeholder="Share your experience with this product..."
                         required
                     />
                 </div>
@@ -1249,7 +1388,7 @@ function ReviewForm({
                     disabled={isSubmitting}
                     className="w-full rounded-xl bg-teal-700 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-teal-800 disabled:opacity-50"
                 >
-                    {isSubmitting ? 'Mengirim...' : 'Kirim Ulasan'}
+                    {isSubmitting ? 'Submitting...' : 'Submit Review'}
                 </button>
             </form>
         </div>

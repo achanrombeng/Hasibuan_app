@@ -1,4 +1,5 @@
 import { SEOHead } from '@/components/seo';
+import { ProductImagePlaceholder } from '@/components/shop';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { ApiCategory, ApiProduct, PaginatedResponse } from '@/types/shop';
@@ -233,19 +234,27 @@ export default function StockSale({
 function ProductCard({ product }: { product: ApiProduct }) {
     const imageUrl =
         product.primary_image?.image_url ||
-        product.images?.[0]?.image_url ||
-        '/images/placeholder-product.svg';
+        product.images?.[0]?.image_url;
     return (
         <Link
             href={`/shop/products/${product.slug}`}
             className="group overflow-hidden rounded-sm border border-terra-100 bg-white transition-all hover:shadow-lg"
         >
-            <div className="relative aspect-square overflow-hidden">
-                <img
-                    src={imageUrl}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+            <div className="relative aspect-square overflow-hidden flex items-center justify-center">
+                {imageUrl ? (
+                    <img
+                        src={imageUrl}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                ) : (
+                    <ProductImagePlaceholder
+                        name={product.name}
+                        sku={product.sku}
+                        category={product.category?.name}
+                        size="md"
+                    />
+                )}
                 <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-terra-900 px-3 py-1 text-xs font-medium text-white">
                     <Package size={14} />
                     STOCK

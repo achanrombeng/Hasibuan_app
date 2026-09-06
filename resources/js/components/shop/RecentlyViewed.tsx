@@ -3,6 +3,7 @@ import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Clock, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { ApiProduct } from '@/types/shop';
+import { ProductImagePlaceholder } from './ProductImagePlaceholder';
 
 const STORAGE_KEY = 'recently_viewed_products';
 const MAX_ITEMS = 10;
@@ -12,7 +13,8 @@ export interface RecentlyViewedProduct {
     id: number;
     name: string;
     slug: string;
-    image_url: string;
+    sku?: string;
+    image_url?: string;
     average_rating: number;
     viewedAt: number;
 }
@@ -31,7 +33,8 @@ export function saveToRecentlyViewed(product: ApiProduct) {
             id: product.id,
             name: product.name,
             slug: product.slug,
-            image_url: product.primary_image?.image_url || product.images?.[0]?.image_url || PLACEHOLDER_PRODUCT,
+            sku: product.sku,
+            image_url: product.primary_image?.image_url || product.images?.[0]?.image_url || '',
             average_rating: product.average_rating,
             viewedAt: Date.now(),
         });
@@ -118,8 +121,16 @@ export function RecentlyViewedSection({ excludeProductId, maxItems = 6, classNam
                     {products.map((product, index) => (
                         <motion.div key={product.id || `recently-viewed-${index}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="flex-shrink-0 w-[260px]">
                             <Link href={`/shop/products/${product.slug}`} className="group block bg-white rounded-sm overflow-hidden border border-terra-100 hover:shadow-lg transition-all">
-                                <div className="relative aspect-square overflow-hidden">
-                                    <img src={product.image_url || '/images/placeholder-product.svg'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <div className="relative aspect-square overflow-hidden flex items-center justify-center">
+                                    {product.image_url ? (
+                                        <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    ) : (
+                                        <ProductImagePlaceholder
+                                            name={product.name}
+                                            sku={product.sku}
+                                            size="sm"
+                                        />
+                                    )}
                                 </div>
                                 <div className="p-3">
                                     <h3 className="font-medium text-terra-900 text-sm line-clamp-2 mb-1 group-hover:text-wood transition-colors">{product.name}</h3>

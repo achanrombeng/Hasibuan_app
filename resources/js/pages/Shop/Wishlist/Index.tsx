@@ -5,6 +5,7 @@ import { SiteSettings } from '@/types';
 import { ApiProduct } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ProductImagePlaceholder } from '@/components/shop/ProductImagePlaceholder';
 import { ArrowRight, Heart, ShoppingBag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -119,8 +120,7 @@ function WishlistCard({
   const { t } = useTranslation();
   const imageUrl =
     product.primary_image?.image_url ||
-    product.images?.[0]?.image_url ||
-    '/images/placeholder-product.svg';
+    product.images?.[0]?.image_url;
 
   return (
     <motion.div
@@ -135,11 +135,20 @@ function WishlistCard({
         href={`/shop/products/${product.slug}`}
         className="block aspect-square overflow-hidden bg-sand-50"
       >
-        <img
-          src={imageUrl}
-          alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <ProductImagePlaceholder
+            name={product.name}
+            sku={product.sku}
+            category={product.category?.name}
+            size="md"
+          />
+        )}
       </Link>
 
       {/* Remove Button */}

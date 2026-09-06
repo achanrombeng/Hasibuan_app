@@ -4,12 +4,6 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { ProductCard } from '../ProductCard';
 
-// Placeholder images for products without images
-const PLACEHOLDER_PRODUCTS = [
-    '/images/placeholders/product-sofa.png',
-    '/images/placeholders/product-dining-table.png',
-    '/images/placeholders/product-chair.png',
-];
 
 interface ProductsSectionProps {
     products: ApiProduct[];

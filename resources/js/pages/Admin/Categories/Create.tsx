@@ -159,7 +159,7 @@ export default function CreateCategory({
                             {/* Sort Order */}
                             <div>
                                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                                    Urutan Tampilan (Sort Order)
+                                    Sort Order
                                 </label>
                                 <input
                                     type="number"
@@ -177,7 +177,7 @@ export default function CreateCategory({
                                     placeholder="0"
                                 />
                                 <p className="mt-1 text-xs text-terra-500">
-                                    Semakin kecil nilainya (misal 1, 2, 3), kategori akan muncul lebih awal di menu navbar Products & daftar katalog.
+                                    Lower values (e.g., 1, 2, 3) appear first in the Products navbar dropdown and catalog list.
                                 </p>
                                 {errors.sort_order && (
                                     <p className="mt-1 text-sm text-red-500">

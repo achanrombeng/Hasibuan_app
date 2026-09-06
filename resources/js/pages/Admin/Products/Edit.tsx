@@ -1,3 +1,4 @@
+import { LinkedProductsSelector, ProductOption } from '@/components/admin/LinkedProductsSelector';
 import ImageCropDialog from '@/components/ImageCropDialog';
 import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { Combobox } from '@/components/ui/combobox';
@@ -63,18 +64,22 @@ interface Product {
     meta_description: string | null;
     meta_keywords: string | null;
     images: ProductImage[];
+    linked_product_ids?: number[];
+    linked_products?: any[];
 }
 
 interface EditProductProps {
     product: Product;
     categories: Category[];
     statuses: StatusOption[];
+    allProducts?: ProductOption[];
 }
 
 export default function EditProduct({
     product,
     categories,
     statuses,
+    allProducts = [],
 }: EditProductProps) {
     const [existingImages, setExistingImages] = useState<ProductImage[]>(
         product.images || [],
@@ -86,6 +91,11 @@ export default function EditProduct({
         { file: File; preview: string }[]
     >([]);
     const [deleteImageIds, setDeleteImageIds] = useState<number[]>([]);
+    const [selectedLinkedProductIds, setSelectedLinkedProductIds] = useState<number[]>(
+        product.linked_product_ids ||
+            product.linked_products?.map((p: any) => p.id) ||
+            [],
+    );
     const [isCompressing, setIsCompressing] = useState(false);
     const [specifications, setSpecifications] = useState<
         { key: string; value: string }[]
@@ -211,7 +221,7 @@ export default function EditProduct({
         try {
             const src = img.image_url || img.url;
             const response = await fetch(src, { credentials: 'same-origin' });
-            if (!response.ok) throw new Error('Gagal memuat gambar');
+            if (!response.ok) throw new Error('Failed to load image');
             const blob = await response.blob();
             const ext = (blob.type.split('/')[1] || 'jpg').split('+')[0];
             const file = new File(
@@ -327,6 +337,8 @@ export default function EditProduct({
         if (Object.keys(specsObj).length > 0) {
             formData.append('specifications', JSON.stringify(specsObj));
         }
+
+        formData.append('linked_product_ids', JSON.stringify(selectedLinkedProductIds));
 
         formData.append('status', data.status);
         formData.append('is_featured', data.is_featured ? '1' : '0');
@@ -831,7 +843,14 @@ export default function EditProduct({
                         </div>
                     </div>
 
-                    {/* 7. Product Status */}
+                    {/* 5. Linked / Collection Products */}
+                    <LinkedProductsSelector
+                        allProducts={allProducts}
+                        selectedIds={selectedLinkedProductIds}
+                        onChange={setSelectedLinkedProductIds}
+                    />
+
+                    {/* 6. Product Status */}
                     <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                         <h2 className="mb-4 text-lg font-semibold text-terra-900">
                             Publishing Status

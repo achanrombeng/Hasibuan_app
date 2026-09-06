@@ -64,6 +64,12 @@ class ProductResource extends JsonResource
             'reviews' => $this->relationLoaded('reviews')
                 ? ProductReviewResource::collection($this->reviews)->resolve()
                 : [],
+            'linked_products' => $this->relationLoaded('linkedProducts')
+                ? ProductResource::collection($this->linkedProducts)->resolve()
+                : [],
+            'linked_product_ids' => $this->relationLoaded('linkedProducts')
+                ? $this->linkedProducts->pluck('id')->toArray()
+                : [],
             'is_wishlisted' => $request->user()?->hasProductInWishlist($this->resource) ?? false,
             'rating_counts' => $this->reviews()
                 ->where('is_approved', true) // Filter ulasan yang disetujui

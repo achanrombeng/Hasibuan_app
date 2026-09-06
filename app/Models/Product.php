@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -198,6 +199,38 @@ class Product extends Model implements HasMedia
     public function wishlists(): HasMany
     {
         return $this->hasMany(Wishlist::class);
+    }
+
+    /**
+     * Get products linked/included inside this collection/product.
+     */
+    public function linkedProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'product_links',
+            'parent_product_id',
+            'linked_product_id'
+        )
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get parent products/collections that link to this product.
+     */
+    public function parentProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'product_links',
+            'linked_product_id',
+            'parent_product_id'
+        )
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order')
+            ->withTimestamps();
     }
 
     public function registerMediaCollections(): void

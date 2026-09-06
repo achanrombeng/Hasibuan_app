@@ -1,4 +1,5 @@
 import { ApiProduct } from '@/types/shop';
+import { ProductImagePlaceholder } from './ProductImagePlaceholder';
 import { Link, router } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -35,17 +36,12 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
     if (!product) return null;
 
+    const hasImages = Boolean(product.images && product.images.length > 0) || Boolean(product.primary_image?.image_url);
     const images = product.images?.length
         ? product.images
-        : [
-            {
-                id: 0,
-                image_url:
-                    product.primary_image?.image_url ||
-                    '/images/placeholder-product.svg',
-                alt_text: product.name,
-            },
-        ];
+        : product.primary_image?.image_url
+        ? [{ id: 0, image_url: product.primary_image.image_url, alt_text: product.name }]
+        : [];
 
     const handleAddToCart = async () => {
         setIsAddingToCart(true);
@@ -116,11 +112,20 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                         <div className="grid md:grid-cols-2">
                             {/* Image Section */}
                             <div className="relative aspect-square bg-sand-50 md:aspect-auto flex items-center justify-center p-4">
-                                <img
-                                    src={images[currentImageIndex]?.image_url}
-                                    alt={product.name}
-                                    className="h-full w-full object-scale-down"
-                                />
+                                {images.length > 0 ? (
+                                    <img
+                                        src={images[currentImageIndex]?.image_url}
+                                        alt={product.name}
+                                        className="h-full w-full object-scale-down"
+                                    />
+                                ) : (
+                                    <ProductImagePlaceholder
+                                        name={product.name}
+                                        sku={product.sku}
+                                        category={product.category?.name}
+                                        size="lg"
+                                    />
+                                )}
                                 {images.length > 1 && (
                                     <>
                                         <button

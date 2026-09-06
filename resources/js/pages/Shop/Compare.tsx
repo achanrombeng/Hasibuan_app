@@ -1,4 +1,5 @@
 import { SEOHead } from '@/components/seo';
+import { ProductImagePlaceholder } from '@/components/shop';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { ApiProduct } from '@/types/shop';
@@ -144,18 +145,24 @@ export default function Compare({ products }: Props) {
                                             >
                                                 <X size={16} />
                                             </button>
-                                            <div className="mb-3 aspect-square overflow-hidden rounded-sm bg-sand-50">
-                                                <img
-                                                    src={
-                                                        product.primary_image
-                                                            ?.image_url ||
-                                                        product.images?.[0]
-                                                            ?.image_url ||
-                                                        '/images/placeholder-product.svg'
-                                                    }
-                                                    alt={product.name}
-                                                    className="h-full w-full object-cover"
-                                                />
+                                            <div className="mb-3 aspect-square overflow-hidden rounded-sm bg-sand-50 flex items-center justify-center">
+                                                {product.primary_image?.image_url || product.images?.[0]?.image_url ? (
+                                                    <img
+                                                        src={
+                                                            product.primary_image?.image_url ||
+                                                            product.images?.[0]?.image_url
+                                                        }
+                                                        alt={product.name}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <ProductImagePlaceholder
+                                                        name={product.name}
+                                                        sku={product.sku}
+                                                        category={product.category?.name}
+                                                        size="sm"
+                                                    />
+                                                )}
                                             </div>
                                             <Link
                                                 href={`/shop/products/${product.slug}`}

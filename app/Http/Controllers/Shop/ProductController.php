@@ -51,6 +51,8 @@ class ProductController extends Controller
         $product->load([
             'category',
             'images',
+            'linkedProducts.images',
+            'linkedProducts.category',
             'reviews' => fn ($query) => $query->approved()->with('user')->latest()->limit(10),
         ]);
 

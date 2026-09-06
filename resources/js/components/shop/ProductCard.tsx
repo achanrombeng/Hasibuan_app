@@ -8,18 +8,15 @@ interface ProductCardProps {
     onClick?: () => void;
 }
 
-// Placeholder images for products without images
-const PLACEHOLDER_PRODUCTS = [
-    '/images/placeholders/product-sofa.png',
-    '/images/placeholders/product-dining-table.png',
-    '/images/placeholders/product-chair.png',
-];
+import { ProductImagePlaceholder } from './ProductImagePlaceholder';
 
 export const ProductCard: React.FC<ProductCardProps> = ({
     product,
     className = '',
     onClick,
 }) => {
+    const imageUrl = product.primary_image?.image_url || product.images?.[0]?.image_url;
+
     return (
         <Link
             href={`/shop/products/${product.slug}`}
@@ -30,15 +27,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <div className="relative mb-4 overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-xs transition-all duration-500 group-hover:shadow-xl">
                 {/* Image Container */}
                 <div className="aspect-square overflow-hidden bg-white flex items-center justify-center p-3">
-                    <img
-                        src={
-                            product.primary_image?.image_url ||
-                            product.images?.[0]?.image_url ||
-                            PLACEHOLDER_PRODUCTS[0]
-                        }
-                        alt={product.name}
-                        className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
+                    {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt={product.name}
+                            className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                    ) : (
+                        <ProductImagePlaceholder
+                            name={product.name}
+                            sku={product.sku}
+                            category={product.category?.name}
+                            size="md"
+                        />
+                    )}
                 </div>
 
                 {/* Hover Overlay Badge */}

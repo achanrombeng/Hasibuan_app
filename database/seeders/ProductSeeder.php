@@ -18,6 +18,9 @@ class ProductSeeder extends Seeder
     {
         // Disable foreign key checks to allow truncation
         Schema::disableForeignKeyConstraints();
+        if (Schema::hasTable('product_links')) {
+            \Illuminate\Support\Facades\DB::table('product_links')->truncate();
+        }
         ProductImage::truncate();
         Product::truncate();
         Schema::enableForeignKeyConstraints();

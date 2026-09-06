@@ -61,8 +61,8 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                     exit={{ opacity: 0, scale: 0.95, y: 10 }}
                     transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                     className={`relative z-10 flex flex-col w-full bg-neutral-900 border border-neutral-800 shadow-2xl overflow-hidden transition-all duration-300 ${isFullscreen
-                            ? 'fixed inset-0 h-screen w-screen max-w-none rounded-none z-50'
-                            : 'h-[92vh] max-w-7xl rounded-2xl'
+                        ? 'fixed inset-0 h-screen w-screen max-w-none rounded-none z-50'
+                        : 'h-[92vh] max-w-7xl rounded-2xl'
                         }`}
                     onClick={(e) => e.stopPropagation()}
                 >
@@ -100,8 +100,8 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                                     type="button"
                                     onClick={() => setViewMode('3d')}
                                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${viewMode === '3d'
-                                            ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md'
-                                            : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                                        ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md'
+                                        : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
                                         }`}
                                     title="Tampilan 3D Flipbook Interaktif"
                                 >
@@ -112,8 +112,8 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                                     type="button"
                                     onClick={() => setViewMode('pdf')}
                                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${viewMode === 'pdf'
-                                            ? 'bg-neutral-800 text-white shadow-md border border-neutral-700'
-                                            : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                                        ? 'bg-neutral-800 text-white shadow-md border border-neutral-700'
+                                        : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
                                         }`}
                                     title="Tampilan Dokumen PDF Standar"
                                 >

@@ -1,3 +1,4 @@
+import { ProductImagePlaceholder } from '@/components/shop';
 import { useTranslation } from '@/hooks/use-translation';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
@@ -24,6 +25,7 @@ interface Product {
     id: number;
     name: string;
     slug: string;
+    sku?: string;
     price_formatted: string;
     final_price_formatted: string;
     has_discount: boolean;
@@ -106,11 +108,7 @@ export default function CartIndex({ cart }: Props) {
 
     const getProductImage = (product: Product) => {
         const primary = product.images?.find((img) => img.is_primary);
-        return (
-            primary?.url ||
-            product.images?.[0]?.url ||
-            '/images/placeholder-product.svg'
-        );
+        return primary?.url || product.images?.[0]?.url || '';
     };
 
     return (
@@ -267,17 +265,27 @@ function CartItemCard({
     getProductImage,
 }: CartItemCardProps) {
     const { t } = useTranslation();
+    const imgUrl = getProductImage(item.product);
+
     return (
         <div
             className={`flex gap-4 rounded-sm bg-white p-4 ${loading ? 'opacity-50' : ''}`}
         >
-            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-terra-100">
-                <Link href={`/shop/products/${item.product.slug}`}>
-                    <img
-                        src={getProductImage(item.product)}
-                        alt={item.product.name}
-                        className="h-full w-full object-cover"
-                    />
+            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-terra-100 flex items-center justify-center">
+                <Link href={`/shop/products/${item.product.slug}`} className="h-full w-full">
+                    {imgUrl ? (
+                        <img
+                            src={imgUrl}
+                            alt={item.product.name}
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <ProductImagePlaceholder
+                            name={item.product.name}
+                            sku={item.product.sku}
+                            size="sm"
+                        />
+                    )}
                 </Link>
             </div>
             <div className="flex flex-1 flex-col justify-between">
@@ -369,17 +377,27 @@ function SavedItemCard({
     getProductImage,
 }: SavedItemCardProps) {
     const { t } = useTranslation();
+    const imgUrl = getProductImage(item.product);
+
     return (
         <div
             className={`flex gap-4 rounded-sm bg-white p-4 ${loading ? 'opacity-50' : ''}`}
         >
-            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-terra-100">
-                <Link href={`/shop/products/${item.product.slug}`}>
-                    <img
-                        src={getProductImage(item.product)}
-                        alt={item.product.name}
-                        className="h-full w-full object-cover"
-                    />
+            <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-terra-100 flex items-center justify-center">
+                <Link href={`/shop/products/${item.product.slug}`} className="h-full w-full">
+                    {imgUrl ? (
+                        <img
+                            src={imgUrl}
+                            alt={item.product.name}
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <ProductImagePlaceholder
+                            name={item.product.name}
+                            sku={item.product.sku}
+                            size="sm"
+                        />
+                    )}
                 </Link>
             </div>
             <div className="flex min-w-0 flex-1 flex-col justify-between">

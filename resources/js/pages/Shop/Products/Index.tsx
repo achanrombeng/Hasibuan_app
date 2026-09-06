@@ -10,6 +10,7 @@ import {
 import { Link, router, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { CatalogModal } from '@/components/shop/CatalogModal';
+import { ProductImagePlaceholder } from '@/components/shop/ProductImagePlaceholder';
 import {
     ArrowRight,
     BookOpen,
@@ -780,8 +781,7 @@ function ProductCard({
 }: ProductCardProps) {
     const imageUrl =
         product.primary_image?.image_url ||
-        product.images?.[0]?.image_url ||
-        '/images/placeholder-product.svg';
+        product.images?.[0]?.image_url;
 
     if (viewMode === 'list') {
         return (
@@ -795,11 +795,20 @@ function ProductCard({
                     className="group flex gap-6 rounded-2xl border border-neutral-100 bg-white p-5 transition-all duration-300 hover:shadow-lg hover:border-neutral-200"
                 >
                     <div className="relative h-48 w-48 flex-shrink-0 overflow-hidden rounded-xl bg-neutral-50 flex items-center justify-center p-3">
-                        <img
-                            src={imageUrl}
-                            alt={product.name}
-                            className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
-                        />
+                        {imageUrl ? (
+                            <img
+                                src={imageUrl}
+                                alt={product.name}
+                                className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
+                            />
+                        ) : (
+                            <ProductImagePlaceholder
+                                name={product.name}
+                                sku={product.sku}
+                                category={product.category?.name}
+                                size="sm"
+                            />
+                        )}
                     </div>
                     <div className="flex flex-1 flex-col justify-between py-2">
                         <div>
@@ -833,11 +842,20 @@ function ProductCard({
         >
             <Link href={`/shop/products/${product.slug}`} className="block transition-all duration-400 ease-out hover:scale-105 hover:-translate-y-2 hover:z-10">
                 <div className="relative mb-4 aspect-square overflow-hidden rounded-2xl bg-white border border-neutral-100 shadow-xs transition-all duration-500 group-hover:shadow-2xl flex items-center justify-center p-3 sm:p-4">
-                    <img
-                        src={imageUrl}
-                        alt={product.name}
-                        className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
+                    {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt={product.name}
+                            className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                    ) : (
+                        <ProductImagePlaceholder
+                            name={product.name}
+                            sku={product.sku}
+                            category={product.category?.name}
+                            size="md"
+                        />
+                    )}
                     <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10 flex items-center justify-center">
                         <span className="translate-y-3 rounded-full bg-white/95 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-neutral-800 opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
                             View Detail
