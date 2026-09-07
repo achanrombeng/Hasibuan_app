@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +24,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductImage extends Model
 {
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::deleted(function (ProductImage $image) {
+            if ($image->product_id) {
+                $product = Product::find($image->product_id);
+                if ($product && $product->images()->count() === 0 && $product->status !== ProductStatus::DRAFT) {
+                    $product->updateQuietly(['status' => ProductStatus::DRAFT]);
+                }
+            }
+        });
+    }
 
     protected $fillable = [
         'product_id',

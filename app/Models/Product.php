@@ -266,8 +266,47 @@ class Product extends Model implements HasMedia
         return $query;
     }
 
-    // ==================== Accessors ====================
+    // ==================== Accessors & Helpers ====================
 
+    /**
+     * Check whether this product belongs to the Living Collection category.
+     */
+    public function isLivingCollection(): bool
+    {
+        if ($this->relationLoaded('category') && $this->category) {
+            $catSlug = $this->category->slug ?? '';
+            $catName = $this->category->getTranslation('name', 'en', false) ?: (is_string($this->category->name) ? $this->category->name : '');
+
+            return $catSlug === 'living-collection' || strtolower(trim($catName)) === 'living collection';
+        }
+
+        if ($this->category_id === 2) {
+            return true;
+        }
+
+        return Category::where('id', $this->category_id)->where('slug', 'living-collection')->exists();
+    }
+
+    /**
+     * Check if product has direct images or inherited images from linked products.
+     */
+    public function hasImages(): bool
+    {
+        if ($this->images()->exists()) {
+            return true;
+        }
+
+        if ($this->isLivingCollection()) {
+            return $this->linkedProducts()->whereHas('images')->exists();
+        }
+
+        return false;
+    }
+
+    /**
+     * Get primary image attribute.
+     * For Living Collection products with no direct images, fallback to the primary image of the first connected product.
+     */
     public function getPrimaryImageAttribute(): ?ProductImage
     {
         /** @var Collection<int, ProductImage> $images */
@@ -276,7 +315,41 @@ class Product extends Model implements HasMedia
         /** @var ProductImage|null $primary */
         $primary = $images->firstWhere('is_primary', true) ?? $images->first();
 
+        if (! $primary && $this->isLivingCollection()) {
+            foreach ($this->linkedProducts as $linkedProduct) {
+                if ($linkedPrimary = $linkedProduct->primary_image) {
+                    return $linkedPrimary;
+                }
+            }
+        }
+
         return $primary;
+    }
+
+    /**
+     * Get effective images collection for the product.
+     * For Living Collection products with no direct images, takes the primary image of each connected product.
+     *
+     * @return Collection<int, ProductImage>
+     */
+    public function getEffectiveImagesAttribute(): Collection
+    {
+        if ($this->images->isNotEmpty()) {
+            return $this->images;
+        }
+
+        if ($this->isLivingCollection()) {
+            $collected = new Collection();
+            foreach ($this->linkedProducts as $linkedProduct) {
+                if ($linkedPrimary = $linkedProduct->primary_image) {
+                    $collected->push($linkedPrimary);
+                }
+            }
+
+            return $collected;
+        }
+
+        return $this->images;
     }
 
     /**

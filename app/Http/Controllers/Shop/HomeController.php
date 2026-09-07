@@ -22,7 +22,7 @@ class HomeController extends Controller
     {
         // Latest Products (4 newest items)
         $featuredProducts = Product::active()
-            ->with(['category', 'images'])
+            ->with(['category', 'images', 'linkedProducts.images'])
             ->latest()
             ->limit(4)
             ->get();

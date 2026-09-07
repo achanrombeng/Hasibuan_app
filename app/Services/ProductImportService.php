@@ -672,6 +672,11 @@ class ProductImportService
                 $this->attachImagesFromUrls($product, (string) $data['image_urls']);
             }
 
+            // Produk tanpa foto otomatis berstatus Draft
+            if ($product->images()->count() === 0 && $product->status !== ProductStatus::DRAFT) {
+                $product->updateQuietly(['status' => ProductStatus::DRAFT]);
+            }
+
             return ['status' => $actionType, 'product_id' => $product->id];
         });
     }

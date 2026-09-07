@@ -104,13 +104,13 @@ export default function ProductsIndex({
 
   const productData = products.data;
 
-  const isFirstRender = useRef(true);
+  const isInitialMount = useRef(true);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Auto sync search input with debounce
+  // Auto sync search input with debounce only when user types
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
       return;
     }
 
@@ -130,7 +130,7 @@ export default function ProductsIndex({
         replace: true,
         onFinish: () => setIsSearching(false),
       });
-    }, 300);
+    }, 350);
 
     return () => {
       clearTimeout(timer);

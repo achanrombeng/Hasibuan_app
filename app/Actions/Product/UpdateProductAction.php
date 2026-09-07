@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\Product;
 
+use App\Enums\ProductStatus;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Services\ImageService;
@@ -33,6 +35,30 @@ class UpdateProductAction
             // Generate slug if name changed and slug not provided
             if (isset($data['name']) && ! isset($data['slug'])) {
                 $data['slug'] = Str::slug($data['name']).'-'.Str::random(5);
+            }
+
+            // Produk tanpa foto otomatis berstatus Draft (kecuali Living Collection dengan produk tertaut yang memiliki foto)
+            $remainingCount = $product->images()
+                ->whereNotIn('id', $deleteImageIds)
+                ->count();
+            $totalImages = $remainingCount + count($newImages);
+
+            $isLivingCollection = $product->isLivingCollection();
+            if (isset($data['category_id']) && (int) $data['category_id'] !== $product->category_id) {
+                $cat = Category::find($data['category_id']);
+                $isLivingCollection = $cat && ($cat->slug === 'living-collection' || strtolower(trim((string) ($cat->name['en'] ?? $cat->name))) === 'living collection');
+            }
+
+            $hasLinkedImages = false;
+            if ($isLivingCollection) {
+                $effectiveLinkedIds = $hasLinkedProductsKey ? $linkedProductIds : $product->linkedProducts()->pluck('products.id')->toArray();
+                if (! empty($effectiveLinkedIds)) {
+                    $hasLinkedImages = Product::whereIn('id', $effectiveLinkedIds)->whereHas('images')->exists();
+                }
+            }
+
+            if ($totalImages === 0 && ! $hasLinkedImages) {
+                $data['status'] = ProductStatus::DRAFT;
             }
 
             $product->update($data);

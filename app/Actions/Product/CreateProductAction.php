@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Product;
 
 use App\Enums\ProductStatus;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Services\ImageService;
@@ -22,10 +23,27 @@ class CreateProductAction
     {
         return DB::transaction(function () use ($data, $images) {
             $data['slug'] = $data['slug'] ?? Str::slug($data['name']).'-'.Str::random(5);
-            $data['status'] = $data['status'] ?? ProductStatus::DRAFT;
 
             $linkedProductIds = $data['linked_product_ids'] ?? [];
             unset($data['linked_product_ids']);
+
+            $isLivingCollection = false;
+            if (isset($data['category_id'])) {
+                $category = Category::find($data['category_id']);
+                $isLivingCollection = $category && ($category->slug === 'living-collection' || strtolower(trim((string) ($category->name['en'] ?? $category->name))) === 'living collection');
+            }
+
+            $hasLinkedImages = false;
+            if ($isLivingCollection && ! empty($linkedProductIds)) {
+                $hasLinkedImages = Product::whereIn('id', $linkedProductIds)->whereHas('images')->exists();
+            }
+
+            // Produk tanpa foto otomatis berstatus Draft (kecuali Living Collection yang memiliki foto dari produk tertaut)
+            if (empty($images) && ! $hasLinkedImages) {
+                $data['status'] = ProductStatus::DRAFT;
+            } else {
+                $data['status'] = $data['status'] ?? ProductStatus::DRAFT;
+            }
 
             /** @var Product $product */
             $product = Product::create($data);

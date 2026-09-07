@@ -103,6 +103,11 @@ export default function Pagination({
   };
 
   const getPageUrl = (page: number) => {
+    const directLink = currentLinks.find((l: any) => String(l?.label) === String(page));
+    if (directLink?.url) {
+      return directLink.url;
+    }
+
     const url = new URL(window.location.href);
     url.searchParams.set('page', String(page));
     return url.toString();
@@ -175,6 +180,7 @@ export default function Pagination({
         <Link
           href={isFirstPage ? '#' : getPageUrl(1)}
           preserveScroll
+          preserveState
           className={`rounded-lg p-2 text-neutral-500 transition-colors ${
             isFirstPage
               ? 'cursor-not-allowed opacity-40'
@@ -191,6 +197,7 @@ export default function Pagination({
         <Link
           href={prevLink?.url || '#'}
           preserveScroll
+          preserveState
           className={`rounded-lg p-2 text-neutral-500 transition-colors ${
             !prevLink?.url
               ? 'cursor-not-allowed opacity-40'
@@ -225,6 +232,7 @@ export default function Pagination({
                 key={pageNum}
                 href={getPageUrl(pageNum)}
                 preserveScroll
+                preserveState
                 className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                   isActive
                     ? 'bg-teal-600 text-white'
@@ -248,6 +256,7 @@ export default function Pagination({
         <Link
           href={nextLink?.url || '#'}
           preserveScroll
+          preserveState
           className={`rounded-lg p-2 text-neutral-500 transition-colors ${
             !nextLink?.url
               ? 'cursor-not-allowed opacity-40'
@@ -264,6 +273,7 @@ export default function Pagination({
         <Link
           href={isLastPage ? '#' : getPageUrl(currentMeta.last_page)}
           preserveScroll
+          preserveState
           className={`rounded-lg p-2 text-neutral-500 transition-colors ${
             isLastPage
               ? 'cursor-not-allowed opacity-40'

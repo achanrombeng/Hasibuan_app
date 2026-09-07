@@ -55,10 +55,10 @@ class ProductResource extends JsonResource
             'category' => $this->relationLoaded('category') && $this->category
                 ? (new CategoryResource($this->category))->resolve()
                 : null,
-            'images' => $this->relationLoaded('images')
-                ? ProductImageResource::collection($this->images)->resolve()
+            'images' => ($this->relationLoaded('images') || $this->relationLoaded('linkedProducts'))
+                ? ProductImageResource::collection($this->effective_images)->resolve()
                 : [],
-            'primary_image' => $this->relationLoaded('images') && $this->primary_image
+            'primary_image' => ($this->relationLoaded('images') || $this->relationLoaded('linkedProducts')) && $this->primary_image
                 ? (new ProductImageResource($this->primary_image))->resolve()
                 : null,
             'reviews' => $this->relationLoaded('reviews')

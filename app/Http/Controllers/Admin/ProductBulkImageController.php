@@ -279,6 +279,21 @@ class ProductBulkImageController extends Controller implements HasMiddleware
                         'is_primary' => ! $hasPrimary || $existingCount === 0,
                     ]);
 
+                    // Aktifkan produk jika sebelumnya draft karena belum ada foto
+                    if ($product->status === \App\Enums\ProductStatus::DRAFT) {
+                        $product->updateQuietly(['status' => \App\Enums\ProductStatus::ACTIVE]);
+                    }
+
+                    // Aktifkan juga Living Collection parent jika ada
+                    $livingParents = Product::where('category_id', 2)
+                        ->where('status', \App\Enums\ProductStatus::DRAFT->value)
+                        ->whereHas('linkedProducts', fn ($q) => $q->where('products.id', $product->id))
+                        ->get();
+
+                    foreach ($livingParents as $parent) {
+                        $parent->updateQuietly(['status' => \App\Enums\ProductStatus::ACTIVE]);
+                    }
+
                     $report['successful']++;
                     $updatedProductIds[$product->id] = is_array($product->name) ? ($product->name['id'] ?? $product->name['en'] ?? $product->sku) : (string) $product->name;
                 } catch (\Throwable $e) {

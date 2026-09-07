@@ -12,6 +12,7 @@ import {
     ArrowLeft,
     Crop,
     Globe,
+    Info,
     Loader2,
     Plus,
     Save,
@@ -856,6 +857,14 @@ export default function CreateProduct({
                                 searchPlaceholder="Search status..."
                                 emptyText="No status found."
                             />
+                            {previewImages.length === 0 && (
+                                <p className="mt-2 flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                                    <Info className="h-4 w-4 shrink-0 text-amber-500" />
+                                    <span>
+                                        Produk tanpa foto akan otomatis berstatus <strong>Draft</strong> saat disimpan.
+                                    </span>
+                                </p>
+                            )}
                         </div>
                     </div>
 

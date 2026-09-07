@@ -178,7 +178,7 @@ class ProductController extends Controller
 
         $products = Product::active()
             ->whereIn('id', $productIds)
-            ->with(['category', 'images'])
+            ->with(['category', 'images', 'linkedProducts.images'])
             ->get();
 
         return Inertia::render('Shop/Compare', [
@@ -209,7 +209,7 @@ class ProductController extends Controller
                             ->orWhereRaw('LOWER(slug) LIKE ?', [$likeTerm]);
                     });
             })
-            ->with(['category', 'images'])
+            ->with(['category', 'images', 'linkedProducts.images'])
             ->limit(12)
             ->get();
 

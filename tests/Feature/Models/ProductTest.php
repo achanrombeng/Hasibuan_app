@@ -84,4 +84,47 @@ describe('Product Model', function () {
 
         expect(Product::featured()->count())->toBe(1);
     });
+
+    it('inherits primary image and images from connected products for living collection category', function () {
+        $livingCollectionCategory = Category::factory()->create([
+            'name' => 'Living Collection',
+            'slug' => 'living-collection',
+        ]);
+
+        $collectionProduct = Product::factory()->create([
+            'name' => 'Nova Collection',
+            'category_id' => $livingCollectionCategory->id,
+            'status' => ProductStatus::ACTIVE,
+        ]);
+
+        $chairProduct = Product::factory()->create(['name' => 'Nova Chair']);
+        $chairImage = ProductImage::create([
+            'product_id' => $chairProduct->id,
+            'image_path' => 'products/chair.jpg',
+            'sort_order' => 0,
+            'is_primary' => true,
+        ]);
+
+        $sofaProduct = Product::factory()->create(['name' => 'Nova Sofa']);
+        $sofaImage = ProductImage::create([
+            'product_id' => $sofaProduct->id,
+            'image_path' => 'products/sofa.jpg',
+            'sort_order' => 0,
+            'is_primary' => true,
+        ]);
+
+        $collectionProduct->linkedProducts()->sync([
+            $chairProduct->id => ['sort_order' => 1],
+            $sofaProduct->id => ['sort_order' => 2],
+        ]);
+
+        $collectionProduct = $collectionProduct->fresh()->load(['category', 'images', 'linkedProducts.images']);
+
+        expect($collectionProduct->isLivingCollection())->toBeTrue();
+        expect($collectionProduct->hasImages())->toBeTrue();
+        expect($collectionProduct->primary_image)->not->toBeNull();
+        expect($collectionProduct->primary_image->id)->toBe($chairImage->id);
+        expect($collectionProduct->effective_images)->toHaveCount(2);
+        expect($collectionProduct->effective_images->pluck('id')->toArray())->toEqual([$chairImage->id, $sofaImage->id]);
+    });
 });

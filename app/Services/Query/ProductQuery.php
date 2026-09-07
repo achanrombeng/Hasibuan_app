@@ -52,7 +52,7 @@ class ProductQuery
             ->allowedSorts(['name', 'created_at', 'sold_count', 'average_rating'])
             ->defaultSort('-created_at')
             ->active()
-            ->with(['category', 'images']);
+            ->with(['category', 'images', 'linkedProducts.images']);
     }
 
     public static function admin(Request $request): QueryBuilder
@@ -84,6 +84,6 @@ class ProductQuery
                 AllowedFilter::exact('is_featured'),
             ])
             ->allowedSorts(['name', 'sku', 'created_at', 'sold_count'])
-            ->with(['category', 'images']);
+            ->with(['category', 'images', 'linkedProducts.images']);
     }
 }
