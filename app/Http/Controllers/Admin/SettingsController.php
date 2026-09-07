@@ -29,7 +29,9 @@ class SettingsController extends Controller
                 'contact_email_2' => $settings['contact_email_2'] ?? '',
                 'contact_phone' => $settings['contact_phone'] ?? '',
                 'contact_whatsapp' => $settings['contact_whatsapp'] ?? '',
+                'factory_name' => $settings['factory_name'] ?? '',
                 'factory_address' => $settings['factory_address'] ?? '',
+                'showroom_name' => $settings['showroom_name'] ?? '',
                 'showroom_address' => $settings['showroom_address'] ?? '',
                 'maps_showroom_url' => $settings['maps_showroom_url'] ?? '',
                 'maps_factory_url' => $settings['maps_factory_url'] ?? '',
@@ -57,7 +59,9 @@ class SettingsController extends Controller
             'contact_email_2' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:20'],
             'contact_whatsapp' => ['nullable', 'string', 'max:20'],
+            'factory_name' => ['nullable', 'string', 'max:255'],
             'factory_address' => ['nullable', 'string', 'max:500'],
+            'showroom_name' => ['nullable', 'string', 'max:255'],
             'showroom_address' => ['nullable', 'string', 'max:500'],
             'maps_showroom_url' => ['nullable', 'string', 'max:2000'],
             'maps_factory_url' => ['nullable', 'string', 'max:2000'],
@@ -727,16 +731,18 @@ class SettingsController extends Controller
                 'footer_col2_title' => $settings['footer_col2_title'] ?? 'Perusahaan',
                 'footer_col2_links' => $settings['footer_col2_links'] ?? $defaultCol2Links,
                 'footer_contact_title' => $settings['footer_contact_title'] ?? 'Informasi Kontak',
-                'footer_show_factory' => filter_var($settings['footer_show_factory'] ?? true, FILTER_VALIDATE_BOOLEAN),
-                'footer_show_showroom' => filter_var($settings['footer_show_showroom'] ?? true, FILTER_VALIDATE_BOOLEAN),
-                'footer_show_phone' => filter_var($settings['footer_show_phone'] ?? true, FILTER_VALIDATE_BOOLEAN),
-                'footer_show_whatsapp' => filter_var($settings['footer_show_whatsapp'] ?? true, FILTER_VALIDATE_BOOLEAN),
-                'footer_show_email' => filter_var($settings['footer_show_email'] ?? true, FILTER_VALIDATE_BOOLEAN),
-                'footer_show_socials' => filter_var($settings['footer_show_socials'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'footer_show_factory' => array_key_exists('footer_show_factory', $settings) ? filter_var($settings['footer_show_factory'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_showroom' => array_key_exists('footer_show_showroom', $settings) ? filter_var($settings['footer_show_showroom'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_phone' => array_key_exists('footer_show_phone', $settings) ? filter_var($settings['footer_show_phone'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_whatsapp' => array_key_exists('footer_show_whatsapp', $settings) ? filter_var($settings['footer_show_whatsapp'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_email' => array_key_exists('footer_show_email', $settings) ? filter_var($settings['footer_show_email'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_socials' => array_key_exists('footer_show_socials', $settings) ? filter_var($settings['footer_show_socials'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_privacy' => array_key_exists('footer_show_privacy', $settings) ? filter_var($settings['footer_show_privacy'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_terms' => array_key_exists('footer_show_terms', $settings) ? filter_var($settings['footer_show_terms'], FILTER_VALIDATE_BOOLEAN) : true,
                 'youtube_url' => $settings['youtube_url'] ?? '',
                 'footer_privacy_url' => $settings['footer_privacy_url'] ?? '/shop/privacy-policy',
                 'footer_terms_url' => $settings['footer_terms_url'] ?? '/shop/terms',
-                // Inherited site contact info for reference
+                // Inherited site contact info for reference & social media management
                 'site_description' => $settings['site_description'] ?? '',
                 'contact_email' => $settings['contact_email'] ?? '',
                 'contact_phone' => $settings['contact_phone'] ?? '',
@@ -744,6 +750,8 @@ class SettingsController extends Controller
                 'facebook_url' => $settings['facebook_url'] ?? '',
                 'instagram_url' => $settings['instagram_url'] ?? '',
                 'tiktok_url' => $settings['tiktok_url'] ?? '',
+                'linkedin_url' => $settings['linkedin_url'] ?? '',
+                'social_links' => $settings['social_links'] ?? '',
             ],
         ]);
     }
@@ -767,10 +775,49 @@ class SettingsController extends Controller
             'footer_show_whatsapp' => ['required', 'boolean'],
             'footer_show_email' => ['required', 'boolean'],
             'footer_show_socials' => ['required', 'boolean'],
-            'youtube_url' => ['nullable', 'url', 'max:255'],
+            'footer_show_privacy' => ['required', 'boolean'],
+            'footer_show_terms' => ['required', 'boolean'],
+            'social_links' => ['nullable', 'string'],
+            'facebook_url' => ['nullable', 'string', 'max:255'],
+            'instagram_url' => ['nullable', 'string', 'max:255'],
+            'tiktok_url' => ['nullable', 'string', 'max:255'],
+            'youtube_url' => ['nullable', 'string', 'max:255'],
+            'linkedin_url' => ['nullable', 'string', 'max:255'],
             'footer_privacy_url' => ['nullable', 'string', 'max:255'],
             'footer_terms_url' => ['nullable', 'string', 'max:255'],
         ]);
+
+        if ($request->has('social_links')) {
+            $rawLinks = $request->input('social_links');
+            $decoded = json_decode((string) $rawLinks, true);
+            if (is_array($decoded)) {
+                $cleaned = array_values(array_filter($decoded, function ($item) {
+                    return !empty(trim($item['url'] ?? ''));
+                }));
+                $validated['social_links'] = json_encode($cleaned);
+
+                // Auto-sync legacy fields for backward compatibility
+                $fb = '';
+                $ig = '';
+                $tt = '';
+                $yt = '';
+                $li = '';
+                foreach ($cleaned as $item) {
+                    $platform = strtolower($item['platform'] ?? '');
+                    $url = trim($item['url'] ?? '');
+                    if ($platform === 'facebook' && empty($fb)) $fb = $url;
+                    if ($platform === 'instagram' && empty($ig)) $ig = $url;
+                    if ($platform === 'tiktok' && empty($tt)) $tt = $url;
+                    if ($platform === 'youtube' && empty($yt)) $yt = $url;
+                    if ($platform === 'linkedin' && empty($li)) $li = $url;
+                }
+                $validated['facebook_url'] = $fb;
+                $validated['instagram_url'] = $ig;
+                $validated['tiktok_url'] = $tt;
+                $validated['linkedin_url'] = $li;
+                $validated['youtube_url'] = $yt;
+            }
+        }
 
         foreach ($validated as $key => $value) {
             Setting::updateOrCreate(

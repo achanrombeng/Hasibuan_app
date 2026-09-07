@@ -18,13 +18,15 @@ import {
   FileSpreadsheet,
   Filter,
   Images,
+  Loader2,
   Package,
   Pencil,
   Plus,
   Search,
   Trash2,
+  X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Product {
   id: number;
@@ -83,7 +85,9 @@ export default function ProductsIndex({
   const filterObj =
     filters?.filter && typeof filters.filter === 'object' ? filters.filter : {};
 
-  const [search, setSearch] = useState(filterObj.name || '');
+  const [search, setSearch] = useState(
+    filterObj.search || filterObj.name || filterObj.sku || '',
+  );
   const [category, setCategory] = useState(filterObj.category_id || 'all');
   const [status, setStatus] = useState(filterObj.status || 'all');
   const [isFeatured, setIsFeatured] = useState(filterObj.is_featured || 'all');
@@ -100,8 +104,42 @@ export default function ProductsIndex({
 
   const productData = products.data;
 
+  const isFirstRender = useRef(true);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Auto sync search input with debounce
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    setIsSearching(true);
+    const timer = setTimeout(() => {
+      const params: Record<string, string> = {};
+      if (search.trim()) params['filter[name]'] = search.trim();
+      if (category && category !== 'all')
+        params['filter[category_id]'] = category;
+      if (status && status !== 'all') params['filter[status]'] = status;
+      if (isFeatured && isFeatured !== 'all')
+        params['filter[is_featured]'] = isFeatured;
+
+      router.get('/admin/products', params, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+        onFinish: () => setIsSearching(false),
+      });
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
+
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    setIsSearching(true);
 
     const params: Record<string, string> = {};
     if (search.trim()) params['filter[name]'] = search.trim();
@@ -111,7 +149,54 @@ export default function ProductsIndex({
     if (isFeatured && isFeatured !== 'all')
       params['filter[is_featured]'] = isFeatured;
 
-    router.get('/admin/products', params, { preserveState: true });
+    router.get('/admin/products', params, {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+      onFinish: () => setIsSearching(false),
+    });
+  };
+
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setIsSearching(true);
+    const params: Record<string, string> = {};
+    if (search.trim()) params['filter[name]'] = search.trim();
+    if (newCategory && newCategory !== 'all')
+      params['filter[category_id]'] = newCategory;
+    if (status && status !== 'all') params['filter[status]'] = status;
+    if (isFeatured && isFeatured !== 'all')
+      params['filter[is_featured]'] = isFeatured;
+
+    router.get('/admin/products', params, {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+      onFinish: () => setIsSearching(false),
+    });
+  };
+
+  const handleStatusChange = (newStatus: string) => {
+    setStatus(newStatus);
+    setIsSearching(true);
+    const params: Record<string, string> = {};
+    if (search.trim()) params['filter[name]'] = search.trim();
+    if (category && category !== 'all')
+      params['filter[category_id]'] = category;
+    if (newStatus && newStatus !== 'all') params['filter[status]'] = newStatus;
+    if (isFeatured && isFeatured !== 'all')
+      params['filter[is_featured]'] = isFeatured;
+
+    router.get('/admin/products', params, {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+      onFinish: () => setIsSearching(false),
+    });
+  };
+
+  const handleClearSearch = () => {
+    setSearch('');
   };
 
   const handleReset = () => {
@@ -119,7 +204,7 @@ export default function ProductsIndex({
     setCategory('all');
     setStatus('all');
     setIsFeatured('all');
-    router.get('/admin/products', {}, { preserveState: true });
+    router.get('/admin/products', {}, { preserveState: true, replace: true });
   };
 
   const confirmDelete = (product: Product) => {
@@ -200,14 +285,30 @@ export default function ProductsIndex({
               className="flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <div className="relative flex-1">
-                <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                <div className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-neutral-400">
+                  {isSearching ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-teal-600" />
+                  ) : (
+                    <Search className="h-4 w-4" />
+                  )}
+                </div>
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="Search products by name or SKU..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
+                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50/50 py-2.5 pr-10 pl-10 text-sm text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-wood focus:bg-white focus:ring-2 focus:ring-wood/20 focus:outline-none"
                 />
+                {search.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleClearSearch}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-neutral-400 hover:bg-neutral-200 hover:text-neutral-700"
+                    title="Clear search"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
               </div>
               <div className="flex items-center gap-2.5">
                 <button
@@ -221,12 +322,6 @@ export default function ProductsIndex({
                 >
                   <Filter className="h-4 w-4 text-neutral-600" /> Filter
                 </button>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
-                >
-                  Search
-                </button>
               </div>
             </form>
 
@@ -238,7 +333,7 @@ export default function ProductsIndex({
                   </label>
                   <select
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
                     className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
                   >
                     <option value="all">All Categories</option>
@@ -256,7 +351,7 @@ export default function ProductsIndex({
                   </label>
                   <select
                     value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    onChange={(e) => handleStatusChange(e.target.value)}
                     className="w-full rounded-lg border border-terra-200 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-wood/50 focus:outline-none"
                   >
                     <option value="all">All Status</option>
@@ -270,16 +365,10 @@ export default function ProductsIndex({
 
                 <div className="flex items-end gap-2">
                   <button
-                    onClick={() => handleSearch()}
-                    className="flex-1 cursor-pointer rounded-lg bg-[#a67c52] px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] sm:flex-none"
-                  >
-                    Apply
-                  </button>
-                  <button
                     onClick={handleReset}
                     className="flex-1 cursor-pointer rounded-lg border border-terra-200 px-4 py-2 text-sm font-medium text-terra-600 transition-colors hover:bg-terra-50 sm:flex-none"
                   >
-                    Reset
+                    Reset Filter
                   </button>
                 </div>
               </div>

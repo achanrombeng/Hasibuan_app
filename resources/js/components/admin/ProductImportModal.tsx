@@ -16,6 +16,7 @@ import {
   Loader2,
   RefreshCw,
 } from 'lucide-react';
+import { getCsrfHeaders, getCsrfToken } from '@/lib/csrf';
 import React, { useRef, useState } from 'react';
 
 interface ImportReport {
@@ -102,25 +103,38 @@ export default function ProductImportModal({
     setErrorMessage(null);
     setReport(null);
 
+    const csrfToken = getCsrfToken();
     const formData = new FormData();
+    if (csrfToken) {
+      formData.append('_token', csrfToken);
+    }
     formData.append('file', file);
     if (updateExisting) {
       formData.append('update_existing', '1');
     }
 
     try {
-      const csrfToken =
-        (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)
-          ?.content || '';
-
       const response = await fetch('/admin/products/import', {
         method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'X-CSRF-TOKEN': csrfToken,
-        },
+        headers: getCsrfHeaders(),
         body: formData,
       });
+
+      if (response.status === 419) {
+        setErrorMessage(
+          'Sesi Anda telah kedaluwarsa atau token keamanan tidak valid. Silakan muat ulang (refresh) halaman dan coba kembali.',
+        );
+        return;
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        const text = await response.text();
+        setErrorMessage(
+          `Gagal memproses file (${response.status}: ${response.statusText}). Silakan refresh halaman dan coba lagi.`,
+        );
+        return;
+      }
 
       const data = await response.json();
 

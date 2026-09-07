@@ -29,6 +29,17 @@ class DealerController extends Controller
         $validated = $request->validated();
         $validated['ip_address'] = $request->ip();
 
+        $contact = $validated['contact'] ?? '';
+        unset($validated['contact']);
+
+        if (empty($validated['email']) && empty($validated['phone'])) {
+            if (filter_var($contact, FILTER_VALIDATE_EMAIL)) {
+                $validated['email'] = $contact;
+            } else {
+                $validated['phone'] = $contact;
+            }
+        }
+
         $inquiry = DealerInquiry::create($validated);
 
         // Notify Admins
@@ -38,7 +49,7 @@ class DealerController extends Controller
                 $admin->notify(new NewDealerInquiryNotification($inquiry));
             }
         } catch (\Throwable $e) {
-            Log::error('Failed to notify admins of new dealer inquiry: ' . $e->getMessage());
+            Log::error('Failed to notify admins of new dealer inquiry: '.$e->getMessage());
         }
 
         // Send Email Notification to Admin if recipient is configured
@@ -48,7 +59,7 @@ class DealerController extends Controller
                 Mail::to($adminEmail)->send(new DealerInquiryReceived($inquiry));
             }
         } catch (\Throwable $e) {
-            Log::error('Failed to send dealer inquiry notification email: ' . $e->getMessage());
+            Log::error('Failed to send dealer inquiry notification email: '.$e->getMessage());
         }
 
         return redirect()->back()->with('success', 'Your dealer partnership inquiry has been submitted successfully.');

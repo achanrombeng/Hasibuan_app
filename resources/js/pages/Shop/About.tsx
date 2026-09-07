@@ -111,12 +111,12 @@ As a family business, Ronica is always passionate about quality, sustainability 
             <ShopLayout>
                 <main className="min-h-screen bg-sand-50 pb-20">
                     {/* Fixed Nature/Wood Banner Header */}
-                    <div className="mb-12 md:mb-16 bg-[#96724d] py-11 md:py-13 text-white">
+                    <div className="mb-12 md:mb-16 bg-[#96724d] py-16 text-white">
                         <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-                            <h1 className="mb-2 text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-[2.1rem]">
+                            <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
                                 {isIndonesian ? 'Tentang Kami' : 'About Us'}
                             </h1>
-                            <p className="mx-auto max-w-xl text-xs md:text-sm tracking-wide text-white/90">
+                            <p className="mx-auto max-w-2xl text-xl opacity-90">
                                 {isIndonesian
                                     ? 'Pelajari lebih lanjut tentang kisah kerajinan dan dedikasi furnitur kami'
                                     : 'Discover the story of Ronica’s handcrafted outdoor furniture'}

@@ -179,7 +179,7 @@ export default function Contact() {
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="font-serif text-xl font-bold text-terra-900">
-                                                    Showroom
+                                                    {siteSettings?.showroom_name || 'Showroom'}
                                                 </h3>
                                                 <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-terra-700">
                                                     {t('shop.contact.showroom_address')}
@@ -221,7 +221,7 @@ export default function Contact() {
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="font-serif text-xl font-bold text-terra-900">
-                                                    Factory
+                                                    {siteSettings?.factory_name || 'Factory'}
                                                 </h3>
                                                 <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-terra-700">
                                                     {t('shop.contact.factory_address')}

@@ -172,12 +172,21 @@ export const Footer = () => {
     const col2Title = siteSettings?.footer_col2_title || t('shop.footer.company');
     const contactTitle = siteSettings?.footer_contact_title || 'Informasi Kontak';
 
-    const showSocials = siteSettings?.footer_show_socials !== false;
-    const showFactory = siteSettings?.footer_show_factory !== false;
-    const showShowroom = siteSettings?.footer_show_showroom !== false;
-    const showPhone = siteSettings?.footer_show_phone !== false;
-    const showWhatsapp = siteSettings?.footer_show_whatsapp !== false;
-    const showEmail = siteSettings?.footer_show_email !== false;
+    const isSettingVisible = (val: unknown, defaultValue = true): boolean => {
+        if (val === undefined || val === null || val === '') return defaultValue;
+        if (val === false || val === '0' || val === 0 || val === 'false') return false;
+        if (val === true || val === '1' || val === 1 || val === 'true') return true;
+        return Boolean(val);
+    };
+
+    const showSocials = isSettingVisible(siteSettings?.footer_show_socials);
+    const showFactory = isSettingVisible(siteSettings?.footer_show_factory);
+    const showShowroom = isSettingVisible(siteSettings?.footer_show_showroom);
+    const showPhone = isSettingVisible(siteSettings?.footer_show_phone);
+    const showWhatsapp = isSettingVisible(siteSettings?.footer_show_whatsapp);
+    const showEmail = isSettingVisible(siteSettings?.footer_show_email);
+    const showPrivacy = isSettingVisible(siteSettings?.footer_show_privacy);
+    const showTerms = isSettingVisible(siteSettings?.footer_show_terms);
 
     const privacyUrl = siteSettings?.footer_privacy_url || '/shop/privacy-policy';
     const termsUrl = siteSettings?.footer_terms_url || '/shop/terms';
@@ -210,25 +219,44 @@ export const Footer = () => {
                         {showSocials && (() => {
                             // Parse dynamic social links
                             const links: { platform: string; url: string; label?: string }[] = (() => {
+                                const list: { platform: string; url: string; label?: string }[] = [];
+                                const seenPlatforms = new Set<string>();
+
                                 if (siteSettings?.social_links) {
                                     try {
                                         const parsed = JSON.parse(siteSettings.social_links);
                                         if (Array.isArray(parsed) && parsed.length > 0) {
-                                            return parsed.filter(
-                                                (item) => item && item.url && item.url.trim().length > 0
-                                            );
+                                            parsed.forEach((item) => {
+                                                if (item && item.url && item.url.trim().length > 0) {
+                                                    list.push(item);
+                                                    if (item.platform) {
+                                                        seenPlatforms.add(item.platform.toLowerCase());
+                                                    }
+                                                }
+                                            });
                                         }
                                     } catch {
                                         // ignore
                                     }
                                 }
-                                const fallback: { platform: string; url: string; label?: string }[] = [];
-                                if (siteSettings?.facebook_url) fallback.push({ platform: 'facebook', url: siteSettings.facebook_url });
-                                if (siteSettings?.instagram_url) fallback.push({ platform: 'instagram', url: siteSettings.instagram_url });
-                                if (siteSettings?.tiktok_url) fallback.push({ platform: 'tiktok', url: siteSettings.tiktok_url });
-                                if (siteSettings?.youtube_url) fallback.push({ platform: 'youtube', url: siteSettings.youtube_url });
-                                if (siteSettings?.linkedin_url) fallback.push({ platform: 'linkedin', url: siteSettings.linkedin_url });
-                                return fallback;
+
+                                // Merge standalone URLs if they exist and are not already in list
+                                const standalone: { platform: string; url?: string }[] = [
+                                    { platform: 'facebook', url: siteSettings?.facebook_url },
+                                    { platform: 'instagram', url: siteSettings?.instagram_url },
+                                    { platform: 'tiktok', url: siteSettings?.tiktok_url },
+                                    { platform: 'youtube', url: siteSettings?.youtube_url },
+                                    { platform: 'linkedin', url: siteSettings?.linkedin_url },
+                                ];
+
+                                standalone.forEach(({ platform, url }) => {
+                                    if (url && url.trim().length > 0 && !seenPlatforms.has(platform)) {
+                                        list.push({ platform, url });
+                                        seenPlatforms.add(platform);
+                                    }
+                                });
+
+                                return list;
                             })();
 
                             if (links.length === 0) return null;
@@ -367,13 +395,13 @@ export const Footer = () => {
                             {showFactory && siteSettings?.factory_address && (
                                 <li className="flex items-start gap-3">
                                     <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
-                                    <span><strong className="font-medium text-neutral-800">Factory:</strong> {siteSettings.factory_address}</span>
+                                    <span><strong className="font-medium text-neutral-800">{siteSettings?.factory_name || 'Factory'}:</strong> {siteSettings.factory_address}</span>
                                 </li>
                             )}
                             {showShowroom && siteSettings?.showroom_address && (
                                 <li className="flex items-start gap-3">
                                     <Store className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
-                                    <span><strong className="font-medium text-neutral-800">Showroom:</strong> {siteSettings.showroom_address}</span>
+                                    <span><strong className="font-medium text-neutral-800">{siteSettings?.showroom_name || 'Showroom'}:</strong> {siteSettings.showroom_address}</span>
                                 </li>
                             )}
                             {!siteSettings?.factory_address && !siteSettings?.showroom_address && siteSettings?.address && (
@@ -435,20 +463,26 @@ export const Footer = () => {
                 {/* Bottom Section */}
                 <div className="flex flex-col items-center justify-between pt-8 text-xs text-neutral-500 md:flex-row">
                     <p>{copyrightText}</p>
-                    <div className="mt-4 flex gap-6 md:mt-0">
-                        <Link
-                            href={privacyUrl}
-                            className="transition-colors hover:text-teal-600"
-                        >
-                            Privacy Policy
-                        </Link>
-                        <Link
-                            href={termsUrl}
-                            className="transition-colors hover:text-teal-600"
-                        >
-                            Terms &amp; Conditions
-                        </Link>
-                    </div>
+                    {(showPrivacy || showTerms) && (
+                        <div className="mt-4 flex gap-6 md:mt-0">
+                            {showPrivacy && (
+                                <Link
+                                    href={privacyUrl}
+                                    className="transition-colors hover:text-teal-600"
+                                >
+                                    Privacy Policy
+                                </Link>
+                            )}
+                            {showTerms && (
+                                <Link
+                                    href={termsUrl}
+                                    className="transition-colors hover:text-teal-600"
+                                >
+                                    Terms &amp; Conditions
+                                </Link>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </footer>

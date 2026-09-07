@@ -125,10 +125,13 @@ class ProductBulkImageController extends Controller implements HasMiddleware
      */
     public function upload(Request $request): JsonResponse
     {
+        @ini_set('memory_limit', '1024M');
+        @set_time_limit(300);
+
         $request->validate([
             'images' => ['nullable', 'array'],
-            'images.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,webp,gif', 'max:15360'], // max 15MB each
-            'zip_file' => ['nullable', 'file', 'mimes:zip', 'max:102400'], // max 100MB
+            'images.*' => ['nullable', 'file', 'mimes:jpeg,png,jpg,webp,gif,svg', 'max:51200'], // max 50MB each
+            'zip_file' => ['nullable', 'file', 'max:256000'], // max 250MB (mimes checked flexibly)
             'mappings' => ['nullable', 'string'], // JSON string of filename => product_id
         ]);
 

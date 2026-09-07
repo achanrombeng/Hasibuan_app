@@ -37,7 +37,9 @@ export interface SiteSettings {
   contact_email_2?: string;
   contact_phone: string;
   contact_whatsapp: string;
+  factory_name?: string;
   factory_address?: string;
+  showroom_name?: string;
   showroom_address?: string;
   maps_showroom_url?: string;
   maps_factory_url?: string;
@@ -61,6 +63,8 @@ export interface SiteSettings {
   footer_show_whatsapp?: boolean;
   footer_show_email?: boolean;
   footer_show_socials?: boolean;
+  footer_show_privacy?: boolean;
+  footer_show_terms?: boolean;
   footer_privacy_url?: string;
   footer_terms_url?: string;
   catalog_pdf_url?: string;

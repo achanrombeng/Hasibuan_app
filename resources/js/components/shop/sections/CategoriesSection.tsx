@@ -235,8 +235,8 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                     href={`/shop/category/${item.slug}`}
                     onMouseEnter={() => setActiveIndex(index)}
                     className={`group relative flex items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal cursor-pointer ${isActive
-                        ? 'pl-4 font-semibold text-neutral-900 lg:pl-3'
-                        : 'font-normal text-neutral-500 hover:pl-2 hover:text-neutral-800'
+                      ? 'pl-4 font-semibold text-neutral-900 lg:pl-3'
+                      : 'font-normal text-neutral-500 hover:pl-2 hover:text-neutral-800'
                       }`}
                   >
                     {/* Active Bar Indicator */}
@@ -259,8 +259,8 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                     <ArrowRight
                       size={15}
                       className={`hidden transition-all duration-300 lg:block ${isActive
-                          ? 'translate-x-0 text-[#7c926a] opacity-100'
-                          : '-translate-x-2 opacity-0 group-hover:opacity-60'
+                        ? 'translate-x-0 text-[#7c926a] opacity-100'
+                        : '-translate-x-2 opacity-0 group-hover:opacity-60'
                         }`}
                     />
                   </Link>
@@ -304,7 +304,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
 
                 {/* Floating "Explore Collection" Badge */}
                 <div className="absolute bottom-6 right-6 z-20 hidden items-center gap-2 rounded-xl bg-white/90 px-4 py-2.5 text-sm font-semibold text-neutral-900 shadow-lg backdrop-blur-md transition-all group-hover:bg-white group-hover:shadow-xl sm:inline-flex">
-                  <span>Lihat Produk {currentSlide.categoryName}</span>
+                  <span>Explore {currentSlide.categoryName}</span>
                   <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
@@ -344,8 +344,8 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                       setActiveIndex(idx);
                     }}
                     className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeIndex
-                        ? 'w-8 bg-white'
-                        : 'w-2 bg-white/50 hover:bg-white/80'
+                      ? 'w-8 bg-white'
+                      : 'w-2 bg-white/50 hover:bg-white/80'
                       }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />

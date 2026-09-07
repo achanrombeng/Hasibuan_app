@@ -365,11 +365,13 @@ export default function HomepageSettings({
 
   const confirmSaveHomepage = () => {
     const formData = new FormData();
-    formData.append('hero_badge', data.hero_badge);
-    formData.append('hero_title', data.hero_title);
-    formData.append('hero_title_highlight', data.hero_title_highlight);
-    formData.append('hero_description', data.hero_description);
-    formData.append('hero_product_name', data.hero_product_name);
+    formData.append('hero_badge', data.hero_badge || '');
+    formData.append('hero_title', data.hero_title || '');
+    formData.append('hero_title_highlight', data.hero_title_highlight || '');
+    formData.append('hero_description', data.hero_description || '');
+    formData.append('hero_product_name', data.hero_product_name || '');
+    formData.append('values_badge', data.values_badge || '');
+    formData.append('values_title', data.values_title || '');
     formData.append('trust_logos', JSON.stringify(trustLogos));
     formData.append('home_values', JSON.stringify(values));
     formData.append('carousel_banners', JSON.stringify(carouselBanners));
@@ -380,14 +382,14 @@ export default function HomepageSettings({
     });
 
     // Craftsmanship Section
-    formData.append('craftsmanship_title_1', data.craftsmanship_title_1);
-    formData.append('craftsmanship_desc_1', data.craftsmanship_desc_1);
+    formData.append('craftsmanship_title_1', data.craftsmanship_title_1 || '');
+    formData.append('craftsmanship_desc_1', data.craftsmanship_desc_1 || '');
     formData.append(
       'craftsmanship_images_1',
       JSON.stringify(craftsmanshipImages1),
     );
-    formData.append('craftsmanship_title_2', data.craftsmanship_title_2);
-    formData.append('craftsmanship_desc_2', data.craftsmanship_desc_2);
+    formData.append('craftsmanship_title_2', data.craftsmanship_title_2 || '');
+    formData.append('craftsmanship_desc_2', data.craftsmanship_desc_2 || '');
     formData.append(
       'craftsmanship_images_2',
       JSON.stringify(craftsmanshipImages2),
@@ -442,7 +444,7 @@ export default function HomepageSettings({
     );
 
     // Site logo
-    formData.append('site_logo', siteLogoPreview);
+    formData.append('site_logo', siteLogoPreview || '');
     if (siteLogoFile) {
       formData.append('site_logo_file', siteLogoFile);
     }
@@ -452,19 +454,25 @@ export default function HomepageSettings({
       formData.append('hero_media_file', heroMediaFile);
       formData.append('hero_media_type', heroMediaType);
     } else {
-      formData.append('hero_image_main', data.hero_image_main);
+      formData.append('hero_image_main', data.hero_image_main || '');
       formData.append(
         'hero_media_type',
-        detectMediaTypeFromUrl(data.hero_image_main),
+        detectMediaTypeFromUrl(data.hero_image_main || ''),
       );
     }
 
     router.post('/admin/settings/homepage', formData, {
       forceFormData: true,
+      preserveScroll: true,
       onStart: () => setProcessing(true),
-      onError: () => {
+      onSuccess: () => {
         setProcessing(false);
         setShowConfirmDialog(false);
+      },
+      onError: (errors) => {
+        setProcessing(false);
+        setShowConfirmDialog(false);
+        console.error('Validation errors:', errors);
       },
       onFinish: () => setProcessing(false),
     });

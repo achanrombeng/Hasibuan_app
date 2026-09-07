@@ -14,8 +14,7 @@ export default function Dealer() {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
-        email: '',
-        phone: '',
+        contact: '',
         message: '',
     });
 
@@ -127,38 +126,23 @@ export default function Dealer() {
                                                 )}
                                             </div>
 
-                                            {/* E-mail */}
+                                            {/* Email/Phone */}
                                             <div>
                                                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-neutral-700">
-                                                    E-mail
+                                                    Email/Phone
                                                 </label>
                                                 <input
-                                                    type="email"
+                                                    type="text"
                                                     required
-                                                    value={data.email}
-                                                    onChange={(e) => setData('email', e.target.value)}
-                                                    placeholder="Type Your E-mail Address"
+                                                    value={data.contact}
+                                                    onChange={(e) => setData('contact', e.target.value)}
+                                                    placeholder="Type Your E-mail Address or Phone Number"
                                                     className="w-full rounded-lg border border-neutral-200/80 bg-neutral-100/70 px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 outline-none transition-all focus:border-[#a67c52] focus:bg-white focus:ring-2 focus:ring-[#a67c52]/20"
                                                 />
-                                                {errors.email && (
-                                                    <p className="mt-1 text-xs text-red-500">{errors.email}</p>
-                                                )}
-                                            </div>
-
-                                            {/* Phone */}
-                                            <div>
-                                                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-neutral-700">
-                                                    Phone
-                                                </label>
-                                                <input
-                                                    type="tel"
-                                                    value={data.phone}
-                                                    onChange={(e) => setData('phone', e.target.value)}
-                                                    placeholder="Type Your Phone Number"
-                                                    className="w-full rounded-lg border border-neutral-200/80 bg-neutral-100/70 px-4 py-3 text-sm text-neutral-800 placeholder-neutral-400 outline-none transition-all focus:border-[#a67c52] focus:bg-white focus:ring-2 focus:ring-[#a67c52]/20"
-                                                />
-                                                {errors.phone && (
-                                                    <p className="mt-1 text-xs text-red-500">{errors.phone}</p>
+                                                {errors.contact && (
+                                                    <p className="mt-1 text-xs text-red-500">
+                                                        {errors.contact}
+                                                    </p>
                                                 )}
                                             </div>
 

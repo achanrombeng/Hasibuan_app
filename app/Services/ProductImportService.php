@@ -624,9 +624,9 @@ class ProductImportService
             default => ProductStatus::ACTIVE,
         };
 
-        // 4. Generate SKU if missing
+        // 4. Generate SKU if missing (2-letter category prefix + 5-character product name abbreviation)
         if (empty($sku)) {
-            $sku = $existing?->sku ?: $this->generateUniqueSku($categoryName);
+            $sku = $existing?->sku ?: $this->generateUniqueSku($name, $categoryName);
         }
 
         // 5. Descriptions & translatable texts
@@ -793,17 +793,133 @@ class ProductImportService
     }
 
     /**
-     * Generate unique SKU.
+     * Generate unique SKU with 2-letter category prefix and 5-character product name abbreviation.
+     *
+     * Format: {CATEGORY_2_LETTERS}-{PRODUCT_5_CHARS}
+     * Examples:
+     * - "Living Set", "Sofa Minimalis Outdoor"   => "LI-SOMIO"
+     * - "Dining Sets", "Meja Makan Scandinavian" => "DI-MEMAS"
+     * - "Sunbed", "Sunbed Lounger"               => "SU-SUNLO"
      */
-    private function generateUniqueSku(string $categoryName): string
+    public function generateUniqueSku(string $productName, ?string $categoryName = null): string
     {
-        $prefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $categoryName) ?: 'RON', 0, 3));
+        // 1. Prefix: 2 characters from category name (initials if multi-word, or first 2 chars; fallback: 'RO')
+        $catPrefix = $this->extractCategoryPrefix($categoryName);
 
+        // 2. Abbreviation: 5 alphanumeric characters from product name
+        $abbr = $this->extractProductAbbreviation($productName);
+
+        // 3. Ensure uniqueness in database
+        $baseCandidate = "{$catPrefix}-{$abbr}";
+        if (! Product::where('sku', $baseCandidate)->exists()) {
+            return $baseCandidate;
+        }
+
+        // Collision handling: append numerical increment on last character(s)
+        $counter = 1;
+        while ($counter <= 99) {
+            $suffixNum = (string) $counter;
+            $len = strlen($suffixNum);
+            $modifiedAbbr = substr($abbr, 0, 5 - $len).$suffixNum;
+            $candidate = "{$catPrefix}-{$modifiedAbbr}";
+
+            if (! Product::where('sku', $candidate)->exists()) {
+                return $candidate;
+            }
+            $counter++;
+        }
+
+        // Fallback with random 5-character string
         do {
-            $sku = sprintf('%s-%s', $prefix, strtoupper(Str::random(5)));
-        } while (Product::where('sku', $sku)->exists());
+            $candidate = sprintf('%s-%s', $catPrefix, strtoupper(Str::random(5)));
+        } while (Product::where('sku', $candidate)->exists());
 
-        return $sku;
+        return $candidate;
+    }
+
+    /**
+     * Extract a 2-character prefix from category name.
+     */
+    private function extractCategoryPrefix(?string $categoryName): string
+    {
+        $clean = strtoupper(trim((string) $categoryName));
+        $clean = preg_replace('/[^A-Z0-9\s]/', ' ', $clean) ?? $clean;
+        $words = array_values(array_filter(explode(' ', $clean), fn ($w) => $w !== ''));
+
+        if (empty($words)) {
+            return 'RO';
+        }
+
+        if (count($words) >= 2) {
+            return substr($words[0], 0, 1).substr($words[1], 0, 1);
+        }
+
+        $single = $words[0];
+        if (strlen($single) >= 2) {
+            return substr($single, 0, 2);
+        }
+
+        return str_pad($single, 2, 'X');
+    }
+
+    /**
+     * Extract a 5-character alphanumeric abbreviation from the product name.
+     */
+    private function extractProductAbbreviation(string $productName): string
+    {
+        $clean = strtoupper(trim($productName));
+        $clean = preg_replace('/[^A-Z0-9\s]/', ' ', $clean) ?? $clean;
+        $words = array_values(array_filter(explode(' ', $clean), fn ($w) => $w !== ''));
+
+        if (empty($words)) {
+            return strtoupper(Str::random(5));
+        }
+
+        $wordCount = count($words);
+
+        if ($wordCount >= 5) {
+            // Take 1st letter of the first 5 words
+            $abbr = '';
+            for ($i = 0; $i < 5; $i++) {
+                $abbr .= substr($words[$i], 0, 1);
+            }
+
+            return $abbr;
+        }
+
+        if ($wordCount === 4) {
+            // 2 letters from word 1, 1 letter each from words 2, 3, 4
+            return substr($words[0], 0, 2)
+                .substr($words[1], 0, 1)
+                .substr($words[2], 0, 1)
+                .substr($words[3], 0, 1);
+        }
+
+        if ($wordCount === 3) {
+            // 2 letters from word 1, 2 letters from word 2, 1 letter from word 3
+            return substr($words[0], 0, 2)
+                .substr($words[1], 0, 2)
+                .substr($words[2], 0, 1);
+        }
+
+        if ($wordCount === 2) {
+            // 3 letters from word 1, 2 letters from word 2 (or balance if word 1 is short)
+            $len1 = min(3, strlen($words[0]));
+            $len2 = 5 - $len1;
+            $p1 = substr($words[0], 0, $len1);
+            $p2 = substr($words[1], 0, $len2);
+            $combined = $p1.$p2;
+
+            return str_pad($combined, 5, '0');
+        }
+
+        // Single word
+        $single = $words[0];
+        if (strlen($single) >= 5) {
+            return substr($single, 0, 5);
+        }
+
+        return str_pad($single, 5, '0');
     }
 
     /**

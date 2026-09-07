@@ -20,6 +20,7 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react';
+import { getCsrfHeaders, getCsrfToken } from '@/lib/csrf';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface MatchedProduct {
@@ -253,7 +254,11 @@ export default function ProductBulkImageModal({
     setErrorMessage(null);
     setReport(null);
 
+    const csrfToken = getCsrfToken();
     const formData = new FormData();
+    if (csrfToken) {
+      formData.append('_token', csrfToken);
+    }
 
     if (zipFile) {
       formData.append('zip_file', zipFile);
@@ -273,18 +278,33 @@ export default function ProductBulkImageModal({
     }
 
     try {
-      const csrfToken =
-        (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)
-          ?.content || '';
-
       const res = await fetch('/admin/products/bulk-images/upload', {
         method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'X-CSRF-TOKEN': csrfToken,
-        },
+        headers: getCsrfHeaders(),
         body: formData,
       });
+
+      if (res.status === 419) {
+        setErrorMessage(
+          'Sesi Anda telah kedaluwarsa atau token keamanan tidak valid. Silakan muat ulang (refresh) halaman dan coba kembali.',
+        );
+        return;
+      }
+
+      if (res.status === 413) {
+        setErrorMessage(
+          'Ukuran file melebihi batas unggah server (HTTP 413 Content Too Large). Silakan coba lagi atau pastikan ukuran ZIP di bawah 200MB.',
+        );
+        return;
+      }
+
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        setErrorMessage(
+          `Gagal memproses upload (${res.status}: ${res.statusText}). Silakan refresh halaman dan coba lagi.`,
+        );
+        return;
+      }
 
       const data = await res.json();
 
@@ -411,7 +431,7 @@ export default function ProductBulkImageModal({
                       Tarik & jatuhkan banyak foto atau file ZIP di sini
                     </p>
                     <p className="mt-1 text-xs text-neutral-500">
-                      Format didukung: JPG, PNG, WEBP, atau file ZIP (Maks 100MB)
+                      Format didukung: JPG, PNG, WEBP, atau file ZIP (Maks 200MB)
                     </p>
                   </div>
                   <div className="mt-2 flex items-center gap-2">

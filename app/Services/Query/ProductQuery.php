@@ -16,13 +16,20 @@ class ProductQuery
     {
         return QueryBuilder::for(Product::class, $request)
             ->allowedFilters([
-                AllowedFilter::partial('name'),
+                AllowedFilter::callback('name', function ($query, $value) {
+                    $val = '%' . mb_strtolower(trim((string) $value), 'UTF-8') . '%';
+                    $query->where(function ($q) use ($val) {
+                        $q->whereRaw('LOWER(name) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(sku) LIKE ?', [$val]);
+                    });
+                }),
                 AllowedFilter::callback('search', function ($query, $value) {
-                    $query->where(function ($q) use ($value) {
-                        $q->where('name', 'like', "%{$value}%")
-                            ->orWhere('description', 'like', "%{$value}%")
-                            ->orWhere('short_description', 'like', "%{$value}%")
-                            ->orWhere('sku', 'like', "%{$value}%");
+                    $val = '%' . mb_strtolower(trim((string) $value), 'UTF-8') . '%';
+                    $query->where(function ($q) use ($val) {
+                        $q->whereRaw('LOWER(name) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(sku) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(description) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(short_description) LIKE ?', [$val]);
                     });
                 }),
                 AllowedFilter::callback('category_id', function ($query, $value) {
@@ -52,12 +59,31 @@ class ProductQuery
     {
         return QueryBuilder::for(Product::class, $request)
             ->allowedFilters([
-                AllowedFilter::partial('name'),
+                AllowedFilter::callback('name', function ($query, $value) {
+                    $val = '%' . mb_strtolower(trim((string) $value), 'UTF-8') . '%';
+                    $query->where(function ($q) use ($val) {
+                        $q->whereRaw('LOWER(name) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(sku) LIKE ?', [$val]);
+                    });
+                }),
+                AllowedFilter::callback('search', function ($query, $value) {
+                    $val = '%' . mb_strtolower(trim((string) $value), 'UTF-8') . '%';
+                    $query->where(function ($q) use ($val) {
+                        $q->whereRaw('LOWER(name) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(sku) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(description) LIKE ?', [$val])
+                            ->orWhereRaw('LOWER(short_description) LIKE ?', [$val]);
+                    });
+                }),
+                AllowedFilter::callback('sku', function ($query, $value) {
+                    $val = '%' . mb_strtolower(trim((string) $value), 'UTF-8') . '%';
+                    $query->whereRaw('LOWER(sku) LIKE ?', [$val]);
+                }),
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::exact('status'),
                 AllowedFilter::exact('is_featured'),
             ])
-            ->allowedSorts(['name', 'created_at', 'sold_count'])
+            ->allowedSorts(['name', 'sku', 'created_at', 'sold_count'])
             ->with(['category', 'images']);
     }
 }
