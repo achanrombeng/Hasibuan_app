@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/hooks/use-translation';
 import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
@@ -124,19 +123,6 @@ export default function Login({
                                 {t('auth.login.submit')}
                             </button>
                         </div>
-
-                        {canRegister && (
-                            <div className="pt-2 text-center text-sm text-neutral-500">
-                                {t('auth.login.no_account')}{' '}
-                                <TextLink
-                                    href={register()}
-                                    tabIndex={5}
-                                    className="font-medium text-teal-600 transition-colors hover:text-teal-700"
-                                >
-                                    {t('auth.login.register_link')}
-                                </TextLink>
-                            </div>
-                        )}
                     </>
                 )}
             </Form>

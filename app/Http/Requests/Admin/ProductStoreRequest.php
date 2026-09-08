@@ -72,7 +72,7 @@ class ProductStoreRequest extends FormRequest
             'meta_keywords' => ['nullable', 'string', 'max:255'],
             'primary_image_id' => ['nullable', 'integer', 'exists:product_images,id'],
             'images' => ['nullable', 'array'],
-            'images.*' => ['image', 'max:2048'],
+            'images.*' => ['image', 'max:20480'],
         ];
     }
 
@@ -86,7 +86,7 @@ class ProductStoreRequest extends FormRequest
             'sku.unique' => 'SKU sudah digunakan.',
             'name.required' => 'Nama produk wajib diisi.',
             'images.*.image' => 'File harus berupa gambar.',
-            'images.*.max' => 'Ukuran gambar maksimal 2MB.',
+            'images.*.max' => 'Ukuran file gambar maksimal 20MB.',
         ];
     }
 }
