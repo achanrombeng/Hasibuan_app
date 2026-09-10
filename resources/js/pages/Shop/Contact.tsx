@@ -9,6 +9,8 @@ import {
     MessageCircle,
     Phone,
     Store,
+    User,
+    UserCheck,
 } from 'lucide-react';
 
 export default function Contact() {
@@ -16,42 +18,30 @@ export default function Contact() {
     const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
     const siteName = siteSettings?.site_name || 'Ronica';
 
-    // Build contact info from settings
-    const contactInfo = [
+    const marketing1Name = siteSettings?.marketing_1_name || siteSettings?.admin_1_name;
+    const marketing2Name = siteSettings?.marketing_2_name || siteSettings?.admin_2_name;
+    const marketing1Email = siteSettings?.marketing_1_email || siteSettings?.admin_1_email || siteSettings?.contact_email;
+    const marketing2Email = siteSettings?.marketing_2_email || siteSettings?.admin_2_email || siteSettings?.contact_email_2;
+    const marketing1Phone = siteSettings?.marketing_1_phone || siteSettings?.admin_1_phone || siteSettings?.contact_phone || siteSettings?.contact_whatsapp;
+    const marketing2Phone = siteSettings?.marketing_2_phone || siteSettings?.admin_2_phone;
+
+    // Build Admin 1 & Admin 2 contact cards
+    const adminCards = [
         {
-            icon: Building2,
-            title: t('shop.contact.factory_address'),
-            lines: siteSettings?.factory_address
-                ? [siteSettings.factory_address]
-                : ['Cirebon, Indonesia'],
-            type: 'text',
+            role: 'Marketing 1',
+            name: marketing1Name || 'Marketing 1',
+            phone: marketing1Phone,
+            email: marketing1Email,
+            icon: User,
+            badge: 'Utama',
         },
         {
-            icon: Store,
-            title: t('shop.contact.showroom_address'),
-            lines: siteSettings?.showroom_address
-                ? [siteSettings.showroom_address]
-                : ['Jepara, Indonesia'],
-            type: 'text',
-        },
-        {
-            icon: Phone,
-            title: t('shop.contact.info_phone'),
-            lines: siteSettings?.contact_phone
-                ? [siteSettings.contact_phone]
-                : [t('shop.contact.phone_not_set')],
-            type: 'phone',
-        },
-        {
-            icon: Mail,
-            title: t('shop.contact.info_email'),
-            lines: siteSettings?.contact_email
-                ? [
-                    siteSettings.contact_email,
-                    ...(siteSettings.contact_email_2 ? [siteSettings.contact_email_2] : []),
-                ]
-                : [t('shop.contact.email_not_set')],
-            type: 'email',
+            role: 'Marketing 2',
+            name: marketing2Name || 'Marketing 2',
+            phone: marketing2Phone,
+            email: marketing2Email,
+            icon: UserCheck,
+            badge: 'Alternatif',
         },
     ];
 
@@ -83,54 +73,96 @@ export default function Contact() {
                     </div>
 
                     <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-                        {/* Contact Info Cards */}
+                        {/* Admin 1 & Admin 2 Contact Cards */}
                         <div className="mb-16">
                             <h2 className="mb-8 font-serif text-2xl text-terra-900">
                                 {t('shop.contact.contact_info')}
                             </h2>
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                                {contactInfo.map((info, i) => (
+                            <div className="grid gap-6 sm:grid-cols-2">
+                                {adminCards.map((admin, i) => (
                                     <div
                                         key={i}
-                                        className="flex flex-col justify-between rounded-xl border border-terra-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+                                        className="flex flex-col justify-between rounded-2xl border border-terra-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
                                     >
                                         <div>
-                                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                                                <info.icon size={24} />
+                                            <div className="mb-4 flex items-center justify-between">
+                                                <div className="flex items-center gap-3.5">
+                                                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+                                                        <admin.icon size={24} />
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-xs font-semibold uppercase tracking-wider text-teal-700">
+                                                            {admin.role}
+                                                        </span>
+                                                        <h3 className="font-serif text-xl font-bold text-terra-900">
+                                                            {admin.name}
+                                                        </h3>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <h3 className="mb-2 font-serif text-lg font-bold text-terra-900">
-                                                {info.title}
-                                            </h3>
-                                            <div className="space-y-1 text-sm text-terra-600">
-                                                {info.lines.map((line, j) => {
-                                                    if (info.type === 'phone' && siteSettings?.contact_phone) {
-                                                        return (
+
+                                            <div className="space-y-3 pt-3 border-t border-terra-100/70">
+                                                {admin.phone ? (
+                                                    <div className="flex items-center gap-3 text-sm text-terra-600">
+                                                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-teal-700">
+                                                            <Phone size={15} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="block text-[11px] font-medium uppercase tracking-wider text-terra-500">
+                                                                {t('shop.contact.info_phone')}
+                                                            </span>
                                                             <a
-                                                                key={j}
-                                                                href={`tel:${line}`}
-                                                                className="block text-terra-600 transition-colors hover:text-teal-700 hover:underline font-medium"
+                                                                href={`tel:${admin.phone}`}
+                                                                className="font-medium text-terra-800 transition-colors hover:text-teal-700 hover:underline"
                                                             >
-                                                                {line}
+                                                                {admin.phone}
                                                             </a>
-                                                        );
-                                                    }
-                                                    if (info.type === 'email' && line !== t('shop.contact.email_not_set')) {
-                                                        return (
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-3 text-sm text-terra-400">
+                                                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-terra-400">
+                                                            <Phone size={15} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="block text-[11px] font-medium uppercase tracking-wider text-terra-400">
+                                                                {t('shop.contact.info_phone')}
+                                                            </span>
+                                                            <span className="italic">{t('shop.contact.phone_not_set')}</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {admin.email ? (
+                                                    <div className="flex items-center gap-3 text-sm text-terra-600">
+                                                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-teal-700">
+                                                            <Mail size={15} />
+                                                        </div>
+                                                        <div className="min-w-0 flex-1 truncate">
+                                                            <span className="block text-[11px] font-medium uppercase tracking-wider text-terra-500">
+                                                                {t('shop.contact.info_email')}
+                                                            </span>
                                                             <a
-                                                                key={j}
-                                                                href={`mailto:${line}`}
-                                                                className="block text-terra-600 transition-colors hover:text-teal-700 hover:underline font-medium"
+                                                                href={`mailto:${admin.email}`}
+                                                                className="font-medium text-terra-800 transition-colors hover:text-teal-700 hover:underline truncate block"
                                                             >
-                                                                {line}
+                                                                {admin.email}
                                                             </a>
-                                                        );
-                                                    }
-                                                    return (
-                                                        <p key={j} className="leading-relaxed">
-                                                            {line}
-                                                        </p>
-                                                    );
-                                                })}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-3 text-sm text-terra-400">
+                                                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-terra-400">
+                                                            <Mail size={15} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="block text-[11px] font-medium uppercase tracking-wider text-terra-400">
+                                                                {t('shop.contact.info_email')}
+                                                            </span>
+                                                            <span className="italic">{t('shop.contact.email_not_set')}</span>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

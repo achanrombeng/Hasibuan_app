@@ -30,7 +30,7 @@ class HomeController extends Controller
         // Active Root Categories (for storefront display)
         $allActiveCategories = Category::where('is_active', true)
             ->whereNull('parent_id')
-            ->withCount('products')
+            ->withProductsCount()
             ->orderBy('sort_order')
             ->orderBy('id')
             ->get();
@@ -39,6 +39,7 @@ class HomeController extends Controller
         $featuredCategories = Category::where('is_active', true)
             ->where('is_featured', true)
             ->whereNull('parent_id')
+            ->withProductsCount()
             ->orderBy('sort_order')
             ->orderBy('id')
             ->get();

@@ -35,7 +35,7 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
     Route::get('/catalogs', function () {
         $categories = Category::where('is_active', true)
             ->whereNull('parent_id')
-            ->withCount('products')
+            ->withProductsCount()
             ->orderBy('sort_order')
             ->get();
 
@@ -53,8 +53,8 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
     Route::get('/categories', function () {
         $categories = Category::where('is_active', true)
             ->whereNull('parent_id')
-            ->with('children')
-            ->withCount('products')
+            ->with(['children' => fn ($q) => $q->withProductsCount()->orderBy('sort_order')])
+            ->withProductsCount()
             ->orderBy('sort_order')
             ->get();
 

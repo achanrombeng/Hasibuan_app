@@ -29,6 +29,18 @@ class SettingsController extends Controller
                 'contact_email_2' => $settings['contact_email_2'] ?? '',
                 'contact_phone' => $settings['contact_phone'] ?? '',
                 'contact_whatsapp' => $settings['contact_whatsapp'] ?? '',
+                'marketing_1_name' => $settings['marketing_1_name'] ?? ($settings['admin_1_name'] ?? ''),
+                'marketing_1_email' => $settings['marketing_1_email'] ?? ($settings['admin_1_email'] ?? ($settings['contact_email'] ?? '')),
+                'marketing_1_phone' => $settings['marketing_1_phone'] ?? ($settings['admin_1_phone'] ?? ($settings['contact_whatsapp'] ?? ($settings['contact_phone'] ?? ''))),
+                'marketing_2_name' => $settings['marketing_2_name'] ?? ($settings['admin_2_name'] ?? ''),
+                'marketing_2_email' => $settings['marketing_2_email'] ?? ($settings['admin_2_email'] ?? ($settings['contact_email_2'] ?? '')),
+                'marketing_2_phone' => $settings['marketing_2_phone'] ?? ($settings['admin_2_phone'] ?? ''),
+                'admin_1_name' => $settings['marketing_1_name'] ?? ($settings['admin_1_name'] ?? ''),
+                'admin_1_email' => $settings['marketing_1_email'] ?? ($settings['admin_1_email'] ?? ($settings['contact_email'] ?? '')),
+                'admin_1_phone' => $settings['marketing_1_phone'] ?? ($settings['admin_1_phone'] ?? ($settings['contact_whatsapp'] ?? ($settings['contact_phone'] ?? ''))),
+                'admin_2_name' => $settings['marketing_2_name'] ?? ($settings['admin_2_name'] ?? ''),
+                'admin_2_email' => $settings['marketing_2_email'] ?? ($settings['admin_2_email'] ?? ($settings['contact_email_2'] ?? '')),
+                'admin_2_phone' => $settings['marketing_2_phone'] ?? ($settings['admin_2_phone'] ?? ''),
                 'factory_name' => $settings['factory_name'] ?? '',
                 'factory_address' => $settings['factory_address'] ?? '',
                 'showroom_name' => $settings['showroom_name'] ?? '',
@@ -57,8 +69,20 @@ class SettingsController extends Controller
             'site_description' => ['nullable', 'string', 'max:500'],
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_email_2' => ['nullable', 'email', 'max:255'],
-            'contact_phone' => ['nullable', 'string', 'max:20'],
-            'contact_whatsapp' => ['nullable', 'string', 'max:20'],
+            'contact_phone' => ['nullable', 'string', 'max:50'],
+            'contact_whatsapp' => ['nullable', 'string', 'max:50'],
+            'marketing_1_name' => ['nullable', 'string', 'max:255'],
+            'marketing_1_email' => ['nullable', 'email', 'max:255'],
+            'marketing_1_phone' => ['nullable', 'string', 'max:50'],
+            'marketing_2_name' => ['nullable', 'string', 'max:255'],
+            'marketing_2_email' => ['nullable', 'email', 'max:255'],
+            'marketing_2_phone' => ['nullable', 'string', 'max:50'],
+            'admin_1_name' => ['nullable', 'string', 'max:255'],
+            'admin_1_email' => ['nullable', 'email', 'max:255'],
+            'admin_1_phone' => ['nullable', 'string', 'max:50'],
+            'admin_2_name' => ['nullable', 'string', 'max:255'],
+            'admin_2_email' => ['nullable', 'email', 'max:255'],
+            'admin_2_phone' => ['nullable', 'string', 'max:50'],
             'factory_name' => ['nullable', 'string', 'max:255'],
             'factory_address' => ['nullable', 'string', 'max:500'],
             'showroom_name' => ['nullable', 'string', 'max:255'],
@@ -157,6 +181,54 @@ class SettingsController extends Controller
             $validated['catalog_docx_url'] = '/storage/'.$path;
         }
         unset($validated['catalog_docx_file']);
+
+        // Handle marketing_1 & admin_1 sync
+        $m1Name = $validated['marketing_1_name'] ?? ($validated['admin_1_name'] ?? null);
+        $m1Email = $validated['marketing_1_email'] ?? ($validated['admin_1_email'] ?? null);
+        $m1Phone = $validated['marketing_1_phone'] ?? ($validated['admin_1_phone'] ?? null);
+
+        if ($m1Name !== null) {
+            $validated['marketing_1_name'] = $m1Name;
+            $validated['admin_1_name'] = $m1Name;
+        }
+        if ($m1Email !== null) {
+            $validated['marketing_1_email'] = $m1Email;
+            $validated['admin_1_email'] = $m1Email;
+            if (empty($validated['contact_email'])) {
+                $validated['contact_email'] = $m1Email;
+            }
+        }
+        if ($m1Phone !== null) {
+            $validated['marketing_1_phone'] = $m1Phone;
+            $validated['admin_1_phone'] = $m1Phone;
+            if (empty($validated['contact_whatsapp'])) {
+                $validated['contact_whatsapp'] = $m1Phone;
+            }
+            if (empty($validated['contact_phone'])) {
+                $validated['contact_phone'] = $m1Phone;
+            }
+        }
+
+        // Handle marketing_2 & admin_2 sync
+        $m2Name = $validated['marketing_2_name'] ?? ($validated['admin_2_name'] ?? null);
+        $m2Email = $validated['marketing_2_email'] ?? ($validated['admin_2_email'] ?? null);
+        $m2Phone = $validated['marketing_2_phone'] ?? ($validated['admin_2_phone'] ?? null);
+
+        if ($m2Name !== null) {
+            $validated['marketing_2_name'] = $m2Name;
+            $validated['admin_2_name'] = $m2Name;
+        }
+        if ($m2Email !== null) {
+            $validated['marketing_2_email'] = $m2Email;
+            $validated['admin_2_email'] = $m2Email;
+            if (empty($validated['contact_email_2'])) {
+                $validated['contact_email_2'] = $m2Email;
+            }
+        }
+        if ($m2Phone !== null) {
+            $validated['marketing_2_phone'] = $m2Phone;
+            $validated['admin_2_phone'] = $m2Phone;
+        }
 
         foreach ($validated as $key => $value) {
             Setting::updateOrCreate(

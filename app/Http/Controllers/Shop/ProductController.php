@@ -24,7 +24,7 @@ class ProductController extends Controller
             ->withQueryString();
 
         $categories = Category::active()
-            ->withCount('products')
+            ->withProductsCount()
             ->ordered()
             ->get();
 
@@ -82,7 +82,8 @@ class ProductController extends Controller
 
         $categories = Category::active()
             ->root()
-            ->with('children')
+            ->with(['children' => fn ($q) => $q->withProductsCount()->ordered()])
+            ->withProductsCount()
             ->ordered()
             ->get();
 
@@ -103,7 +104,8 @@ class ProductController extends Controller
 
         $categories = Category::active()
             ->root()
-            ->with('children')
+            ->with(['children' => fn ($q) => $q->withProductsCount()->ordered()])
+            ->withProductsCount()
             ->ordered()
             ->get();
 
@@ -129,7 +131,8 @@ class ProductController extends Controller
 
         $categories = Category::active()
             ->root()
-            ->with('children')
+            ->with(['children' => fn ($q) => $q->withProductsCount()->ordered()])
+            ->withProductsCount()
             ->ordered()
             ->get();
 
@@ -154,7 +157,8 @@ class ProductController extends Controller
 
         $categories = Category::active()
             ->root()
-            ->with('children')
+            ->with(['children' => fn ($q) => $q->withProductsCount()->ordered()])
+            ->withProductsCount()
             ->ordered()
             ->get();
 

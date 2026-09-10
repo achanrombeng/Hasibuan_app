@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ProductStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Order;
@@ -18,7 +19,7 @@ class DashboardController extends Controller
     public function index(): Response
     {
         // Get statistics
-        $totalProducts = Product::count();
+        $totalProducts = Product::where('status', '!=', ProductStatus::DRAFT)->count();
         $totalCategories = Category::count();
         $activeBanners = PromoBanner::active()->count();
         $totalOrders = Order::count();

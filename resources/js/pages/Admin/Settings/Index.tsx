@@ -23,6 +23,9 @@ import {
   Store,
   Trash2,
   Upload,
+  User,
+  UserCheck,
+  Users,
   Youtube,
 } from 'lucide-react';
 import {
@@ -41,6 +44,18 @@ interface SettingsIndexProps {
     contact_email_2?: string;
     contact_phone: string;
     contact_whatsapp: string;
+    marketing_1_name?: string;
+    marketing_1_email?: string;
+    marketing_1_phone?: string;
+    marketing_2_name?: string;
+    marketing_2_email?: string;
+    marketing_2_phone?: string;
+    admin_1_name?: string;
+    admin_1_email?: string;
+    admin_1_phone?: string;
+    admin_2_name?: string;
+    admin_2_email?: string;
+    admin_2_phone?: string;
     factory_name?: string;
     factory_address?: string;
     showroom_name?: string;
@@ -105,6 +120,18 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
   const { data, setData, post, processing } = useForm({
     ...settings,
+    marketing_1_name: settings.marketing_1_name ?? settings.admin_1_name ?? '',
+    marketing_1_email: settings.marketing_1_email ?? settings.admin_1_email ?? settings.contact_email ?? '',
+    marketing_1_phone: settings.marketing_1_phone ?? settings.admin_1_phone ?? settings.contact_whatsapp ?? settings.contact_phone ?? '',
+    marketing_2_name: settings.marketing_2_name ?? settings.admin_2_name ?? '',
+    marketing_2_email: settings.marketing_2_email ?? settings.admin_2_email ?? settings.contact_email_2 ?? '',
+    marketing_2_phone: settings.marketing_2_phone ?? settings.admin_2_phone ?? '',
+    admin_1_name: settings.marketing_1_name ?? settings.admin_1_name ?? '',
+    admin_1_email: settings.marketing_1_email ?? settings.admin_1_email ?? settings.contact_email ?? '',
+    admin_1_phone: settings.marketing_1_phone ?? settings.admin_1_phone ?? settings.contact_whatsapp ?? settings.contact_phone ?? '',
+    admin_2_name: settings.marketing_2_name ?? settings.admin_2_name ?? '',
+    admin_2_email: settings.marketing_2_email ?? settings.admin_2_email ?? settings.contact_email_2 ?? '',
+    admin_2_phone: settings.marketing_2_phone ?? settings.admin_2_phone ?? '',
     social_links: JSON.stringify(initialSocialLinks),
     catalog_title: settings.catalog_title || 'Ronica Product Catalogue 2026',
     catalog_pdf_file: null as File | null,
@@ -328,168 +355,315 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-neutral-900">
-                  Contact Information
+                  Contact Information (Marketing)
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  How customers reach you
+                  Manage marketing contact persons, email, WhatsApp, and showroom / factory locations
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Email 1
-                </label>
-                <div className="relative">
-                  <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="email"
-                    value={data.contact_email}
-                    onChange={(e) => setData('contact_email', e.target.value)}
-                    placeholder="info@ronica.com.tr"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
+
+            {/* Admin 1 & Admin 2 Options */}
+            <div className="mb-8 space-y-6">
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {/* Admin 1 Card */}
+                <div className="rounded-xl border border-teal-200 bg-teal-50/30 p-5 transition-all hover:border-teal-300">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600 text-white shadow-xs">
+                        <User className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-neutral-900">
+                          Admin 1 (Utama / Primary)
+                        </h3>
+                        <p className="text-[11px] text-neutral-500">
+                          Kontak Admin 1 &amp; customer service utama
+                        </p>
+                      </div>
+                    </div>
+                    <span className="inline-flex items-center rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-semibold text-teal-800">
+                      Utama
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Nama Admin 1
+                      </label>
+                      <div className="relative">
+                        <User className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.admin_1_name ?? data.marketing_1_name ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prev) => ({
+                              ...prev,
+                              marketing_1_name: val,
+                              admin_1_name: val,
+                            }));
+                          }}
+                          placeholder="cth: Mr. Halit"
+                          className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Email Admin 1
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="email"
+                          value={data.admin_1_email ?? data.marketing_1_email ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prev) => ({
+                              ...prev,
+                              marketing_1_email: val,
+                              admin_1_email: val,
+                              contact_email: val,
+                            }));
+                          }}
+                          placeholder="info@ronica.com.tr"
+                          className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Kontak / WhatsApp Admin 1
+                      </label>
+                      <div className="relative">
+                        <MessageCircle className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.admin_1_phone ?? data.marketing_1_phone ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prev) => ({
+                              ...prev,
+                              marketing_1_phone: val,
+                              admin_1_phone: val,
+                              contact_whatsapp: val,
+                              contact_phone: val,
+                            }));
+                          }}
+                          placeholder="+61415266787 / 6281234567890"
+                          className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                      <p className="mt-1 text-[11px] text-neutral-500">
+                        Nomor telepon / WhatsApp utama Admin 1
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Admin 2 Card */}
+                <div className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-5 transition-all hover:border-neutral-300">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 text-white shadow-xs">
+                        <UserCheck className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold text-neutral-900">
+                          Admin 2 (Cadangan / Opsional)
+                        </h3>
+                        <p className="text-[11px] text-neutral-500">
+                          Kontak Admin 2 atau divisi customer service alternatif
+                        </p>
+                      </div>
+                    </div>
+                    <span className="inline-flex items-center rounded-full bg-neutral-200 px-2.5 py-0.5 text-xs font-medium text-neutral-700">
+                      Opsional
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Nama Admin 2
+                      </label>
+                      <div className="relative">
+                        <User className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.admin_2_name ?? data.marketing_2_name ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prev) => ({
+                              ...prev,
+                              marketing_2_name: val,
+                              admin_2_name: val,
+                            }));
+                          }}
+                          placeholder="cth: Admin 2 / Support"
+                          className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Email Admin 2
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="email"
+                          value={data.admin_2_email ?? data.marketing_2_email ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prev) => ({
+                              ...prev,
+                              marketing_2_email: val,
+                              admin_2_email: val,
+                              contact_email_2: val,
+                            }));
+                          }}
+                          placeholder="sales@ronica.com.tr"
+                          className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Kontak / WhatsApp Admin 2
+                      </label>
+                      <div className="relative">
+                        <MessageCircle className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.admin_2_phone ?? data.marketing_2_phone ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setData((prev) => ({
+                              ...prev,
+                              marketing_2_phone: val,
+                              admin_2_phone: val,
+                            }));
+                          }}
+                          placeholder="6289876543210"
+                          className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                      <p className="mt-1 text-[11px] text-neutral-500">
+                        Nomor kontak alternatif Admin 2
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Email 2 (Optional)
-                </label>
-                <div className="relative">
-                  <Mail className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="email"
-                    value={data.contact_email_2 ?? ''}
-                    onChange={(e) => setData('contact_email_2', e.target.value)}
-                    placeholder="sales@ronica.com.tr"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                </div>
+            </div>
+
+            {/* Lokasi Pabrik & Showroom */}
+            <div className="border-t border-neutral-200/80 pt-6">
+              <div className="mb-4 flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-teal-600" />
+                <h3 className="text-sm font-semibold text-neutral-900">
+                  Lokasi Pabrik &amp; Showroom (Factory &amp; Showroom)
+                </h3>
               </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <Phone className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Factory Name
+                  </label>
+                  <div className="relative">
+                    <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={data.factory_name ?? ''}
+                      onChange={(e) => setData('factory_name', e.target.value)}
+                      placeholder="PT. Eren Outdoor Furniture"
+                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Factory Address
+                  </label>
+                  <div className="relative">
+                    <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={data.factory_address ?? ''}
+                      onChange={(e) => setData('factory_address', e.target.value)}
+                      placeholder="Cirebon, Indonesia"
+                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Showroom Name
+                  </label>
+                  <div className="relative">
+                    <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={data.showroom_name ?? ''}
+                      onChange={(e) => setData('showroom_name', e.target.value)}
+                      placeholder="Ronica Furniture"
+                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Showroom Address
+                  </label>
+                  <div className="relative">
+                    <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                    <input
+                      type="text"
+                      value={data.showroom_address ?? ''}
+                      onChange={(e) => setData('showroom_address', e.target.value)}
+                      placeholder="Jepara, Indonesia"
+                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Showroom Google Maps Embed URL
+                  </label>
                   <input
                     type="text"
-                    value={data.contact_phone}
-                    onChange={(e) => setData('contact_phone', e.target.value)}
-                    placeholder="(021) 1234-5678"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    value={data.maps_showroom_url ?? ''}
+                    onChange={(e) => setData('maps_showroom_url', e.target.value)}
+                    placeholder="https://www.google.com/maps/embed?pb=..."
+                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   />
+                  <p className="mt-1 text-xs text-neutral-500">
+                    Google Maps iframe embed URL for Showroom location
+                  </p>
                 </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  WhatsApp Number
-                </label>
-                <div className="relative">
-                  <MessageCircle className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
+                    Factory Google Maps Embed URL (Optional)
+                  </label>
                   <input
                     type="text"
-                    value={data.contact_whatsapp}
-                    onChange={(e) =>
-                      setData('contact_whatsapp', e.target.value)
-                    }
-                    placeholder="6281234567890"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    value={data.maps_factory_url ?? ''}
+                    onChange={(e) => setData('maps_factory_url', e.target.value)}
+                    placeholder="https://www.google.com/maps/embed?pb=..."
+                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   />
+                  <p className="mt-1 text-xs text-neutral-500">
+                    Google Maps iframe embed URL for Factory location
+                  </p>
                 </div>
-                <p className="mt-2 text-xs text-neutral-500">
-                  Without + prefix (e.g. 6281234567890)
-                </p>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Factory Name
-                </label>
-                <div className="relative">
-                  <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={data.factory_name ?? ''}
-                    onChange={(e) => setData('factory_name', e.target.value)}
-                    placeholder="PT. Eren Outdoor Furniture"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Factory Address
-                </label>
-                <div className="relative">
-                  <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={data.factory_address ?? ''}
-                    onChange={(e) => setData('factory_address', e.target.value)}
-                    placeholder="Cirebon, Indonesia"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Showroom Name
-                </label>
-                <div className="relative">
-                  <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={data.showroom_name ?? ''}
-                    onChange={(e) => setData('showroom_name', e.target.value)}
-                    placeholder="Ronica Furniture"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Showroom Address
-                </label>
-                <div className="relative">
-                  <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="text"
-                    value={data.showroom_address ?? ''}
-                    onChange={(e) => setData('showroom_address', e.target.value)}
-                    placeholder="Jepara, Indonesia"
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                </div>
-              </div>
-              <div className="md:col-span-2">
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Showroom Google Maps Embed URL
-                </label>
-                <input
-                  type="text"
-                  value={data.maps_showroom_url ?? ''}
-                  onChange={(e) => setData('maps_showroom_url', e.target.value)}
-                  placeholder="https://www.google.com/maps/embed?pb=..."
-                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                />
-                <p className="mt-1 text-xs text-neutral-500">
-                  Google Maps iframe embed URL for Showroom location
-                </p>
-              </div>
-              <div className="md:col-span-2">
-                <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Factory Google Maps Embed URL (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={data.maps_factory_url ?? ''}
-                  onChange={(e) => setData('maps_factory_url', e.target.value)}
-                  placeholder="https://www.google.com/maps/embed?pb=..."
-                  className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                />
-                <p className="mt-1 text-xs text-neutral-500">
-                  Google Maps iframe embed URL for Factory location
-                </p>
               </div>
             </div>
           </div>

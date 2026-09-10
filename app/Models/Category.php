@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -155,6 +156,27 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get non-draft products in this category.
+     */
+    public function publishedProducts(): HasMany
+    {
+        return $this->hasMany(Product::class)->where('status', '!=', ProductStatus::DRAFT);
+    }
+
+    /**
+     * Scope to eagerly count non-draft products.
+     *
+     * @param  Builder<Category>  $query
+     * @return Builder<Category>
+     */
+    public function scopeWithProductsCount(Builder $query): Builder
+    {
+        return $query->withCount([
+            'products' => fn ($q) => $q->where('status', '!=', ProductStatus::DRAFT),
+        ]);
     }
 
     /**

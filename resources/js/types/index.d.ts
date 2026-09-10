@@ -37,6 +37,18 @@ export interface SiteSettings {
   contact_email_2?: string;
   contact_phone: string;
   contact_whatsapp: string;
+  admin_1_name?: string;
+  admin_1_email?: string;
+  admin_1_phone?: string;
+  admin_2_name?: string;
+  admin_2_email?: string;
+  admin_2_phone?: string;
+  marketing_1_name?: string;
+  marketing_1_email?: string;
+  marketing_1_phone?: string;
+  marketing_2_name?: string;
+  marketing_2_email?: string;
+  marketing_2_phone?: string;
   factory_name?: string;
   factory_address?: string;
   showroom_name?: string;
