@@ -6,7 +6,6 @@ import { usePage } from '@inertiajs/react';
 import {
     Building2,
     Mail,
-    MessageCircle,
     Phone,
     Store,
     User,
@@ -59,14 +58,14 @@ export default function Contact() {
             />
             <div className="bg-noise" />
             <ShopLayout>
-                <main className="min-h-screen bg-sand-50 pb-20">
+                <main className="min-h-screen bg-sand-50 pb-16">
                     {/* Hero */}
-                    <div className="mb-16 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
+                    <div className="mb-10 bg-gradient-to-r from-teal-600 to-teal-700 py-12 text-white">
                         <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-                            <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
+                            <h1 className="mb-3 font-serif text-4xl font-bold md:text-5xl">
                                 {t('shop.contact.hero_title')}
                             </h1>
-                            <p className="text-xl opacity-90">
+                            <p className="text-lg opacity-90">
                                 {t('shop.contact.hero_subtitle')}
                             </p>
                         </div>
@@ -74,8 +73,8 @@ export default function Contact() {
 
                     <div className="mx-auto max-w-[1400px] px-6 md:px-12">
                         {/* Admin 1 & Admin 2 Contact Cards */}
-                        <div className="mb-16">
-                            <h2 className="mb-8 font-serif text-2xl text-terra-900">
+                        <div className="mb-12">
+                            <h2 className="mb-6 font-serif text-2xl font-bold text-terra-900">
                                 {t('shop.contact.contact_info')}
                             </h2>
                             <div className="grid gap-6 sm:grid-cols-2">
@@ -170,33 +169,10 @@ export default function Contact() {
                             </div>
                         </div>
 
-                        {/* Quick WhatsApp Banner */}
-                        {siteSettings?.contact_whatsapp && (
-                            <div className="mb-16 flex flex-col items-center justify-between gap-6 rounded-2xl bg-gradient-to-r from-teal-800 to-teal-700 p-8 text-white md:flex-row">
-                                <div>
-                                    <h3 className="mb-1 font-serif text-2xl font-bold">
-                                        {t('shop.contact.quick_response_title')}
-                                    </h3>
-                                    <p className="text-sm opacity-90">
-                                        {t('shop.contact.quick_response_desc')}
-                                    </p>
-                                </div>
-                                <a
-                                    href={`https://wa.me/${siteSettings.contact_whatsapp}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex flex-shrink-0 items-center gap-3.5 rounded-xl bg-white px-8 py-3.5 font-medium text-teal-800 shadow-sm transition-transform hover:scale-105 active:scale-95"
-                                >
-                                    <MessageCircle size={22} className="text-emerald-600" />
-                                    <span>{t('shop.contact.chat_whatsapp')}</span>
-                                </a>
-                            </div>
-                        )}
-
                         {/* Map Section - Split into 2 columns (Left: Showroom, Right: Factory) */}
                         <div>
-                            <div className="mb-8">
-                                <h2 className="font-serif text-2xl text-terra-900">
+                            <div className="mb-6">
+                                <h2 className="font-serif text-2xl font-bold text-terra-900">
                                     {t('shop.contact.our_location')}
                                 </h2>
                             </div>
