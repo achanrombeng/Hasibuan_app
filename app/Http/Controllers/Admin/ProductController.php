@@ -52,10 +52,17 @@ class ProductController extends Controller implements HasMiddleware
 
         $categories = Category::where('is_active', true)->orderBy('name')->get();
 
+        $stats = [
+            'total' => Product::count(),
+            'active' => Product::where('status', ProductStatus::ACTIVE)->count(),
+            'draft' => Product::where('status', ProductStatus::DRAFT)->count(),
+        ];
+
         return Inertia::render('Admin/Products/Index', [
             'products' => ProductResource::collection($products),
             'categories' => CategoryResource::collection($categories),
             'filters' => $request->only(['filter', 'sort']),
+            'stats' => $stats,
             'statuses' => [
                 ['value' => 'active', 'name' => 'Active'],
                 ['value' => 'draft', 'name' => 'Draft'],
@@ -96,6 +103,11 @@ class ProductController extends Controller implements HasMiddleware
         }
 
         $action->execute($request->validated(), $images);
+
+        $returnUrl = $request->input('return_url');
+        if ($returnUrl && is_string($returnUrl) && str_starts_with($returnUrl, '/admin/products')) {
+            return redirect($returnUrl)->with('success', __('messages.product_created'));
+        }
 
         return redirect()
             ->route('admin.products.index')
@@ -159,6 +171,11 @@ class ProductController extends Controller implements HasMiddleware
 
         $action->execute($product, $request->validated(), $newImages, $deleteImageIds);
 
+        $returnUrl = $request->input('return_url');
+        if ($returnUrl && is_string($returnUrl) && str_starts_with($returnUrl, '/admin/products')) {
+            return redirect($returnUrl)->with('success', __('messages.product_updated'));
+        }
+
         return redirect()
             ->route('admin.products.index')
             ->with('success', __('messages.product_updated'));
@@ -168,9 +185,7 @@ class ProductController extends Controller implements HasMiddleware
     {
         $action->execute($product);
 
-        return redirect()
-            ->route('admin.products.index')
-            ->with('success', __('messages.product_deleted'));
+        return back(fallback: route('admin.products.index'))->with('success', __('messages.product_deleted'));
     }
 
     public function extractFromImage(

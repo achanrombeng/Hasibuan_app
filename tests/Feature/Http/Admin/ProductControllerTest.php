@@ -184,6 +184,31 @@ describe('Admin ProductController', function () {
         expect($product->fresh()->status)->toBe(ProductStatus::DRAFT);
     });
 
+    it('updates product and redirects to return_url if provided', function () {
+        Storage::fake('public');
+        $admin = createAdmin();
+        $admin->givePermissionTo('edit products');
+        $product = Product::factory()->create(['name' => 'Old Name', 'status' => ProductStatus::DRAFT]);
+        $category = Category::factory()->create();
+
+        $returnUrl = '/admin/products?filter%5Bname%5D=kursi&page=2';
+
+        $response = $this->actingAs($admin)->put(route('admin.products.update', $product), [
+            'name' => 'Updated Name',
+            'sku' => $product->sku,
+            'description' => 'Updated description',
+            'category_id' => $category->id,
+            'status' => ProductStatus::DRAFT->value,
+            'track_stock' => $product->track_stock,
+            'return_url' => $returnUrl,
+        ]);
+
+        $response->assertRedirect($returnUrl)
+            ->assertSessionHas('success');
+
+        expect($product->fresh()->name)->toBe('Updated Name');
+    });
+
     it('deletes product', function () {
         $admin = createAdmin();
         $admin->givePermissionTo('delete products');

@@ -73,6 +73,7 @@ class ProductStoreRequest extends FormRequest
             'primary_image_id' => ['nullable', 'integer', 'exists:product_images,id'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'max:20480'],
+            'return_url' => ['nullable', 'string'],
         ];
     }
 

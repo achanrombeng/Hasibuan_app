@@ -82,6 +82,7 @@ class ProductUpdateRequest extends FormRequest
             'images.*' => ['image', 'max:20480'],
             'delete_images' => ['nullable', 'array'],
             'delete_images.*' => ['integer'],
+            'return_url' => ['nullable', 'string'],
         ];
     }
 

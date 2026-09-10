@@ -82,6 +82,11 @@ export default function EditProduct({
     statuses,
     allProducts = [],
 }: EditProductProps) {
+    const returnUrl = typeof window !== 'undefined'
+        ? (new URLSearchParams(window.location.search).get('return_to') ||
+           (sessionStorage.getItem('admin_products_last_query') ? `/admin/products${sessionStorage.getItem('admin_products_last_query')}` : '/admin/products'))
+        : '/admin/products';
+
     const [existingImages, setExistingImages] = useState<ProductImage[]>(
         product.images || [],
     );
@@ -362,11 +367,12 @@ export default function EditProduct({
             formData.append('delete_images[]', String(id));
         });
 
+        if (returnUrl) {
+            formData.append('return_url', returnUrl);
+        }
+
         router.post(`/admin/products/${product.id}`, formData, {
             forceFormData: true,
-            onSuccess: () => {
-                router.visit('/admin/products');
-            },
             onError: (errs) => {
                 setIsSubmitting(false);
                 setShowConfirmDialog(false);
@@ -390,7 +396,7 @@ export default function EditProduct({
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Products', href: '/admin/products' },
+                { title: 'Products', href: returnUrl },
                 {
                     title: 'Edit Product',
                     href: `/admin/products/${product.id}/edit`,
@@ -403,7 +409,7 @@ export default function EditProduct({
                 {/* Header */}
                 <div className="flex items-center gap-4">
                     <Link
-                        href="/admin/products"
+                        href={returnUrl}
                         className="rounded-lg p-2 text-terra-600 transition-colors hover:bg-terra-100"
                     >
                         <ArrowLeft className="h-5 w-5" />
@@ -985,7 +991,7 @@ export default function EditProduct({
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
-                                href="/admin/products"
+                                href={returnUrl}
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
                                 Cancel

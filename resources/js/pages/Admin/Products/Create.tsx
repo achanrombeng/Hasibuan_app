@@ -64,6 +64,11 @@ export default function CreateProduct({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const autoExtractAfterUploadRef = useRef(false);
 
+    const returnUrl = typeof window !== 'undefined'
+        ? (new URLSearchParams(window.location.search).get('return_to') ||
+           (sessionStorage.getItem('admin_products_last_query') ? `/admin/products${sessionStorage.getItem('admin_products_last_query')}` : '/admin/products'))
+        : '/admin/products';
+
     const { data, setData, processing, errors } = useForm({
         name: '',
         sku: '',
@@ -411,6 +416,10 @@ export default function CreateProduct({
             formData.append('images[]', img.file);
         });
 
+        if (returnUrl) {
+            formData.append('return_url', returnUrl);
+        }
+
         router.post('/admin/products', formData, {
             forceFormData: true,
             onError: (errors) => {
@@ -431,7 +440,7 @@ export default function CreateProduct({
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Products', href: '/admin/products' },
+                { title: 'Products', href: returnUrl },
                 { title: 'Add Product', href: '/admin/products/create' },
             ]}
         >
@@ -441,7 +450,7 @@ export default function CreateProduct({
                 {/* Header */}
                 <div className="flex items-center gap-4">
                     <Link
-                        href="/admin/products"
+                        href={returnUrl}
                         className="rounded-lg p-2 text-terra-600 transition-colors hover:bg-terra-100"
                     >
                         <ArrowLeft className="h-5 w-5" />
@@ -972,7 +981,7 @@ export default function CreateProduct({
                         </span>
                         <div className="ml-auto flex items-center gap-3">
                             <Link
-                                href="/admin/products"
+                                href={returnUrl}
                                 className="rounded-xl border border-neutral-200 bg-white px-6 py-3 font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                             >
                                 Cancel

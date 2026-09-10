@@ -11,10 +11,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import AdminLayout from '@/layouts/admin/admin-layout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
   AlertTriangle,
+  CheckCircle2,
   Eye,
+  FileEdit,
   FileSpreadsheet,
   Filter,
   Images,
@@ -67,11 +69,17 @@ interface ProductsIndexProps {
       }>;
     };
   };
+  stats?: {
+    total: number;
+    active: number;
+    draft: number;
+  };
   filters?: { filter?: Record<string, string> };
 }
 
 export default function ProductsIndex({
   products,
+  stats,
   filters,
   categories,
   statuses,
@@ -81,13 +89,16 @@ export default function ProductsIndex({
   statuses: { value: string; name: string }[];
   saleTypes: { value: string; name: string }[];
 }) {
+  const { url } = usePage();
+
   // Safely get filter values
   const filterObj =
     filters?.filter && typeof filters.filter === 'object' ? filters.filter : {};
 
-  const [search, setSearch] = useState(
-    filterObj.search || filterObj.name || filterObj.sku || '',
-  );
+  const currentSearchTerm =
+    filterObj.search || filterObj.name || filterObj.sku || '';
+
+  const [search, setSearch] = useState(currentSearchTerm);
   const [category, setCategory] = useState(filterObj.category_id || 'all');
   const [status, setStatus] = useState(filterObj.status || 'all');
   const [isFeatured, setIsFeatured] = useState(filterObj.is_featured || 'all');
@@ -105,7 +116,41 @@ export default function ProductsIndex({
   const productData = products.data;
 
   const isInitialMount = useRef(true);
+  const lastSentSearchRef = useRef(currentSearchTerm);
   const [isSearching, setIsSearching] = useState(false);
+
+  // Sync state if filters prop changes from external navigation (e.g. back/forward or return from edit)
+  useEffect(() => {
+    const newSearch =
+      filterObj.search || filterObj.name || filterObj.sku || '';
+    const newCategory = filterObj.category_id || 'all';
+    const newStatus = filterObj.status || 'all';
+    const newFeatured = filterObj.is_featured || 'all';
+
+    if (newSearch !== search) {
+      lastSentSearchRef.current = newSearch;
+      setSearch(newSearch);
+    }
+    if (newCategory !== category) {
+      setCategory(newCategory);
+    }
+    if (newStatus !== status) {
+      setStatus(newStatus);
+    }
+    if (newFeatured !== isFeatured) {
+      setIsFeatured(newFeatured);
+    }
+  }, [filters]);
+
+  // Keep last active query in sessionStorage so Show/Edit back buttons can restore exact state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const queryIdx = url.indexOf('?');
+      if (queryIdx !== -1) {
+        sessionStorage.setItem('admin_products_last_query', url.substring(queryIdx));
+      }
+    }
+  }, [url]);
 
   // Auto sync search input with debounce only when user types
   useEffect(() => {
@@ -114,8 +159,13 @@ export default function ProductsIndex({
       return;
     }
 
+    if (search === lastSentSearchRef.current) {
+      return;
+    }
+
     setIsSearching(true);
     const timer = setTimeout(() => {
+      lastSentSearchRef.current = search;
       const params: Record<string, string> = {};
       if (search.trim()) params['filter[name]'] = search.trim();
       if (category && category !== 'all')
@@ -123,6 +173,13 @@ export default function ProductsIndex({
       if (status && status !== 'all') params['filter[status]'] = status;
       if (isFeatured && isFeatured !== 'all')
         params['filter[is_featured]'] = isFeatured;
+
+      const currentParams =
+        typeof window !== 'undefined'
+          ? new URLSearchParams(window.location.search)
+          : null;
+      const perPage = currentParams?.get('per_page');
+      if (perPage) params['per_page'] = perPage;
 
       router.get('/admin/products', params, {
         preserveState: true,
@@ -140,6 +197,7 @@ export default function ProductsIndex({
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setIsSearching(true);
+    lastSentSearchRef.current = search;
 
     const params: Record<string, string> = {};
     if (search.trim()) params['filter[name]'] = search.trim();
@@ -148,6 +206,13 @@ export default function ProductsIndex({
     if (status && status !== 'all') params['filter[status]'] = status;
     if (isFeatured && isFeatured !== 'all')
       params['filter[is_featured]'] = isFeatured;
+
+    const currentParams =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : null;
+    const perPage = currentParams?.get('per_page');
+    if (perPage) params['per_page'] = perPage;
 
     router.get('/admin/products', params, {
       preserveState: true,
@@ -168,6 +233,13 @@ export default function ProductsIndex({
     if (isFeatured && isFeatured !== 'all')
       params['filter[is_featured]'] = isFeatured;
 
+    const currentParams =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : null;
+    const perPage = currentParams?.get('per_page');
+    if (perPage) params['per_page'] = perPage;
+
     router.get('/admin/products', params, {
       preserveState: true,
       preserveScroll: true,
@@ -187,6 +259,13 @@ export default function ProductsIndex({
     if (isFeatured && isFeatured !== 'all')
       params['filter[is_featured]'] = isFeatured;
 
+    const currentParams =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : null;
+    const perPage = currentParams?.get('per_page');
+    if (perPage) params['per_page'] = perPage;
+
     router.get('/admin/products', params, {
       preserveState: true,
       preserveScroll: true,
@@ -197,13 +276,37 @@ export default function ProductsIndex({
 
   const handleClearSearch = () => {
     setSearch('');
+    lastSentSearchRef.current = '';
+    const params: Record<string, string> = {};
+    if (category && category !== 'all')
+      params['filter[category_id]'] = category;
+    if (status && status !== 'all') params['filter[status]'] = status;
+    if (isFeatured && isFeatured !== 'all')
+      params['filter[is_featured]'] = isFeatured;
+
+    const currentParams =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search)
+        : null;
+    const perPage = currentParams?.get('per_page');
+    if (perPage) params['per_page'] = perPage;
+
+    router.get('/admin/products', params, {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    });
   };
 
   const handleReset = () => {
     setSearch('');
+    lastSentSearchRef.current = '';
     setCategory('all');
     setStatus('all');
     setIsFeatured('all');
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('admin_products_last_query');
+    }
     router.get('/admin/products', {}, { preserveState: true, replace: true });
   };
 
@@ -215,6 +318,8 @@ export default function ProductsIndex({
     if (productToDelete) {
       setIsDeleting(true);
       router.delete(`/admin/products/${productToDelete.id}`, {
+        preserveScroll: true,
+        preserveState: true,
         onFinish: () => {
           setIsDeleting(false);
           setProductToDelete(null);
@@ -270,12 +375,117 @@ export default function ProductsIndex({
                 <span>Import Excel</span>
               </button>
               <Link
-                href="/admin/products/create"
+                href={`/admin/products/create?return_to=${encodeURIComponent(url)}`}
                 className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-teal-700"
               >
                 <Plus className="h-5 w-5" /> Add Product
               </Link>
             </div>
+          </div>
+
+          {/* Stats Cards: Total, Active, Draft */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+            {/* Total Product */}
+            <button
+              type="button"
+              onClick={() => handleStatusChange('all')}
+              className={`group flex items-center justify-between rounded-2xl border p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md ${
+                status === 'all'
+                  ? 'border-wood/50 bg-sand-50/80 ring-2 ring-wood/15'
+                  : 'border-terra-100 bg-white hover:border-terra-200'
+              }`}
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-wood/10 text-wood transition-transform group-hover:scale-105">
+                  <Package className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium tracking-wider text-terra-500 uppercase">
+                    Total Product
+                  </p>
+                  <p className="text-2xl font-bold text-terra-900">
+                    {stats?.total ?? products.meta.total}
+                  </p>
+                </div>
+              </div>
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                  status === 'all'
+                    ? 'bg-wood text-white'
+                    : 'bg-sand-100 text-terra-600 group-hover:bg-sand-200'
+                }`}
+              >
+                Semua
+              </span>
+            </button>
+
+            {/* Active Product */}
+            <button
+              type="button"
+              onClick={() => handleStatusChange('active')}
+              className={`group flex items-center justify-between rounded-2xl border p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md ${
+                status === 'active'
+                  ? 'border-emerald-500/50 bg-emerald-50/70 ring-2 ring-emerald-500/15'
+                  : 'border-terra-100 bg-white hover:border-terra-200'
+              }`}
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 transition-transform group-hover:scale-105">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium tracking-wider text-terra-500 uppercase">
+                    Active Product
+                  </p>
+                  <p className="text-2xl font-bold text-emerald-700">
+                    {stats?.active ?? 0}
+                  </p>
+                </div>
+              </div>
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                  status === 'active'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-emerald-100 text-emerald-700 group-hover:bg-emerald-200'
+                }`}
+              >
+                Active
+              </span>
+            </button>
+
+            {/* Draft Product */}
+            <button
+              type="button"
+              onClick={() => handleStatusChange('draft')}
+              className={`group flex items-center justify-between rounded-2xl border p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md ${
+                status === 'draft'
+                  ? 'border-amber-500/50 bg-amber-50/70 ring-2 ring-amber-500/15'
+                  : 'border-terra-100 bg-white hover:border-terra-200'
+              }`}
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700 transition-transform group-hover:scale-105">
+                  <FileEdit className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium tracking-wider text-terra-500 uppercase">
+                    Draft Product
+                  </p>
+                  <p className="text-2xl font-bold text-amber-700">
+                    {stats?.draft ?? 0}
+                  </p>
+                </div>
+              </div>
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                  status === 'draft'
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-amber-100 text-amber-700 group-hover:bg-amber-200'
+                }`}
+              >
+                Draft
+              </span>
+            </button>
           </div>
 
           {/* Filters */}
@@ -456,14 +666,14 @@ export default function ProductsIndex({
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <Link
-                            href={`/admin/products/${product.id}`}
+                            href={`/admin/products/${product.id}?return_to=${encodeURIComponent(url)}`}
                             className="rounded-lg p-2 text-terra-500 transition-colors hover:bg-terra-100"
                             title="Lihat"
                           >
                             <Eye className="h-4 w-4" />
                           </Link>
                           <Link
-                            href={`/admin/products/${product.id}/edit`}
+                            href={`/admin/products/${product.id}/edit?return_to=${encodeURIComponent(url)}`}
                             className="rounded-lg p-2 text-terra-500 transition-colors hover:bg-terra-100"
                             title="Edit"
                           >

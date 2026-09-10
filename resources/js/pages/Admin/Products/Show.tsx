@@ -54,6 +54,11 @@ interface ShowProductProps {
 
 
 export default function ShowProduct({ product }: ShowProductProps) {
+    const returnUrl = typeof window !== 'undefined'
+        ? (new URLSearchParams(window.location.search).get('return_to') ||
+           (sessionStorage.getItem('admin_products_last_query') ? `/admin/products${sessionStorage.getItem('admin_products_last_query')}` : '/admin/products'))
+        : '/admin/products';
+
     const specEntries = Array.isArray(product.specifications)
         ? product.specifications
               .map((item: any) =>
@@ -75,7 +80,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
     return (
         <AdminLayout
             breadcrumbs={[
-                { title: 'Products', href: '/admin/products' },
+                { title: 'Products', href: returnUrl },
                 {
                     title: product.name,
                     href: `/admin/products/${product.id}`,
@@ -89,7 +94,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/admin/products"
+                            href={returnUrl}
                             className="rounded-lg p-2 text-terra-600 transition-colors hover:bg-terra-100"
                         >
                             <ArrowLeft className="h-5 w-5" />
@@ -104,7 +109,7 @@ export default function ShowProduct({ product }: ShowProductProps) {
                         </div>
                     </div>
                     <Link
-                        href={`/admin/products/${product.id}/edit`}
+                        href={`/admin/products/${product.id}/edit?return_to=${encodeURIComponent(returnUrl)}`}
                         className="inline-flex items-center gap-2 rounded-xl bg-terra-900 px-4 py-2.5 font-medium text-white transition-all hover:bg-wood-dark"
                     >
                         <Pencil className="h-4 w-4" />
