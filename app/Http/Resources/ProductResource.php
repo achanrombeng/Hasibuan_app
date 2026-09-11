@@ -58,6 +58,9 @@ class ProductResource extends JsonResource
             'images' => ($this->relationLoaded('images') || $this->relationLoaded('linkedProducts'))
                 ? ProductImageResource::collection($this->effective_images)->resolve()
                 : [],
+            'images_count' => ($this->relationLoaded('images') || $this->relationLoaded('linkedProducts'))
+                ? $this->effective_images->count()
+                : ($this->images_count ?? $this->images()->count()),
             'primary_image' => ($this->relationLoaded('images') || $this->relationLoaded('linkedProducts')) && $this->primary_image
                 ? (new ProductImageResource($this->primary_image))->resolve()
                 : null,

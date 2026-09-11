@@ -19,6 +19,7 @@ import {
   FileEdit,
   FileSpreadsheet,
   Filter,
+  Image as ImageIcon,
   Images,
   Loader2,
   Package,
@@ -39,6 +40,7 @@ interface Product {
   category: { id: number; name: string } | null;
   primary_image: { id: number; image_url: string } | null;
   images: Array<{ id: number; image_url: string }>;
+  images_count?: number;
   created_at: string;
 }
 
@@ -341,6 +343,23 @@ export default function ProductsIndex({
     }
   };
 
+  const getStatusLabel = (status: { value: string; label: string }) => {
+    switch (status.value) {
+      case 'active':
+        return 'Active';
+      case 'draft':
+        return 'Draft';
+      case 'inactive':
+        return 'Inactive';
+      case 'out_of_stock':
+        return 'Out of Stock';
+      case 'discontinued':
+        return 'Discontinued';
+      default:
+        return status.label || status.value;
+    }
+  };
+
   return (
     <AdminLayout breadcrumbs={[{ title: 'Products', href: '/admin/products' }]}>
       <Head title="Manage Products" />
@@ -364,7 +383,7 @@ export default function ProductsIndex({
                 className="inline-flex items-center gap-2 rounded-xl border border-sand-300 bg-sand-50/80 px-4 py-2.5 text-sm font-semibold text-terra-900 shadow-sm transition-all hover:bg-sand-100 active:scale-[0.98]"
               >
                 <Images className="h-4 w-4 text-terra-800" />
-                <span>Upload Foto Massal</span>
+                <span>Bulk Upload Photos</span>
               </button>
               <button
                 type="button"
@@ -415,7 +434,7 @@ export default function ProductsIndex({
                     : 'bg-sand-100 text-terra-600 group-hover:bg-sand-200'
                 }`}
               >
-                Semua
+                All
               </span>
             </button>
 
@@ -593,19 +612,22 @@ export default function ProductsIndex({
               <thead className="sticky top-0 z-10 border-b border-terra-100 bg-sand-50">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
-                    Produk
+                    Product
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
                     SKU
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
-                    Kategori
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
+                    Total Images
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-medium text-terra-600">
                     Status
                   </th>
                   <th className="px-6 py-4 text-right text-sm font-medium text-terra-600">
-                    Aksi
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -613,7 +635,7 @@ export default function ProductsIndex({
                 {productData.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className="py-12 text-center text-terra-500"
                     >
                       No products yet
@@ -657,10 +679,32 @@ export default function ProductsIndex({
                         {product.category?.name || '-'}
                       </td>
                       <td className="px-6 py-4">
+                        {(() => {
+                          const totalImg =
+                            product.images_count ??
+                            product.images?.length ??
+                            0;
+                          return (
+                            <span
+                              className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium ${
+                                totalImg > 0
+                                  ? 'border border-sand-200/80 bg-sand-100/80 text-terra-800'
+                                  : 'border border-amber-200/70 bg-amber-50 text-amber-700'
+                              }`}
+                            >
+                              <ImageIcon className="h-3.5 w-3.5 opacity-70" />
+                              <span>
+                                {totalImg} {totalImg === 1 ? 'image' : 'images'}
+                              </span>
+                            </span>
+                          );
+                        })()}
+                      </td>
+                      <td className="px-6 py-4">
                         <span
                           className={`rounded-full px-2.5 py-1 text-xs font-medium ${getStatusColor(product.status.value)}`}
                         >
-                          {product.status.label}
+                          {getStatusLabel(product.status)}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -668,7 +712,7 @@ export default function ProductsIndex({
                           <Link
                             href={`/admin/products/${product.id}?return_to=${encodeURIComponent(url)}`}
                             className="rounded-lg p-2 text-terra-500 transition-colors hover:bg-terra-100"
-                            title="Lihat"
+                            title="View"
                           >
                             <Eye className="h-4 w-4" />
                           </Link>
@@ -682,7 +726,7 @@ export default function ProductsIndex({
                           <button
                             onClick={() => confirmDelete(product)}
                             className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50"
-                            title="Hapus"
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
