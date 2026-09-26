@@ -42,7 +42,7 @@ class OrderSeeder extends Seeder
 
                 foreach ($orderProducts as $product) {
                     $quantity = rand(1, 3);
-                    $price = $product->final_price ?? $product->price;
+                    $price = $product->final_price ?? $product->price ?? fake()->numberBetween(500000, 5000000);
                     $rowTotal = $price * $quantity;
                     $subtotal += $rowTotal;
 
