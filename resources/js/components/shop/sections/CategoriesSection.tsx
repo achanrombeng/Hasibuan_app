@@ -153,7 +153,9 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
         const orderA = typeof a.sort_order === 'number' ? a.sort_order : 0;
         const orderB = typeof b.sort_order === 'number' ? b.sort_order : 0;
         if (orderA !== orderB) return orderA - orderB;
-        return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+        return (a.name || '').localeCompare(b.name || '', undefined, {
+          sensitivity: 'base',
+        });
       });
 
       return sorted.map((c: ApiCategory) => {
@@ -213,7 +215,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
               <button
                 type="button"
                 onClick={() => setCatalogModalOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-md active:scale-95 cursor-pointer"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-md active:scale-95"
                 title="Buka & Preview E-Katalog Produk (PDF / 3D Flipbook)"
               >
                 <BookOpen size={14} />
@@ -234,10 +236,11 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                     key={item.id}
                     href={`/shop/category/${item.slug}`}
                     onMouseEnter={() => setActiveIndex(index)}
-                    className={`group relative flex items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal cursor-pointer ${isActive
-                      ? 'pl-4 font-semibold text-neutral-900 lg:pl-3'
-                      : 'font-normal text-neutral-500 hover:pl-2 hover:text-neutral-800'
-                      }`}
+                    className={`group relative flex cursor-pointer items-center justify-between px-4 py-3 text-left whitespace-nowrap transition-all duration-300 lg:px-0 lg:whitespace-normal ${
+                      isActive
+                        ? 'pl-4 font-semibold text-neutral-900 lg:pl-3'
+                        : 'font-normal text-neutral-500 hover:pl-2 hover:text-neutral-800'
+                    }`}
                   >
                     {/* Active Bar Indicator */}
                     {isActive && (
@@ -258,10 +261,11 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
 
                     <ArrowRight
                       size={15}
-                      className={`hidden transition-all duration-300 lg:block ${isActive
-                        ? 'translate-x-0 text-[#7c926a] opacity-100'
-                        : '-translate-x-2 opacity-0 group-hover:opacity-60'
-                        }`}
+                      className={`hidden transition-all duration-300 lg:block ${
+                        isActive
+                          ? 'translate-x-0 text-[#7c926a] opacity-100'
+                          : '-translate-x-2 opacity-0 group-hover:opacity-60'
+                      }`}
                     />
                   </Link>
                 );
@@ -303,9 +307,12 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                 </AnimatePresence>
 
                 {/* Floating "Explore Collection" Badge */}
-                <div className="absolute bottom-6 right-6 z-20 hidden items-center gap-2 rounded-xl bg-white/90 px-4 py-2.5 text-sm font-semibold text-neutral-900 shadow-lg backdrop-blur-md transition-all group-hover:bg-white group-hover:shadow-xl sm:inline-flex">
+                <div className="absolute right-6 bottom-6 z-20 hidden items-center gap-2 rounded-xl bg-white/90 px-4 py-2.5 text-sm font-semibold text-neutral-900 shadow-lg backdrop-blur-md transition-all group-hover:bg-white group-hover:shadow-xl sm:inline-flex">
                   <span>Explore {currentSlide.categoryName}</span>
-                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
                 </div>
               </Link>
 
@@ -343,10 +350,11 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                       e.stopPropagation();
                       setActiveIndex(idx);
                     }}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeIndex
-                      ? 'w-8 bg-white'
-                      : 'w-2 bg-white/50 hover:bg-white/80'
-                      }`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      idx === activeIndex
+                        ? 'w-8 bg-white'
+                        : 'w-2 bg-white/50 hover:bg-white/80'
+                    }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}

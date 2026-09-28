@@ -197,16 +197,18 @@ function OrderTimeline({
             {/* Step content */}
             <div className="flex w-24 flex-col items-center">
               <div
-                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${step.completed
+                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                  step.completed
                     ? 'border-teal-500 bg-teal-500 text-white'
                     : 'border-terra-300 bg-white text-terra-400'
-                  }`}
+                }`}
               >
                 {step.completed ? <CheckCircle size={18} /> : step.icon}
               </div>
               <p
-                className={`mt-2 text-center text-xs font-medium ${step.completed ? 'text-teal-600' : 'text-terra-400'
-                  }`}
+                className={`mt-2 text-center text-xs font-medium ${
+                  step.completed ? 'text-teal-600' : 'text-terra-400'
+                }`}
               >
                 {step.label}
               </p>
@@ -221,12 +223,13 @@ function OrderTimeline({
             {/* Connector line */}
             {index < steps.length - 1 && (
               <div
-                className={`mt-5 h-0.5 w-12 ${step.completed && steps[index + 1].completed
+                className={`mt-5 h-0.5 w-12 ${
+                  step.completed && steps[index + 1].completed
                     ? 'bg-teal-500'
                     : step.completed
                       ? 'bg-gradient-to-r from-teal-500 to-terra-300'
                       : 'bg-terra-300'
-                  }`}
+                }`}
               />
             )}
           </div>

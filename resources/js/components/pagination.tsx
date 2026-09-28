@@ -85,7 +85,12 @@ export default function Pagination({
 }: PaginationProps) {
   // Normalize data
   const currentMeta = meta || paginator || pagination?.meta || pagination;
-  const currentLinks = links || paginator?.links || pagination?.links || pagination?.meta?.links || [];
+  const currentLinks =
+    links ||
+    paginator?.links ||
+    pagination?.links ||
+    pagination?.meta?.links ||
+    [];
 
   // If no links or only 1 page, hide
   if (currentLinks.length === 0 || !currentMeta || currentMeta.last_page <= 1)
@@ -103,7 +108,9 @@ export default function Pagination({
   };
 
   const getPageUrl = (page: number) => {
-    const directLink = currentLinks.find((l: any) => String(l?.label) === String(page));
+    const directLink = currentLinks.find(
+      (l: any) => String(l?.label) === String(page),
+    );
     if (directLink?.url) {
       return directLink.url;
     }
@@ -121,7 +128,9 @@ export default function Pagination({
   const isLastPage = currentMeta.current_page === currentMeta.last_page;
 
   // Find prev and next links from Laravel pagination
-  const prevLink = currentLinks.find((_: unknown, index: number) => index === 0);
+  const prevLink = currentLinks.find(
+    (_: unknown, index: number) => index === 0,
+  );
   const nextLink = currentLinks.find(
     (_: unknown, index: number) => index === currentLinks.length - 1,
   );

@@ -16,15 +16,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShopLayout } from '@/layouts/ShopLayout';
+import {
+  defaultMethod as addressesDefault,
+  destroy as addressesDestroy,
+  store as addressesStore,
+  update as addressesUpdate,
+} from '@/routes/shop/addresses';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Edit, Loader2, MapPin, Plus, Search, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import {
-  destroy as addressesDestroy,
-  defaultMethod as addressesDefault,
-  update as addressesUpdate,
-  store as addressesStore,
-} from '@/routes/shop/addresses';
 
 interface Address {
   id: number;

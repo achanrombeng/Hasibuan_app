@@ -54,9 +54,9 @@ class CategoryController extends Controller implements HasMiddleware
         // Get only root categories (no parent) with their children eager loaded
         $categories = Category::whereNull('parent_id')
             ->with(['children' => function ($query) {
-                $query->withProductsCount()->orderBy('sort_order');
+                $query->withCount('products')->orderBy('sort_order');
             }])
-            ->withProductsCount()
+            ->withCount('products')
             ->orderBy('sort_order')
             ->get();
 

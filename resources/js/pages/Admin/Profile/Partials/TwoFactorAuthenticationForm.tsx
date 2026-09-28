@@ -86,7 +86,8 @@ export default function TwoFactorAuthenticationForm({
           Two-Factor Authentication
         </h2>
         <p className="mt-1 text-sm text-terra-500">
-          Add additional security to your account using two-factor authentication.
+          Add additional security to your account using two-factor
+          authentication.
         </p>
       </header>
 
@@ -100,7 +101,9 @@ export default function TwoFactorAuthenticationForm({
               Enabled
             </Badge>
             <p className="text-sm text-terra-600">
-              When two-factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.
+              When two-factor authentication is enabled, you will be prompted
+              for a secure, random token during authentication. You may retrieve
+              this token from your phone's Google Authenticator application.
             </p>
 
             <TwoFactorRecoveryCodes
@@ -129,7 +132,9 @@ export default function TwoFactorAuthenticationForm({
               Disabled
             </Badge>
             <p className="text-sm text-terra-600">
-              When you enable two-factor authentication, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.
+              When you enable two-factor authentication, you will be prompted
+              for a secure, random token during authentication. You may retrieve
+              this token from your phone's Google Authenticator application.
             </p>
 
             <div>

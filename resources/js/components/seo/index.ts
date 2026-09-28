@@ -2,15 +2,14 @@ export { SEOHead } from './SEOHead';
 export type { SEOProps } from './SEOHead';
 
 export {
-    OrganizationStructuredData,
-    ProductStructuredData,
-    BreadcrumbStructuredData,
-    WebsiteStructuredData,
+  BreadcrumbStructuredData,
+  OrganizationStructuredData,
+  ProductStructuredData,
+  WebsiteStructuredData,
 } from './StructuredData';
 export type {
-    OrganizationSchema,
-    ProductSchema,
-    BreadcrumbItem,
-    WebsiteSchema,
+  BreadcrumbItem,
+  OrganizationSchema,
+  ProductSchema,
+  WebsiteSchema,
 } from './StructuredData';
-

@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { SharedData, SiteSettings } from '@/types';
+import { SharedData } from '@/types';
 
 interface NavItem {
   titleKey: string;
@@ -135,8 +135,7 @@ export default function AdminSidebar({
     typeof window !== 'undefined' ? window.location.pathname : '';
 
   // Get site settings & notifications count
-  const { siteSettings, newDealerInquiriesCount } =
-    usePage<SharedData>().props;
+  const { siteSettings, newDealerInquiriesCount } = usePage<SharedData>().props;
   const siteName = siteSettings?.site_name || 'Ronica';
 
   // Check if user has permission (simplified - will be enhanced later)

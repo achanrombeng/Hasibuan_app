@@ -2,11 +2,9 @@ import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
 import {
   AlertTriangle,
   CheckCircle,
-  ChevronLeft,
   Clock,
   CreditCard,
   ExternalLink,
@@ -15,6 +13,7 @@ import {
   MessageCircle,
   Save,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface PaymentSettingsProps {
   settings: {
@@ -122,8 +121,9 @@ export default function PaymentSettings({
             <div className="p-6">
               {/* Status */}
               <div
-                className={`mb-6 flex items-start gap-3 rounded-lg p-4 ${midtransConfigured ? 'bg-green-50' : 'bg-amber-50'
-                  }`}
+                className={`mb-6 flex items-start gap-3 rounded-lg p-4 ${
+                  midtransConfigured ? 'bg-green-50' : 'bg-amber-50'
+                }`}
               >
                 {midtransConfigured ? (
                   <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600" />
@@ -326,9 +326,7 @@ export default function PaymentSettings({
                 <input
                   type="text"
                   value={data.bank_account_name}
-                  onChange={(e) =>
-                    setData('bank_account_name', e.target.value)
-                  }
+                  onChange={(e) => setData('bank_account_name', e.target.value)}
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   placeholder="PT Ronica Indonesia"
                 />
@@ -402,8 +400,8 @@ export default function PaymentSettings({
                   placeholder="24"
                 />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Pesanan akan otomatis dibatalkan jika belum dibayar dalam waktu
-                  ini (1-168 jam)
+                  Pesanan akan otomatis dibatalkan jika belum dibayar dalam
+                  waktu ini (1-168 jam)
                 </p>
               </div>
             </div>

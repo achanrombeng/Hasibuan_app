@@ -1,18 +1,17 @@
 import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, useForm } from '@inertiajs/react';
 import {
   AlertTriangle,
   Bot,
-  ChevronLeft,
   Info,
   RefreshCw,
   Save,
   SlidersHorizontal,
   Sparkles,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface AiSettingsProps {
   settings: {
@@ -78,7 +77,8 @@ export default function AiSettings({
             Pengaturan AI Auto-Fill
           </h1>
           <p className="mt-1 text-neutral-500">
-            Konfigurasi model Gemini dan prompt untuk fitur analisis gambar produk
+            Konfigurasi model Gemini dan prompt untuk fitur analisis gambar
+            produk
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export default function AiSettings({
             <div className="space-y-5 p-6">
               {/* Gemini API Key */}
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="mb-2 flex items-center justify-between">
                   <label className="block text-sm font-medium text-neutral-700">
                     Gemini API Key
                   </label>
@@ -139,7 +139,8 @@ export default function AiSettings({
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
                 />
                 <p className="mt-1.5 text-xs text-neutral-400">
-                  Jika diisi, nilai ini akan menggantikan GEMINI_API_KEY dari file .env
+                  Jika diisi, nilai ini akan menggantikan GEMINI_API_KEY dari
+                  file .env
                 </p>
               </div>
 
@@ -307,7 +308,9 @@ export default function AiSettings({
                       Menggunakan prompt bawaan sistem
                     </span>
                   ) : (
-                    <span>{data.ai_prompt_template.length} / 10.000 karakter</span>
+                    <span>
+                      {data.ai_prompt_template.length} / 10.000 karakter
+                    </span>
                   )}
                 </span>
                 {errors.ai_prompt_template && (

@@ -20,24 +20,27 @@ interface ArticlesSectionProps {
   articles: ArticleItem[];
 }
 
-export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) => {
+export const ArticlesSection: React.FC<ArticlesSectionProps> = ({
+  articles,
+}) => {
   if (!articles || articles.length === 0) return null;
 
   const displayArticles = articles.slice(0, 3);
 
   return (
-    <section className=" py-16 md:py-24 border-t border-terra-100/60">
+    <section className="border-t border-terra-100/60 py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-14 text-center max-w-3xl mx-auto">
-          <span className="text-xs font-semibold uppercase tracking-widest text-teal-500">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <span className="text-xs font-semibold tracking-widest text-teal-500 uppercase">
             Blog & Journal
           </span>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Latest Articles & News
           </h2>
-          <p className="mt-3 text-base text-gray-600 leading-relaxed">
-            Discover inspiration, lifestyle trends, and the stories behind Ronica luxury furniture collections.
+          <p className="mt-3 text-base leading-relaxed text-gray-600">
+            Discover inspiration, lifestyle trends, and the stories behind
+            Ronica luxury furniture collections.
           </p>
         </div>
 
@@ -48,21 +51,21 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
               article.formatted_published_at ||
               (article.published_at
                 ? new Date(article.published_at).toLocaleDateString('en-US', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                })
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })
                 : '');
 
             return (
               <article
                 key={article.id}
-                className="group flex flex-col overflow-hidden rounded-2xl bg-white border border-terra-100/80 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-terra-100/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 {/* Image */}
                 <Link
                   href={`/shop/articles/${article.slug}`}
-                  className="relative aspect-[16/10] overflow-hidden bg-sand-100 block"
+                  className="relative block aspect-[16/10] overflow-hidden bg-sand-100"
                 >
                   {article.featured_image_url ? (
                     <img
@@ -73,14 +76,14 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-sand-200 text-terra-400">
-                      <span className="text-3xl font-serif">R</span>
+                      <span className="font-serif text-3xl">R</span>
                     </div>
                   )}
 
                   {/* Primary Tag Badge */}
                   {article.tags && article.tags.length > 0 && (
                     <div className="absolute top-3 left-3">
-                      <span className="inline-block rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-medium text-terra-900 shadow-sm">
+                      <span className="inline-block rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-terra-900 shadow-sm backdrop-blur-md">
                         {article.tags[0]}
                       </span>
                     </div>
@@ -91,7 +94,7 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
                 <div className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     {/* Meta info */}
-                    <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                    <div className="mb-3 flex items-center gap-3 text-xs text-gray-500">
                       {formattedDate && (
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5 text-terra-600" />
@@ -105,23 +108,23 @@ export const ArticlesSection: React.FC<ArticlesSectionProps> = ({ articles }) =>
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-snug group-hover:text-terra-900 transition-colors">
+                    <h3 className="line-clamp-2 text-lg leading-snug font-bold text-gray-900 transition-colors group-hover:text-terra-900">
                       <Link href={`/shop/articles/${article.slug}`}>
                         {article.title}
                       </Link>
                     </h3>
 
                     {/* Excerpt */}
-                    <p className="mt-2.5 text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                    <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-gray-600">
                       {article.excerpt_truncated || article.excerpt}
                     </p>
                   </div>
 
                   {/* Footer link */}
-                  <div className="mt-6 pt-4 border-t border-sand-100">
+                  <div className="mt-6 border-t border-sand-100 pt-4">
                     <Link
                       href={`/shop/articles/${article.slug}`}
-                      className="inline-flex items-center text-xs font-semibold text-terra-900 group-hover:text-wood transition-colors"
+                      className="inline-flex items-center text-xs font-semibold text-terra-900 transition-colors group-hover:text-wood"
                     >
                       Read Article
                       <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />

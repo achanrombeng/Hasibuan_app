@@ -24,14 +24,14 @@ export { ValuesSection } from './sections/ValuesSection';
 
 // Marketing Components
 export {
-    FlashSaleCountdown,
-    FlashSaleCountdownCompact,
+  FlashSaleCountdown,
+  FlashSaleCountdownCompact,
 } from './FlashSaleCountdown';
 export { PromoBanner } from './PromoBanner';
 export {
-    RecentlyViewedSection,
-    getRecentlyViewed,
-    saveToRecentlyViewed,
+  RecentlyViewedSection,
+  getRecentlyViewed,
+  saveToRecentlyViewed,
 } from './RecentlyViewed';
 export { WhatsAppButton } from './WhatsAppButton';
 

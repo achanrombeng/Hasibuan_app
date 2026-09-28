@@ -1,6 +1,12 @@
 import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
+import {
+  PLATFORM_PRESETS,
+  PlatformIcon,
+  getPlatformBadgeStyle,
+  type SocialItem,
+} from '@/lib/social-platforms';
 import { Head, router, useForm } from '@inertiajs/react';
 import {
   ArrowDown,
@@ -8,32 +14,19 @@ import {
   BookOpen,
   Building2,
   ExternalLink,
-  Facebook,
   FileText,
   Globe,
-  Instagram,
-  Linkedin,
   Loader2,
   Mail,
   MessageCircle,
   Phone,
   Plus,
   Save,
-  Send,
   Store,
   Trash2,
-  Upload,
   User,
   UserCheck,
-  Users,
-  Youtube,
 } from 'lucide-react';
-import {
-  PLATFORM_PRESETS,
-  PlatformIcon,
-  getPlatformBadgeStyle,
-  type SocialItem,
-} from '@/lib/social-platforms';
 import { useState } from 'react';
 
 interface SettingsIndexProps {
@@ -95,42 +88,86 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
     const items: SocialItem[] = [];
     if (settings.facebook_url) {
-      items.push({ id: 'social-fb', platform: 'facebook', url: settings.facebook_url });
+      items.push({
+        id: 'social-fb',
+        platform: 'facebook',
+        url: settings.facebook_url,
+      });
     }
     if (settings.instagram_url) {
-      items.push({ id: 'social-ig', platform: 'instagram', url: settings.instagram_url });
+      items.push({
+        id: 'social-ig',
+        platform: 'instagram',
+        url: settings.instagram_url,
+      });
     }
     if (settings.tiktok_url) {
-      items.push({ id: 'social-tt', platform: 'tiktok', url: settings.tiktok_url });
+      items.push({
+        id: 'social-tt',
+        platform: 'tiktok',
+        url: settings.tiktok_url,
+      });
     }
     if (settings.linkedin_url) {
-      items.push({ id: 'social-li', platform: 'linkedin', url: settings.linkedin_url });
+      items.push({
+        id: 'social-li',
+        platform: 'linkedin',
+        url: settings.linkedin_url,
+      });
     }
     return items.length > 0
       ? items
       : [
-        { id: '1', platform: 'facebook', url: '' },
-        { id: '2', platform: 'instagram', url: '' },
-        { id: '3', platform: 'tiktok', url: '' },
-        { id: '4', platform: 'linkedin', url: '' },
-      ];
+          { id: '1', platform: 'facebook', url: '' },
+          { id: '2', platform: 'instagram', url: '' },
+          { id: '3', platform: 'tiktok', url: '' },
+          { id: '4', platform: 'linkedin', url: '' },
+        ];
   })();
 
-  const [socialItems, setSocialItems] = useState<SocialItem[]>(initialSocialLinks);
+  const [socialItems, setSocialItems] =
+    useState<SocialItem[]>(initialSocialLinks);
 
   const { data, setData, post, processing } = useForm({
     ...settings,
     marketing_1_name: settings.marketing_1_name ?? settings.admin_1_name ?? '',
-    marketing_1_email: settings.marketing_1_email ?? settings.admin_1_email ?? settings.contact_email ?? '',
-    marketing_1_phone: settings.marketing_1_phone ?? settings.admin_1_phone ?? settings.contact_whatsapp ?? settings.contact_phone ?? '',
+    marketing_1_email:
+      settings.marketing_1_email ??
+      settings.admin_1_email ??
+      settings.contact_email ??
+      '',
+    marketing_1_phone:
+      settings.marketing_1_phone ??
+      settings.admin_1_phone ??
+      settings.contact_whatsapp ??
+      settings.contact_phone ??
+      '',
     marketing_2_name: settings.marketing_2_name ?? settings.admin_2_name ?? '',
-    marketing_2_email: settings.marketing_2_email ?? settings.admin_2_email ?? settings.contact_email_2 ?? '',
-    marketing_2_phone: settings.marketing_2_phone ?? settings.admin_2_phone ?? '',
+    marketing_2_email:
+      settings.marketing_2_email ??
+      settings.admin_2_email ??
+      settings.contact_email_2 ??
+      '',
+    marketing_2_phone:
+      settings.marketing_2_phone ?? settings.admin_2_phone ?? '',
     admin_1_name: settings.marketing_1_name ?? settings.admin_1_name ?? '',
-    admin_1_email: settings.marketing_1_email ?? settings.admin_1_email ?? settings.contact_email ?? '',
-    admin_1_phone: settings.marketing_1_phone ?? settings.admin_1_phone ?? settings.contact_whatsapp ?? settings.contact_phone ?? '',
+    admin_1_email:
+      settings.marketing_1_email ??
+      settings.admin_1_email ??
+      settings.contact_email ??
+      '',
+    admin_1_phone:
+      settings.marketing_1_phone ??
+      settings.admin_1_phone ??
+      settings.contact_whatsapp ??
+      settings.contact_phone ??
+      '',
     admin_2_name: settings.marketing_2_name ?? settings.admin_2_name ?? '',
-    admin_2_email: settings.marketing_2_email ?? settings.admin_2_email ?? settings.contact_email_2 ?? '',
+    admin_2_email:
+      settings.marketing_2_email ??
+      settings.admin_2_email ??
+      settings.contact_email_2 ??
+      '',
     admin_2_phone: settings.marketing_2_phone ?? settings.admin_2_phone ?? '',
     social_links: JSON.stringify(initialSocialLinks),
     catalog_title: settings.catalog_title || 'Ronica Product Catalogue 2026',
@@ -159,7 +196,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
       social_links: JSON.stringify(
         newItems
           .filter((i) => i.url.trim().length > 0)
-          .map(({ platform, url, label }) => ({ platform, url, label }))
+          .map(({ platform, url, label }) => ({ platform, url, label })),
       ),
       facebook_url: fb,
       instagram_url: ig,
@@ -184,10 +221,12 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
   const handleSocialChange = (
     id: string,
     field: 'platform' | 'url' | 'label',
-    value: string
+    value: string,
   ) => {
     updateSocialItems(
-      socialItems.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+      socialItems.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item,
+      ),
     );
   };
 
@@ -207,7 +246,11 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
   const { t } = useTranslation();
 
   const handleDeleteCatalog = (type: 'pdf' | 'docx') => {
-    if (confirm(`Are you sure you want to delete this ${type.toUpperCase()} catalog file?`)) {
+    if (
+      confirm(
+        `Are you sure you want to delete this ${type.toUpperCase()} catalog file?`,
+      )
+    ) {
       setDeletingType(type);
       router.post(
         '/admin/settings/delete-catalog',
@@ -235,7 +278,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
           onError: () => {
             setDeletingType(null);
           },
-        }
+        },
       );
     }
   };
@@ -284,20 +327,14 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
   };
 
   return (
-    <AdminLayout
-      breadcrumbs={[{ title: 'Settings', href: '/admin/settings' }]}
-    >
+    <AdminLayout breadcrumbs={[{ title: 'Settings', href: '/admin/settings' }]}>
       <Head title="Site Settings" />
 
       <div className="w-full space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-neutral-900">
-            Site Settings
-          </h1>
-          <p className="mt-1 text-neutral-500">
-            Manage general store settings
-          </p>
+          <h1 className="text-2xl font-bold text-neutral-900">Site Settings</h1>
+          <p className="mt-1 text-neutral-500">Manage general store settings</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -358,7 +395,8 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   Contact Information (Marketing)
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Manage marketing contact persons, email, WhatsApp, and showroom / factory locations
+                  Manage marketing contact persons, email, WhatsApp, and
+                  showroom / factory locations
                 </p>
               </div>
             </div>
@@ -396,7 +434,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <User className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                           type="text"
-                          value={data.admin_1_name ?? data.marketing_1_name ?? ''}
+                          value={
+                            data.admin_1_name ?? data.marketing_1_name ?? ''
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             setData((prev) => ({
@@ -419,7 +459,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                           type="email"
-                          value={data.admin_1_email ?? data.marketing_1_email ?? ''}
+                          value={
+                            data.admin_1_email ?? data.marketing_1_email ?? ''
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             setData((prev) => ({
@@ -443,7 +485,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <MessageCircle className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                           type="text"
-                          value={data.admin_1_phone ?? data.marketing_1_phone ?? ''}
+                          value={
+                            data.admin_1_phone ?? data.marketing_1_phone ?? ''
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             setData((prev) => ({
@@ -495,7 +539,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <User className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                           type="text"
-                          value={data.admin_2_name ?? data.marketing_2_name ?? ''}
+                          value={
+                            data.admin_2_name ?? data.marketing_2_name ?? ''
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             setData((prev) => ({
@@ -518,7 +564,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                           type="email"
-                          value={data.admin_2_email ?? data.marketing_2_email ?? ''}
+                          value={
+                            data.admin_2_email ?? data.marketing_2_email ?? ''
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             setData((prev) => ({
@@ -542,7 +590,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <MessageCircle className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                         <input
                           type="text"
-                          value={data.admin_2_phone ?? data.marketing_2_phone ?? ''}
+                          value={
+                            data.admin_2_phone ?? data.marketing_2_phone ?? ''
+                          }
                           onChange={(e) => {
                             const val = e.target.value;
                             setData((prev) => ({
@@ -598,7 +648,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                     <input
                       type="text"
                       value={data.factory_address ?? ''}
-                      onChange={(e) => setData('factory_address', e.target.value)}
+                      onChange={(e) =>
+                        setData('factory_address', e.target.value)
+                      }
                       placeholder="Cirebon, Indonesia"
                       className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                     />
@@ -628,7 +680,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                     <input
                       type="text"
                       value={data.showroom_address ?? ''}
-                      onChange={(e) => setData('showroom_address', e.target.value)}
+                      onChange={(e) =>
+                        setData('showroom_address', e.target.value)
+                      }
                       placeholder="Jepara, Indonesia"
                       className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                     />
@@ -641,7 +695,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   <input
                     type="text"
                     value={data.maps_showroom_url ?? ''}
-                    onChange={(e) => setData('maps_showroom_url', e.target.value)}
+                    onChange={(e) =>
+                      setData('maps_showroom_url', e.target.value)
+                    }
                     placeholder="https://www.google.com/maps/embed?pb=..."
                     className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   />
@@ -656,7 +712,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   <input
                     type="text"
                     value={data.maps_factory_url ?? ''}
-                    onChange={(e) => setData('maps_factory_url', e.target.value)}
+                    onChange={(e) =>
+                      setData('maps_factory_url', e.target.value)
+                    }
                     placeholder="https://www.google.com/maps/embed?pb=..."
                     className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                   />
@@ -713,7 +771,14 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   Click the button below to add your preferred platforms
                 </p>
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                  {['instagram', 'facebook', 'tiktok', 'linkedin', 'youtube', 'whatsapp'].map((p) => {
+                  {[
+                    'instagram',
+                    'facebook',
+                    'tiktok',
+                    'linkedin',
+                    'youtube',
+                    'whatsapp',
+                  ].map((p) => {
                     const preset = PLATFORM_PRESETS.find((x) => x.id === p);
                     return (
                       <button
@@ -722,8 +787,8 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         onClick={() => handleAddSocial(p)}
                         className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm transition-all hover:border-teal-500 hover:text-teal-600"
                       >
-                        <PlatformIcon platform={p} className="h-3.5 w-3.5" />
-                        + {preset?.name}
+                        <PlatformIcon platform={p} className="h-3.5 w-3.5" />+{' '}
+                        {preset?.name}
                       </button>
                     );
                   })}
@@ -732,7 +797,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
             ) : (
               <div className="space-y-3">
                 {socialItems.map((item, index) => {
-                  const currentPreset = PLATFORM_PRESETS.find((p) => p.id === item.platform) || {
+                  const currentPreset = PLATFORM_PRESETS.find(
+                    (p) => p.id === item.platform,
+                  ) || {
                     id: 'custom',
                     name: 'Custom',
                     placeholder: 'https://...',
@@ -772,12 +839,21 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                           <span
                             className={`flex h-6 w-6 items-center justify-center rounded border ${badgeClass}`}
                           >
-                            <PlatformIcon platform={item.platform} className="h-3.5 w-3.5" />
+                            <PlatformIcon
+                              platform={item.platform}
+                              className="h-3.5 w-3.5"
+                            />
                           </span>
                         </div>
                         <select
                           value={item.platform}
-                          onChange={(e) => handleSocialChange(item.id, 'platform', e.target.value)}
+                          onChange={(e) =>
+                            handleSocialChange(
+                              item.id,
+                              'platform',
+                              e.target.value,
+                            )
+                          }
                           className="w-full appearance-none rounded-lg border border-neutral-200 bg-white py-2.5 pr-8 pl-11 text-sm font-medium text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                         >
                           {PLATFORM_PRESETS.map((preset) => (
@@ -787,7 +863,11 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                           ))}
                         </select>
                         <div className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-neutral-400">
-                          <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <svg
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
                             <path
                               fillRule="evenodd"
                               d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
@@ -803,7 +883,13 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                           <input
                             type="text"
                             value={item.label || ''}
-                            onChange={(e) => handleSocialChange(item.id, 'label', e.target.value)}
+                            onChange={(e) =>
+                              handleSocialChange(
+                                item.id,
+                                'label',
+                                e.target.value,
+                              )
+                            }
                             placeholder="Nama Platform"
                             className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                           />
@@ -815,7 +901,9 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         <input
                           type="url"
                           value={item.url}
-                          onChange={(e) => handleSocialChange(item.id, 'url', e.target.value)}
+                          onChange={(e) =>
+                            handleSocialChange(item.id, 'url', e.target.value)
+                          }
                           placeholder={currentPreset.placeholder}
                           className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                         />
@@ -850,21 +938,33 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                 {/* Quick Add Presets Row */}
                 <div className="mt-3 flex flex-wrap items-center gap-2 pt-2 text-xs text-neutral-500">
                   <span className="font-medium">Tambah cepat:</span>
-                  {['instagram', 'facebook', 'tiktok', 'linkedin', 'youtube', 'whatsapp', 'twitter', 'pinterest'].map((p) => {
+                  {[
+                    'instagram',
+                    'facebook',
+                    'tiktok',
+                    'linkedin',
+                    'youtube',
+                    'whatsapp',
+                    'twitter',
+                    'pinterest',
+                  ].map((p) => {
                     const preset = PLATFORM_PRESETS.find((x) => x.id === p);
-                    const isAlreadyAdded = socialItems.some((i) => i.platform === p);
+                    const isAlreadyAdded = socialItems.some(
+                      (i) => i.platform === p,
+                    );
                     return (
                       <button
                         key={p}
                         type="button"
                         onClick={() => handleAddSocial(p)}
-                        className={`inline-flex items-center gap-1 rounded-md px-2 py-1 transition-all ${isAlreadyAdded
+                        className={`inline-flex items-center gap-1 rounded-md px-2 py-1 transition-all ${
+                          isAlreadyAdded
                             ? 'bg-neutral-100 text-neutral-400 hover:bg-neutral-200 hover:text-neutral-600'
                             : 'bg-neutral-100 text-neutral-700 hover:bg-teal-50 hover:text-teal-700'
-                          }`}
+                        }`}
                       >
-                        <PlatformIcon platform={p} className="h-3 w-3" />
-                        + {preset?.name}
+                        <PlatformIcon platform={p} className="h-3 w-3" />+{' '}
+                        {preset?.name}
                       </button>
                     );
                   })}
@@ -884,12 +984,13 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   E-Catalog Product Document (PDF / Word)
                 </h2>
                 <p className="text-sm text-neutral-500">
-                  Upload your official product catalogue document in PDF or Word format
+                  Upload your official product catalogue document in PDF or Word
+                  format
                 </p>
               </div>
             </div>
 
-            <div className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 p-5 space-y-4">
+            <div className="w-full space-y-4 rounded-lg border border-neutral-200 bg-neutral-50/50 p-5">
               {/* Catalog Title Input */}
               <div>
                 <label className="mb-2 block text-xs font-semibold text-neutral-800">
@@ -903,12 +1004,13 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-xs text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1 text-[11px] text-neutral-500">
-                  The title displayed at the top of the interactive catalog preview modal
+                  The title displayed at the top of the interactive catalog
+                  preview modal
                 </p>
               </div>
 
               {/* Document File Section */}
-              <div className="pt-2 border-t border-neutral-200/60">
+              <div className="border-t border-neutral-200/60 pt-2">
                 <label className="mb-2.5 flex items-center gap-2 text-sm font-semibold text-neutral-800">
                   <FileText className="h-4 w-4 text-teal-600" />
                   Catalog Document File (.pdf / .docx / .doc)
@@ -916,16 +1018,16 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
                 {/* Current PDF file indicator */}
                 {data.catalog_pdf_url && (
-                  <div className="mb-3 flex items-center justify-between rounded-md bg-white p-3 text-xs border border-neutral-200 shadow-2xs">
-                    <div className="flex items-center gap-2 truncate min-w-0">
-                      <span className="rounded bg-teal-100 px-2 py-0.5 font-bold text-teal-800 text-[10px] uppercase shrink-0">
+                  <div className="mb-3 flex items-center justify-between rounded-md border border-neutral-200 bg-white p-3 text-xs shadow-2xs">
+                    <div className="flex min-w-0 items-center gap-2 truncate">
+                      <span className="shrink-0 rounded bg-teal-100 px-2 py-0.5 text-[10px] font-bold text-teal-800 uppercase">
                         PDF
                       </span>
                       <span className="truncate font-medium text-neutral-700">
                         {data.catalog_pdf_url}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2.5 shrink-0 ml-2">
+                    <div className="ml-2 flex shrink-0 items-center gap-2.5">
                       <a
                         href={data.catalog_pdf_url}
                         target="_blank"
@@ -938,7 +1040,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         type="button"
                         disabled={deletingType === 'pdf'}
                         onClick={() => handleDeleteCatalog('pdf')}
-                        className="inline-flex items-center gap-1 font-semibold text-red-600 hover:text-red-700 hover:underline cursor-pointer disabled:opacity-50"
+                        className="inline-flex cursor-pointer items-center gap-1 font-semibold text-red-600 hover:text-red-700 hover:underline disabled:opacity-50"
                         title="Delete PDF file"
                       >
                         {deletingType === 'pdf' ? (
@@ -954,16 +1056,16 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
                 {/* Current Word file indicator */}
                 {data.catalog_docx_url && (
-                  <div className="mb-3 flex items-center justify-between rounded-md bg-white p-3 text-xs border border-neutral-200 shadow-2xs">
-                    <div className="flex items-center gap-2 truncate min-w-0">
-                      <span className="rounded bg-blue-100 px-2 py-0.5 font-bold text-blue-800 text-[10px] uppercase shrink-0">
+                  <div className="mb-3 flex items-center justify-between rounded-md border border-neutral-200 bg-white p-3 text-xs shadow-2xs">
+                    <div className="flex min-w-0 items-center gap-2 truncate">
+                      <span className="shrink-0 rounded bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800 uppercase">
                         Word
                       </span>
                       <span className="truncate font-medium text-neutral-700">
                         {data.catalog_docx_url}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2.5 shrink-0 ml-2">
+                    <div className="ml-2 flex shrink-0 items-center gap-2.5">
                       <a
                         href={data.catalog_docx_url}
                         download
@@ -975,7 +1077,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         type="button"
                         disabled={deletingType === 'docx'}
                         onClick={() => handleDeleteCatalog('docx')}
-                        className="inline-flex items-center gap-1 font-semibold text-red-600 hover:text-red-700 hover:underline cursor-pointer disabled:opacity-50"
+                        className="inline-flex cursor-pointer items-center gap-1 font-semibold text-red-600 hover:text-red-700 hover:underline disabled:opacity-50"
                         title="Delete Word file"
                       >
                         {deletingType === 'docx' ? (
@@ -1013,11 +1115,12 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         }
                       }
                     }}
-                    className="block w-full text-xs text-neutral-500 file:mr-3 file:rounded-lg file:border-0 file:bg-teal-600 file:px-4 file:py-2.5 file:text-xs file:font-semibold file:text-white hover:file:bg-teal-700 cursor-pointer"
+                    className="block w-full cursor-pointer text-xs text-neutral-500 file:mr-3 file:rounded-lg file:border-0 file:bg-teal-600 file:px-4 file:py-2.5 file:text-xs file:font-semibold file:text-white hover:file:bg-teal-700"
                   />
                 </div>
                 <p className="mt-2.5 text-xs text-neutral-500">
-                  Supported formats: <b>PDF (.pdf)</b> or <b>Word (.docx, .doc)</b>. Max file size: 50 MB.
+                  Supported formats: <b>PDF (.pdf)</b> or{' '}
+                  <b>Word (.docx, .doc)</b>. Max file size: 50 MB.
                 </p>
               </div>
             </div>

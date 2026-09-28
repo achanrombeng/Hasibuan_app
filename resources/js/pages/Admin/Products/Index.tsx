@@ -123,8 +123,7 @@ export default function ProductsIndex({
 
   // Sync state if filters prop changes from external navigation (e.g. back/forward or return from edit)
   useEffect(() => {
-    const newSearch =
-      filterObj.search || filterObj.name || filterObj.sku || '';
+    const newSearch = filterObj.search || filterObj.name || filterObj.sku || '';
     const newCategory = filterObj.category_id || 'all';
     const newStatus = filterObj.status || 'all';
     const newFeatured = filterObj.is_featured || 'all';
@@ -149,7 +148,10 @@ export default function ProductsIndex({
     if (typeof window !== 'undefined') {
       const queryIdx = url.indexOf('?');
       if (queryIdx !== -1) {
-        sessionStorage.setItem('admin_products_last_query', url.substring(queryIdx));
+        sessionStorage.setItem(
+          'admin_products_last_query',
+          url.substring(queryIdx),
+        );
       }
     }
   }, [url]);
@@ -380,7 +382,7 @@ export default function ProductsIndex({
               <button
                 type="button"
                 onClick={() => setShowBulkImageModal(true)}
-                className="inline-flex items-center gap-2 rounded-xl border border-sand-300 bg-sand-50/80 px-4 py-2.5 text-sm font-semibold text-terra-900 shadow-sm transition-all hover:bg-sand-100 active:scale-[0.98]"
+                className="border-sand-300 inline-flex items-center gap-2 rounded-xl border bg-sand-50/80 px-4 py-2.5 text-sm font-semibold text-terra-900 shadow-sm transition-all hover:bg-sand-100 active:scale-[0.98]"
               >
                 <Images className="h-4 w-4 text-terra-800" />
                 <span>Bulk Upload Photos</span>
@@ -681,9 +683,7 @@ export default function ProductsIndex({
                       <td className="px-6 py-4">
                         {(() => {
                           const totalImg =
-                            product.images_count ??
-                            product.images?.length ??
-                            0;
+                            product.images_count ?? product.images?.length ?? 0;
                           return (
                             <span
                               className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium ${

@@ -6,7 +6,6 @@ import {
   Send,
   Youtube,
 } from 'lucide-react';
-import React from 'react';
 
 export interface SocialItem {
   id: string;
@@ -16,15 +15,43 @@ export interface SocialItem {
 }
 
 export const PLATFORM_PRESETS = [
-  { id: 'instagram', name: 'Instagram', placeholder: 'https://instagram.com/username' },
-  { id: 'facebook', name: 'Facebook', placeholder: 'https://facebook.com/page' },
+  {
+    id: 'instagram',
+    name: 'Instagram',
+    placeholder: 'https://instagram.com/username',
+  },
+  {
+    id: 'facebook',
+    name: 'Facebook',
+    placeholder: 'https://facebook.com/page',
+  },
   { id: 'tiktok', name: 'TikTok', placeholder: 'https://tiktok.com/@username' },
-  { id: 'youtube', name: 'YouTube', placeholder: 'https://youtube.com/@channel' },
-  { id: 'whatsapp', name: 'WhatsApp', placeholder: 'https://wa.me/6281234567890' },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    placeholder: 'https://youtube.com/@channel',
+  },
+  {
+    id: 'whatsapp',
+    name: 'WhatsApp',
+    placeholder: 'https://wa.me/6281234567890',
+  },
   { id: 'twitter', name: 'X / Twitter', placeholder: 'https://x.com/username' },
-  { id: 'pinterest', name: 'Pinterest', placeholder: 'https://pinterest.com/username' },
-  { id: 'linkedin', name: 'LinkedIn', placeholder: 'https://linkedin.com/company/name' },
-  { id: 'threads', name: 'Threads', placeholder: 'https://threads.net/@username' },
+  {
+    id: 'pinterest',
+    name: 'Pinterest',
+    placeholder: 'https://pinterest.com/username',
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    placeholder: 'https://linkedin.com/company/name',
+  },
+  {
+    id: 'threads',
+    name: 'Threads',
+    placeholder: 'https://threads.net/@username',
+  },
   { id: 'telegram', name: 'Telegram', placeholder: 'https://t.me/channel' },
   { id: 'custom', name: 'Custom / Lainnya', placeholder: 'https://...' },
 ];

@@ -1,11 +1,11 @@
 import { SEOHead } from '@/components/seo';
+import { ProductImagePlaceholder } from '@/components/shop/ProductImagePlaceholder';
 import { useTranslation } from '@/hooks/use-translation';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { ApiProduct } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ProductImagePlaceholder } from '@/components/shop/ProductImagePlaceholder';
 import { ArrowRight, Heart, ShoppingBag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -64,7 +64,9 @@ export default function WishlistIndex({ products }: Props) {
                   {t('shop.wishlist.title')}
                 </h1>
                 <p className="text-neutral-500">
-                  {t('shop.products.showing_results', { count: products.length })}
+                  {t('shop.products.showing_results', {
+                    count: products.length,
+                  })}
                 </p>
               </div>
               <Link
@@ -119,8 +121,7 @@ function WishlistCard({
 }: WishlistCardProps) {
   const { t } = useTranslation();
   const imageUrl =
-    product.primary_image?.image_url ||
-    product.images?.[0]?.image_url;
+    product.primary_image?.image_url || product.images?.[0]?.image_url;
 
   return (
     <motion.div
@@ -177,7 +178,10 @@ function WishlistCard({
           </h3>
         </Link>
         <div className="mt-2 flex items-center gap-2">
-          <Link href={`/shop/products/${product.slug}`} className="text-xs font-medium text-teal-700 hover:underline">
+          <Link
+            href={`/shop/products/${product.slug}`}
+            className="text-xs font-medium text-teal-700 hover:underline"
+          >
             Lihat Detail &rarr;
           </Link>
         </div>
@@ -185,9 +189,13 @@ function WishlistCard({
         {/* Stock Status */}
         <div className="mt-3 flex items-center justify-between">
           {product.is_in_stock ? (
-            <span className="text-xs text-green-600">{t('shop.products.in_stock')}</span>
+            <span className="text-xs text-green-600">
+              {t('shop.products.in_stock')}
+            </span>
           ) : (
-            <span className="text-xs text-red-500">{t('shop.products.out_of_stock')}</span>
+            <span className="text-xs text-red-500">
+              {t('shop.products.out_of_stock')}
+            </span>
           )}
           <button
             onClick={onAddToCart}

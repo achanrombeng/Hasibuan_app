@@ -20,8 +20,8 @@ import {
   Mail,
   MessageCircle,
   PanelBottom,
-  Plus,
   Phone,
+  Plus,
   Save,
   ShieldCheck,
   Store,
@@ -85,8 +85,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
     }
   })();
 
-  const [col1Links, setCol1Links] = useState<FooterLinkItem[]>(initialCol1Links);
-  const [col2Links, setCol2Links] = useState<FooterLinkItem[]>(initialCol2Links);
+  const [col1Links, setCol1Links] =
+    useState<FooterLinkItem[]>(initialCol1Links);
+  const [col2Links, setCol2Links] =
+    useState<FooterLinkItem[]>(initialCol2Links);
 
   // Parse initial social links
   const initialSocialLinks: SocialItem[] = (() => {
@@ -142,7 +144,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
         ];
   })();
 
-  const [socialItems, setSocialItems] = useState<SocialItem[]>(initialSocialLinks);
+  const [socialItems, setSocialItems] =
+    useState<SocialItem[]>(initialSocialLinks);
 
   const { data, setData, post, processing } = useForm({
     footer_description: settings.footer_description,
@@ -191,7 +194,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
       social_links: JSON.stringify(
         newItems
           .filter((i) => i.url.trim().length > 0)
-          .map(({ platform, url, label }) => ({ platform, url, label }))
+          .map(({ platform, url, label }) => ({ platform, url, label })),
       ),
       facebook_url: fb,
       instagram_url: ig,
@@ -217,10 +220,12 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
   const handleSocialChange = (
     id: string,
     field: 'platform' | 'url' | 'label',
-    value: string
+    value: string,
   ) => {
     updateSocialItems(
-      socialItems.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+      socialItems.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item,
+      ),
     );
   };
 
@@ -235,7 +240,11 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
   };
 
   // Column 1 Handlers
-  const handleCol1Change = (index: number, field: 'label' | 'url', value: string) => {
+  const handleCol1Change = (
+    index: number,
+    field: 'label' | 'url',
+    value: string,
+  ) => {
     const updated = [...col1Links];
     updated[index][field] = value;
     setCol1Links(updated);
@@ -255,7 +264,11 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
   };
 
   // Column 2 Handlers
-  const handleCol2Change = (index: number, field: 'label' | 'url', value: string) => {
+  const handleCol2Change = (
+    index: number,
+    field: 'label' | 'url',
+    value: string,
+  ) => {
     const updated = [...col2Links];
     updated[index][field] = value;
     setCol2Links(updated);
@@ -310,7 +323,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
             Store Footer Settings
           </h1>
           <p className="mt-1 text-neutral-500">
-            Manage store description, copyright text, column navigation, contact info, and social media links displayed on storefront footers.
+            Manage store description, copyright text, column navigation, contact
+            info, and social media links displayed on storefront footers.
           </p>
         </div>
 
@@ -338,7 +352,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </label>
                 <textarea
                   value={data.footer_description}
-                  onChange={(e) => setData('footer_description', e.target.value)}
+                  onChange={(e) =>
+                    setData('footer_description', e.target.value)
+                  }
                   rows={3}
                   placeholder={
                     settings.site_description ||
@@ -347,7 +363,11 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                   className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1.5 text-xs text-neutral-500">
-                  Leave empty to use primary store description ({settings.site_description ? 'Active store description' : 'default'}).
+                  Leave empty to use primary store description (
+                  {settings.site_description
+                    ? 'Active store description'
+                    : 'default'}
+                  ).
                 </p>
               </div>
 
@@ -363,7 +383,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1.5 text-xs text-neutral-500">
-                  Leave empty to use default format (© [Year] [Store Name]. All rights reserved.)
+                  Leave empty to use default format (© [Year] [Store Name]. All
+                  rights reserved.)
                 </p>
               </div>
             </div>
@@ -420,7 +441,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                       <input
                         type="text"
                         value={link.label}
-                        onChange={(e) => handleCol1Change(index, 'label', e.target.value)}
+                        onChange={(e) =>
+                          handleCol1Change(index, 'label', e.target.value)
+                        }
                         placeholder="Link Label (e.g. All Products)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
@@ -429,7 +452,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                       <input
                         type="text"
                         value={link.url}
-                        onChange={(e) => handleCol1Change(index, 'url', e.target.value)}
+                        onChange={(e) =>
+                          handleCol1Change(index, 'url', e.target.value)
+                        }
                         placeholder="URL (e.g. /shop/products)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
@@ -447,7 +472,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
 
                 {col1Links.length === 0 && (
                   <div className="rounded-lg border border-dashed border-neutral-300 py-6 text-center text-sm text-neutral-400">
-                    No links in Column 1 yet. Click &quot;Add Link&quot; to get started.
+                    No links in Column 1 yet. Click &quot;Add Link&quot; to get
+                    started.
                   </div>
                 )}
               </div>
@@ -505,7 +531,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                       <input
                         type="text"
                         value={link.label}
-                        onChange={(e) => handleCol2Change(index, 'label', e.target.value)}
+                        onChange={(e) =>
+                          handleCol2Change(index, 'label', e.target.value)
+                        }
                         placeholder="Link Label (e.g. About Us)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
@@ -514,7 +542,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                       <input
                         type="text"
                         value={link.url}
-                        onChange={(e) => handleCol2Change(index, 'url', e.target.value)}
+                        onChange={(e) =>
+                          handleCol2Change(index, 'url', e.target.value)
+                        }
                         placeholder="URL (e.g. /shop/about)"
                         className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
                       />
@@ -532,7 +562,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
 
                 {col2Links.length === 0 && (
                   <div className="rounded-lg border border-dashed border-neutral-300 py-6 text-center text-sm text-neutral-400">
-                    No links in Column 2 yet. Click &quot;Add Link&quot; to get started.
+                    No links in Column 2 yet. Click &quot;Add Link&quot; to get
+                    started.
                   </div>
                 )}
               </div>
@@ -563,7 +594,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 <input
                   type="text"
                   value={data.footer_contact_title}
-                  onChange={(e) => setData('footer_contact_title', e.target.value)}
+                  onChange={(e) =>
+                    setData('footer_contact_title', e.target.value)
+                  }
                   placeholder="Contact Information"
                   className="w-full max-w-md rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
@@ -571,7 +604,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                 {/* Factory Address */}
-                <div className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_factory ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}>
+                <div
+                  className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_factory ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}
+                >
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Building2 className="h-4 w-4 text-teal-600" />
                     Factory Address
@@ -595,7 +630,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
 
                 {/* Showroom Address */}
-                <div className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_showroom ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}>
+                <div
+                  className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_showroom ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}
+                >
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Store className="h-4 w-4 text-teal-600" />
                     Showroom Address
@@ -619,7 +656,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
 
                 {/* Phone Number */}
-                <div className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_phone ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}>
+                <div
+                  className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_phone ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}
+                >
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Phone className="h-4 w-4 text-teal-600" />
                     Phone Number
@@ -643,7 +682,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
 
                 {/* WhatsApp Number */}
-                <div className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_whatsapp ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}>
+                <div
+                  className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_whatsapp ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}
+                >
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <MessageCircle className="h-4 w-4 text-teal-600" />
                     WhatsApp Number
@@ -667,7 +708,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
 
                 {/* Contact Email */}
-                <div className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_email ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}>
+                <div
+                  className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_email ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}
+                >
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Mail className="h-4 w-4 text-teal-600" />
                     Contact Email
@@ -691,7 +734,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                 </div>
 
                 {/* Social Media */}
-                <div className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_socials ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}>
+                <div
+                  className={`flex items-center justify-between rounded-xl border p-4 transition-all ${data.footer_show_socials ? 'border-neutral-200 bg-white shadow-sm' : 'border-dashed border-neutral-300 bg-neutral-50/70 opacity-75'}`}
+                >
                   <span className="flex items-center gap-2.5 text-sm font-medium text-neutral-800">
                     <Globe className="h-4 w-4 text-teal-600" />
                     Social Media
@@ -734,7 +779,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                     </span>
                   </div>
                   <p className="text-sm text-neutral-500">
-                    Manage store social media accounts and Privacy Policy / Terms &amp; Conditions pages
+                    Manage store social media accounts and Privacy Policy /
+                    Terms &amp; Conditions pages
                   </p>
                 </div>
               </div>
@@ -763,7 +809,14 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                     Click the buttons below to add your preferred platforms
                   </p>
                   <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                    {['instagram', 'facebook', 'tiktok', 'youtube', 'whatsapp', 'linkedin'].map((p) => {
+                    {[
+                      'instagram',
+                      'facebook',
+                      'tiktok',
+                      'youtube',
+                      'whatsapp',
+                      'linkedin',
+                    ].map((p) => {
                       const preset = PLATFORM_PRESETS.find((x) => x.id === p);
                       return (
                         <button
@@ -772,8 +825,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                           onClick={() => handleAddSocial(p)}
                           className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm transition-all hover:border-teal-500 hover:text-teal-600"
                         >
-                          <PlatformIcon platform={p} className="h-3.5 w-3.5" />
-                          + {preset?.name}
+                          <PlatformIcon platform={p} className="h-3.5 w-3.5" />+{' '}
+                          {preset?.name}
                         </button>
                       );
                     })}
@@ -782,7 +835,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
               ) : (
                 <div className="space-y-3">
                   {socialItems.map((item, index) => {
-                    const currentPreset = PLATFORM_PRESETS.find((p) => p.id === item.platform) || {
+                    const currentPreset = PLATFORM_PRESETS.find(
+                      (p) => p.id === item.platform,
+                    ) || {
                       id: 'custom',
                       name: 'Custom',
                       placeholder: 'https://...',
@@ -822,12 +877,21 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                             <span
                               className={`flex h-6 w-6 items-center justify-center rounded border ${badgeClass}`}
                             >
-                              <PlatformIcon platform={item.platform} className="h-3.5 w-3.5" />
+                              <PlatformIcon
+                                platform={item.platform}
+                                className="h-3.5 w-3.5"
+                              />
                             </span>
                           </div>
                           <select
                             value={item.platform}
-                            onChange={(e) => handleSocialChange(item.id, 'platform', e.target.value)}
+                            onChange={(e) =>
+                              handleSocialChange(
+                                item.id,
+                                'platform',
+                                e.target.value,
+                              )
+                            }
                             className="w-full appearance-none rounded-lg border border-neutral-200 bg-white py-2.5 pr-8 pl-11 text-sm font-medium text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                           >
                             {PLATFORM_PRESETS.map((preset) => (
@@ -837,7 +901,11 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                             ))}
                           </select>
                           <div className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-neutral-400">
-                            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <svg
+                              className="h-4 w-4"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
                               <path
                                 fillRule="evenodd"
                                 d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
@@ -853,7 +921,13 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                             <input
                               type="text"
                               value={item.label || ''}
-                              onChange={(e) => handleSocialChange(item.id, 'label', e.target.value)}
+                              onChange={(e) =>
+                                handleSocialChange(
+                                  item.id,
+                                  'label',
+                                  e.target.value,
+                                )
+                              }
                               placeholder="Platform Name"
                               className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                             />
@@ -865,7 +939,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                           <input
                             type="url"
                             value={item.url}
-                            onChange={(e) => handleSocialChange(item.id, 'url', e.target.value)}
+                            onChange={(e) =>
+                              handleSocialChange(item.id, 'url', e.target.value)
+                            }
                             placeholder={currentPreset.placeholder}
                             className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                           />
@@ -901,7 +977,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                   <div className="mt-3 flex flex-wrap items-center gap-2 pt-2 text-xs text-neutral-500">
                     <span className="font-medium">Quick add:</span>
                     {PLATFORM_PRESETS.filter(
-                      (p) => !socialItems.some((item) => item.platform === p.id)
+                      (p) =>
+                        !socialItems.some((item) => item.platform === p.id),
                     ).map((preset) => (
                       <button
                         key={preset.id}
@@ -909,7 +986,10 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                         onClick={() => handleAddSocial(preset.id)}
                         className="inline-flex items-center gap-1 rounded-md border border-neutral-200 bg-white px-2.5 py-1 text-neutral-600 transition-all hover:border-teal-500 hover:text-teal-600 active:scale-95"
                       >
-                        <PlatformIcon platform={preset.id} className="h-3 w-3" />
+                        <PlatformIcon
+                          platform={preset.id}
+                          className="h-3 w-3"
+                        />
                         + {preset.name}
                       </button>
                     ))}
@@ -925,7 +1005,8 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                     Legal Pages (Privacy Policy &amp; Terms)
                   </h3>
                   <p className="text-xs text-neutral-500">
-                    Show or hide bottom footer legal links and customize their URLs
+                    Show or hide bottom footer legal links and customize their
+                    URLs
                   </p>
                 </div>
 
@@ -944,10 +1025,12 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                           Privacy Policy URL
                         </label>
                         <p className="text-[11px] text-neutral-500">
-                          {data.footer_show_privacy ? 'Visible on footer' : 'Hidden from footer'}
+                          {data.footer_show_privacy
+                            ? 'Visible on footer'
+                            : 'Hidden from footer'}
                         </p>
                       </div>
-                      
+
                       {/* Show / Hide Toggle Buttons */}
                       <div className="inline-flex items-center rounded-lg border border-neutral-200 bg-neutral-100 p-0.5 text-xs">
                         <button
@@ -979,7 +1062,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                     <input
                       type="text"
                       value={data.footer_privacy_url}
-                      onChange={(e) => setData('footer_privacy_url', e.target.value)}
+                      onChange={(e) =>
+                        setData('footer_privacy_url', e.target.value)
+                      }
                       placeholder="/shop/privacy-policy"
                       className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                     />
@@ -999,7 +1084,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                           Terms &amp; Conditions URL
                         </label>
                         <p className="text-[11px] text-neutral-500">
-                          {data.footer_show_terms ? 'Visible on footer' : 'Hidden from footer'}
+                          {data.footer_show_terms
+                            ? 'Visible on footer'
+                            : 'Hidden from footer'}
                         </p>
                       </div>
 
@@ -1034,7 +1121,9 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
                     <input
                       type="text"
                       value={data.footer_terms_url}
-                      onChange={(e) => setData('footer_terms_url', e.target.value)}
+                      onChange={(e) =>
+                        setData('footer_terms_url', e.target.value)
+                      }
                       placeholder="/shop/terms"
                       className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                     />

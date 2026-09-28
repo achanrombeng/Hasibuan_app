@@ -148,7 +148,8 @@ function OrderCard({ order }: { order: Order }) {
           </p>
           {otherItemsCount > 0 && (
             <p className="mt-1 text-xs text-terra-400">
-              +{otherItemsCount} {t('shop.products.showing_results', { count: '' })}
+              +{otherItemsCount}{' '}
+              {t('shop.products.showing_results', { count: '' })}
             </p>
           )}
         </div>

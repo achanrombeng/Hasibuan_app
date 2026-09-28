@@ -54,7 +54,8 @@ export default function AuthSimpleLayout({
               <span className="text-accent-600">for Your Living Spaces</span>
             </h2>
             <p className="max-w-md text-lg leading-relaxed text-teal-100/80">
-              Discover premium outdoor and indoor furniture collections designed to elevate your living environment.
+              Discover premium outdoor and indoor furniture collections designed
+              to elevate your living environment.
             </p>
           </div>
 

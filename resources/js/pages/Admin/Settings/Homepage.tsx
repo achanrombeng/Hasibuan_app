@@ -2,12 +2,12 @@ import { ConfirmDialog } from '@/components/ui/alert-dialog';
 import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
+import MDEditor from '@uiw/react-md-editor';
 import {
   ArrowDown,
   ArrowUp,
   BookOpen,
-  ChevronLeft,
   Home,
   Image,
   LayoutGrid,
@@ -25,7 +25,6 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import MDEditor from '@uiw/react-md-editor';
 import { useCallback, useRef, useState } from 'react';
 
 interface CarouselBanner {
@@ -98,7 +97,12 @@ const SECTIONS = [
     icon: SlidersHorizontal,
     desc: 'Carousel banners',
   },
-  { key: 'trust', label: 'Trust Logos', icon: Users, desc: 'Media & brand logos' },
+  {
+    key: 'trust',
+    label: 'Trust Logos',
+    icon: Users,
+    desc: 'Media & brand logos',
+  },
   {
     key: 'categories',
     label: 'Categories',
@@ -718,7 +722,8 @@ export default function HomepageSettings({
                     Website Logo
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Manage primary logo displayed in Header, Mobile Menu, and Footer
+                    Manage primary logo displayed in Header, Mobile Menu, and
+                    Footer
                   </p>
                 </div>
               </div>
@@ -803,7 +808,7 @@ export default function HomepageSettings({
                       <p className="mt-1 text-xs text-neutral-400">
                         Format: PNG, WEBP, SVG, JPG (Max 10MB)
                       </p>
-                      <span className="mt-2 inline-flex items-center rounded-full bg-teal-50 px-2.5 py-0.5 text-[11px] font-medium text-teal-700 border border-teal-100">
+                      <span className="mt-2 inline-flex items-center rounded-full border border-teal-100 bg-teal-50 px-2.5 py-0.5 text-[11px] font-medium text-teal-700">
                         Recommended size: 300 × 80 px (transparent background)
                       </span>
                     </>
@@ -998,7 +1003,7 @@ export default function HomepageSettings({
                             <label className="block text-xs text-neutral-500">
                               Image / Video
                             </label>
-                            <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200/60">
+                            <span className="rounded border border-amber-200/60 bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
                               Recommended size: 1920 × 600 px (16:5 ratio)
                             </span>
                           </div>
@@ -1249,7 +1254,8 @@ export default function HomepageSettings({
                     Craftsmanship Section (Handcrafted & Materials)
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Manage artisan craftsmanship content, material descriptions, and photo sliders
+                    Manage artisan craftsmanship content, material descriptions,
+                    and photo sliders
                   </p>
                 </div>
               </div>
@@ -1301,7 +1307,7 @@ export default function HomepageSettings({
                     <label className="block text-sm font-medium text-neutral-700">
                       Row 1 Slider Images
                     </label>
-                    <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200/60">
+                    <span className="rounded border border-amber-200/60 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
                       Recommended size: 800 × 600 px (4:3 ratio)
                     </span>
                   </div>
@@ -1376,7 +1382,8 @@ export default function HomepageSettings({
               <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
-                    Row 2: Strength of Nature / Teak Wood (Slider Left, Text Right)
+                    Row 2: Strength of Nature / Teak Wood (Slider Left, Text
+                    Right)
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -1417,7 +1424,7 @@ export default function HomepageSettings({
                     <label className="block text-sm font-medium text-neutral-700">
                       Row 2 Slider Images
                     </label>
-                    <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium border border-amber-200/60">
+                    <span className="rounded border border-amber-200/60 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
                       Recommended size: 800 × 600 px (4:3 ratio)
                     </span>
                   </div>

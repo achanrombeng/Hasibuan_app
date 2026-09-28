@@ -73,7 +73,9 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
 }) => {
   const categoriesList = React.useMemo(() => {
     if (!categories) return [];
-    return Array.isArray(categories) ? categories : (categories as any).data || [];
+    return Array.isArray(categories)
+      ? categories
+      : (categories as any).data || [];
   }, [categories]);
 
   const items: CategoryItem[] = React.useMemo(() => {
@@ -82,11 +84,15 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
         const orderA = typeof a.sort_order === 'number' ? a.sort_order : 0;
         const orderB = typeof b.sort_order === 'number' ? b.sort_order : 0;
         if (orderA !== orderB) return orderA - orderB;
-        return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+        return (a.name || '').localeCompare(b.name || '', undefined, {
+          sensitivity: 'base',
+        });
       });
       return sorted.map((c: ApiCategory, index: number) => {
         const defaultMatch = CATEGORY_ITEMS.find(
-          (item) => item.slug === c.slug || item.title.toLowerCase() === c.name.toLowerCase(),
+          (item) =>
+            item.slug === c.slug ||
+            item.title.toLowerCase() === c.name.toLowerCase(),
         );
         return {
           id: c.slug || `cat-${c.id}`,
@@ -106,7 +112,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
     <section className={`bg-white ${className}`}>
       <div className="mx-auto max-w-[1440px] px-4 md:px-8 lg:px-12">
         {/* Top Armchair Icon */}
-        <div className="flex justify-center mb-3">
+        <div className="mb-3 flex justify-center">
           <svg
             width="44"
             height="44"
@@ -146,19 +152,19 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
         </div>
 
         {/* Section Header */}
-        <div className="mb-12 text-center max-w-3xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-neutral-900 mb-4 tracking-tight">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <h2 className="mb-4 font-serif text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl">
             Product Categories
           </h2>
-          <p className="text-neutral-600 text-sm md:text-base leading-relaxed font-sans">
-            The Ronica collection combines the durability of hand-woven rattan and
-            Grade-A teak wood with modern design. Adding tropical elegance to
-            your living space with natural grace and superior craftsmanship.
+          <p className="font-sans text-sm leading-relaxed text-neutral-600 md:text-base">
+            The Ronica collection combines the durability of hand-woven rattan
+            and Grade-A teak wood with modern design. Adding tropical elegance
+            to your living space with natural grace and superior craftsmanship.
           </p>
         </div>
 
         {/* 2-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
           {items.map((item, index) => (
             <motion.div
               key={item.id}
@@ -169,13 +175,13 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
             >
               <Link
                 href={`/shop/products?filter[category]=${item.slug}`}
-                className="group relative block overflow-hidden rounded-sm aspect-[4/3] bg-neutral-100 shadow-md transition-all duration-500 hover:shadow-2xl"
+                className="group relative block aspect-[4/3] overflow-hidden rounded-sm bg-neutral-100 shadow-md transition-all duration-500 hover:shadow-2xl"
               >
                 {/* Background Image */}
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.96]"
+                  className="h-full w-full object-cover brightness-[0.96] transition-transform duration-700 group-hover:scale-105"
                 />
 
                 {/* Subtle Gradient Overlay */}
@@ -186,11 +192,11 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
                   className={`absolute ${
                     item.badgePosition === 'bottom-left'
                       ? 'bottom-6 left-6'
-                      : 'bottom-6 right-6'
+                      : 'right-6 bottom-6'
                   }`}
                 >
-                  <div className="bg-white/85 backdrop-blur-md px-6 py-3 rounded-sm shadow-lg border border-white/60 transition-all duration-300 group-hover:bg-white group-hover:scale-105">
-                    <span className="font-serif font-bold text-neutral-900 text-base md:text-lg tracking-wide">
+                  <div className="rounded-sm border border-white/60 bg-white/85 px-6 py-3 shadow-lg backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:bg-white">
+                    <span className="font-serif text-base font-bold tracking-wide text-neutral-900 md:text-lg">
                       {item.title}
                     </span>
                   </div>

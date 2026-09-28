@@ -8,12 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Order } from '@/types';
 import { useTranslation } from '@/hooks/use-translation';
-import { Head, Link, usePage } from '@inertiajs/react';
 import { home as shopHome } from '@/routes/shop';
-import { index as shopProductsIndex } from '@/routes/shop/products';
 import { index as shopOrdersIndex } from '@/routes/shop/orders';
+import { index as shopProductsIndex } from '@/routes/shop/products';
+import { Order } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
   CheckCircle2,
   ChevronRight,
@@ -68,7 +68,9 @@ export default function Success({ order }: Props) {
         <div className="mb-4 rounded-full bg-red-100 p-4">
           <ShoppingBag className="h-12 w-12 text-red-600" />
         </div>
-        <h1 className="mb-2 text-2xl font-bold">{t('shop.orders.no_orders')}</h1>
+        <h1 className="mb-2 text-2xl font-bold">
+          {t('shop.orders.no_orders')}
+        </h1>
         <p className="mb-8 text-gray-600">
           Maaf, kami tidak dapat menemukan informasi pesanan Anda.
         </p>
@@ -257,18 +259,12 @@ export default function Success({ order }: Props) {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col justify-center gap-3 border-t py-6 sm:flex-row">
-            <Link
-              href={shopProductsIndex.url()}
-              className="w-full sm:w-auto"
-            >
+            <Link href={shopProductsIndex.url()} className="w-full sm:w-auto">
               <Button variant="outline" className="w-full">
                 Lanjut Belanja
               </Button>
             </Link>
-            <Link
-              href={shopOrdersIndex.url()}
-              className="w-full sm:w-auto"
-            >
+            <Link href={shopOrdersIndex.url()} className="w-full sm:w-auto">
               <Button className="w-full gap-2">
                 Lihat Pesanan Saya
                 <ChevronRight className="h-4 w-4" />

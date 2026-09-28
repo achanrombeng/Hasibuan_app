@@ -457,17 +457,19 @@ function ShippingSection({
           {visibleOptions.map((option) => (
             <label
               key={option.key}
-              className={`flex cursor-pointer items-center justify-between rounded-sm border-2 p-4 transition-colors ${selectedOption?.key === option.key
+              className={`flex cursor-pointer items-center justify-between rounded-sm border-2 p-4 transition-colors ${
+                selectedOption?.key === option.key
                   ? 'border-wood bg-wood/5'
                   : 'border-terra-100 hover:border-terra-200'
-                }`}
+              }`}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${selectedOption?.key === option.key
+                  className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2 ${
+                    selectedOption?.key === option.key
                       ? 'border-wood bg-wood'
                       : 'border-terra-300'
-                    }`}
+                  }`}
                 >
                   {selectedOption?.key === option.key && (
                     <Check className="h-3 w-3 text-white" />

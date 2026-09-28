@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { getCsrfHeaders, getCsrfToken } from '@/lib/csrf';
 import { router } from '@inertiajs/react';
 import {
   AlertCircle,
@@ -20,7 +21,6 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react';
-import { getCsrfHeaders, getCsrfToken } from '@/lib/csrf';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface MatchedProduct {
@@ -162,7 +162,11 @@ export default function ProductBulkImageModal({
       const matchData = await res.json();
       const matchesMap: Record<
         string,
-        { detected_sku: string; matched: boolean; product: MatchedProduct | null }
+        {
+          detected_sku: string;
+          matched: boolean;
+          product: MatchedProduct | null;
+        }
       > = {};
 
       if (matchData.success && Array.isArray(matchData.matches)) {
@@ -431,7 +435,8 @@ export default function ProductBulkImageModal({
                       Tarik & jatuhkan banyak foto atau file ZIP di sini
                     </p>
                     <p className="mt-1 text-xs text-neutral-500">
-                      Format didukung: JPG, PNG, WEBP, atau file ZIP (Maks 200MB)
+                      Format didukung: JPG, PNG, WEBP, atau file ZIP (Maks
+                      200MB)
                     </p>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
@@ -484,7 +489,9 @@ export default function ProductBulkImageModal({
               {isMatching && (
                 <div className="flex items-center justify-center gap-2 rounded-xl border border-terra-100 bg-terra-50/50 p-4 text-xs font-medium text-terra-900">
                   <Loader2 className="h-4 w-4 animate-spin text-terra-700" />
-                  <span>Menganalisis nama file dan mencocokkan ke database SKU...</span>
+                  <span>
+                    Menganalisis nama file dan mencocokkan ke database SKU...
+                  </span>
                 </div>
               )}
 
@@ -534,7 +541,7 @@ export default function ProductBulkImageModal({
                           <img
                             src={item.previewUrl}
                             alt={item.filename}
-                            className="h-12 w-12 shrink-0 rounded-lg border border-neutral-200 object-cover bg-white"
+                            className="h-12 w-12 shrink-0 rounded-lg border border-neutral-200 bg-white object-cover"
                           />
                           <div className="min-w-0">
                             <p className="truncate font-semibold text-neutral-900">
@@ -552,7 +559,7 @@ export default function ProductBulkImageModal({
                             <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-2.5 py-1.5 text-green-900">
                               <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
                               <div className="text-left">
-                                <p className="font-semibold leading-none">
+                                <p className="leading-none font-semibold">
                                   SKU: {item.matchedProduct.sku}
                                 </p>
                                 <p className="mt-0.5 max-w-[140px] truncate text-[11px] text-green-700">
@@ -586,9 +593,9 @@ export default function ProductBulkImageModal({
 
                           {/* Product Search Dropdown Popup */}
                           {activeItemForSearch === item.id && (
-                            <div className="absolute right-0 top-full z-50 mt-1.5 w-72 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl">
+                            <div className="absolute top-full right-0 z-50 mt-1.5 w-72 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl">
                               <div className="relative mb-2">
-                                <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400" />
+                                <Search className="absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400" />
                                 <input
                                   type="text"
                                   placeholder="Cari SKU / nama produk..."
@@ -597,7 +604,7 @@ export default function ProductBulkImageModal({
                                     setSearchQuery(e.target.value)
                                   }
                                   autoFocus
-                                  className="w-full rounded-lg border border-neutral-200 py-1.5 pl-8 pr-2 text-xs focus:border-terra-600 focus:outline-none"
+                                  className="w-full rounded-lg border border-neutral-200 py-1.5 pr-2 pl-8 text-xs focus:border-terra-600 focus:outline-none"
                                 />
                               </div>
 
@@ -714,7 +721,9 @@ export default function ProductBulkImageModal({
               <div className="flex items-center gap-3 rounded-xl border border-teal-200 bg-teal-50/70 p-4 text-teal-900">
                 <CheckCircle2 className="h-6 w-6 shrink-0 text-teal-600" />
                 <div>
-                  <h4 className="font-semibold">Upload Gambar Massal Selesai!</h4>
+                  <h4 className="font-semibold">
+                    Upload Gambar Massal Selesai!
+                  </h4>
                   <p className="text-xs text-teal-700">
                     Foto produk telah diproses dengan latar belakang putih 1:1
                     dan ditautkan ke galeri produk.
@@ -754,7 +763,7 @@ export default function ProductBulkImageModal({
                     {report.updated_products.map((name, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center gap-2 rounded-lg bg-white px-2.5 py-1.5 border border-neutral-100"
+                        className="flex items-center gap-2 rounded-lg border border-neutral-100 bg-white px-2.5 py-1.5"
                       >
                         <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
                         <span className="truncate">{name}</span>
@@ -774,7 +783,7 @@ export default function ProductBulkImageModal({
                     {report.errors.map((err, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-2 rounded-lg bg-white/70 p-2 border border-amber-100"
+                        className="flex items-start gap-2 rounded-lg border border-amber-100 bg-white/70 p-2"
                       >
                         <span className="font-mono font-semibold">
                           {err.filename}:

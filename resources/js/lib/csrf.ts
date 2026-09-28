@@ -5,7 +5,9 @@
 export function getCsrfToken(): string {
   if (typeof document === 'undefined') return '';
 
-  const meta = document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement | null;
+  const meta = document.querySelector(
+    'meta[name="csrf-token"]',
+  ) as HTMLMetaElement | null;
   if (meta?.content) {
     return meta.content;
   }
@@ -16,20 +18,29 @@ export function getCsrfToken(): string {
 export function getCookie(name: string): string {
   if (typeof document === 'undefined') return '';
 
-  const match = document.cookie.match(new RegExp('(^|;\\s*)' + name + '=([^;]*)'));
+  const match = document.cookie.match(
+    new RegExp('(^|;\\s*)' + name + '=([^;]*)'),
+  );
   return match ? decodeURIComponent(match[2]) : '';
 }
 
-export function getCsrfHeaders(customHeaders: Record<string, string> = {}): Record<string, string> {
+export function getCsrfHeaders(
+  customHeaders: Record<string, string> = {},
+): Record<string, string> {
   const headers: Record<string, string> = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
     ...customHeaders,
   };
 
-  const metaToken = typeof document !== 'undefined'
-    ? (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement | null)?.content
-    : null;
+  const metaToken =
+    typeof document !== 'undefined'
+      ? (
+          document.querySelector(
+            'meta[name="csrf-token"]',
+          ) as HTMLMetaElement | null
+        )?.content
+      : null;
 
   if (metaToken) {
     headers['X-CSRF-TOKEN'] = metaToken;
