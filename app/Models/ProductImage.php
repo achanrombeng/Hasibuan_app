@@ -27,11 +27,34 @@ class ProductImage extends Model
 
     protected static function booted(): void
     {
+        static::saved(function (ProductImage $image) {
+            if ($image->product_id) {
+                $product = Product::with('parentProducts')->find($image->product_id);
+                if ($product && ! $product->isLivingCollection()) {
+                    foreach ($product->parentProducts as $parent) {
+                        if ($parent->isLivingCollection()) {
+                            $parent->syncLivingCollectionImages();
+                        }
+                    }
+                }
+            }
+        });
+
         static::deleted(function (ProductImage $image) {
             if ($image->product_id) {
-                $product = Product::find($image->product_id);
-                if ($product && $product->images()->count() === 0 && $product->status !== ProductStatus::DRAFT) {
-                    $product->updateQuietly(['status' => ProductStatus::DRAFT]);
+                $product = Product::with('parentProducts')->find($image->product_id);
+                if ($product) {
+                    if ($product->images()->count() === 0 && $product->status !== ProductStatus::DRAFT) {
+                        $product->updateQuietly(['status' => ProductStatus::DRAFT]);
+                    }
+
+                    if (! $product->isLivingCollection()) {
+                        foreach ($product->parentProducts as $parent) {
+                            if ($parent->isLivingCollection()) {
+                                $parent->syncLivingCollectionImages();
+                            }
+                        }
+                    }
                 }
             }
         });

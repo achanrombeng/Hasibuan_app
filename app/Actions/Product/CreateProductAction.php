@@ -55,6 +55,10 @@ class CreateProductAction
                     $syncData[$linkedId] = ['sort_order' => $order];
                 }
                 $product->linkedProducts()->sync($syncData);
+
+                if ($isLivingCollection && empty($images)) {
+                    $product->syncLivingCollectionImages();
+                }
             }
 
             // Handle images

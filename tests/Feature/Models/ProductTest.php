@@ -127,4 +127,49 @@ describe('Product Model', function () {
         expect($collectionProduct->effective_images)->toHaveCount(2);
         expect($collectionProduct->effective_images->pluck('id')->toArray())->toEqual([$chairImage->id, $sofaImage->id]);
     });
+
+    it('automatically syncs and populates primary images from linked products for living collection', function () {
+        $livingCollectionCategory = Category::factory()->create([
+            'name' => 'Living Collection',
+            'slug' => 'living-collection',
+        ]);
+
+        $collection = Product::factory()->create([
+            'name' => 'Salvador Collection',
+            'category_id' => $livingCollectionCategory->id,
+            'status' => ProductStatus::DRAFT,
+        ]);
+
+        $table = Product::factory()->create(['name' => 'Salvador Table']);
+        $tableImg = ProductImage::create([
+            'product_id' => $table->id,
+            'image_path' => 'products/table.jpg',
+            'sort_order' => 0,
+            'is_primary' => true,
+        ]);
+
+        $chair = Product::factory()->create(['name' => 'Salvador Chair']);
+        $chairImg = ProductImage::create([
+            'product_id' => $chair->id,
+            'image_path' => 'products/chair.jpg',
+            'sort_order' => 0,
+            'is_primary' => true,
+        ]);
+
+        $collection->linkedProducts()->sync([
+            $table->id => ['sort_order' => 0],
+            $chair->id => ['sort_order' => 1],
+        ]);
+
+        $collection->syncLivingCollectionImages();
+
+        $collection = $collection->fresh()->load('images');
+        expect($collection->images)->toHaveCount(2);
+        expect($collection->status)->toBe(ProductStatus::ACTIVE);
+        expect($collection->images[0]->image_path)->toBe('products/table.jpg');
+        expect($collection->images[0]->is_primary)->toBeTrue();
+        expect($collection->images[1]->image_path)->toBe('products/chair.jpg');
+        expect($collection->images[1]->is_primary)->toBeFalse();
+    });
 });
+

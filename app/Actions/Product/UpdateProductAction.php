@@ -104,6 +104,17 @@ class UpdateProductAction
                 ]);
             }
 
+            if ($isLivingCollection && empty($newImages) && empty($primaryImageId)) {
+                $product->syncLivingCollectionImages();
+            }
+
+            // Sync any parent living collection products if this product is linked
+            foreach ($product->parentProducts as $parent) {
+                if ($parent->isLivingCollection()) {
+                    $parent->syncLivingCollectionImages();
+                }
+            }
+
             return $product->fresh()->load('images', 'category');
         });
     }

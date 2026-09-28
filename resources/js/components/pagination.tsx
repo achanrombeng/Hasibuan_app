@@ -164,13 +164,12 @@ export default function Pagination({
           <div className="flex items-center gap-2">
             <span className="text-sm text-neutral-500">Show</span>
             <select
-              value={currentMeta?.per_page || 15}
+              value={currentMeta?.per_page || 20}
               onChange={handlePerPageChange}
               className="rounded-lg border-neutral-200 bg-neutral-50 py-1 pr-8 pl-2 text-sm focus:border-teal-600 focus:ring-teal-600"
             >
-              <option value="5">5</option>
               <option value="10">10</option>
-              <option value="15">15</option>
+              <option value="20">20</option>
               <option value="50">50</option>
               <option value="100">100</option>
             </select>

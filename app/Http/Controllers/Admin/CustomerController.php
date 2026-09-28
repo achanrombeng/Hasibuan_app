@@ -22,7 +22,7 @@ class CustomerController extends Controller
             ->defaultSort('-created_at')
             ->withCount('orders')
             ->with(['orders' => fn ($q) => $q->latest()->take(1)])
-            ->paginate($request->input('per_page', 15))
+            ->paginate($request->input('per_page', 20))
             ->onEachSide(1)
             ->withQueryString()
             ->through(fn (User $user) => [

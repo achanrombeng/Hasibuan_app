@@ -34,7 +34,7 @@ class OrderController extends Controller implements HasMiddleware
     {
         $orders = OrderQuery::admin($request)
             ->latest()
-            ->paginate($request->input('per_page', 15))
+            ->paginate($request->input('per_page', 20))
             ->onEachSide(1)
             ->withQueryString();
 

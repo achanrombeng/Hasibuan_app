@@ -284,14 +284,11 @@ class ProductBulkImageController extends Controller implements HasMiddleware
                         $product->updateQuietly(['status' => \App\Enums\ProductStatus::ACTIVE]);
                     }
 
-                    // Aktifkan juga Living Collection parent jika ada
-                    $livingParents = Product::where('category_id', 2)
-                        ->where('status', \App\Enums\ProductStatus::DRAFT->value)
-                        ->whereHas('linkedProducts', fn ($q) => $q->where('products.id', $product->id))
-                        ->get();
-
-                    foreach ($livingParents as $parent) {
-                        $parent->updateQuietly(['status' => \App\Enums\ProductStatus::ACTIVE]);
+                    // Sync Living Collection parents jika produk ini ditautkan
+                    foreach ($product->parentProducts as $parent) {
+                        if ($parent->isLivingCollection()) {
+                            $parent->syncLivingCollectionImages();
+                        }
                     }
 
                     $report['successful']++;

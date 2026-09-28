@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { Head, Link, router } from '@inertiajs/react';
-import { Pencil, Search, Shield, Trash2, User, UserCog } from 'lucide-react';
+import { Pencil, Plus, Search, Shield, Trash2, User, UserCog } from 'lucide-react';
 import { useState } from 'react';
 
 interface AdminUser {
@@ -94,13 +94,13 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
             </h1>
             <p className="mt-1 text-terra-500">Manage admin users and staff</p>
           </div>
-          {/* <Link
-                        href="/admin/users/create"
-                        className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white transition-all hover:bg-wood-dark"
-                    >
-                        <Plus className="h-5 w-5" />
-                        Add User
-                    </Link> */}
+          <Link
+            href="/admin/users/create"
+            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-teal-700 active:scale-[0.98]"
+          >
+            <Plus className="h-5 w-5" />
+            <span>Add User</span>
+          </Link>
         </div>
 
         {/* Search & Filter Bar */}

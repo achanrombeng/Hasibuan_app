@@ -48,7 +48,7 @@ class SyncGoogleDriveProductsCommand extends Command
 
         $baseDir = $this->option('path') 
             ? (string) $this->option('path') 
-            : '/Users/adnanmac/.gemini/antigravity-ide/brain/e4d67261-58d6-41cb-ae35-84d759438c27/scratch/gdrive';
+            : '/Users/adnanmac/.gemini/antigravity-ide/brain/56f99149-693b-452d-a621-fb3b814a21b2/scratch/gdrive_import';
 
         if (! is_dir($baseDir)) {
             $this->error("Directory not found: {$baseDir}");
@@ -65,23 +65,15 @@ class SyncGoogleDriveProductsCommand extends Command
             $this->warn('--- DRY RUN MODE (No changes will be written to database or storage) ---');
         }
 
-        // Get all subdirectories
-        $allEntries = scandir($baseDir);
-        $folders = [];
-        foreach ($allEntries as $entry) {
-            if ($entry === '.' || $entry === '..' || str_starts_with($entry, '.')) {
-                continue;
-            }
-            $fullPath = $baseDir.'/'.$entry;
-            if (is_dir($fullPath)) {
-                $folders[] = $entry;
-            }
-        }
-        sort($folders);
+        // Find all directories that contain image files
+        $productFolders = $this->findProductFolders($baseDir);
 
         if ($targetFolder) {
-            $folders = array_filter($folders, fn ($f) => strcasecmp($f, $targetFolder) === 0);
-            if (empty($folders)) {
+            $productFolders = array_filter(
+                $productFolders,
+                fn ($name) => strcasecmp($name, $targetFolder) === 0
+            );
+            if (empty($productFolders)) {
                 $this->error("Folder '{$targetFolder}' not found in {$baseDir}");
 
                 return self::FAILURE;
@@ -89,30 +81,29 @@ class SyncGoogleDriveProductsCommand extends Command
         }
 
         if ($limit !== null && $limit > 0) {
-            $folders = array_slice($folders, 0, $limit);
+            $productFolders = array_slice($productFolders, 0, $limit, true);
         }
 
-        $this->info('Found '.count($folders).' product folders to process.');
+        $this->info('Found ' . count($productFolders) . ' product folders to process.');
 
         $processed = 0;
         $created = 0;
         $updated = 0;
         $failed = 0;
 
-        foreach ($folders as $folderName) {
-            $folderPath = $baseDir.'/'.$folderName;
+        foreach ($productFolders as $folderPath => $folderName) {
             $this->newLine();
             $this->info("==================================================");
             $this->info("Processing Folder: [{$folderName}]");
 
-            // Gather valid image files
+            // Gather valid, deduplicated image files
             $imageFiles = $this->getImageFiles($folderPath);
             if (empty($imageFiles)) {
                 $this->warn("No valid images found in folder '{$folderName}'. Skipping.");
                 continue;
             }
 
-            $this->line("Found ".count($imageFiles)." images.");
+            $this->line("Found " . count($imageFiles) . " distinct images (after deduplication).");
 
             try {
                 // 1. Check if product already exists or needs to be created
@@ -120,7 +111,7 @@ class SyncGoogleDriveProductsCommand extends Command
 
                 // Skip if product already has all images synced and force is not set
                 if ($existingProduct && ! $force && ! $dryRun && $existingProduct->images()->count() >= count($imageFiles)) {
-                    $this->info("✓ Product #{$existingProduct->id} ({$existingProduct->name}) already has ".count($imageFiles)." images. Skipping.");
+                    $this->info("✓ Product #{$existingProduct->id} ({$existingProduct->name}) already has " . $existingProduct->images()->count() . " images. Skipping.");
                     $processed++;
                     continue;
                 }
@@ -131,9 +122,9 @@ class SyncGoogleDriveProductsCommand extends Command
 
                 if ($dryRun) {
                     if ($existingProduct) {
-                        $this->info("[DRY RUN] Would update existing Product #{$existingProduct->id} ({$existingProduct->name}) with ".count($imageFiles)." photos.");
+                        $this->info("[DRY RUN] Would update existing Product #{$existingProduct->id} ({$existingProduct->name}) with " . count($imageFiles) . " photos.");
                     } else {
-                        $this->info("[DRY RUN] Would create new Product for folder '{$folderName}' with ".count($imageFiles)." photos.");
+                        $this->info("[DRY RUN] Would create new Product for folder '{$folderName}' with " . count($imageFiles) . " photos.");
                     }
                     $processed++;
                     continue;
@@ -168,30 +159,101 @@ class SyncGoogleDriveProductsCommand extends Command
             $this->error("Failed: {$failed}");
         }
 
+        if (! $dryRun) {
+            Product::syncAllLivingCollections();
+            $drafted = Product::whereDoesntHave('images')->update(['status' => ProductStatus::DRAFT]);
+            $activated = Product::whereHas('images')->update(['status' => ProductStatus::ACTIVE]);
+            $this->info("Products without images set to DRAFT: {$drafted}");
+            $this->info("Products with images set to ACTIVE: {$activated}");
+        }
+
         return self::SUCCESS;
     }
 
     /**
-     * Get image files from directory, ignoring macOS AppleDouble ._* metadata.
+     * Recursively find all product directories that contain images.
+     *
+     * @return array<string, string> Map of folderPath => folderName
+     */
+    private function findProductFolders(string $baseDir): array
+    {
+        $productFolders = [];
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($baseDir, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                $dirPath = $item->getPathname();
+                $dirName = $item->getFilename();
+
+                // Skip top-level numeric batch folders like '1', '7', '8', '9'
+                if (in_array($dirName, ['1', '7', '8', '9'], true)) {
+                    continue;
+                }
+
+                // Check if directory contains valid images
+                $images = $this->getImageFiles($dirPath);
+                if (! empty($images)) {
+                    $productFolders[$dirPath] = $dirName;
+                }
+            }
+        }
+
+        ksort($productFolders);
+
+        return $productFolders;
+    }
+
+    /**
+     * Get image files from directory, ignoring macOS AppleDouble ._* metadata and removing duplicates.
      *
      * @return array<int, string>
      */
     private function getImageFiles(string $dir): array
     {
-        $files = scandir($dir);
-        $images = [];
+        $files = @scandir($dir);
+        if ($files === false) {
+            return [];
+        }
+
+        $rawFiles = [];
         foreach ($files as $file) {
             if (str_starts_with($file, '.') || str_starts_with($file, '._')) {
                 continue;
             }
             $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
             if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
-                $images[] = $dir.'/'.$file;
+                $rawFiles[] = $file;
             }
         }
-        sort($images);
+        sort($rawFiles);
 
-        return $images;
+        $filtered = [];
+        $seenHashes = [];
+
+        foreach ($rawFiles as $file) {
+            // Check duplicate naming like 'DSC00520 2.jpg' or 'DSC00520-2.jpg'
+            $baseName = preg_replace('/[\s_-]2\.(jpg|jpeg|png|webp)$/i', '.$1', $file);
+            if ($baseName !== $file && in_array($baseName, $rawFiles, true)) {
+                continue; // Skip named duplicate
+            }
+
+            $fullPath = $dir . '/' . $file;
+            $hash = @md5_file($fullPath);
+            if ($hash && in_array($hash, $seenHashes, true)) {
+                continue; // Skip exact content duplicate
+            }
+            if ($hash) {
+                $seenHashes[] = $hash;
+            }
+
+            $filtered[] = $fullPath;
+        }
+
+        // Limit to 6 best distinct photos per product to ensure fast loading while giving complete views
+        return array_slice($filtered, 0, 6);
     }
 
     /**
@@ -199,14 +261,15 @@ class SyncGoogleDriveProductsCommand extends Command
      */
     private function findExistingProduct(string $folderName): ?Product
     {
-        // 1. Direct name normalization
         $clean = trim($folderName);
+        $clean = preg_replace('/\s*\([^)]*\)/', '', $clean);
         $clean = preg_replace('/\s+/', ' ', $clean);
 
         // Normalize aliases
         $normalizedSearch = $clean;
         $normalizedSearch = preg_replace('/\bDC\b/i', 'DINING CHAIR', $normalizedSearch);
         $normalizedSearch = preg_replace('/\bD\.Table\b/i', 'DINING TABLE', $normalizedSearch);
+        $normalizedSearch = preg_replace('/\bCoffe\b/i', 'COFFEE', $normalizedSearch);
         $normalizedSearch = preg_replace('/\bBarstool\b/i', 'BAR CHAIR', $normalizedSearch);
 
         // Try exact case-insensitive match on name
@@ -222,99 +285,11 @@ class SyncGoogleDriveProductsCommand extends Command
             }
         }
 
-        // Special predefined mappings
-        $specialMap = [
-            'Alefa DC' => 'ALEFA DINING CHAIR',
-            'Aranni Dining Chair' => 'ARANNI DINING CHAIR',
-            'Astarte Dining Chair' => 'ASTARTE DINING CHAIR',
-            'Batty Line Dining Chair (Blue)' => 'BATTY LINE DINING CHAIR (BLUE)',
-            'Coral Barstool' => 'CORAL BAR CHAIR',
-            'Coral Dining Chair' => 'CORAL DINING CHAIR',
-            'Coral Dining Set' => 'CORAL DINING SET',
-            'Coral Dining Table' => 'CORAL DINING TABLE',
-            'Cordoba Dining Chair' => 'CORDOBA DINING CHAIR',
-            'Dolce Balcony Set' => 'DOLCE BALCONY SET',
-            'Dolce Balcony Sofa' => 'DOLCE BALCONY SOFA',
-            'Dolce Balcony Table' => 'DOLCE BALCONY TABLE',
-            'Dolce Dining Chair' => 'DOLCE DINING CHAIR',
-            'Hemera Dining Chair' => 'HEMERA DINING CHAIR',
-            'Hera Dining Chair' => 'HERA DINING CHAIR',
-            'Koko Dining Chair' => 'KOKO DINING CHAIR',
-            'Komodo Barstool' => 'KOMODO BAR CHAIR',
-            'Komodo Barstool 2' => 'KOMODO BARSTOOL 2',
-            'Linden Dining Chair' => 'LINDEN DINING CHAIR',
-            'Meryl Dining Chair' => 'MERYL DINING CHAIR',
-            'Monaco Dining Chair' => 'MONACO DINING CHAIR',
-            'Montevideo Barstool' => 'MONTEVIDEO BAR CHAIR',
-            'Nana DC Back' => 'NANA DINING CHAIR BACK',
-            'Nana Dining Arm set' => 'NANA DINING ARM SET',
-            'Nana Dining Chair Arm' => 'NANA DINING CHAIR ARM',
-            'Nana High Back' => 'NANA HIGH BACK',
-            'Nara D.Table Square' => 'NARA DINING TABLE SQUARE',
-            'Nara Dining Chair Back Curve' => 'NARA DINING CHAIR BACK CURVE',
-            'Nara Dining Chair Core' => 'NARA DINING CHAIR CORE',
-            'Nara Dining Chair no Arm' => 'NARA DINING CHAIR NO ARM',
-            'Nara Dining Core Set ( round & Squere Table)' => 'NARA DINING CORE SET',
-            'Nara Round Dining Table' => 'NARA ROUND DINING TABLE',
-            'Narnia Barstool' => 'NARNIA BAR CHAIR',
-            'Narnia Dining Chair High Back' => 'NARNIA DINING CHAIR',
-            'Narnia Occasional Chair' => 'NARNIA OCCASIONAL CHAIR',
-            'Narnia Occasional Set' => 'NARNIA OCCASIONAL SET',
-            'Narnia Occasional Table' => 'NARNIA OCCASIONAL TABLE',
-            'Nexus Dining Chair' => 'NEXUS DINING CHAIR',
-            'Nusa Dining Table' => 'NUSA DINING TABLE',
-            'Rio Dining Chair' => 'RIO DINING CHAIR NATURAL',
-            'Sisi Dining Chair' => 'SISI DINING CHAIR',
-            'Vega Dining Chair' => 'VEGA DINING CHAIR',
-            'Vero Dining Chair' => 'VERO DINING CHAIR',
-            'Windsor Barstool' => 'WINDSOR BAR CHAIR',
-            // Batch 2 mappings
-            'Caira Coffe Table' => 'CAIRA COFFEE TABLE',
-            'Caira Living Chair' => 'CAIRA LIVING CHAIR',
-            'Caira Living Set' => 'CAIRA LIVING SET',
-            'Caira Sofa 2 Seater' => 'CAIRA SOFA',
-            'Coral Coffe Table' => 'CORAL COFFEE TABLE',
-            'Coral Living Chair' => 'CORAL LIVING CHAIR',
-            'Coral Living Set' => 'CORAL LIVING SET',
-            'Coral Puff Round' => 'CORAL PUFF ROUND',
-            'Coral Sofa 3 Seater' => 'CORAL SOFA',
-            'Dune Coffe Table' => 'DUNE COFFEE TABLE',
-            'Dune Living Chair' => 'DUNE LIVING CHAIR',
-            'Dune Living Set' => 'DUNE LIVING SET',
-            'Dune Sofa 3 Seater' => 'DUNE SOFA 3 SEATER',
-            'Leora Coffe Table' => 'LEORA COFFEE TABLE',
-            'Leora Dining Chair' => 'LEORA DINING CHAIR',
-            'Leora Dining Set' => 'LEORA DINING SET',
-            'Leora Dining Table' => 'LEORA DINING TABLE',
-            'Leora Sofa 2 seater Set' => 'LEORA SOFA',
-            'Narnia Counter Stool' => 'NARNIA COUNTER CHAIR',
-            'Salvador Coffe Table' => 'SALVADOR COFFEE TABLE',
-            'Salvador Dining Chair' => 'SALVADOR DINING CHAIR',
-            'Salvador Dining Set' => 'SALVADOR DINING SET',
-            'Salvador Dining Table' => 'SALVADOR DINING TABLE',
-            'Salvador Living Chair' => 'SALVADOR LIVING CHAIR',
-            'Salvador Living Set' => 'SALVADOR LIVING SET',
-            'Salvador Side Table' => 'SALVADOR END TABLE',
-            'Salvador Sofa 3 Seater' => 'SALVADOR SOFA',
-        ];
-
-        if (isset($specialMap[$clean])) {
-            $target = $specialMap[$clean];
-            foreach ($allProducts as $p) {
-                $translations = $p->getTranslations('name');
-                $nameId = $translations['id'] ?? '';
-                $nameEn = $translations['en'] ?? (is_array($p->name) ? ($p->name['en'] ?? '') : (string) $p->name);
-                if (strcasecmp($nameEn, $target) === 0 || strcasecmp($nameId, $target) === 0) {
-                    return $p;
-                }
-            }
-        }
-
         return null;
     }
 
     /**
-     * Determine front-view image ("tampak depan") using Gemini Vision or fallback to first.
+     * Determine front-view image ("tampak depan") using edge detection & photoshoot sequence.
      *
      * @param array<int, string> $imageFiles
      */
@@ -324,46 +299,91 @@ class SyncGoogleDriveProductsCommand extends Command
             return $imageFiles[0];
         }
 
-        $tempFiles = [];
-        try {
-            // Upload up to 6 lightweight thumbnails for AI analysis
-            $subset = array_slice($imageFiles, 0, 6);
-            $uploadedFiles = [];
-            foreach ($subset as $p) {
-                $tmpPath = tempnam(sys_get_temp_dir(), 'ai_front_') . '.jpg';
-                $this->createThumbnail($p, $tmpPath, 640);
-                $tempFiles[] = $tmpPath;
-                $uploadedFiles[] = new UploadedFile($tmpPath, basename($p), 'image/jpeg', null, true);
-            }
-
-            $filenames = array_map(fn ($f) => basename($f), $subset);
-            $prompt = "Di antara foto-foto produk furnitur '{$folderName}' ini (nama file: " . implode(', ', $filenames) . "), gambar manakah yang merupakan foto TAMPAK DEPAN (front view lurus / straight-on from the front) yang paling pas sebagai foto utama katalog? Kembalikan JSON dengan format yang diminta.";
-
-            $schema = [
-                'type' => 'OBJECT',
-                'properties' => [
-                    'front_view_filename' => ['type' => 'STRING'],
-                ],
-                'required' => ['front_view_filename'],
-            ];
-
-            $res = $this->vision->generateJsonFromImages($uploadedFiles, $prompt, $schema);
-            $chosen = trim((string) ($res['front_view_filename'] ?? ''));
-
-            foreach ($imageFiles as $filePath) {
-                if (strcasecmp(basename($filePath), $chosen) === 0) {
-                    return $filePath;
-                }
-            }
-        } catch (\Throwable $e) {
-            $this->warn("AI front-view check skipped/failed: {$e->getMessage()}. Using first image as fallback.");
-        } finally {
-            foreach ($tempFiles as $tf) {
-                @unlink($tf);
+        // 1. Check if any filename explicitly contains 'front', 'depan', or 'utama'
+        foreach ($imageFiles as $filePath) {
+            $base = strtolower(basename($filePath));
+            if (str_contains($base, 'front') || str_contains($base, 'depan') || str_contains($base, 'utama')) {
+                return $filePath;
             }
         }
 
+        // 2. Select the first full-view photo (filtering out detail/close-up crops where subject touches edges)
+        foreach ($imageFiles as $filePath) {
+            if (! $this->isDetailCrop($filePath)) {
+                return $filePath;
+            }
+        }
+
+        // 3. Fallback to first image in photoshoot sequence
         return $imageFiles[0];
+    }
+
+    /**
+     * Check if an image is a detail/close-up crop where the subject bleeds into the canvas borders.
+     */
+    private function isDetailCrop(string $filePath): bool
+    {
+        $info = @getimagesize($filePath);
+        if (! $info) {
+            return false;
+        }
+
+        $srcImg = match ($info[2]) {
+            IMAGETYPE_JPEG => @imagecreatefromjpeg($filePath),
+            IMAGETYPE_PNG => @imagecreatefrompng($filePath),
+            IMAGETYPE_WEBP => @imagecreatefromwebp($filePath),
+            default => null,
+        };
+
+        if (! $srcImg) {
+            return false;
+        }
+
+        $w = imagesx($srcImg);
+        $h = imagesy($srcImg);
+        $touches = false;
+
+        // Sample along top and bottom borders (margin of 12px)
+        $stepX = max(1, (int) ($w / 25));
+        for ($x = 0; $x < $w; $x += $stepX) {
+            $rgbTop = imagecolorat($srcImg, $x, 12);
+            $rgbBot = imagecolorat($srcImg, $x, $h - 12);
+            $rTop = ($rgbTop >> 16) & 0xFF;
+            $gTop = ($rgbTop >> 8) & 0xFF;
+            $bTop = $rgbTop & 0xFF;
+            $rBot = ($rgbBot >> 16) & 0xFF;
+            $gBot = ($rgbBot >> 8) & 0xFF;
+            $bBot = $rgbBot & 0xFF;
+
+            if ($rTop < 240 || $gTop < 240 || $bTop < 240 || $rBot < 240 || $gBot < 240 || $bBot < 240) {
+                $touches = true;
+                break;
+            }
+        }
+
+        if (! $touches) {
+            // Sample along left and right borders
+            $stepY = max(1, (int) ($h / 25));
+            for ($y = 0; $y < $h; $y += $stepY) {
+                $rgbLeft = imagecolorat($srcImg, 12, $y);
+                $rgbRight = imagecolorat($srcImg, $w - 12, $y);
+                $rLeft = ($rgbLeft >> 16) & 0xFF;
+                $gLeft = ($rgbLeft >> 8) & 0xFF;
+                $bLeft = $rgbLeft & 0xFF;
+                $rRight = ($rgbRight >> 16) & 0xFF;
+                $gRight = ($rgbRight >> 8) & 0xFF;
+                $bRight = $rgbRight & 0xFF;
+
+                if ($rLeft < 240 || $gLeft < 240 || $bLeft < 240 || $rRight < 240 || $gRight < 240 || $bRight < 240) {
+                    $touches = true;
+                    break;
+                }
+            }
+        }
+
+        imagedestroy($srcImg);
+
+        return $touches;
     }
 
     /**
@@ -405,9 +425,25 @@ class SyncGoogleDriveProductsCommand extends Command
                 ]);
             }
 
-            // 4. Ensure product status is Active
+            // 4. Ensure product status is Active and fill missing fields
+            $dirty = [];
             if ($product->status !== ProductStatus::ACTIVE) {
-                $product->updateQuietly(['status' => ProductStatus::ACTIVE]);
+                $dirty['status'] = ProductStatus::ACTIVE;
+            }
+            if (empty($product->short_description)) {
+                $dirty['short_description'] = [
+                    'id' => "Furnitur outdoor {$productName} dengan desain modern kontemporer dari Ronica Furniture, dibuat menggunakan material tahan cuaca berkualitas tinggi.",
+                    'en' => "Elegant {$productName} outdoor furniture featuring contemporary modern design by Ronica Furniture, crafted with premium all-weather materials.",
+                ];
+            }
+            if (empty($product->description)) {
+                $dirty['description'] = [
+                    'id' => "{$productName} merupakan produk furnitur luar ruangan premium dari Ronica Furniture. Dirancang khusus untuk ketahanan segala cuaca dengan paduan kayu jati solid berkualitas tinggi dan anyaman rotan sintetis berdaya tahan maksimal terhadap sinar UV.",
+                    'en' => "The {$productName} is a premium outdoor furniture piece by Ronica Furniture. Expertly engineered for exceptional weather resistance featuring high-grade solid teak wood and UV-stabilized synthetic weave.",
+                ];
+            }
+            if (! empty($dirty)) {
+                $product->updateQuietly($dirty);
             }
         });
     }
@@ -427,7 +463,7 @@ class SyncGoogleDriveProductsCommand extends Command
             }
         }
 
-        // 2. Extract catalog attributes via Gemini Vision
+        // 2. Extract catalog attributes
         $attributes = $this->extractCatalogAttributes($folderName, $orderedFiles);
 
         return DB::transaction(function () use ($attributes, $orderedFiles) {
@@ -463,202 +499,177 @@ class SyncGoogleDriveProductsCommand extends Command
     {
         $cleanName = trim($folderName);
         $cleanName = preg_replace('/\s*\([^)]*\)/', '', $cleanName);
-        $cleanName = preg_replace('/\bDC\b/i', 'DINING CHAIR', $cleanName);
-        $cleanName = preg_replace('/\bD\.Table\b/i', 'DINING TABLE', $cleanName);
-        $cleanName = preg_replace('/\bCoffe\b/i', 'COFFEE', $cleanName);
+        $cleanName = preg_replace('/\bDC\b/i', 'Dining Chair', $cleanName);
+        $cleanName = preg_replace('/\bD\.Table\b/i', 'Dining Table', $cleanName);
+        $cleanName = preg_replace('/\bCoffe\b/i', 'Coffee', $cleanName);
+        $cleanName = preg_replace('/\bChildern\b/i', 'Children', $cleanName);
+        $cleanName = preg_replace('/\bHight\b/i', 'High', $cleanName);
+        $cleanName = preg_replace('/\bTry\b/i', 'Tray', $cleanName);
         $cleanName = preg_replace('/\s+/', ' ', $cleanName);
-        $cleanName = strtoupper(trim($cleanName));
+        $cleanName = trim($cleanName);
 
-        // Determine default Category
-        $categoryId = $this->guessCategoryId($cleanName);
+        // Determine Category (STRICTLY within existing active categories)
+        $categoryId = $this->guessCategoryId($folderName);
 
-        // Fallback default attributes
+        // Standard outdoor luxury furniture defaults
         $defaultData = [
             'category_id' => $categoryId,
             'sku' => $this->generateUniqueSku($cleanName),
-            'name' => ['id' => $cleanName, 'en' => $cleanName],
-            'slug' => Str::slug($cleanName).'-'.Str::lower(Str::random(5)),
+            'name' => [
+                'id' => $cleanName,
+                'en' => $cleanName,
+            ],
+            'slug' => Str::slug($cleanName) . '-' . Str::lower(Str::random(4)),
             'short_description' => [
-                'id' => "Furnitur elegan {$cleanName} dengan desain modern kontemporer dari Ronica Furniture.",
-                'en' => "Elegant {$cleanName} furniture featuring contemporary modern design by Ronica Furniture.",
+                'id' => "Furnitur outdoor elegan {$cleanName} dengan desain modern kontemporer dari Ronica Furniture, dibuat menggunakan material tahan cuaca berkualitas tinggi.",
+                'en' => "Elegant {$cleanName} outdoor furniture featuring contemporary modern design by Ronica Furniture, crafted with premium all-weather materials.",
             ],
             'description' => [
-                'id' => "{$cleanName} merupakan produk furnitur berkualitas tinggi dari Ronica. Dibuat dengan material pilihan yang kokoh, tahan lama, dan memiliki estetika visual yang menawan untuk melengkapi ruang interior maupun semi-outdoor Anda.",
-                'en' => "The {$cleanName} is a high quality furniture piece by Ronica. Crafted with selected durable materials offering visual aesthetics and comfortable ergonomics.",
+                'id' => "{$cleanName} merupakan produk furnitur luar ruangan premium dari Ronica Furniture. Dirancang khusus untuk ketahanan segala cuaca dengan paduan kayu jati solid berkualitas tinggi dan anyaman rotan sintetis berdaya tahan maksimal terhadap sinar UV. Menghadirkan kenyamanan ergonomis serta estetika mewah yang menyempurnakan area taman, teras, patio, maupun ruang keluarga Anda.",
+                'en' => "The {$cleanName} is a premium outdoor furniture piece by Ronica Furniture. Expertly engineered for exceptional weather resistance featuring high-grade solid teak wood and UV-stabilized synthetic weave. Provides superior ergonomic comfort and luxurious aesthetics for garden, patio, poolside, and indoor living spaces.",
             ],
             'low_stock_threshold' => 5,
-            'track_stock' => true,
-            'allow_backorder' => false,
+            'track_stock' => false,
+            'allow_backorder' => true,
             'is_pre_order' => false,
-            'weight' => 7.50,
-            'length' => 55.00,
-            'width' => 52.00,
-            'height' => 82.00,
+            'weight' => $this->estimateWeight($cleanName),
+            'length' => 60.00,
+            'width' => 60.00,
+            'height' => 85.00,
             'shipping_class' => 'flat_rate',
             'material' => [
-                'id' => 'Kayu Jati & Rotan Alami',
-                'en' => 'Teak Wood & Natural Rattan',
+                'id' => 'Kayu Jati Grade A & Anyaman Tahan Cuaca (UV Resistant)',
+                'en' => 'Grade-A Solid Teak Wood & All-Weather UV Resistant Weave',
             ],
             'color' => [
-                'id' => 'Natural Wood / Charcoal',
-                'en' => 'Natural Wood / Charcoal',
+                'id' => 'Natural Teak Wood & Neutral Charcoal',
+                'en' => 'Natural Teak Wood & Neutral Charcoal',
             ],
             'specifications' => [
-                ['key' => 'Gaya', 'value' => 'Modern Minimalis'],
-                ['key' => 'Finishing', 'value' => 'Natural Matte'],
-                ['key' => 'Perakitan', 'value' => 'Sudah Dirakit'],
-                ['key' => 'Garansi', 'value' => '1 Tahun'],
+                ['key' => 'Rangka / Framework', 'value' => 'Kayu Jati Solid / Powder Coated Aluminum'],
+                ['key' => 'Material Anyaman', 'value' => 'High-Density Polyethylene (HDPE) All-Weather Wicker'],
+                ['key' => 'Ketahanan Cuaca', 'value' => '100% Tahan Air, Tahan Sinar UV, Anti Jamur'],
+                ['key' => 'Finishing', 'value' => 'Natural Outdoor Wood Treatment'],
+                ['key' => 'Garansi', 'value' => 'Garansi Konstruksi 3 Tahun'],
             ],
             'status' => ProductStatus::ACTIVE,
             'is_featured' => false,
             'is_new_arrival' => true,
             'meta_title' => [
-                'id' => "Beli {$cleanName} - Ronica Furniture",
-                'en' => "Buy {$cleanName} - Ronica Furniture",
+                'id' => "{$cleanName} - Ronica Outdoor Furniture",
+                'en' => "{$cleanName} - Ronica Outdoor Furniture",
             ],
             'meta_description' => [
-                'id' => "Koleksi {$cleanName} premium dari Ronica. Material berkualitas, desain elegan, dan pengerjaan presisi.",
-                'en' => "Premium {$cleanName} collection from Ronica. Quality materials, elegant design, and precision craftsmanship.",
+                'id' => "Koleksi {$cleanName} premium dari Ronica Furniture. Material kayu jati pilihan, tahan cuaca dan berdesain modern elegan.",
+                'en' => "Premium {$cleanName} collection from Ronica Furniture. Premium teak craftsmanship, all-weather durability, and timeless luxury.",
             ],
             'meta_keywords' => [
-                'id' => strtolower($cleanName) . ', furniture jepara, kursi makan, ronica',
-                'en' => strtolower($cleanName) . ', luxury furniture, dining chair, ronica',
+                'id' => strtolower($cleanName) . ', furniture jepara, outdoor furniture, ronica',
+                'en' => strtolower($cleanName) . ', outdoor furniture, teak furniture, luxury patio, ronica',
             ],
         ];
-
-        $tempFiles = [];
-        try {
-            $subset = array_slice($orderedFiles, 0, 3);
-            $uploadedFiles = [];
-            foreach ($subset as $p) {
-                $tmpPath = tempnam(sys_get_temp_dir(), 'ai_cat_') . '.jpg';
-                $this->createThumbnail($p, $tmpPath, 640);
-                $tempFiles[] = $tmpPath;
-                $uploadedFiles[] = new UploadedFile($tmpPath, basename($p), 'image/jpeg', null, true);
-            }
-
-            $categories = Category::where('is_active', true)->pluck('name', 'id')->all();
-            $categoryList = implode(', ', array_map(fn ($c) => is_array($c) ? ($c['id'] ?? $c['en'] ?? '') : (string) $c, $categories));
-
-            $prompt = "Anda adalah kurator katalog Ronica Furniture. Ekstrak data katalog untuk produk baru '{$cleanName}' berdasarkan gambar-gambar terlampir. Kategori yang tersedia: {$categoryList}.";
-
-            $schema = [
-                'type' => 'OBJECT',
-                'properties' => [
-                    'name_id' => ['type' => 'STRING'],
-                    'name_en' => ['type' => 'STRING'],
-                    'category' => ['type' => 'STRING'],
-                    'description_id' => ['type' => 'STRING'],
-                    'description_en' => ['type' => 'STRING'],
-                    'material_id' => ['type' => 'STRING'],
-                    'material_en' => ['type' => 'STRING'],
-                    'color_id' => ['type' => 'STRING'],
-                    'color_en' => ['type' => 'STRING'],
-                    'weight_kg' => ['type' => 'NUMBER'],
-                    'length_cm' => ['type' => 'NUMBER'],
-                    'width_cm' => ['type' => 'NUMBER'],
-                    'height_cm' => ['type' => 'NUMBER'],
-                    'shipping_class' => ['type' => 'STRING'],
-                    'specifications' => [
-                        'type' => 'ARRAY',
-                        'items' => [
-                            'type' => 'OBJECT',
-                            'properties' => [
-                                'key' => ['type' => 'STRING'],
-                                'value' => ['type' => 'STRING'],
-                            ],
-                            'required' => ['key', 'value'],
-                        ],
-                    ],
-                ],
-                'required' => ['name_id', 'description_id'],
-            ];
-
-            $ai = $this->vision->generateJsonFromImages($uploadedFiles, $prompt, $schema);
-
-            if (! empty($ai['name_id'])) {
-                $defaultData['name'] = [
-                    'id' => strtoupper(trim((string) $ai['name_id'])),
-                    'en' => strtoupper(trim((string) ($ai['name_en'] ?? $ai['name_id']))),
-                ];
-            }
-
-            if (! empty($ai['description_id'])) {
-                $descId = trim((string) $ai['description_id']);
-                $descEn = trim((string) ($ai['description_en'] ?? $descId));
-                $defaultData['description'] = ['id' => $descId, 'en' => $descEn];
-                $defaultData['short_description'] = [
-                    'id' => Str::limit($descId, 250, '...'),
-                    'en' => Str::limit($descEn, 250, '...'),
-                ];
-            }
-
-            if (! empty($ai['material_id'])) {
-                $defaultData['material'] = [
-                    'id' => trim((string) $ai['material_id']),
-                    'en' => trim((string) ($ai['material_en'] ?? $ai['material_id'])),
-                ];
-            }
-
-            if (! empty($ai['color_id'])) {
-                $defaultData['color'] = [
-                    'id' => trim((string) $ai['color_id']),
-                    'en' => trim((string) ($ai['color_en'] ?? $ai['color_id'])),
-                ];
-            }
-
-            if (! empty($ai['weight_kg'])) {
-                $defaultData['weight'] = max(0.5, (float) $ai['weight_kg']);
-            }
-            if (! empty($ai['length_cm'])) {
-                $defaultData['length'] = max(10, (float) $ai['length_cm']);
-            }
-            if (! empty($ai['width_cm'])) {
-                $defaultData['width'] = max(10, (float) $ai['width_cm']);
-            }
-            if (! empty($ai['height_cm'])) {
-                $defaultData['height'] = max(10, (float) $ai['height_cm']);
-            }
-
-            if (! empty($ai['specifications']) && is_array($ai['specifications'])) {
-                $defaultData['specifications'] = $ai['specifications'];
-            }
-        } catch (\Throwable $e) {
-            $this->warn("AI attribute extraction fallback: " . $e->getMessage());
-        } finally {
-            foreach ($tempFiles as $tf) {
-                @unlink($tf);
-            }
-        }
 
         return $defaultData;
     }
 
+    /**
+     * Map product name to an EXISTING Category ID.
+     */
     private function guessCategoryId(string $name): int
     {
-        $upper = strtoupper($name);
+        $n = strtolower($name);
 
-        if (str_contains($upper, 'SOFA')) {
-            return 29; // Comfort Products
+        // 1. Natural Rattan (Check first for explicit natural rattan tag)
+        if (str_contains($n, 'natural rattan') || str_contains($n, '(nt)') || str_contains($n, 'ratania') || str_contains($n, 'bamboo')) {
+            if (str_contains($n, 'table') || str_contains($n, 'coffe')) {
+                $cat = Category::where('slug', 'tables')->first();
+                if ($cat) return $cat->id;
+            }
+            if (str_contains($n, 'set')) {
+                $cat = Category::where('slug', 'living-set')->first();
+                if ($cat) return $cat->id;
+            }
+            if (str_contains($n, 'rack') || str_contains($n, 'tray') || str_contains($n, 'try') || str_contains($n, 'stand')) {
+                $cat = Category::where('slug', 'accessories')->first();
+                if ($cat) return $cat->id;
+            }
+            $cat = Category::where('slug', 'natural-rattan')->first();
+            if ($cat) return $cat->id;
         }
 
-        if (str_contains($upper, 'DINING SET') || str_contains($upper, 'CORE SET')) {
-            return 1; // Dining Set
+        // 2. Corner Sets
+        if (str_contains($n, 'corner') || str_contains($n, 'l-shape') || str_contains($n, 'sectional')) {
+            $cat = Category::where('slug', 'corner-set')->first();
+            if ($cat) return $cat->id;
         }
 
-        if (str_contains($upper, 'LIVING SET') || str_contains($upper, 'BALCONY SET') || str_contains($upper, 'OCCASIONAL SET') || str_contains($upper, 'SET')) {
-            return 6; // Living Set
+        // 3. Dining Sets
+        if (str_contains($n, 'dining set') || str_contains($n, 'dining core set') || str_contains($n, 'bistro set') || str_contains($n, 'bar set')) {
+            $cat = Category::where('slug', 'dining-set')->first();
+            if ($cat) return $cat->id;
         }
 
-        if (str_contains($upper, 'TABLE')) {
-            return 26; // Tables
+        // 4. Living Sets & Sofas
+        if (str_contains($n, 'living set') || str_contains($n, 'balcony set') || str_contains($n, 'occasional set') || str_contains($n, 'sofa set') || str_contains($n, 'lounge set')) {
+            $cat = Category::where('slug', 'living-set')->first();
+            if ($cat) return $cat->id;
         }
 
-        if (str_contains($upper, 'CHAIR') || str_contains($upper, 'BARSTOOL') || str_contains($upper, 'STOOL')) {
-            return 3; // Chairs
+        // 5. Daybed & Sunbed
+        if (str_contains($n, 'daybed') || str_contains($n, 'sunbed') || str_contains($n, 'hanging chair') || str_contains($n, 'lounger')) {
+            $cat = Category::where('slug', 'daybedsunbed')->first();
+            if ($cat) return $cat->id;
         }
 
-        return 3; // Default Chairs
+        // 6. Tables
+        if (str_contains($n, 'table') || str_contains($n, 'coffe') || str_contains($n, 'coffee') || str_contains($n, 'desk') || str_contains($n, 'ct')) {
+            $cat = Category::where('slug', 'tables')->first();
+            if ($cat) return $cat->id;
+        }
+
+        // 7. Chairs, Stools & Benches
+        if (str_contains($n, 'chair') || str_contains($n, 'stool') || str_contains($n, 'barstool') || str_contains($n, 'swivel') || str_contains($n, 'armchair') || str_contains($n, 'bench') || str_contains($n, 'puff') || str_contains($n, 'dc')) {
+            $cat = Category::where('slug', 'chairs')->first();
+            if ($cat) return $cat->id;
+        }
+
+        // 8. Sofas (standalone)
+        if (str_contains($n, 'sofa')) {
+            $cat = Category::where('slug', 'living-set')->first();
+            if ($cat) return $cat->id;
+        }
+
+        // 9. Cabinets & Storage Furniture
+        if (str_contains($n, 'cabinet') || str_contains($n, 'drawer') || str_contains($n, 'credenza')) {
+            $cat = Category::where('slug', 'home-furniture')->first();
+            if ($cat) return $cat->id;
+        }
+
+        // 10. Accessories
+        if (str_contains($n, 'stand') || str_contains($n, 'rack') || str_contains($n, 'tray') || str_contains($n, 'try') || str_contains($n, 'accessory') || str_contains($n, 'lantern')) {
+            $cat = Category::where('slug', 'accessories')->first();
+            if ($cat) return $cat->id;
+        }
+
+        // 11. Generic Set
+        if (str_contains($n, 'set')) {
+            $cat = Category::where('slug', 'living-set')->first();
+            if ($cat) return $cat->id;
+        }
+
+        // Fallback to Chairs or first active category
+        return Category::where('slug', 'chairs')->value('id') ?? (Category::first()?->id ?? 1);
+    }
+
+    private function estimateWeight(string $name): float
+    {
+        $n = strtolower($name);
+        if (str_contains($n, 'set')) return 48.0;
+        if (str_contains($n, 'sofa')) return 32.0;
+        if (str_contains($n, 'table')) return 24.0;
+        if (str_contains($n, 'cabinet') || str_contains($n, 'drawer')) return 35.0;
+        if (str_contains($n, 'daybed')) return 38.0;
+        return 8.5; // Single chair / stool
     }
 
     private function generateUniqueSku(string $name): string
@@ -671,23 +682,23 @@ class SyncGoogleDriveProductsCommand extends Command
             ->value();
 
         if (strlen($prefix) < 3) {
-            $prefix = 'EOF';
+            $prefix = 'RON';
         }
 
-        for ($i = 0; $i < 10; $i++) {
-            $candidate = 'EOF-' . $prefix . Str::upper(Str::random(4));
+        for ($i = 0; $i < 15; $i++) {
+            $candidate = 'RON-' . $prefix . '-' . Str::upper(Str::random(4));
             if (! Product::where('sku', $candidate)->exists()) {
                 return $candidate;
             }
         }
 
-        return 'EOF-' . Str::upper(Str::random(8));
+        return 'RON-' . Str::upper(Str::random(8));
     }
 
     /**
-     * Create a lightweight JPEG thumbnail for AI Vision analysis to stay within request size limits.
+     * Create a lightweight JPEG thumbnail for AI Vision analysis.
      */
-    private function createThumbnail(string $source, string $dest, int $maxDim = 640): void
+    private function createThumbnail(string $source, string $dest, int $maxDim = 480): void
     {
         $info = @getimagesize($source);
         if (! $info) {

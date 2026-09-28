@@ -275,16 +275,114 @@ class Product extends Model implements HasMedia
     {
         if ($this->relationLoaded('category') && $this->category) {
             $catSlug = $this->category->slug ?? '';
-            $catName = $this->category->getTranslation('name', 'en', false) ?: (is_string($this->category->name) ? $this->category->name : '');
+            $catNameEn = $this->category->getTranslation('name', 'en', false) ?: '';
+            $catNameId = $this->category->getTranslation('name', 'id', false) ?: '';
+            $catNameRaw = is_string($this->category->name) ? $this->category->name : '';
 
-            return $catSlug === 'living-collection' || strtolower(trim($catName)) === 'living collection';
+            return $catSlug === 'living-collection'
+                || strtolower(trim($catNameEn)) === 'living collection'
+                || strtolower(trim($catNameId)) === 'living collection'
+                || strtolower(trim($catNameRaw)) === 'living collection';
         }
 
-        if ($this->category_id === 2) {
-            return true;
+        if ($this->category_id) {
+            $category = Category::find($this->category_id);
+            if ($category) {
+                $catSlug = $category->slug ?? '';
+                $catNameEn = $category->getTranslation('name', 'en', false) ?: '';
+                $catNameId = $category->getTranslation('name', 'id', false) ?: '';
+                $catNameRaw = is_string($category->name) ? $category->name : '';
+
+                return $catSlug === 'living-collection'
+                    || strtolower(trim($catNameEn)) === 'living collection'
+                    || strtolower(trim($catNameId)) === 'living collection'
+                    || strtolower(trim($catNameRaw)) === 'living collection';
+            }
         }
 
-        return Category::where('id', $this->category_id)->where('slug', 'living-collection')->exists();
+        return false;
+    }
+
+    /**
+     * Automatically populate images for Living Collection products from the primary images of all linked products.
+     */
+    public function syncLivingCollectionImages(): void
+    {
+        if (! $this->isLivingCollection()) {
+            return;
+        }
+
+        // Fetch linked products in their sort order
+        $linkedProducts = $this->linkedProducts()
+            ->with(['images' => fn ($q) => $q->orderBy('sort_order')])
+            ->get();
+
+        $primaryImages = [];
+        foreach ($linkedProducts as $linked) {
+            $primary = $linked->images->where('is_primary', true)->first() ?? $linked->images->first();
+            if ($primary) {
+                $primaryImages[] = [
+                    'image_path' => $primary->image_path,
+                    'alt_text' => is_array($linked->name)
+                        ? ($linked->name['en'] ?? $linked->name['id'] ?? (is_array($this->name) ? ($this->name['en'] ?? $this->name['id']) : (string) $this->name))
+                        : (string) $linked->name,
+                ];
+            }
+        }
+
+        if (empty($primaryImages)) {
+            // If none of the linked products have images, remove any inherited images
+            $this->images()->delete();
+            if ($this->status !== ProductStatus::DRAFT) {
+                $this->updateQuietly(['status' => ProductStatus::DRAFT]);
+            }
+
+            return;
+        }
+
+        // Clear existing collection image records before recreating them from linked products
+        $this->images()->delete();
+
+        foreach ($primaryImages as $index => $imgData) {
+            $this->images()->create([
+                'image_path' => $imgData['image_path'],
+                'alt_text' => $imgData['alt_text'],
+                'sort_order' => $index,
+                'is_primary' => ($index === 0),
+            ]);
+        }
+
+        // Mark collection as active if it was draft
+        if ($this->status === ProductStatus::DRAFT) {
+            $this->updateQuietly(['status' => ProductStatus::ACTIVE]);
+        }
+    }
+
+    /**
+     * Sync living collection images for all products in the Living Collection category.
+     *
+     * @return int Number of collections synced
+     */
+    public static function syncAllLivingCollections(): int
+    {
+        $livingCategory = Category::where('slug', 'living-collection')
+            ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(name, '$.en'))) = 'living collection'")
+            ->orWhereRaw("LOWER(JSON_UNQUOTE(JSON_EXTRACT(name, '$.id'))) = 'living collection'")
+            ->first();
+
+        if (! $livingCategory) {
+            return 0;
+        }
+
+        $collections = static::where('category_id', $livingCategory->id)->get();
+        $count = 0;
+
+        foreach ($collections as $collection) {
+            $collection->syncLivingCollectionImages();
+            $count++;
+        }
+
+        return $count;
     }
 
     /**

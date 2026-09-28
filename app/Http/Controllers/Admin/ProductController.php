@@ -46,7 +46,7 @@ class ProductController extends Controller implements HasMiddleware
     {
         $products = ProductQuery::admin($request)
             ->latest()
-            ->paginate($request->input('per_page', 15))
+            ->paginate($request->input('per_page', 20))
             ->onEachSide(1)
             ->withQueryString();
 

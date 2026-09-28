@@ -24,7 +24,7 @@ class UserController extends Controller
             ->allowedSorts(['name', 'email', 'created_at'])
             ->defaultSort('-created_at')
             ->with('roles')
-            ->paginate($request->input('per_page', 15))
+            ->paginate($request->input('per_page', 20))
             ->onEachSide(1)
             ->withQueryString()
             ->through(fn (User $user) => [
