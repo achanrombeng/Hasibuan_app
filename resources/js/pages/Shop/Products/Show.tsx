@@ -14,6 +14,7 @@ import { SharedData, SiteSettings } from '@/types';
 import { ApiProduct, ProductImage, ProductReview } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { toast } from 'sonner';
 import {
   ArrowLeft,
   ArrowRight,
@@ -52,12 +53,6 @@ export default function ProductShow({
     product.is_wishlisted || false,
   );
   const [isShareOpen, setIsShareOpen] = useState(false);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [cartMessage, setCartMessage] = useState<{
-    type: 'success' | 'error';
-    text: string;
-  } | null>(null);
-
   // Update wishlist state when product changes
   useEffect(() => {
     setIsWishlisted(product.is_wishlisted || false);
@@ -69,45 +64,7 @@ export default function ProductShow({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id]);
 
-  // Auto hide cart message after 3 seconds
-  useEffect(() => {
-    if (cartMessage) {
-      const timer = setTimeout(() => setCartMessage(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [cartMessage]);
-
   const images = product.images?.length ? product.images : [];
-
-  const handleAddToCart = async () => {
-    setIsAddingToCart(true);
-    setCartMessage(null);
-
-    router.post(
-      '/shop/cart',
-      { product_id: product.id, quantity },
-      {
-        preserveScroll: true,
-        only: ['cart'],
-        onSuccess: () => {
-          setCartMessage({
-            type: 'success',
-            text: 'Product added to cart successfully!',
-          });
-        },
-        onError: (errors) => {
-          console.error('Error adding to cart:', errors);
-          setCartMessage({
-            type: 'error',
-            text: 'Failed to add product to cart',
-          });
-        },
-        onFinish: () => {
-          setIsAddingToCart(false);
-        },
-      },
-    );
-  };
 
   const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
 
@@ -119,7 +76,6 @@ export default function ProductShow({
     }
 
     setIsTogglingWishlist(true);
-    setCartMessage(null);
 
     router.post(
       `/shop/wishlist/${product.id}`,
@@ -129,18 +85,14 @@ export default function ProductShow({
         onSuccess: () => {
           const newStatus = !isWishlisted;
           setIsWishlisted(newStatus);
-          setCartMessage({
-            type: 'success',
-            text: newStatus
-              ? 'Product added to wishlist!'
-              : 'Product removed from wishlist',
-          });
+          if (newStatus) {
+            toast.success('Product added to wishlist!');
+          } else {
+            toast.info('Product removed from wishlist');
+          }
         },
         onError: () => {
-          setCartMessage({
-            type: 'error',
-            text: 'Failed to update wishlist',
-          });
+          toast.error('Failed to update wishlist');
         },
         onFinish: () => {
           setIsTogglingWishlist(false);
@@ -243,37 +195,6 @@ export default function ProductShow({
           <div className="mx-auto max-w-[1400px] px-4 sm:px-6 md:px-12">
             {/* Modern Breadcrumb */}
             <Breadcrumb product={product} />
-
-            {/* Cart Notification Message */}
-            <AnimatePresence>
-              {cartMessage && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className={`mb-6 flex items-center justify-between rounded-xl border px-5 py-3.5 text-sm font-medium shadow-sm ${
-                    cartMessage.type === 'success'
-                      ? 'border-teal-200 bg-teal-50 text-teal-800'
-                      : 'border-red-200 bg-red-50 text-red-800'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    {cartMessage.type === 'success' ? (
-                      <Check className="h-5 w-5 flex-shrink-0 text-teal-600" />
-                    ) : (
-                      <X className="h-5 w-5 flex-shrink-0 text-red-600" />
-                    )}
-                    <span>{cartMessage.text}</span>
-                  </div>
-                  <button
-                    onClick={() => setCartMessage(null)}
-                    className="text-neutral-400 hover:text-neutral-600"
-                  >
-                    <X size={16} />
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
 
             {/* Top Hero Section: Image Gallery & Main Summary */}
             <div className="mb-14 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-14">

@@ -271,6 +271,9 @@ class SyncGoogleDriveProductsCommand extends Command
         $normalizedSearch = preg_replace('/\bD\.Table\b/i', 'DINING TABLE', $normalizedSearch);
         $normalizedSearch = preg_replace('/\bCoffe\b/i', 'COFFEE', $normalizedSearch);
         $normalizedSearch = preg_replace('/\bBarstool\b/i', 'BAR CHAIR', $normalizedSearch);
+        $normalizedSearch = preg_replace('/\bChildern\b/i', 'Children', $normalizedSearch);
+        $normalizedSearch = preg_replace('/\bHight\b/i', 'High', $normalizedSearch);
+        $normalizedSearch = preg_replace('/\bTry\b/i', 'Tray', $normalizedSearch);
 
         // Try exact case-insensitive match on name
         $allProducts = Product::all();

@@ -28,8 +28,6 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [cartSuccess, setCartSuccess] = useState(false);
 
   if (!product) return null;
 
@@ -47,34 +45,6 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
           },
         ]
       : [];
-
-  const handleAddToCart = async () => {
-    setIsAddingToCart(true);
-
-    router.post(
-      '/shop/cart',
-      { product_id: product.id, quantity },
-      {
-        preserveScroll: true,
-        only: ['cart'],
-        onSuccess: () => {
-          setCartSuccess(true);
-          // Show success briefly then close
-          setTimeout(() => {
-            onClose();
-            setCartSuccess(false);
-            setQuantity(1);
-          }, 800);
-        },
-        onError: (errors) => {
-          console.error('Error adding to cart:', errors);
-        },
-        onFinish: () => {
-          setIsAddingToCart(false);
-        },
-      },
-    );
-  };
 
   const handleWishlist = async () => {
     router.post(

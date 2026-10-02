@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Shop\AddressController;
 use App\Http\Controllers\Shop\ArticleController;
-use App\Http\Controllers\Shop\CartController;
-use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\DealerController;
 use App\Http\Controllers\Shop\HomeController;
 use App\Http\Controllers\Shop\NewsletterController;
@@ -29,7 +27,7 @@ use Inertia\Inertia;
 */
 
 // Public routes - Produk
-Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function () {
+Route::prefix('shop')->name('shop.')->group(function () {
     // Homepage - Landing page with products
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/catalogs', function () {
@@ -134,16 +132,6 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
     Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
     Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
-    // Cart (accessible by guests and authenticated users)
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-    Route::put('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
-    Route::post('/cart/merge', [CartController::class, 'merge'])->name('cart.merge');
-    Route::post('/cart/{cartItem}/save-for-later', [CartController::class, 'saveForLater'])->name('cart.saveForLater');
-    Route::post('/cart/{cartItem}/move-to-cart', [CartController::class, 'moveToCart'])->name('cart.moveToCart');
-
     // Authenticated routes
     Route::middleware(['auth', 'verified'])->group(function () {
         // Wishlist
@@ -151,11 +139,6 @@ Route::prefix('shop')->name('shop.')->middleware('share.cart')->group(function (
         Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
         Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
         Route::get('/wishlist/check/{product}', [WishlistController::class, 'check'])->name('wishlist.check');
-
-        // Checkout
-        Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-        Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-        Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
         // Orders
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');

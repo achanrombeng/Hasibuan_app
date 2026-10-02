@@ -30,10 +30,16 @@ class ProductImage extends Model
         static::saved(function (ProductImage $image) {
             if ($image->product_id) {
                 $product = Product::with('parentProducts')->find($image->product_id);
-                if ($product && ! $product->isLivingCollection()) {
-                    foreach ($product->parentProducts as $parent) {
-                        if ($parent->isLivingCollection()) {
-                            $parent->syncLivingCollectionImages();
+                if ($product) {
+                    if ($product->status === ProductStatus::DRAFT) {
+                        $product->updateQuietly(['status' => ProductStatus::ACTIVE]);
+                    }
+
+                    if (! $product->isLivingCollection()) {
+                        foreach ($product->parentProducts as $parent) {
+                            if ($parent->isLivingCollection()) {
+                                $parent->syncLivingCollectionImages();
+                            }
                         }
                     }
                 }

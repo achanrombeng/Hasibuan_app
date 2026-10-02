@@ -98,7 +98,7 @@ Route::get('/quick-populate', function () {
 });
 
 // Root route - displays shop homepage
-Route::get('/', [HomeController::class, 'index'])->middleware('share.cart')->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Aliases for articles & blog
 Route::redirect('/articles', '/shop/articles');

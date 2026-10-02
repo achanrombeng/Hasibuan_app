@@ -8,9 +8,7 @@ import {
   ArrowLeft,
   Check,
   GitCompare,
-  Loader2,
   Minus,
-  ShoppingBag,
   Star,
   X,
 } from 'lucide-react';
@@ -23,8 +21,6 @@ interface Props {
 export default function Compare({ products }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
   const siteName = siteSettings?.site_name || 'Ronica';
-  const [addingToCart, setAddingToCart] = useState<number | null>(null);
-  const [cartSuccess, setCartSuccess] = useState<number | null>(null);
 
   const handleRemove = (productId: number) => {
     const newIds = products
@@ -36,29 +32,6 @@ export default function Compare({ products }: Props) {
     } else {
       router.visit('/shop/products');
     }
-  };
-
-  const handleAddToCart = async (productId: number) => {
-    setAddingToCart(productId);
-
-    router.post(
-      '/shop/cart',
-      { product_id: productId, quantity: 1 },
-      {
-        preserveScroll: true,
-        only: ['cart'],
-        onSuccess: () => {
-          setCartSuccess(productId);
-          setTimeout(() => setCartSuccess(null), 1500);
-        },
-        onError: (errors) => {
-          console.error('Error adding to cart:', errors);
-        },
-        onFinish: () => {
-          setAddingToCart(null);
-        },
-      },
-    );
   };
 
   // Collect all unique specs from products
@@ -231,7 +204,7 @@ export default function Compare({ products }: Props) {
                   />
                 ))}
 
-                {/* Add to Cart */}
+                {/* Action / View Detail */}
                 <div
                   className="grid border-t border-terra-100"
                   style={{
@@ -244,36 +217,12 @@ export default function Compare({ products }: Props) {
                       key={product.id}
                       className="border-l border-terra-100 p-4"
                     >
-                      <button
-                        onClick={() => handleAddToCart(product.id)}
-                        disabled={
-                          !product.is_in_stock ||
-                          addingToCart === product.id ||
-                          cartSuccess === product.id
-                        }
-                        className={`flex w-full items-center justify-center gap-2 rounded-full py-3 transition-colors disabled:cursor-not-allowed ${
-                          cartSuccess === product.id
-                            ? 'bg-green-500 text-white'
-                            : 'bg-terra-900 text-white hover:bg-wood-dark disabled:opacity-50'
-                        }`}
+                      <Link
+                        href={`/shop/products/${product.slug}`}
+                        className="flex w-full items-center justify-center gap-2 rounded-full bg-terra-900 py-3 text-sm font-medium text-white transition-colors hover:bg-wood-dark"
                       >
-                        {cartSuccess === product.id ? (
-                          <>
-                            <Check size={18} />
-                            Ditambahkan!
-                          </>
-                        ) : addingToCart === product.id ? (
-                          <>
-                            <Loader2 size={18} className="animate-spin" />
-                            Menambahkan...
-                          </>
-                        ) : (
-                          <>
-                            <ShoppingBag size={18} />
-                            Tambah ke Keranjang
-                          </>
-                        )}
-                      </button>
+                        Lihat Detail
+                      </Link>
                     </div>
                   ))}
                 </div>

@@ -34,8 +34,6 @@ interface AuthUser {
 }
 
 interface HeaderProps {
-  cartCount: number;
-  onCartClick: () => void;
   onLogoClick: () => void;
   bannerVisible?: boolean;
   featuredCategories?: ApiCategory[];
@@ -59,8 +57,6 @@ const PRODUCT_SUB_MENU = [
 ];
 
 export const Header: React.FC<HeaderProps> = ({
-  cartCount,
-  onCartClick,
   onLogoClick,
   bannerVisible = false,
   featuredCategories = [],

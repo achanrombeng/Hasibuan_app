@@ -6,7 +6,7 @@ import { SiteSettings } from '@/types';
 import { ApiProduct } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Heart, ShoppingBag, Trash2 } from 'lucide-react';
+import { ArrowRight, Heart, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
@@ -18,7 +18,6 @@ export default function WishlistIndex({ products }: Props) {
   const siteName = siteSettings?.site_name || 'Ronica';
   const { t } = useTranslation();
   const [removingId, setRemovingId] = useState<number | null>(null);
-  const [addingToCartId, setAddingToCartId] = useState<number | null>(null);
 
   const handleRemove = (productId: number) => {
     setRemovingId(productId);
@@ -29,21 +28,6 @@ export default function WishlistIndex({ products }: Props) {
         setRemovingId(null);
       },
     });
-  };
-
-  const handleAddToCart = (productId: number) => {
-    setAddingToCartId(productId);
-    router.post(
-      '/shop/cart',
-      {
-        product_id: productId,
-        quantity: 1,
-      },
-      {
-        preserveScroll: true,
-        onFinish: () => setAddingToCartId(null),
-      },
-    );
   };
 
   return (
@@ -88,8 +72,6 @@ export default function WishlistIndex({ products }: Props) {
                       product={product}
                       onRemove={() => handleRemove(product.id)}
                       isRemoving={removingId === product.id}
-                      onAddToCart={() => handleAddToCart(product.id)}
-                      isAddingToCart={addingToCartId === product.id}
                     />
                   ))}
                 </AnimatePresence>
@@ -108,16 +90,12 @@ interface WishlistCardProps {
   product: ApiProduct;
   onRemove: () => void;
   isRemoving: boolean;
-  onAddToCart: () => void;
-  isAddingToCart: boolean;
 }
 
 function WishlistCard({
   product,
   onRemove,
   isRemoving,
-  onAddToCart,
-  isAddingToCart,
 }: WishlistCardProps) {
   const { t } = useTranslation();
   const imageUrl =
@@ -197,17 +175,12 @@ function WishlistCard({
               {t('shop.products.out_of_stock')}
             </span>
           )}
-          <button
-            onClick={onAddToCart}
-            disabled={!product.is_in_stock || isAddingToCart}
-            className="rounded-sm bg-teal-900 p-2 text-white transition-colors hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
+          <Link
+            href={`/shop/products/${product.slug}`}
+            className="rounded-sm bg-teal-900 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-teal-800"
           >
-            {isAddingToCart ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-            ) : (
-              <ShoppingBag size={16} />
-            )}
-          </button>
+            {t('shop.orders.view_detail')}
+          </Link>
         </div>
       </div>
     </motion.div>
