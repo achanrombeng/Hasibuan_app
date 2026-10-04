@@ -6,70 +6,70 @@ import { useState } from 'react';
 
 const FAQ_DATA = [
   {
-    category: 'Pemesanan',
+    category: 'Ordering',
     questions: [
       {
-        q: 'Bagaimana cara memesan produk?',
-        a: 'Pilih produk yang Anda inginkan, tambahkan ke keranjang, lalu lanjutkan ke checkout. Anda bisa memilih metode pembayaran Transfer Bank atau COD (Bayar di Tempat).',
+        q: 'How do I place an order?',
+        a: 'Browse our collection, select your desired products, and reach out to our team via inquiry or WhatsApp. We will assist you with specifications, delivery details, and order confirmation.',
       },
       {
-        q: 'Apakah bisa custom order?',
-        a: 'Ya, kami menerima custom order. Silakan hubungi kami via WhatsApp untuk konsultasi desain dan estimasi harga.',
+        q: 'Do you accept custom orders?',
+        a: 'Yes, we specialize in bespoke custom manufacturing for residential and commercial projects. Please contact us via WhatsApp or email for design consultations and quotations.',
       },
       {
-        q: 'Berapa lama waktu produksi untuk custom order?',
-        a: 'Waktu produksi custom order biasanya 2-4 minggu tergantung kompleksitas desain dan ketersediaan material.',
+        q: 'What is the production lead time for custom orders?',
+        a: 'Production lead times typically range from 2 to 4 weeks depending on design complexity, finish options, and material availability.',
       },
     ],
   },
   {
-    category: 'Pembayaran',
+    category: 'Payment',
     questions: [
       {
-        q: 'Metode pembayaran apa saja yang tersedia?',
-        a: 'Kami menerima Transfer Bank (BCA, Mandiri, BNI) dan COD (Cash on Delivery) untuk area tertentu.',
+        q: 'What payment methods are available?',
+        a: 'We accept international bank wire transfers (T/T), certified bank payments, and customized payment arrangements for wholesale projects.',
       },
       {
-        q: 'Apakah bisa cicilan?',
-        a: 'Untuk pembelian dalam jumlah besar, silakan hubungi kami untuk diskusi mengenai opsi cicilan.',
+        q: 'Are installment or milestone payments available?',
+        a: 'For commercial projects and volume orders, milestone-based payment schedules (e.g., deposit upon confirmation and balance prior to dispatch) are available.',
       },
       {
-        q: 'Bagaimana konfirmasi pembayaran?',
-        a: 'Setelah transfer, konfirmasi pembayaran via WhatsApp dengan menyertakan bukti transfer dan nomor pesanan.',
+        q: 'How do I confirm payment?',
+        a: 'After making a payment, please forward the transaction receipt along with your reference number to our sales representative via WhatsApp or email.',
       },
     ],
   },
   {
-    category: 'Pengiriman',
+    category: 'Shipping & Logistics',
     questions: [
       {
-        q: 'Berapa lama waktu pengiriman?',
-        a: 'Pengiriman dalam kota Jakarta 1-3 hari kerja. Luar kota 3-7 hari kerja tergantung lokasi.',
+        q: 'What are the delivery lead times?',
+        a: 'Standard domestic deliveries take 2 to 5 business days. International container and freight shipments vary according to destination port and customs clearance.',
       },
       {
-        q: 'Apakah ada biaya pengiriman?',
-        a: 'Biaya pengiriman dihitung berdasarkan lokasi dan berat/volume produk. Free ongkir untuk area Jakarta dengan minimum pembelian tertentu.',
+        q: 'How are shipping fees calculated?',
+        a: 'Shipping fees are calculated based on volume (CBM), weight, and delivery destination. Our logistics team secures competitive freight rates for every shipment.',
       },
       {
-        q: 'Apakah tersedia pengiriman ke luar pulau?',
-        a: 'Ya, kami melayani pengiriman ke seluruh Indonesia. Biaya dan waktu pengiriman akan diinformasikan saat checkout.',
+        q: 'Do you ship internationally?',
+        a: 'Yes, Ronica ships to over 15 countries worldwide, including Australia, the USA, Europe, the Middle East, and Asia.',
       },
     ],
   },
   {
-    category: 'Garansi & Pengembalian',
+    category: 'Warranty & Support',
     questions: [
       {
-        q: 'Apakah produk bergaransi?',
-        a: 'Ya, semua produk kami bergaransi 1 tahun untuk kerusakan struktural akibat cacat produksi.',
+        q: 'Do products come with a warranty?',
+        a: 'Yes, all our outdoor furniture pieces include a manufacturer warranty covering structural integrity and craftsmanship under recommended use.',
       },
       {
-        q: 'Bagaimana jika produk rusak saat pengiriman?',
-        a: 'Segera hubungi kami dalam 24 jam dengan foto kerusakan. Kami akan mengganti produk atau melakukan perbaikan tanpa biaya.',
+        q: 'What if items arrive damaged during shipping?',
+        a: 'Please contact us within 24 to 48 hours with photographic proof of the packaging and item. We will promptly arrange replacement or repairs without hassle.',
       },
       {
-        q: 'Apakah bisa retur produk?',
-        a: 'Retur dapat dilakukan dalam 7 hari setelah penerimaan jika produk tidak sesuai deskripsi. Biaya retur ditanggung pembeli kecuali kesalahan dari kami.',
+        q: 'Can items be returned?',
+        a: 'Returns can be initiated within 7 days of delivery for qualifying items that do not match agreed specifications. Please review our Return Policy page for details.',
       },
     ],
   },
@@ -111,11 +111,10 @@ export default function FAQ() {
             {/* Header */}
             <div className="mb-16 text-center">
               <h1 className="mb-4 font-serif text-4xl text-terra-900 md:text-5xl">
-                Pertanyaan Umum
+                Frequently Asked Questions
               </h1>
               <p className="mx-auto max-w-2xl text-lg text-terra-600">
-                Temukan jawaban untuk pertanyaan yang sering diajukan seputar
-                pemesanan, pembayaran, dan pengiriman.
+                Find answers to common questions about ordering, payments, and international shipping.
               </p>
             </div>
 
@@ -142,10 +141,10 @@ export default function FAQ() {
             {siteSettings?.contact_whatsapp && (
               <div className="mt-16 rounded-sm bg-terra-900 p-10 text-center text-white">
                 <h3 className="mb-4 font-serif text-2xl">
-                  Masih Ada Pertanyaan?
+                  Still Have Questions?
                 </h3>
                 <p className="mb-6 text-terra-300">
-                  Tim kami siap membantu Anda
+                  Our dedicated team is ready to assist you.
                 </p>
                 <a
                   href={`https://wa.me/${siteSettings.contact_whatsapp}`}
@@ -153,7 +152,7 @@ export default function FAQ() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-sm bg-green-500 px-6 py-3 font-medium text-white transition-colors hover:bg-green-600"
                 >
-                  Hubungi via WhatsApp
+                  Contact via WhatsApp
                 </a>
               </div>
             )}

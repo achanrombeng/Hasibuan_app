@@ -49,11 +49,11 @@ export default function ShowCustomer({ customer }: ShowCustomerProps) {
   return (
     <AdminLayout
       breadcrumbs={[
-        { title: 'Pelanggan', href: '/admin/customers' },
+        { title: 'Customers', href: '/admin/customers' },
         { title: customer.name, href: `/admin/customers/${customer.id}` },
       ]}
     >
-      <Head title={`Pelanggan: ${customer.name}`} />
+      <Head title={`Customer: ${customer.name}`} />
 
       <div className="space-y-6">
         {/* Header */}
@@ -73,7 +73,7 @@ export default function ShowCustomer({ customer }: ShowCustomerProps) {
                 {customer.name}
               </h1>
               <p className="mt-1 text-terra-500">
-                Bergabung sejak {customer.created_at}
+                Joined {customer.created_at}
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function ShowCustomer({ customer }: ShowCustomerProps) {
           <div className="space-y-6">
             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                Informasi Kontak
+                Contact Information
               </h2>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -114,17 +114,17 @@ export default function ShowCustomer({ customer }: ShowCustomerProps) {
 
             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-lg font-semibold text-terra-900">
-                Statistik
+                Statistics
               </h2>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-terra-600">Total Pesanan</span>
+                  <span className="text-terra-600">Total Orders</span>
                   <span className="font-semibold text-terra-900">
                     {customer.orders_count}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-terra-600">Total Belanja</span>
+                  <span className="text-terra-600">Total Spent</span>
                   <span className="font-semibold text-terra-900">
                     {customer.total_spent}
                   </span>
@@ -140,7 +140,7 @@ export default function ShowCustomer({ customer }: ShowCustomerProps) {
                 <div className="flex items-center gap-3">
                   <ShoppingBag className="h-5 w-5 text-terra-600" />
                   <h2 className="text-lg font-semibold text-terra-900">
-                    Riwayat Pesanan
+                    Order History
                   </h2>
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function ShowCustomer({ customer }: ShowCustomerProps) {
                 </div>
               ) : (
                 <div className="p-8 text-center text-terra-500">
-                  Belum ada pesanan
+                  No orders yet
                 </div>
               )}
             </div>

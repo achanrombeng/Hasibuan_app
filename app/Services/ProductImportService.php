@@ -352,7 +352,7 @@ class ProductImportService
         $rows = $sheet->toArray(null, true, true, true);
 
         if (empty($rows)) {
-            throw new Exception('File kosong atau tidak dapat dibaca.');
+            throw new Exception('File is empty or unreadable.');
         }
 
         // Row 1 is header
@@ -360,7 +360,7 @@ class ProductImportService
         $columnMap = $this->determineColumnMapping($headerRow);
 
         if (! isset($columnMap['name'])) {
-            throw new Exception("Kolom 'name' / 'nama_produk' tidak ditemukan pada header file.");
+            throw new Exception("Column 'name' / 'nama_produk' not found in file header.");
         }
 
         $parsedRows = [];
@@ -468,7 +468,7 @@ class ProductImportService
         $realPath = $file instanceof UploadedFile ? $file->getRealPath() : $file;
 
         if (! $realPath || ! file_exists($realPath)) {
-            throw new Exception('File import tidak ditemukan atau tidak dapat dibaca.');
+            throw new Exception('Import file not found or unreadable.');
         }
 
         $spreadsheet = IOFactory::load($realPath);
@@ -476,7 +476,7 @@ class ProductImportService
         $rawRows = $sheet->toArray(null, true, true, true);
 
         if (empty($rawRows) || count($rawRows) < 2) {
-            throw new Exception('File Excel kosong atau tidak memiliki baris data.');
+            throw new Exception('Spreadsheet file is empty or has no data rows.');
         }
 
         // 1. Identify header mapping

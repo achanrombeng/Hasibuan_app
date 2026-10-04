@@ -15,20 +15,24 @@ class SetLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        $defaultLocale = config('translation.default_locale', config('app.locale', 'en'));
-        $locale = session('locale') ?? $request->cookie('locale') ?? $defaultLocale;
+        $defaultLocale = 'en';
+        $locale = 'en';
 
-        if (! in_array($locale, self::SUPPORTED_LOCALES, true)) {
-            $locale = $defaultLocale;
-        }
-
-        if (! session()->has('locale') || session('locale') !== $locale) {
+        if (session('locale') !== $locale) {
             session(['locale' => $locale]);
         }
 
         App::setLocale($locale);
 
-        return $next($request);
+        $response = $next($request);
+
+        if ($request->cookie('locale') !== 'en') {
+            return $response->withCookie(
+                cookie('locale', 'en', 60 * 24 * 365, null, null, false, false)
+            );
+        }
+
+        return $response;
     }
 
     /**

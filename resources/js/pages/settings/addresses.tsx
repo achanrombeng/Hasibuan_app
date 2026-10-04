@@ -123,7 +123,7 @@ export default function Addresses({ addresses }: Props) {
         <div className="flex items-center justify-between">
           <HeadingSmall
             title={t('shop.addresses.title')}
-            description="Kelola alamat untuk pengiriman pesanan"
+            description="Manage addresses for order delivery"
           />
           <button
             onClick={openAddDialog}
@@ -170,7 +170,7 @@ export default function Addresses({ addresses }: Props) {
                       <button
                         onClick={() => handleSetDefault(addr)}
                         className="rounded-sm p-2 text-terra-500 transition-colors hover:bg-terra-50 hover:text-terra-700"
-                        title="Jadikan {t('shop.addresses.default')}"
+                        title="Set as default address"
                       >
                         <Star className="h-4 w-4" />
                       </button>
@@ -195,13 +195,13 @@ export default function Addresses({ addresses }: Props) {
         ) : (
           <div className="rounded-sm border-2 border-dashed border-terra-200 py-12 text-center">
             <MapPin className="mx-auto mb-4 h-12 w-12 text-terra-200" />
-            <p className="text-terra-500">Belum ada alamat tersimpan</p>
+            <p className="text-terra-500">No saved addresses yet</p>
             <button
               onClick={openAddDialog}
               className="mt-4 inline-flex items-center gap-2 rounded-sm bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700"
             >
               <Plus className="h-4 w-4" />
-              {t('shop.addresses.add_new')} Pertama
+              Add First Address
             </button>
           </div>
         )}
@@ -221,12 +221,12 @@ export default function Addresses({ addresses }: Props) {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {editingAddress ? 'Edit Alamat' : t('shop.addresses.add_new')}
+              {editingAddress ? 'Edit Address' : 'Add New Address'}
             </DialogTitle>
             <DialogDescription>
               {editingAddress
-                ? 'Perbarui informasi alamat pengiriman'
-                : 'Tambahkan alamat baru untuk pengiriman'}
+                ? 'Update delivery address details'
+                : 'Add a new address for orders and deliveries'}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -237,7 +237,7 @@ export default function Addresses({ addresses }: Props) {
                   id="label"
                   value={data.label}
                   onChange={(e) => setData('label', e.target.value)}
-                  placeholder="Rumah, Kantor, dll"
+                  placeholder="Home, Office, Villa, etc."
                   className="mt-1"
                 />
                 {errors.label && (
@@ -252,7 +252,7 @@ export default function Addresses({ addresses }: Props) {
                   id="recipient_name"
                   value={data.recipient_name}
                   onChange={(e) => setData('recipient_name', e.target.value)}
-                  placeholder="Nama lengkap"
+                  placeholder="Full name"
                   className="mt-1"
                 />
                 {errors.recipient_name && (
@@ -267,7 +267,7 @@ export default function Addresses({ addresses }: Props) {
                   id="phone"
                   value={data.phone}
                   onChange={(e) => setData('phone', e.target.value)}
-                  placeholder="08xxxxxxxxxx"
+                  placeholder="+1 (555) 000-0000"
                   className="mt-1"
                 />
                 {errors.phone && (
@@ -282,7 +282,7 @@ export default function Addresses({ addresses }: Props) {
                   id="address"
                   value={data.address}
                   onChange={(e) => setData('address', e.target.value)}
-                  placeholder="Jl. Nama Jalan No. X"
+                  placeholder="Street address, building, suite..."
                   className="mt-1"
                 />
                 {errors.address && (
@@ -295,7 +295,7 @@ export default function Addresses({ addresses }: Props) {
                   id="city"
                   value={data.city}
                   onChange={(e) => setData('city', e.target.value)}
-                  placeholder="Jakarta Selatan"
+                  placeholder="City"
                   className="mt-1"
                 />
                 {errors.city && (
@@ -308,7 +308,7 @@ export default function Addresses({ addresses }: Props) {
                   id="province"
                   value={data.province}
                   onChange={(e) => setData('province', e.target.value)}
-                  placeholder="DKI Jakarta"
+                  placeholder="State / Province"
                   className="mt-1"
                 />
                 {errors.province && (
@@ -341,7 +341,7 @@ export default function Addresses({ addresses }: Props) {
                   className="h-4 w-4 rounded border-terra-300 text-teal-600 focus:ring-teal-500"
                 />
                 <Label htmlFor="is_default" className="!mb-0">
-                  Jadikan alamat utama
+                  Set as default address
                 </Label>
               </div>
             </div>
@@ -351,7 +351,7 @@ export default function Addresses({ addresses }: Props) {
                   type="button"
                   className="rounded-sm border border-terra-200 px-4 py-2 text-sm font-medium text-terra-700 transition-colors hover:bg-terra-50"
                 >
-                  Batal
+                  Cancel
                 </button>
               </DialogClose>
               <button
@@ -362,7 +362,7 @@ export default function Addresses({ addresses }: Props) {
                 {processing ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Menyimpan...
+                    Saving...
                   </>
                 ) : (
                   <>
@@ -386,10 +386,10 @@ export default function Addresses({ addresses }: Props) {
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
               <AlertTriangle className="h-6 w-6 text-red-600" />
             </div>
-            <DialogTitle className="text-center">Hapus Alamat</DialogTitle>
+            <DialogTitle className="text-center">Delete Address</DialogTitle>
             <DialogDescription className="text-center">
-              Apakah Anda yakin ingin menghapus alamat "{deleteAddress?.label}"?
-              Tindakan ini tidak dapat dibatalkan.
+              Are you sure you want to delete the address "{deleteAddress?.label}"?
+              This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4 gap-2">
@@ -398,7 +398,7 @@ export default function Addresses({ addresses }: Props) {
                 type="button"
                 className="flex-1 rounded-sm border border-terra-200 px-4 py-2.5 font-medium text-terra-700 transition-colors hover:bg-terra-50 sm:flex-none"
               >
-                Batal
+                Cancel
               </button>
             </DialogClose>
             <button
@@ -407,7 +407,7 @@ export default function Addresses({ addresses }: Props) {
               disabled={isDeleting}
               className="flex-1 rounded-sm bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
             >
-              {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
+              {isDeleting ? 'Deleting...' : 'Yes, Delete'}
             </button>
           </DialogFooter>
         </DialogContent>

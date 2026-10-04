@@ -62,7 +62,7 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full rounded-sm border-terra-200 focus:border-teal-500 focus:ring-teal-500"
                     autoComplete="current-password"
-                    placeholder="Masukkan kata sandi saat ini"
+                    placeholder="Enter current password"
                   />
                   <InputError message={errors.current_password} />
                 </div>
@@ -76,7 +76,7 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full rounded-sm border-terra-200 focus:border-teal-500 focus:ring-teal-500"
                     autoComplete="new-password"
-                    placeholder="Masukkan kata sandi baru"
+                    placeholder="Enter new password"
                   />
                   <InputError message={errors.password} />
                 </div>
@@ -91,7 +91,7 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full rounded-sm border-terra-200 focus:border-teal-500 focus:ring-teal-500"
                     autoComplete="new-password"
-                    placeholder="Ulangi kata sandi baru"
+                    placeholder="Confirm new password"
                   />
                   <InputError message={errors.password_confirmation} />
                 </div>

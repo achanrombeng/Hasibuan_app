@@ -94,20 +94,20 @@ class GeminiVisionService
             ]);
 
             if ($status === 429) {
-                throw new RuntimeException('Kuota atau rate limit Google Gemini API telah habis (Error 429). Silakan tunggu beberapa saat atau perbarui GEMINI_API_KEY di Pengaturan AI.');
+                throw new RuntimeException('Google Gemini API rate limit or quota exceeded (Error 429). Please wait a moment or update your GEMINI_API_KEY in AI Settings.');
             }
 
             if ($status === 400 || $status === 403 || str_contains(strtolower((string) $msg), 'key')) {
-                throw new RuntimeException('API Key Gemini tidak valid atau kuota terlampaui. Periksa GEMINI_API_KEY di Pengaturan AI.');
+                throw new RuntimeException('Gemini API Key is invalid or quota exceeded. Please check GEMINI_API_KEY in AI Settings.');
             }
 
-            throw new RuntimeException('Gagal menghubungi Gemini API (HTTP '.$status.'): '.($msg ?: 'Respons error dari server Google Gemini.'));
+            throw new RuntimeException('Failed to connect to Gemini API (HTTP '.$status.'): '.($msg ?: 'Error response from Google Gemini server.'));
         }
 
         $text = data_get($response->json(), 'candidates.0.content.parts.0.text');
 
         if (! is_string($text) || $text === '') {
-            throw new RuntimeException('Respons Gemini kosong atau tidak valid.');
+            throw new RuntimeException('Gemini response was empty or invalid.');
         }
 
         $decoded = json_decode($text, true);

@@ -73,9 +73,9 @@ export default function NotificationsIndex({ notifications }: Props) {
 
   return (
     <AdminLayout
-      breadcrumbs={[{ title: 'Notifikasi', href: '/admin/notifications' }]}
+      breadcrumbs={[{ title: 'Notifications', href: '/admin/notifications' }]}
     >
-      <Head title="Notifikasi" />
+      <Head title="Notifications" />
 
       <div className="mb-6">
         {/* Header - Responsive */}
@@ -89,10 +89,10 @@ export default function NotificationsIndex({ notifications }: Props) {
             </Link>
             <div>
               <h1 className="text-xl font-bold text-neutral-900 sm:text-2xl">
-                Notifikasi
+                Notifications
               </h1>
               <p className="mt-1 text-sm text-neutral-500">
-                Lihat dan kelola semua aktivitas toko Anda.
+                View and manage store activity and notifications.
               </p>
             </div>
           </div>
@@ -104,16 +104,16 @@ export default function NotificationsIndex({ notifications }: Props) {
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 sm:flex-none sm:px-4 sm:py-2.5"
             >
               <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Hapus Semua</span>
-              <span className="sm:hidden">Hapus</span>
+              <span className="hidden sm:inline">Clear All</span>
+              <span className="sm:hidden">Clear</span>
             </button>
             <button
               onClick={markAllRead}
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none sm:px-4 sm:py-2.5"
             >
               <Check className="h-4 w-4" />
-              <span className="hidden sm:inline">Tandai Semua Dibaca</span>
-              <span className="sm:hidden">Dibaca</span>
+              <span className="hidden sm:inline">Mark All Read</span>
+              <span className="sm:hidden">Read</span>
             </button>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function NotificationsIndex({ notifications }: Props) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Riwayat Notifikasi</CardTitle>
+          <CardTitle>Notification History</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="divide-y divide-border">
@@ -141,24 +141,22 @@ export default function NotificationsIndex({ notifications }: Props) {
                       <p
                         className={`text-sm font-medium ${!notification.read_at ? 'text-neutral-900' : 'text-neutral-600'}`}
                       >
-                        {notification.data.title || 'Notifikasi Baru'}
+                        {notification.data.title || 'New Notification'}
                       </p>
                       <span className="text-xs text-neutral-400">
-                        {new Date(notification.created_at).toLocaleString(
-                          'id-ID',
-                        )}
+                        {new Date(notification.created_at).toLocaleString('en-US')}
                       </span>
                     </div>
                     <p className="mt-1 line-clamp-2 text-sm text-neutral-500">
                       {notification.data.message ||
-                        'Anda memiliki notifikasi baru.'}
+                        'You have received a new notification.'}
                     </p>
                     {!notification.read_at && (
                       <button
                         onClick={() => markAsRead(notification.id)}
                         className="mt-2 text-xs text-blue-600 hover:underline"
                       >
-                        Tandai dibaca
+                        Mark as read
                       </button>
                     )}
                   </div>
@@ -166,7 +164,7 @@ export default function NotificationsIndex({ notifications }: Props) {
               ))
             ) : (
               <div className="p-8 text-center text-neutral-400">
-                Tidak ada notifikasi saat ini.
+                No notifications at this time.
               </div>
             )}
           </div>
@@ -197,11 +195,10 @@ export default function NotificationsIndex({ notifications }: Props) {
               <AlertTriangle className="h-6 w-6 text-red-600" />
             </div>
             <DialogTitle className="text-center">
-              Hapus Semua Notifikasi
+              Clear All Notifications
             </DialogTitle>
             <DialogDescription className="text-center">
-              Apakah Anda yakin ingin menghapus semua notifikasi? Tindakan ini
-              tidak dapat dibatalkan.
+              Are you sure you want to clear all notifications? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4 gap-2">
@@ -210,7 +207,7 @@ export default function NotificationsIndex({ notifications }: Props) {
                 type="button"
                 className="flex-1 rounded-xl border border-neutral-200 px-4 py-2.5 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 sm:flex-none"
               >
-                Batal
+                Cancel
               </button>
             </DialogClose>
             <button
@@ -219,7 +216,7 @@ export default function NotificationsIndex({ notifications }: Props) {
               disabled={isClearing}
               className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
             >
-              {isClearing ? 'Menghapus...' : 'Ya, Hapus Semua'}
+              {isClearing ? 'Clearing...' : 'Yes, Clear All'}
             </button>
           </DialogFooter>
         </DialogContent>

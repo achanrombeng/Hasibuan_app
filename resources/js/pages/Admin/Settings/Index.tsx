@@ -917,7 +917,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700"
-                            title="Buka tautan di tab baru"
+                            title="Open link in new tab"
                           >
                             <ExternalLink className="h-4 w-4" />
                           </a>
@@ -926,7 +926,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                           type="button"
                           onClick={() => handleRemoveSocial(item.id)}
                           className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                          title="Hapus media sosial ini"
+                          title="Remove this social link"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -937,7 +937,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
                 {/* Quick Add Presets Row */}
                 <div className="mt-3 flex flex-wrap items-center gap-2 pt-2 text-xs text-neutral-500">
-                  <span className="font-medium">Tambah cepat:</span>
+                  <span className="font-medium">Quick add:</span>
                   {[
                     'instagram',
                     'facebook',

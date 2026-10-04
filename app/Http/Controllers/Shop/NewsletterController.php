@@ -39,7 +39,7 @@ class NewsletterController extends Controller
                 }
 
                 throw ValidationException::withMessages([
-                    'email' => ['Email ini sudah terdaftar sebagai subscriber.'],
+                    'email' => ['This email is already subscribed.'],
                 ]);
             }
 
@@ -50,7 +50,7 @@ class NewsletterController extends Controller
                 'unsubscribed_at' => null,
             ]);
 
-            $message = 'Selamat datang kembali! Anda telah berlangganan kembali.';
+            $message = 'Welcome back! You have been re-subscribed.';
 
             // Send welcome email on reactivation
             try {
@@ -84,7 +84,7 @@ class NewsletterController extends Controller
             Log::error('Failed to send newsletter welcome email: ' . $e->getMessage());
         }
 
-        $message = 'Terima kasih telah berlangganan! Anda akan menerima update terbaru dari kami.';
+        $message = 'Thank you for subscribing! You will receive our latest updates.';
 
         if ($request->wantsJson() && ! $request->header('X-Inertia')) {
             return response()->json([
@@ -107,7 +107,7 @@ class NewsletterController extends Controller
         if (! $subscriber) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email tidak ditemukan.',
+                'message' => 'Email not found.',
             ], 404);
         }
 
@@ -115,7 +115,7 @@ class NewsletterController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Anda telah berhenti berlangganan.',
+            'message' => 'You have been unsubscribed.',
         ]);
     }
 }

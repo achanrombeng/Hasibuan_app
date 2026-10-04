@@ -20,21 +20,20 @@ export const SuccessView: React.FC<SuccessViewProps> = ({ onContinue }) => {
           <Check size={48} className="text-green-600" />
         </div>
         <h1 className="mb-4 font-serif text-4xl text-terra-900">
-          Pesanan Berhasil!
+          Order Placed Successfully!
         </h1>
         <p className="mb-8 leading-relaxed text-terra-600">
-          Terima kasih atas pesanan Anda. Kami akan segera memproses dan
-          mengirimkan pesanan Anda. Konfirmasi telah dikirim ke email Anda.
+          Thank you for your order. We are preparing your order for fulfillment and will keep you updated. A confirmation has been sent to your email.
         </p>
         <div className="mb-8 rounded-sm bg-sand-50 p-6">
-          <p className="mb-2 text-sm text-terra-500">Nomor Pesanan</p>
+          <p className="mb-2 text-sm text-terra-500">Order Number</p>
           <p className="font-mono text-xl text-terra-900">{orderNumber}</p>
         </div>
         <button
           onClick={onContinue}
           className="rounded-full bg-terra-900 px-10 py-4 font-medium text-white transition-colors hover:bg-wood"
         >
-          Lanjut Belanja
+          Continue Shopping
         </button>
       </div>
     </motion.div>

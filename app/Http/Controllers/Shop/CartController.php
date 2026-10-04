@@ -52,7 +52,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Produk berhasil ditambahkan ke keranjang.',
+                'message' => 'Product added to cart successfully.',
                 'cart' => (new CartResource($cart))->resolve(),
             ]);
         }
@@ -71,7 +71,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Keranjang berhasil diperbarui.',
+                'message' => 'Cart updated successfully.',
                 'cart' => (new CartResource($cart))->resolve(),
             ]);
         }
@@ -88,7 +88,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Produk berhasil dihapus dari keranjang.',
+                'message' => 'Product removed from cart successfully.',
                 'cart' => $cart ? (new CartResource($cart))->resolve() : null,
             ]);
         }
@@ -106,7 +106,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Keranjang berhasil dikosongkan.',
+                'message' => 'Cart cleared successfully.',
             ]);
         }
 
@@ -129,7 +129,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Keranjang berhasil digabungkan.',
+                'message' => 'Cart merged successfully.',
                 'cart' => (new CartResource($cart))->resolve(),
             ]);
         }
@@ -145,7 +145,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Produk disimpan untuk nanti.',
+                'message' => 'Product saved for later.',
                 'cart' => (new CartResource($cart))->resolve(),
             ]);
         }
@@ -161,7 +161,7 @@ class CartController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Produk dipindahkan ke keranjang.',
+                'message' => 'Product moved to cart.',
                 'cart' => (new CartResource($cart))->resolve(),
             ]);
         }

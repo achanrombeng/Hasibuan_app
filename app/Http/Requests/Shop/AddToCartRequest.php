@@ -26,11 +26,11 @@ class AddToCartRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_id.required' => 'Produk wajib dipilih.',
-            'product_id.exists' => 'Produk tidak ditemukan.',
-            'quantity.required' => 'Jumlah wajib diisi.',
-            'quantity.min' => 'Jumlah minimal 1.',
-            'quantity.max' => 'Jumlah maksimal 100.',
+            'product_id.required' => 'Product is required.',
+            'product_id.exists' => 'Product not found.',
+            'quantity.required' => 'Quantity is required.',
+            'quantity.min' => 'Quantity must be at least 1.',
+            'quantity.max' => 'Quantity may not exceed 100.',
         ];
     }
 }

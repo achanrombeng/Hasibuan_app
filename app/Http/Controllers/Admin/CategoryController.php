@@ -46,7 +46,7 @@ class CategoryController extends Controller implements HasMiddleware
         \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.id');
         \Illuminate\Support\Facades\Cache::forget('featured_categories_navbar.en');
 
-        return back()->with('success', 'Urutan kategori berhasil diperbarui.');
+        return back()->with('success', 'Category order updated successfully.');
     }
 
     public function index(): Response

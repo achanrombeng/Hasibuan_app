@@ -55,7 +55,7 @@ class AddressController extends Controller implements HasMiddleware
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Alamat berhasil ditambahkan.',
+                'message' => 'Address added successfully.',
                 'address' => new AddressResource($address),
             ]);
         }
@@ -72,7 +72,7 @@ class AddressController extends Controller implements HasMiddleware
 
         // Ensure user can only update their own addresses
         if ($address->user_id !== $user->id) {
-            abort(403, 'Anda tidak memiliki akses ke alamat ini.');
+            abort(403, 'You do not have access to this address.');
         }
 
         $validated = $request->validated();
@@ -86,7 +86,7 @@ class AddressController extends Controller implements HasMiddleware
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Alamat berhasil diperbarui.',
+                'message' => 'Address updated successfully.',
                 'address' => new AddressResource($address),
             ]);
         }
@@ -103,14 +103,14 @@ class AddressController extends Controller implements HasMiddleware
 
         // Ensure user can only delete their own addresses
         if ($address->user_id !== $user->id) {
-            abort(403, 'Anda tidak memiliki akses ke alamat ini.');
+            abort(403, 'You do not have access to this address.');
         }
 
         $address->delete();
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Alamat berhasil dihapus.',
+                'message' => 'Address deleted successfully.',
             ]);
         }
 
@@ -126,7 +126,7 @@ class AddressController extends Controller implements HasMiddleware
 
         // Ensure user can only update their own addresses
         if ($address->user_id !== $user->id) {
-            abort(403, 'Anda tidak memiliki akses ke alamat ini.');
+            abort(403, 'You do not have access to this address.');
         }
 
         // Unset other defaults
@@ -137,7 +137,7 @@ class AddressController extends Controller implements HasMiddleware
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Alamat utama berhasil diubah.',
+                'message' => 'Primary address updated successfully.',
             ]);
         }
 

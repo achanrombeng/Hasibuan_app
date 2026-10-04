@@ -136,7 +136,7 @@ export default function ProductBulkImageModal({
 
     if (validImages.length === 0) {
       setErrorMessage(
-        'Tidak ada file gambar yang valid (.jpg, .jpeg, .png, .webp, .gif).',
+        'No valid image files found (.jpg, .jpeg, .png, .webp, .gif).',
       );
       setIsMatching(false);
       return;
@@ -290,14 +290,14 @@ export default function ProductBulkImageModal({
 
       if (res.status === 419) {
         setErrorMessage(
-          'Sesi Anda telah kedaluwarsa atau token keamanan tidak valid. Silakan muat ulang (refresh) halaman dan coba kembali.',
+          'Your session has expired or the security token is invalid. Please refresh the page and try again.',
         );
         return;
       }
 
       if (res.status === 413) {
         setErrorMessage(
-          'Ukuran file melebihi batas unggah server (HTTP 413 Content Too Large). Silakan coba lagi atau pastikan ukuran ZIP di bawah 200MB.',
+          'File size exceeds server upload limit (HTTP 413 Content Too Large). Please ensure ZIP or images are under 200MB.',
         );
         return;
       }
@@ -305,7 +305,7 @@ export default function ProductBulkImageModal({
       const contentType = res.headers.get('content-type') || '';
       if (!contentType.includes('application/json')) {
         setErrorMessage(
-          `Gagal memproses upload (${res.status}: ${res.statusText}). Silakan refresh halaman dan coba lagi.`,
+          `Failed to process upload (${res.status}: ${res.statusText}). Please refresh the page and try again.`,
         );
         return;
       }
@@ -314,7 +314,7 @@ export default function ProductBulkImageModal({
 
       if (!res.ok || !data.success) {
         setErrorMessage(
-          data.message || 'Terjadi kesalahan saat memproses upload gambar.',
+          data.message || 'An error occurred while processing image upload.',
         );
       } else {
         setReport(data.report);
@@ -322,7 +322,7 @@ export default function ProductBulkImageModal({
         router.reload({ only: ['products'] });
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Koneksi gagal saat mengunggah file.');
+      setErrorMessage(err.message || 'Network connection error while uploading file.');
     } finally {
       setIsUploading(false);
     }
@@ -344,11 +344,10 @@ export default function ProductBulkImageModal({
             </div>
             <div>
               <DialogTitle className="text-xl font-bold text-terra-900">
-                Bulk Image Matcher (Upload Foto Massal)
+                Bulk Image Matcher
               </DialogTitle>
               <DialogDescription className="text-sm text-terra-600">
-                Unggah puluhan foto produk atau file ZIP langsung dari komputer
-                dan tautkan ke SKU produk secara otomatis
+                Upload product photos or a ZIP archive directly and automatically link them to product SKUs
               </DialogDescription>
             </div>
           </div>
@@ -361,10 +360,10 @@ export default function ProductBulkImageModal({
               <Info className="mt-0.5 h-4 w-4 shrink-0 text-terra-700" />
               <div>
                 <p className="font-semibold text-terra-900">
-                  Tips Penamaan File Foto:
+                  Photo Filename Tips:
                 </p>
                 <p className="mt-0.5 text-terra-700">
-                  Beri nama file foto sesuai dengan SKU produk, contoh:{' '}
+                  Name image files matching the product SKU, e.g.{' '}
                   <code className="rounded bg-white px-1.5 py-0.5 font-mono font-semibold text-terra-900">
                     SFA-001.jpg
                   </code>
@@ -376,8 +375,7 @@ export default function ProductBulkImageModal({
                   <code className="rounded bg-white px-1.5 py-0.5 font-mono font-semibold text-terra-900">
                     TBL-DIN-002-front.png
                   </code>
-                  . Sistem akan otomatis mencocokkan foto dengan produk
-                  tersebut.
+                  . The system will automatically match photos to the respective products.
                 </p>
               </div>
             </div>
@@ -432,11 +430,10 @@ export default function ProductBulkImageModal({
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-neutral-800">
-                      Tarik & jatuhkan banyak foto atau file ZIP di sini
+                      Drag & drop photos or a ZIP archive here
                     </p>
                     <p className="mt-1 text-xs text-neutral-500">
-                      Format didukung: JPG, PNG, WEBP, atau file ZIP (Maks
-                      200MB)
+                      Supported formats: JPG, PNG, WEBP, or ZIP archive (Max 200MB)
                     </p>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
@@ -446,7 +443,7 @@ export default function ProductBulkImageModal({
                       className="inline-flex items-center gap-1.5 rounded-lg bg-terra-900 px-3 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-terra-800"
                     >
                       <ImageIcon className="h-3.5 w-3.5" />
-                      Pilih Foto Gambar
+                      Select Images
                     </button>
                     <button
                       type="button"
@@ -454,7 +451,7 @@ export default function ProductBulkImageModal({
                       className="inline-flex items-center gap-1.5 rounded-lg border border-terra-200 bg-white px-3 py-1.5 text-xs font-semibold text-terra-900 shadow-xs transition-colors hover:bg-terra-50"
                     >
                       <FileArchive className="h-3.5 w-3.5 text-terra-700" />
-                      Pilih File ZIP
+                      Select ZIP File
                     </button>
                   </div>
                 </div>
@@ -470,8 +467,7 @@ export default function ProductBulkImageModal({
                         {zipFile.name}
                       </p>
                       <p className="text-teal-700">
-                        {(zipFile.size / (1024 * 1024)).toFixed(2)} MB • File
-                        ZIP siap diekstrak & dicocokkan di server
+                        {(zipFile.size / (1024 * 1024)).toFixed(2)} MB • ZIP archive ready to extract & match on server
                       </p>
                     </div>
                   </div>
@@ -490,7 +486,7 @@ export default function ProductBulkImageModal({
                 <div className="flex items-center justify-center gap-2 rounded-xl border border-terra-100 bg-terra-50/50 p-4 text-xs font-medium text-terra-900">
                   <Loader2 className="h-4 w-4 animate-spin text-terra-700" />
                   <span>
-                    Menganalisis nama file dan mencocokkan ke database SKU...
+                    Analyzing filenames and matching against product SKUs...
                   </span>
                 </div>
               )}
@@ -502,14 +498,14 @@ export default function ProductBulkImageModal({
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-2">
                     <div className="flex items-center gap-2 text-xs">
                       <span className="font-semibold text-neutral-800">
-                        Total Foto: {items.length}
+                        Total Photos: {items.length}
                       </span>
                       <span className="rounded-full bg-green-100 px-2 py-0.5 font-medium text-green-700">
-                        Cocok: {matchedCount}
+                        Matched: {matchedCount}
                       </span>
                       {unmatchedCount > 0 && (
                         <span className="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-700">
-                          Perlu Dipilih: {unmatchedCount}
+                          Needs Selection: {unmatchedCount}
                         </span>
                       )}
                     </div>
@@ -521,7 +517,7 @@ export default function ProductBulkImageModal({
                       }}
                       className="text-xs text-red-600 hover:underline"
                     >
-                      Hapus Semua
+                      Clear All
                     </button>
                   </div>
 
@@ -574,7 +570,7 @@ export default function ProductBulkImageModal({
                                 }}
                                 className="ml-1 text-[11px] text-green-800 underline hover:text-green-950"
                               >
-                                Ganti
+                                Change
                               </button>
                             </div>
                           ) : (
@@ -587,7 +583,7 @@ export default function ProductBulkImageModal({
                               className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1.5 font-medium text-amber-900 hover:bg-amber-100"
                             >
                               <Search className="h-3.5 w-3.5 text-amber-700" />
-                              <span>Pilih Produk Manual</span>
+                              <span>Select Product Manually</span>
                             </button>
                           )}
 
@@ -598,7 +594,7 @@ export default function ProductBulkImageModal({
                                 <Search className="absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400" />
                                 <input
                                   type="text"
-                                  placeholder="Cari SKU / nama produk..."
+                                  placeholder="Search SKU / product name..."
                                   value={searchQuery}
                                   onChange={(e) =>
                                     setSearchQuery(e.target.value)
@@ -646,7 +642,7 @@ export default function ProductBulkImageModal({
                                   ))
                                 ) : (
                                   <p className="p-3 text-center text-neutral-400">
-                                    Produk tidak ditemukan
+                                    No products found
                                   </p>
                                 )}
                               </div>
@@ -656,7 +652,7 @@ export default function ProductBulkImageModal({
                                 onClick={() => setActiveItemForSearch(null)}
                                 className="mt-2 w-full rounded-lg bg-neutral-100 py-1 text-center text-[11px] font-medium text-neutral-700 hover:bg-neutral-200"
                               >
-                                Tutup
+                                Close
                               </button>
                             </div>
                           )}
@@ -691,7 +687,7 @@ export default function ProductBulkImageModal({
                   disabled={isUploading}
                   className="rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                 >
-                  Batal
+                  Cancel
                 </button>
                 <button
                   type="submit"
@@ -701,13 +697,13 @@ export default function ProductBulkImageModal({
                   {isUploading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Memproses & Menyimpan Gambar...
+                      Processing & Saving Images...
                     </>
                   ) : (
                     <>
                       <UploadCloud className="h-4 w-4" />
-                      Simpan & Tautkan Foto (
-                      {zipFile ? 'File ZIP' : items.length})
+                      Save & Link Photos (
+                      {zipFile ? 'ZIP Archive' : items.length})
                     </>
                   )}
                 </button>
@@ -722,11 +718,10 @@ export default function ProductBulkImageModal({
                 <CheckCircle2 className="h-6 w-6 shrink-0 text-teal-600" />
                 <div>
                   <h4 className="font-semibold">
-                    Upload Gambar Massal Selesai!
+                    Bulk Image Upload Complete!
                   </h4>
                   <p className="text-xs text-teal-700">
-                    Foto produk telah diproses dengan latar belakang putih 1:1
-                    dan ditautkan ke galeri produk.
+                    Product photos have been processed with a 1:1 white background and linked to product galleries.
                   </p>
                 </div>
               </div>
@@ -734,19 +729,19 @@ export default function ProductBulkImageModal({
               {/* Metrics */}
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="rounded-xl border border-neutral-200 bg-white p-3 shadow-xs">
-                  <p className="text-xs text-neutral-500">Total Foto</p>
+                  <p className="text-xs text-neutral-500">Total Photos</p>
                   <p className="text-xl font-bold text-neutral-900">
                     {report.total}
                   </p>
                 </div>
                 <div className="rounded-xl border border-green-200 bg-green-50/40 p-3 shadow-xs">
-                  <p className="text-xs text-green-700">Berhasil Ditautkan</p>
+                  <p className="text-xs text-green-700">Successfully Linked</p>
                   <p className="text-xl font-bold text-green-700">
                     {report.successful}
                   </p>
                 </div>
                 <div className="rounded-xl border border-amber-200 bg-amber-50/40 p-3 shadow-xs">
-                  <p className="text-xs text-amber-700">Dilewati / Gagal</p>
+                  <p className="text-xs text-amber-700">Skipped / Failed</p>
                   <p className="text-xl font-bold text-amber-700">
                     {report.failed}
                   </p>
@@ -757,7 +752,7 @@ export default function ProductBulkImageModal({
               {report.updated_products.length > 0 && (
                 <div className="rounded-xl border border-neutral-200 bg-neutral-50/50 p-4">
                   <p className="text-xs font-semibold text-neutral-900">
-                    Produk yang Diperbarui ({report.updated_products.length}):
+                    Updated Products ({report.updated_products.length}):
                   </p>
                   <div className="mt-2 max-h-36 space-y-1 overflow-y-auto text-xs text-neutral-700">
                     {report.updated_products.map((name, idx) => (
@@ -777,7 +772,7 @@ export default function ProductBulkImageModal({
               {report.errors.length > 0 && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4">
                   <p className="text-xs font-semibold text-amber-900">
-                    Catatan File yang Dilewati ({report.errors.length}):
+                    Skipped Files Notes ({report.errors.length}):
                   </p>
                   <div className="mt-2 max-h-32 space-y-1 overflow-y-auto text-xs text-amber-800">
                     {report.errors.map((err, idx) => (
@@ -809,14 +804,14 @@ export default function ProductBulkImageModal({
                   className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  Upload Gambar Lain
+                  Upload More Images
                 </button>
                 <button
                   type="button"
                   onClick={handleClose}
                   className="rounded-xl bg-terra-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-terra-800"
                 >
-                  Selesai
+                  Done
                 </button>
               </div>
             </div>

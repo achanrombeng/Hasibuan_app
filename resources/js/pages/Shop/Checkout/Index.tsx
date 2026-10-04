@@ -181,7 +181,7 @@ export default function CheckoutIndex({
 
         if (!destinationId) {
           setShippingError(
-            `Tidak dapat menemukan lokasi "${address.district || address.city}" di database RajaOngkir. Silakan update alamat dengan lokasi yang valid.`,
+            `Unable to locate "${address.district || address.city}" in shipping database. Please update with a valid location.`,
           );
           setShippingOptions([]);
           setLoadingShipping(false);
@@ -214,12 +214,12 @@ export default function CheckoutIndex({
             setData('shipping_cost', cheapest.cost);
           }
         } else {
-          setShippingError(result.message || 'Gagal mengambil opsi pengiriman');
+          setShippingError(result.message || 'Failed to retrieve shipping options');
           setShippingOptions([]);
         }
       } catch (e) {
         console.error('Failed to fetch shipping options', e);
-        setShippingError('Terjadi kesalahan saat mengambil opsi pengiriman');
+        setShippingError('An error occurred while retrieving shipping options');
         setShippingOptions([]);
       } finally {
         setLoadingShipping(false);
@@ -280,13 +280,13 @@ export default function CheckoutIndex({
                   <div className="rounded-sm bg-white p-6">
                     <div className="mb-4 flex items-center justify-between">
                       <h2 className="flex items-center gap-2 font-serif text-xl text-terra-900">
-                        <MapPin className="h-5 w-5" /> Alamat Pengiriman
+                        <MapPin className="h-5 w-5" /> Shipping Address
                       </h2>
                       <Link
                         href="/shop/addresses"
                         className="flex items-center gap-1 text-sm text-wood hover:text-terra-900"
                       >
-                        <Plus className="h-4 w-4" /> Tambah Alamat
+                        <Plus className="h-4 w-4" /> Add Address
                       </Link>
                     </div>
                     {addressList.length > 0 ? (
@@ -311,7 +311,7 @@ export default function CheckoutIndex({
                                   </span>
                                   {addr.is_default && (
                                     <span className="rounded bg-wood/10 px-2 py-0.5 text-xs text-wood">
-                                      Utama
+                                      Default
                                     </span>
                                   )}
                                 </div>
@@ -338,13 +338,13 @@ export default function CheckoutIndex({
                       <div className="py-8 text-center">
                         <MapPin className="mx-auto mb-3 h-12 w-12 text-terra-200" />
                         <p className="mb-4 text-terra-500">
-                          Belum ada alamat tersimpan
+                          No saved addresses yet
                         </p>
                         <Link
                           href="/shop/addresses"
                           className="inline-flex items-center gap-2 rounded-lg bg-terra-900 px-4 py-2 text-white hover:bg-terra-800"
                         >
-                          <Plus className="h-4 w-4" /> Tambah Alamat
+                          <Plus className="h-4 w-4" /> Add Address
                         </Link>
                       </div>
                     )}
@@ -433,13 +433,13 @@ function ShippingSection({
   return (
     <div className="rounded-sm bg-white p-6">
       <h2 className="mb-4 flex items-center gap-2 font-serif text-xl text-terra-900">
-        <Package className="h-5 w-5" /> Metode Pengiriman
+        <Package className="h-5 w-5" /> Shipping Method
       </h2>
 
       {loading ? (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="h-8 w-8 animate-spin text-terra-400" />
-          <span className="ml-3 text-terra-500">Mencari ongkos kirim...</span>
+          <span className="ml-3 text-terra-500">Calculating shipping rates...</span>
         </div>
       ) : error ? (
         <div className="rounded-lg bg-red-50 p-4 text-center">
@@ -449,7 +449,7 @@ function ShippingSection({
         <div className="py-8 text-center">
           <Truck className="mx-auto mb-3 h-12 w-12 text-terra-200" />
           <p className="text-terra-500">
-            Pilih alamat pengiriman untuk melihat opsi kurir
+            Select a shipping address to view available courier options
           </p>
         </div>
       ) : (
@@ -483,7 +483,7 @@ function ShippingSection({
                     </span>
                   </div>
                   <p className="text-sm text-terra-500">
-                    {option.description} • Estimasi {option.etd}
+                    {option.description} • Estimated delivery {option.etd}
                   </p>
                 </div>
               </div>
@@ -508,13 +508,13 @@ function ShippingSection({
               className="w-full rounded-sm border-2 border-dashed border-terra-200 py-3 text-sm font-medium text-terra-600 transition-colors hover:border-terra-300 hover:bg-terra-50"
             >
               {shouldShowAll
-                ? 'Tampilkan Lebih Sedikit'
-                : `Lihat ${options.length - INITIAL_SHOW_COUNT} Opsi Lainnya`}
+                ? 'Show Less'
+                : `View ${options.length - INITIAL_SHOW_COUNT} More Options`}
             </button>
           )}
 
           <p className="text-xs text-terra-500">
-            *Estimasi waktu pengiriman dapat berbeda tergantung kondisi.
+            *Estimated delivery time may vary depending on local conditions.
           </p>
         </div>
       )}
@@ -538,7 +538,7 @@ function PaymentSection({
   return (
     <div className="rounded-sm bg-white p-6">
       <h2 className="mb-4 flex items-center gap-2 font-serif text-xl text-terra-900">
-        <CreditCard className="h-5 w-5" /> Metode Pembayaran
+        <CreditCard className="h-5 w-5" /> Payment Method
       </h2>
       <div className="space-y-3">
         {paymentMethods.map((method) => (
@@ -624,7 +624,7 @@ function OrderSummary({
     <div className="lg:col-span-1">
       <div className="sticky top-28 rounded-sm bg-white p-6">
         <h2 className="mb-4 font-serif text-xl text-terra-900">
-          Ringkasan Pesanan
+          Order Summary
         </h2>
 
         {/* Items */}
@@ -659,7 +659,7 @@ function OrderSummary({
             <span>{cart.subtotal_formatted}</span>
           </div>
           <div className="flex justify-between text-terra-600">
-            <span>Ongkos Kirim</span>
+            <span>Shipping Cost</span>
             <span
               className={shippingCost > 0 ? 'text-terra-900' : 'text-terra-500'}
             >
@@ -679,7 +679,7 @@ function OrderSummary({
           )}
           {codFee > 0 && (
             <div className="flex justify-between text-terra-600">
-              <span>Biaya COD</span>
+              <span>COD Fee</span>
               <span className="text-orange-600">{formatCurrency(codFee)}</span>
             </div>
           )}
@@ -707,27 +707,27 @@ function OrderSummary({
         >
           {processing ? (
             <>
-              <Loader2 className="h-5 w-5 animate-spin" /> Memproses...
+              <Loader2 className="h-5 w-5 animate-spin" /> Processing...
             </>
           ) : (
-            'Buat Pesanan'
+            'Place Order'
           )}
         </button>
 
         {(!selectedAddress || !selectedPayment || !selectedShipping) && (
           <p className="mt-3 text-center text-sm text-red-500">
             {!selectedAddress
-              ? 'Pilih alamat pengiriman'
+              ? 'Please select a shipping address'
               : !selectedShipping
-                ? 'Pilih metode pengiriman'
-                : 'Pilih metode pembayaran'}
+                ? 'Please select a shipping method'
+                : 'Please select a payment method'}
           </p>
         )}
 
         {hasErrors && (
           <div className="mt-3 rounded-lg bg-red-50 p-3">
             <p className="mb-1 text-sm font-medium text-red-600">
-              Terjadi kesalahan:
+              An error occurred:
             </p>
             <ul className="list-inside list-disc text-sm text-red-500">
               {Object.values(errors).map((error, i) => (

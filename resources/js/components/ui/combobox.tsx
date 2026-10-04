@@ -28,9 +28,9 @@ export function Combobox({
     options,
     value,
     onChange,
-    placeholder = 'Pilih opsi...',
-    searchPlaceholder = 'Cari...',
-    emptyText = 'Tidak ditemukan.',
+    placeholder = 'Select option...',
+    searchPlaceholder = 'Search...',
+    emptyText = 'No results found.',
     className,
     disabled = false,
 }: ComboboxProps) {

@@ -50,9 +50,9 @@ class ProductImportController extends Controller implements HasMiddleware
             'file' => ['required', 'file', 'mimes:xlsx,xls,csv,txt', 'max:20480'], // max 20MB
             'update_existing' => ['nullable', 'boolean'],
         ], [
-            'file.required' => 'Silakan pilih file Excel atau CSV terlebih dahulu.',
-            'file.mimes' => 'Format file harus berupa .xlsx, .xls, atau .csv.',
-            'file.max' => 'Ukuran file maksimal adalah 20MB.',
+            'file.required' => 'Please select an Excel or CSV file first.',
+            'file.mimes' => 'The file format must be .xlsx, .xls, or .csv.',
+            'file.max' => 'The maximum file size is 20MB.',
         ]);
 
         /** @var UploadedFile $file */
@@ -63,7 +63,7 @@ class ProductImportController extends Controller implements HasMiddleware
             $report = $service->import($file, $updateExisting);
 
             $successMsg = sprintf(
-                'Import selesai: %d produk berhasil ditambahkan, %d diperbarui, %d dilewati.',
+                'Import completed: %d products added, %d updated, %d skipped.',
                 $report['imported'],
                 $report['updated'],
                 $report['skipped']

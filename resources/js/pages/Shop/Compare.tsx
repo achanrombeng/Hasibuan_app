@@ -45,8 +45,8 @@ export default function Compare({ products }: Props) {
   return (
     <>
       <SEOHead
-        title="Bandingkan Produk"
-        description={`Bandingkan spesifikasi dan harga produk furnitur di ${siteName}. Pilih produk terbaik sesuai kebutuhan Anda.`}
+        title="Compare Products"
+        description={`Compare specifications and details of furniture items at ${siteName}. Select the perfect pieces for your space.`}
         noindex={true}
       />
       <div className="bg-noise" />
@@ -64,10 +64,10 @@ export default function Compare({ products }: Props) {
               <div>
                 <h1 className="flex items-center gap-3 font-serif text-3xl text-terra-900">
                   <GitCompare size={32} className="text-wood" />
-                  Bandingkan Produk
+                  Compare Products
                 </h1>
                 <p className="mt-1 text-terra-500">
-                  {products.length} produk dipilih
+                  {products.length} {products.length === 1 ? 'product' : 'products'} selected
                 </p>
               </div>
             </div>
@@ -171,13 +171,13 @@ export default function Compare({ products }: Props) {
 
                 {/* Stock */}
                 <CompareRow
-                  label="Stok"
+                  label="Stock"
                   products={products}
                   render={(p) => (
                     <span
                       className={`rounded-full px-3 py-1 text-sm ${p.is_in_stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                     >
-                      {p.is_in_stock ? 'Tersedia' : 'Habis'}
+                      {p.is_in_stock ? 'In Stock' : 'Out of Stock'}
                     </span>
                   )}
                 />
@@ -221,7 +221,7 @@ export default function Compare({ products }: Props) {
                         href={`/shop/products/${product.slug}`}
                         className="flex w-full items-center justify-center gap-2 rounded-full bg-terra-900 py-3 text-sm font-medium text-white transition-colors hover:bg-wood-dark"
                       >
-                        Lihat Detail
+                        View Details
                       </Link>
                     </div>
                   ))}

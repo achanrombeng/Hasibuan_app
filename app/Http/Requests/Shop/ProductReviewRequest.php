@@ -28,14 +28,14 @@ class ProductReviewRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_id.required' => 'Produk wajib dipilih.',
-            'product_id.exists' => 'Produk tidak ditemukan.',
-            'rating.required' => 'Rating wajib diisi.',
-            'rating.min' => 'Rating minimal 1 bintang.',
-            'rating.max' => 'Rating maksimal 5 bintang.',
-            'comment.required' => 'Ulasan wajib diisi.',
-            'comment.min' => 'Ulasan minimal 10 karakter.',
-            'comment.max' => 'Ulasan maksimal 1000 karakter.',
+            'product_id.required' => 'Product is required.',
+            'product_id.exists' => 'Product not found.',
+            'rating.required' => 'Rating is required.',
+            'rating.min' => 'Rating must be at least 1 star.',
+            'rating.max' => 'Rating may not exceed 5 stars.',
+            'comment.required' => 'Review comment is required.',
+            'comment.min' => 'Review comment must be at least 10 characters.',
+            'comment.max' => 'Review comment may not exceed 1000 characters.',
         ];
     }
 }

@@ -13,7 +13,7 @@
         {{-- Default Open Graph --}}
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="Ronica Outdoor Furniture">
-        <meta property="og:locale" content="tr_TR">
+        <meta property="og:locale" content="en_US">
         <meta property="og:image" content="{{ url('/logo.png') }}">
         <meta property="og:image:width" content="1024">
         <meta property="og:image:height" content="400">

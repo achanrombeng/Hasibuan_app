@@ -199,12 +199,12 @@ class ProductBulkImageController extends Controller implements HasMiddleware
                         }
                     }
                 } else {
-                    throw new Exception('Gagal membuka file ZIP. Pastikan file arsip ZIP tidak rusak.');
+                    throw new Exception('Failed to open ZIP archive. Please ensure the archive is valid.');
                 }
             }
 
             if (empty($filesToProcess)) {
-                throw new Exception('Tidak ada file gambar valid yang ditemukan untuk diproses.');
+                throw new Exception('No valid image files found to process.');
             }
 
             // Preload products for fallback mapping
@@ -246,7 +246,7 @@ class ProductBulkImageController extends Controller implements HasMiddleware
                     $report['failed']++;
                     $report['errors'][] = [
                         'filename' => $filename,
-                        'message' => 'Produk tidak ditemukan untuk nama file ini.',
+                        'message' => 'Product not found for this filename.',
                     ];
 
                     continue;
@@ -258,7 +258,7 @@ class ProductBulkImageController extends Controller implements HasMiddleware
                     $report['failed']++;
                     $report['errors'][] = [
                         'filename' => $filename,
-                        'message' => "Produk dengan ID {$productId} tidak ditemukan di database.",
+                        'message' => "Product with ID {$productId} not found in database.",
                     ];
 
                     continue;
@@ -308,7 +308,7 @@ class ProductBulkImageController extends Controller implements HasMiddleware
             return response()->json([
                 'success' => true,
                 'message' => sprintf(
-                    'Upload gambar massal selesai: %d berhasil ditautkan, %d dilewati.',
+                    'Bulk image upload completed: %d successfully linked, %d skipped.',
                     $report['successful'],
                     $report['failed']
                 ),

@@ -27,8 +27,6 @@ export default function About({ aboutSettings }: AboutProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  const isIndonesian = locale === 'id';
-
   const carouselImages = (
     aboutSettings?.story_images && aboutSettings.story_images.length > 0
       ? aboutSettings.story_images
@@ -59,25 +57,11 @@ export default function About({ aboutSettings }: AboutProps) {
   }, [isAutoPlaying, currentImageIndex, carouselImages.length]);
 
   const storyTitle =
-    aboutSettings?.story_title ||
-    (isIndonesian
-      ? 'Melangkah Dari Indonesia Untuk Dunia'
-      : 'Extending From Indonesia To The World');
+    aboutSettings?.story_title || 'Extending From Indonesia To The World';
   const storySubtitle =
-    aboutSettings?.story_subtitle ||
-    (isIndonesian ? 'Kisah Kerajinan Tangan' : 'Handicraft Story');
+    aboutSettings?.story_subtitle || 'Handicraft Story';
 
-  const defaultContent = isIndonesian
-    ? `Didirikan pada tahun 2016 di Cirebon, Indonesia, Ronica adalah representasi keanggunan furnitur luar ruangan yang diproduksi secara buatan tangan (handmade). Merek yang mengkhususkan diri dalam pembuatan furnitur rotan berkualitas tinggi, tali (rope), dan aluminium sejak awal berdiri, berpindah ke pabrik barunya yang berteknologi modern pada tahun 2021 serta memperluas jangkauan produksinya hingga mencakup kayu jati kelas A. Kayu jati diperoleh dari kawasan jati paling eksklusif di Indonesia, Perhutani Blora, dan memperoleh kualitas istimewa melalui proses pengolahan serta pengeringan di fasilitas milik Ronica sendiri.
-
-Memadukan tradisi anyaman tangan Cirebon dan keahlian perkayuan Jepara yang berakar mendalam, Ronica menyatukan dua budaya kerajinan agung di bawah satu atap. Perpaduan ini melahirkan produk yang kokoh dan berestetika tinggi yang memancarkan jejak keahlian pada setiap furnitur. Setiap detail adalah wujud pemahaman desain yang dibentuk langsung oleh tangan para master perajin.
-
-Hanya material kelas premium yang cocok untuk kondisi luar ruangan yang digunakan di Ronica. Kayu jati bersertifikasi Perhutani, rotan sintetis Rehau dan Viro, kain Sunproof, Ateja, Sunbrella, dan Agora; serta spons teknologi QuickDry dipilih secara seksama demi ketahanan dan kenyamanan maksimal. Seluruh material telah melalui uji laboratorium tahan sinar UV dan didukung garansi tiga tahun dari pemasok.
-
-Kini, Ronica mengekspor ke lebih dari 15 negara, termasuk Amerika Serikat, Eropa, Timur Tengah, dan Australia. Dengan keunggulan pengiriman cepat melalui gudang Mersin di Turki, Ronica telah menjadi mitra solusi terpercaya di kancah internasional untuk proyek hotel dan residensial eksklusif di Maladewa, Qatar, Australia, dan AS.
-
-Sebagai bisnis keluarga, Ronica senantiasa berdedikasi terhadap mutu terbaik, keberlanjutan, dan kepuasan pelanggan. Setiap koleksi dirancang dengan material yang ramah lingkungan serta desain yang inovatif. Ronica tidak hanya menghadirkan kenyamanan, melainkan juga keanggunan yang abadi untuk gaya hidup luar ruangan Anda.`
-    : `Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.
+  const defaultContent = `Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.
 
 Bringing together the tradition of Cirebon's hand knitting and Jepara's deep-rooted woodwork, Ronica brings two great craft cultures together under one roof. This combination reveals durable and aesthetic products that carry the trace of craftsmanship in each furniture. Each detail is the result of a design understanding that is shaped in the hands of the masters.
 
@@ -96,13 +80,13 @@ As a family business, Ronica is always passionate about quality, sustainability 
   return (
     <>
       <SEOHead
-        title={isIndonesian ? 'Tentang Kami' : 'About Us'}
+        title="About Us"
         description={t('shop.about.seo_description', { siteName })}
         keywords={[
-          'tentang kami',
+          'about us',
           'about ronica',
           'outdoor furniture',
-          'furnitur rotan',
+          'rattan furniture',
           'teak wood indonesia',
           'handicraft story',
         ]}
@@ -114,12 +98,10 @@ As a family business, Ronica is always passionate about quality, sustainability 
           <div className="mb-12 bg-[#96724d] py-16 text-white md:mb-16">
             <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
               <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                {isIndonesian ? 'Tentang Kami' : 'About Us'}
+                About Us
               </h1>
               <p className="mx-auto max-w-2xl text-xl opacity-90">
-                {isIndonesian
-                  ? 'Pelajari lebih lanjut tentang kisah kerajinan dan dedikasi furnitur kami'
-                  : 'Discover the story of Ronica’s handcrafted outdoor furniture'}
+                Discover the story of Ronica’s handcrafted outdoor furniture
               </p>
             </div>
           </div>

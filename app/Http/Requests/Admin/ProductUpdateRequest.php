@@ -90,13 +90,13 @@ class ProductUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'category_id.required' => 'Kategori wajib dipilih.',
-            'category_id.exists' => 'Kategori tidak ditemukan.',
-            'sku.required' => 'SKU wajib diisi.',
-            'sku.unique' => 'SKU sudah digunakan.',
-            'name.required' => 'Nama produk wajib diisi.',
-            'images.*.image' => 'File harus berupa gambar.',
-            'images.*.max' => 'Ukuran file gambar maksimal 20MB.',
+            'category_id.required' => 'Category is required.',
+            'category_id.exists' => 'Category not found.',
+            'sku.required' => 'SKU is required.',
+            'sku.unique' => 'SKU is already in use.',
+            'name.required' => 'Product name is required.',
+            'images.*.image' => 'The file must be an image.',
+            'images.*.max' => 'The image size may not exceed 20MB.',
         ];
     }
 }

@@ -61,12 +61,12 @@ export default function AddressIndex({ addresses }: { addresses: Address[] }) {
 
   const handleDelete = (id: number) => {
     showConfirm(
-      'Hapus Alamat',
-      'Apakah Anda yakin ingin menghapus alamat ini?',
+      'Delete Address',
+      'Are you sure you want to delete this address?',
       () => {
         router.delete(addressesDestroy.url(id), {
           onSuccess: () => console.log('Address deleted'),
-          onError: () => showAlert('Gagal menghapus alamat', 'error', 'Error'),
+          onError: () => showAlert('Failed to delete address', 'error', 'Error'),
         });
       },
       'danger',
@@ -75,15 +75,15 @@ export default function AddressIndex({ addresses }: { addresses: Address[] }) {
 
   return (
     <ShopLayout>
-      <Head title="Daftar Alamat" />
+      <Head title="Address Book" />
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="mx-auto max-w-4xl">
           <div className="mb-8 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                Daftar Alamat
+                Address Book
               </h1>
-              <p className="text-gray-600">Kelola alamat pengiriman Anda</p>
+              <p className="text-gray-600">Manage your shipping and delivery addresses</p>
             </div>
             <Button
               onClick={() => {
@@ -93,14 +93,14 @@ export default function AddressIndex({ addresses }: { addresses: Address[] }) {
               className="bg-teal-600 hover:bg-teal-700"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Tambah Alamat
+              Add Address
             </Button>
           </div>
 
           <div className="grid gap-6">
             {addresses.length === 0 ? (
               <div className="py-12 text-center text-gray-500">
-                Belum ada alamat yang tersimpan.
+                No saved addresses found.
               </div>
             ) : (
               addresses.map((address) => (
@@ -178,7 +178,7 @@ function AddressCard({
               </span>
               {address.is_default && (
                 <span className="rounded bg-teal-100 px-2 py-0.5 text-xs font-medium text-teal-800">
-                  Utama
+                  Default
                 </span>
               )}
             </div>
@@ -192,7 +192,7 @@ function AddressCard({
         <div className="flex flex-col gap-2 sm:flex-row">
           {!address.is_default && (
             <Button variant="outline" size="sm" onClick={handleSetDefault}>
-              Jadikan Utama
+              Set as Default
             </Button>
           )}
           <Button
@@ -277,7 +277,7 @@ function LocationSearchInput({
       <div className="relative">
         <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-gray-500" />
         <Input
-          placeholder="Cari Kecamatan atau Kota..."
+          placeholder="Search district, city, or postal code..."
           className="pl-9"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -384,7 +384,7 @@ function AddressFormDialog({
         reset();
       },
       onError: () =>
-        showAlert('Mohon periksa form kembali.', 'warning', 'Perhatian'),
+        showAlert('Please check the form fields and try again.', 'warning', 'Attention'),
     };
 
     if (address) {
@@ -399,20 +399,20 @@ function AddressFormDialog({
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
-            {address ? 'Edit Alamat' : 'Tambah Alamat Baru'}
+            {address ? 'Edit Address' : 'Add New Address'}
           </DialogTitle>
           <DialogDescription>
-            Isi detail alamat pengiriman Anda di bawah ini.
+            Fill in your delivery address details below.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="label">Label Alamat</Label>
+              <Label htmlFor="label">Address Label</Label>
               <Input
                 id="label"
-                placeholder="Rumah, Kantor, dll"
+                placeholder="Home, Office, Villa, etc."
                 value={data.label}
                 onChange={(e) => setData('label', e.target.value)}
                 required
@@ -422,7 +422,7 @@ function AddressFormDialog({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="recipient_name">Nama Penerima</Label>
+              <Label htmlFor="recipient_name">Recipient Name</Label>
               <Input
                 id="recipient_name"
                 value={data.recipient_name}
@@ -436,7 +436,7 @@ function AddressFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Nomor Telepon</Label>
+            <Label htmlFor="phone">Phone Number</Label>
             <Input
               id="phone"
               value={data.phone}
@@ -449,7 +449,7 @@ function AddressFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Lokasi (Cari Kecamatan / Kota)</Label>
+            <Label>Location (Search District / City)</Label>
             <LocationSearchInput
               onSelect={handleLocationSelect}
               initialValue={
@@ -460,7 +460,7 @@ function AddressFormDialog({
             />
             {errors.city_id && (
               <p className="text-xs text-red-500">
-                Silakan pilih lokasi dari hasil pencarian
+                Please select a valid location from the search suggestions
               </p>
             )}
           </div>
@@ -468,17 +468,17 @@ function AddressFormDialog({
           {data.city && (
             <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-700">
               <p>
-                <span className="font-semibold">Provinsi:</span> {data.province}
+                <span className="font-semibold">Province:</span> {data.province}
               </p>
               <p>
-                <span className="font-semibold">Kota:</span> {data.city}
+                <span className="font-semibold">City:</span> {data.city}
               </p>
               <p>
-                <span className="font-semibold">Kecamatan:</span>{' '}
+                <span className="font-semibold">District:</span>{' '}
                 {data.district}
               </p>
               <p>
-                <span className="font-semibold">Kode Pos:</span>{' '}
+                <span className="font-semibold">Postal Code:</span>{' '}
                 {data.postal_code}
               </p>
             </div>
@@ -486,7 +486,7 @@ function AddressFormDialog({
 
           <div className="space-y-2">
             <Label htmlFor="address">
-              Alamat Lengkap (Jalan, No. Rumah, RT/RW)
+              Street Address (Street, Building, Unit / Suite)
             </Label>
             <textarea
               id="address"
@@ -501,7 +501,7 @@ function AddressFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Catatan (Patokan/Petunjuk)</Label>
+            <Label htmlFor="notes">Delivery Notes / Landmark Instructions</Label>
             <Input
               id="notes"
               value={data.notes}
@@ -518,7 +518,7 @@ function AddressFormDialog({
               onChange={(e) => setData('is_default', e.target.checked)}
             />
             <Label htmlFor="is_default" className="font-normal">
-              Jadikan alamat utama
+              Set as default address
             </Label>
           </div>
 
@@ -528,7 +528,7 @@ function AddressFormDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Batal
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -536,7 +536,7 @@ function AddressFormDialog({
               disabled={processing}
             >
               {processing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Simpan Alamat
+              Save Address
             </Button>
           </DialogFooter>
         </form>

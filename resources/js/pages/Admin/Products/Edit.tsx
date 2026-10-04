@@ -376,7 +376,7 @@ export default function EditProduct({
         setSubmitError(
           typeof firstErr === 'string'
             ? firstErr
-            : 'Terjadi kesalahan saat menyimpan perubahan. Silakan periksa kembali data formulir.',
+            : 'An error occurred while saving changes. Please review the form fields.',
         );
       },
       onFinish: () => {
@@ -803,8 +803,8 @@ export default function EditProduct({
                 <p className="mt-2 flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
                   <Info className="h-4 w-4 shrink-0 text-amber-500" />
                   <span>
-                    Produk tanpa foto akan otomatis berstatus{' '}
-                    <strong>Draft</strong> saat disimpan.
+                    Products without photos will automatically be saved as{' '}
+                    <strong>Draft</strong>.
                   </span>
                 </p>
               )}

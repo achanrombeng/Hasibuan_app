@@ -18,60 +18,60 @@ import {
 const SECTIONS = [
   {
     icon: FileText,
-    title: 'Ketentuan Umum',
-    content: `Dengan mengakses dan menggunakan website ini, Anda menyetujui untuk terikat dengan syarat dan ketentuan ini. Jika Anda tidak setuju dengan ketentuan ini, mohon untuk tidak menggunakan layanan kami.`,
+    title: 'General Terms',
+    content: `By accessing and using this website, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, please do not proceed with our services or website.`,
   },
   {
     icon: CreditCard,
-    title: 'Pemesanan & Pembayaran',
+    title: 'Ordering & Payment',
     items: [
-      'Harga produk dapat berubah sewaktu-waktu tanpa pemberitahuan terlebih dahulu',
-      'Pesanan dianggap sah setelah pembayaran dikonfirmasi',
-      'Pembayaran harus dilakukan dalam waktu 24 jam setelah pemesanan untuk Transfer Bank',
-      'Kami berhak membatalkan pesanan jika pembayaran tidak diterima dalam waktu yang ditentukan',
+      'Product specifications and commercial prices are subject to confirmation at the time of quotation or order placement.',
+      'An order is considered legally binding once payment or confirmed deposit has been verified.',
+      'Bank wire transfer orders require remittance confirmation within the timeframe specified in the commercial proforma invoice.',
+      'We reserve the right to cancel unconfirmed orders if payment is not received within the agreed period.',
     ],
   },
   {
     icon: Truck,
-    title: 'Pengiriman',
+    title: 'Shipping & Delivery',
     items: [
-      'Waktu pengiriman adalah estimasi dan dapat berbeda tergantung kondisi',
-      'Pembeli bertanggung jawab memastikan alamat pengiriman yang benar',
-      'Kerusakan akibat pengiriman harus dilaporkan dalam 24 jam setelah penerimaan',
-      'Biaya pengiriman ulang akibat alamat salah ditanggung pembeli',
+      'Lead times and transit schedules provided are estimates and subject to maritime and customs conditions.',
+      'The purchaser is responsible for providing complete and accurate destination and delivery recipient details.',
+      'Transit discrepancies or physical crate damage must be documented and reported within 48 hours of receipt.',
+      'Additional charges resulting from incorrect address information or destination detention are borne by the purchaser.',
     ],
   },
   {
     icon: Shield,
-    title: 'Garansi Produk',
+    title: 'Product Warranty',
     content:
-      'Semua produk kami bergaransi 1 tahun untuk kerusakan struktural akibat cacat produksi.',
+      'All our furniture pieces are covered by a 1-year limited warranty against manufacturing and structural defects.',
     excludes: [
-      'Kerusakan akibat pemakaian tidak wajar',
-      'Kerusakan akibat modifikasi oleh pihak ketiga',
-      'Perubahan warna alami pada material kayu',
-      'Keausan normal akibat pemakaian sehari-hari',
+      'Damage resulting from improper assembly or unauthorized third-party modifications',
+      'Normal weathering and natural color variation inherent to organic teak wood',
+      'Normal wear and tear from everyday commercial or residential usage',
+      'Abnormal exposure to corrosive chemicals or improper maintenance',
     ],
   },
   {
     icon: RefreshCw,
-    title: 'Pembatalan & Pengembalian',
+    title: 'Cancellations & Claims',
     items: [
-      'Pembatalan dapat dilakukan sebelum pesanan diproses dengan potongan 10% biaya admin',
-      'Custom order tidak dapat dibatalkan setelah produksi dimulai',
-      'Pengembalian produk harus dalam kondisi asli dan kemasan lengkap',
-      'Refund akan diproses dalam 7-14 hari kerja setelah produk diterima kembali',
+      'Standard catalog order cancellations prior to dispatch may incur administrative and processing fees.',
+      'Custom bespoke and made-to-order architectural pieces cannot be cancelled once production commences.',
+      'Returned items must remain in original packaging, complete with hardware and tags.',
+      'Approved claims and refunds are processed within 7 to 14 business days following receipt and inspection.',
     ],
   },
   {
     icon: Ban,
-    title: 'Hak Kekayaan Intelektual',
-    content: `Seluruh konten di website ini termasuk gambar, desain, logo, dan teks adalah milik kami dan dilindungi hak cipta. Dilarang menyalin atau menggunakan tanpa izin tertulis.`,
+    title: 'Intellectual Property',
+    content: `All content featured on this website, including designs, photography, brand assets, technical diagrams, and typography, is the exclusive property of Ronica and protected by international intellectual property laws. Reproduction without written consent is strictly prohibited.`,
   },
   {
     icon: Clock,
-    title: 'Perubahan Ketentuan',
-    content: `Kami berhak mengubah syarat dan ketentuan ini sewaktu-waktu. Perubahan akan berlaku segera setelah dipublikasikan di website. Penggunaan berkelanjutan atas layanan kami dianggap sebagai persetujuan atas perubahan tersebut.`,
+    title: 'Amendments',
+    content: `We reserve the right to update these Terms and Conditions at any time. Changes take effect immediately upon publication. Continued use of our website and services constitutes acceptance of the revised terms.`,
   },
 ];
 
@@ -82,12 +82,12 @@ export default function Terms() {
   return (
     <>
       <SEOHead
-        title="Syarat & Ketentuan"
-        description={`Syarat dan ketentuan penggunaan layanan ${siteName}. Ketahui hak dan kewajiban Anda sebagai pelanggan.`}
+        title="Terms & Conditions"
+        description={`Terms and conditions for using ${siteName} services. Learn about your rights and policies.`}
         keywords={[
-          'syarat ketentuan',
-          'terms conditions',
-          'kebijakan pembelian',
+          'terms and conditions',
+          'terms of service',
+          'purchasing policy',
           siteName.toLowerCase(),
         ]}
       />
@@ -101,13 +101,13 @@ export default function Terms() {
                 <Scale size={40} className="text-white" />
               </div>
               <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                Syarat & Ketentuan
+                Terms & Conditions
               </h1>
               <p className="mx-auto max-w-2xl text-lg opacity-90">
-                Ketentuan yang berlaku untuk penggunaan layanan {siteName}
+                Operating policies and conditions for the use of {siteName} services
               </p>
               <p className="mt-4 text-sm opacity-70">
-                Terakhir diperbarui: Januari 2026
+                Last updated: 2026
               </p>
             </div>
           </div>
@@ -119,11 +119,10 @@ export default function Terms() {
               <AlertTriangle className="h-6 w-6 flex-shrink-0 text-amber-600" />
               <div>
                 <p className="font-medium text-amber-900">
-                  Penting untuk dibaca
+                  Important Notice
                 </p>
                 <p className="mt-1 text-sm text-amber-700">
-                  Dengan melakukan pembelian di {siteName}, Anda dianggap telah
-                  membaca dan menyetujui seluruh syarat dan ketentuan berikut.
+                  By engaging in transactions or placing orders with {siteName}, you acknowledge that you have read, understood, and agreed to the terms set forth below.
                 </p>
               </div>
             </div>
@@ -164,7 +163,7 @@ export default function Terms() {
                   {section.excludes && (
                     <div className="mt-4">
                       <p className="mb-3 text-sm font-medium text-neutral-500">
-                        Garansi tidak berlaku untuk:
+                        Warranty excludes:
                       </p>
                       <ul className="space-y-2">
                         {section.excludes.map((item, i) => (
@@ -186,16 +185,16 @@ export default function Terms() {
             <div className="mt-12 rounded-xl bg-neutral-50 p-8 text-center">
               <Package className="mx-auto mb-4 h-12 w-12 text-teal-600" />
               <h3 className="mb-2 text-xl font-semibold text-neutral-900">
-                Ada Pertanyaan?
+                Have Any Questions?
               </h3>
               <p className="mb-6 text-neutral-600">
-                Tim customer service kami siap membantu Anda
+                Our client relations team is available to assist you
               </p>
               <a
                 href="/shop/contact"
                 className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 font-medium text-white transition-colors hover:bg-teal-700"
               >
-                Hubungi Kami
+                Contact Us
               </a>
             </div>
           </div>

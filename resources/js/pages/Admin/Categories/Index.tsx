@@ -596,25 +596,25 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
             </div>
             <DialogTitle className="text-center">
               {(categoryToDelete?.products_count || 0) > 0
-                ? 'Kategori Tidak Dapat Dihapus'
-                : 'Hapus Kategori'}
+                ? 'Category Cannot Be Deleted'
+                : 'Delete Category'}
             </DialogTitle>
             <DialogDescription className="text-center">
               {(categoryToDelete?.products_count || 0) > 0 ? (
                 <>
-                  Kategori{' '}
+                  Category{' '}
                   <span className="font-semibold text-terra-900">
                     "{categoryToDelete?.name}"
                   </span>{' '}
-                  masih memiliki produk yang terhubung ke dalamnya.
+                  still has products linked to it.
                 </>
               ) : (
                 <>
-                  Apakah Anda yakin ingin menghapus kategori{' '}
+                  Are you sure you want to delete category{' '}
                   <span className="font-semibold text-terra-900">
                     "{categoryToDelete?.name}"
                   </span>
-                  ? Tindakan ini tidak dapat dibatalkan.
+                  ? This action cannot be undone.
                 </>
               )}
             </DialogDescription>
@@ -626,15 +626,15 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                 <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
                 <div className="text-sm">
                   <p className="font-semibold text-amber-900">
-                    Memiliki {categoryToDelete.products_count}{' '}
+                    Contains {categoryToDelete.products_count}{' '}
                     {categoryToDelete.products_count === 1
-                      ? 'Produk'
-                      : 'Produk'}
+                      ? 'Product'
+                      : 'Products'}
                   </p>
                   <p className="mt-1 leading-relaxed text-amber-800">
-                    Untuk menjaga integritas katalog, kategori yang memiliki
-                    produk tidak dapat dihapus. Silakan pindahkan produk ke
-                    kategori lain atau hapus produk terlebih dahulu.
+                    To maintain catalog integrity, categories with linked products
+                    cannot be deleted. Please reassign products to another category
+                    or delete the products first.
                   </p>
                 </div>
               </div>
@@ -644,7 +644,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-900 underline underline-offset-2 hover:text-amber-950"
                 >
                   <Package className="h-3.5 w-3.5" />
-                  Kelola {categoryToDelete.products_count} Produk Terkait →
+                  Manage {categoryToDelete.products_count} Related Products →
                 </Link>
               </div>
             </div>
@@ -656,9 +656,9 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
             categoryToDelete.children.length > 0 && (
               <div className="rounded-lg border border-red-200 bg-red-50 p-3">
                 <p className="text-sm text-red-800">
-                  <strong>Peringatan:</strong> Kategori ini memiliki{' '}
-                  {categoryToDelete.children.length} sub-kategori yang juga akan
-                  dihapus.
+                  <strong>Warning:</strong> This category has{' '}
+                  {categoryToDelete.children.length} sub-categories that will also
+                  be deleted.
                 </p>
               </div>
             )}
@@ -670,7 +670,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                   type="button"
                   className="w-full rounded-xl bg-neutral-900 px-4 py-2.5 font-medium text-white transition-colors hover:bg-neutral-800 sm:w-auto"
                 >
-                  Mengerti & Tutup
+                  Understood & Close
                 </button>
               </DialogClose>
             ) : (
@@ -680,7 +680,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                     type="button"
                     className="flex-1 rounded-xl border border-terra-200 px-4 py-2.5 font-medium text-terra-700 transition-colors hover:bg-terra-50 sm:flex-none"
                   >
-                    Batal
+                    Cancel
                   </button>
                 </DialogClose>
                 <button
@@ -689,7 +689,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                   disabled={isDeleting}
                   className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50 sm:flex-none"
                 >
-                  {isDeleting ? 'Menghapus...' : 'Ya, Hapus'}
+                  {isDeleting ? 'Deleting...' : 'Yes, Delete'}
                 </button>
               </>
             )}

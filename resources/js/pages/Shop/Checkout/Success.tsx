@@ -48,11 +48,11 @@ export default function Success({ order }: Props) {
             window.location.reload();
           },
           onPending: function (result: any) {
-            showAlert('Menunggu pembayaran...', 'info', 'Info Pembayaran');
+            showAlert('Awaiting payment...', 'info', 'Payment Notice');
             window.location.reload();
           },
           onError: function (result: any) {
-            showAlert('Pembayaran gagal!', 'error', 'Gagal');
+            showAlert('Payment failed!', 'error', 'Failed');
           },
           onClose: function () {
             // User closed popup
@@ -72,7 +72,7 @@ export default function Success({ order }: Props) {
           {t('shop.orders.no_orders')}
         </h1>
         <p className="mb-8 text-gray-600">
-          Maaf, kami tidak dapat menemukan informasi pesanan Anda.
+          Sorry, we could not find your order details.
         </p>
         <Link href={shopHome.url()}>
           <Button>{t('common.home')}</Button>
@@ -89,11 +89,11 @@ export default function Success({ order }: Props) {
           window.location.reload();
         },
         onPending: function (result: any) {
-          showAlert('Menunggu pembayaran...', 'info', 'Info Pembayaran');
+          showAlert('Awaiting payment...', 'info', 'Payment Notice');
           window.location.reload();
         },
         onError: function (result: any) {
-          showAlert('Pembayaran gagal!', 'error', 'Gagal');
+          showAlert('Payment failed!', 'error', 'Failed');
         },
         onClose: function () {
           // Closed
@@ -115,7 +115,7 @@ export default function Success({ order }: Props) {
             {t('shop.checkout_success.thank_you')}
           </h1>
           <p className="text-lg text-gray-600">
-            Pesanan Anda telah berhasil dibuat.
+            Your order has been placed successfully.
           </p>
         </div>
 
@@ -160,11 +160,10 @@ export default function Success({ order }: Props) {
                       onClick={handlePay}
                       className="w-full bg-teal-600 text-white hover:bg-teal-700"
                     >
-                      Bayar Sekarang
+                      Pay Now
                     </Button>
                     <p className="mt-2 text-center text-xs text-gray-500">
-                      Klik tombol di atas untuk menyelesaikan pembayaran
-                      otomatis via Midtrans.
+                      Click the button above to complete automatic payment via Midtrans.
                     </p>
                   </div>
                 )}
@@ -173,10 +172,10 @@ export default function Success({ order }: Props) {
                 order.payment_status.value === 'unpaid' && (
                   <div className="mt-4 rounded border border-gray-200 bg-white p-4">
                     <p className="mb-2 text-sm font-medium">
-                      Silakan transfer ke rekening berikut:
+                      Please wire payment to the following account:
                     </p>
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-sm text-gray-600">BCA</span>
+                      <span className="text-sm text-gray-600">Bank Transfer</span>
                       <div className="flex items-center gap-2">
                         <code className="rounded bg-gray-100 px-2 py-1 font-mono text-sm">
                           1234567890
@@ -188,9 +187,9 @@ export default function Success({ order }: Props) {
                           onClick={() => {
                             navigator.clipboard.writeText('1234567890');
                             showAlert(
-                              'Nomor rekening disalin',
+                              'Account number copied',
                               'success',
-                              'Berhasil',
+                              'Success',
                             );
                           }}
                         >
@@ -199,15 +198,14 @@ export default function Success({ order }: Props) {
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Atas Nama</span>
+                      <span className="text-sm text-gray-600">Account Beneficiary</span>
                       <span className="text-sm font-medium">
                         PT Ronica Indonesia
                       </span>
                     </div>
                     <div className="mt-4 border-t border-gray-100 pt-4">
                       <p className="text-xs text-gray-500">
-                        Mohon konfirmasi pembayaran Anda melalui WhatsApp admin
-                        setelah transfer berhasil.
+                        Please confirm your payment with support via WhatsApp after the transfer is complete.
                       </p>
                     </div>
                   </div>
@@ -219,7 +217,7 @@ export default function Success({ order }: Props) {
               <div>
                 <h3 className="mb-2 flex items-center gap-2 font-semibold">
                   <Truck className="h-4 w-4" />
-                  Alamat Pengiriman
+                  Shipping Address
                 </h3>
                 <div className="text-sm text-gray-600">
                   <p className="font-medium text-gray-900">
@@ -234,19 +232,19 @@ export default function Success({ order }: Props) {
                 </div>
               </div>
               <div>
-                <h3 className="mb-2 font-semibold">Ringkasan Biaya</h3>
+                <h3 className="mb-2 font-semibold">Cost Summary</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
                     <span>{order.subtotal_formatted}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
-                    <span>Pengiriman</span>
+                    <span>Shipping</span>
                     <span>{order.shipping_cost_formatted}</span>
                   </div>
                   {order.discount_amount > 0 && (
                     <div className="flex justify-between text-green-600">
-                      <span>Diskon</span>
+                      <span>Discount</span>
                       <span>-{order.discount_formatted}</span>
                     </div>
                   )}
@@ -261,12 +259,12 @@ export default function Success({ order }: Props) {
           <CardFooter className="flex flex-col justify-center gap-3 border-t py-6 sm:flex-row">
             <Link href={shopProductsIndex.url()} className="w-full sm:w-auto">
               <Button variant="outline" className="w-full">
-                Lanjut Belanja
+                Continue Shopping
               </Button>
             </Link>
             <Link href={shopOrdersIndex.url()} className="w-full sm:w-auto">
               <Button className="w-full gap-2">
-                Lihat Pesanan Saya
+                View My Orders
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </Link>

@@ -57,7 +57,7 @@ class ShippingController extends Controller
         if ($costs === null) {
             return response()->json([
                 'error' => 'Failed to fetch shipping costs',
-                'message' => 'Gagal mengambil data ongkos kirim. Silakan coba lagi.',
+                'message' => 'Failed to calculate shipping rates. Please try again.',
             ], 500);
         }
 

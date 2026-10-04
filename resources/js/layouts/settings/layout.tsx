@@ -10,22 +10,22 @@ import { type PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [
   {
-    title: 'Profil',
+    title: 'Profile',
     href: edit(),
     icon: User,
   },
   {
-    title: 'Kata Sandi',
+    title: 'Password',
     href: editPassword(),
     icon: KeyRound,
   },
   {
-    title: 'Alamat',
+    title: 'Address Book',
     href: '/settings/addresses',
     icon: MapPin,
   },
   {
-    title: 'Keamanan',
+    title: 'Security',
     href: show(),
     icon: Shield,
   },

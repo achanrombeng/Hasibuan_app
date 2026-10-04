@@ -137,7 +137,7 @@ function OrderTimeline({
             <XCircle className="h-6 w-6 text-red-600" />
           </div>
           <div>
-            <p className="font-semibold text-red-800">Pesanan Dibatalkan</p>
+            <p className="font-semibold text-red-800">Order Cancelled</p>
             {order.cancellation_reason && (
               <p className="text-sm text-red-600">
                 {order.cancellation_reason}
@@ -152,34 +152,34 @@ function OrderTimeline({
   const steps = [
     {
       key: 'created',
-      label: 'Pesanan Dibuat',
+      label: 'Order Placed',
       icon: <Package size={18} />,
       completed: true,
       date: formatDate(order.created_at),
     },
     {
       key: 'paid',
-      label: 'Pembayaran',
+      label: 'Payment',
       icon: <CreditCard size={18} />,
       completed: isPaid,
-      date: isPaid ? 'Lunas' : 'Menunggu',
+      date: isPaid ? 'Paid' : 'Pending',
     },
     {
       key: 'processing',
-      label: 'Diproses',
+      label: 'Processing',
       icon: <AlertCircle size={18} />,
       completed: isProcessing,
     },
     {
       key: 'shipped',
-      label: 'Dikirim',
+      label: 'Shipped',
       icon: <Truck size={18} />,
       completed: isShipped,
       date: formatDate(order.shipped_at),
     },
     {
       key: 'delivered',
-      label: 'Diterima',
+      label: 'Delivered',
       icon: <CheckCircle size={18} />,
       completed: isDelivered,
       date: formatDate(order.delivered_at),
@@ -189,7 +189,7 @@ function OrderTimeline({
   return (
     <div className="mb-6 overflow-x-auto rounded-sm bg-white p-6">
       <h2 className="mb-6 text-center font-medium text-terra-900">
-        Status Pesanan
+        Order Status
       </h2>
       <div className="flex min-w-[500px] items-start justify-center">
         {steps.map((step, index) => (
@@ -249,8 +249,8 @@ export default function OrderShow({ order, paymentSettings }: Props) {
 
   const handleCancel = () => {
     showConfirm(
-      'Batalkan Pesanan',
-      'Apakah Anda yakin ingin membatalkan pesanan ini?',
+      'Cancel Order',
+      'Are you sure you want to cancel this order?',
       () => {
         setCancelling(true);
         router.post(
@@ -274,12 +274,12 @@ export default function OrderShow({ order, paymentSettings }: Props) {
   // Safe access to status with fallback
   const status = order.status || {
     value: 'pending',
-    label: 'Menunggu',
+    label: 'Pending',
     color: 'bg-yellow-100 text-yellow-800',
   };
   const paymentStatus = order.payment_status || {
     value: 'pending',
-    label: 'Menunggu',
+    label: 'Pending',
     color: 'bg-yellow-100 text-yellow-800',
   };
   const paymentMethod = order.payment_method || {
@@ -306,11 +306,11 @@ export default function OrderShow({ order, paymentSettings }: Props) {
             window.location.reload();
           },
           onPending: function (result: any) {
-            showAlert('Menunggu pembayaran...', 'info', 'Info Pembayaran');
+            showAlert('Awaiting payment...', 'info', 'Payment Notice');
             window.location.reload();
           },
           onError: function (result: any) {
-            showAlert('Pembayaran gagal!', 'error', 'Pembayaran Gagal');
+            showAlert('Payment failed!', 'error', 'Payment Failed');
           },
           onClose: function () {
             // Closed
@@ -318,13 +318,13 @@ export default function OrderShow({ order, paymentSettings }: Props) {
         });
       } else {
         showAlert(
-          'Skrip pembayaran belum dimuat. Silakan refresh halaman.',
+          'Payment gateway failed to load. Please refresh the page.',
           'error',
           'Error',
         );
       }
     } else {
-      showAlert('Token pembayaran tidak ditemukan.', 'error', 'Error');
+      showAlert('Payment token not found.', 'error', 'Error');
     }
   };
 
@@ -333,16 +333,16 @@ export default function OrderShow({ order, paymentSettings }: Props) {
     const productList = items
       .map(
         (item) =>
-          `• ${item.product_name} x${item.quantity} - ${item.subtotal_formatted || `Rp ${item.subtotal.toLocaleString('id-ID')}`}`,
+          `• ${item.product_name} x${item.quantity} - ${item.subtotal_formatted || `$${item.subtotal.toLocaleString('en-US')}`}`,
       )
       .join('%0A');
 
     if (isWhatsApp) {
-      return `Halo ${siteName}! 👋%0A%0ASaya ingin memesan:%0A%0A📦 *Order: %23${order.order_number}*%0A%0A*Produk:*%0A${productList}%0A%0A🚚 *Pengiriman:*%0A${order.shipping_name}%0A${order.shipping_phone}%0A${order.shipping_address}%0A${order.shipping_city}, ${order.shipping_province} ${order.shipping_postal_code}%0A%0A💰 *Total: ${order.total_formatted}*%0A%0AMohon dikonfirmasi untuk pembayaran. Terima kasih! 🙏`;
+      return `Hello ${siteName}! 👋%0A%0AI would like to place an order:%0A%0A📦 *Order: %23${order.order_number}*%0A%0A*Items:*%0A${productList}%0A%0A🚚 *Delivery Details:*%0A${order.shipping_name}%0A${order.shipping_phone}%0A${order.shipping_address}%0A${order.shipping_city}, ${order.shipping_province} ${order.shipping_postal_code}%0A%0A💰 *Total: ${order.total_formatted}*%0A%0APlease confirm for payment and processing. Thank you! 🙏`;
     } else if (isBankTransfer) {
-      return `Halo ${siteName}! 👋%0A%0ASaya sudah transfer untuk pesanan:%0A📦 Order: %23${order.order_number}%0A💰 Total: ${order.total_formatted}%0A🏦 Ke: ${paymentSettings.bank_name} ${paymentSettings.bank_account_number}%0A%0AMohon dikonfirmasi. Terima kasih! 🙏`;
+      return `Hello ${siteName}! 👋%0A%0AI have transferred payment for order:%0A📦 Order: %23${order.order_number}%0A💰 Total: ${order.total_formatted}%0A🏦 To: ${paymentSettings.bank_name} ${paymentSettings.bank_account_number}%0A%0APlease confirm. Thank you! 🙏`;
     } else {
-      return `Halo ${siteName}! 👋%0A%0ASaya mau konfirmasi pesanan:%0A📦 Order: %23${order.order_number}%0A💰 Total: ${order.total_formatted}%0A📍 Alamat: ${order.shipping_address}, ${order.shipping_city}%0A%0AMohon diproses. Terima kasih! 🙏`;
+      return `Hello ${siteName}! 👋%0A%0AI would like to confirm my order:%0A📦 Order: %23${order.order_number}%0A💰 Total: ${order.total_formatted}%0A📍 Address: ${order.shipping_address}, ${order.shipping_city}%0A%0APlease process. Thank you! 🙏`;
     }
   };
 
@@ -352,7 +352,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
 
   return (
     <>
-      <Head title={`Pesanan #${order.order_number} - ${siteName}`} />
+      <Head title={`Order #${order.order_number} - ${siteName}`} />
       <div className="bg-noise" />
       <ShopLayout>
         <main className="min-h-screen bg-sand-50 pb-20">
@@ -363,7 +363,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
               className="mb-6 inline-flex items-center gap-2 text-terra-600 hover:text-terra-900"
             >
               <ArrowLeft size={18} />
-              <span>Kembali ke Pesanan</span>
+              <span>Back to Orders</span>
             </Link>
 
             {/* Header */}
@@ -371,7 +371,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <h1 className="font-serif text-2xl text-terra-900">
-                    Pesanan #{order.order_number}
+                    Order #{order.order_number}
                   </h1>
                   <p className="mt-1 text-sm text-terra-500">
                     {new Date(order.created_at).toLocaleDateString('id-ID', {
@@ -396,7 +396,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                       disabled={cancelling}
                       className="rounded-full border border-red-200 px-4 py-2 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
                     >
-                      {cancelling ? 'Membatalkan...' : 'Batalkan'}
+                      {cancelling ? 'Cancelling...' : 'Cancel Order'}
                     </button>
                   )}
                 </div>
@@ -405,7 +405,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
               {order.tracking_number && (
                 <div className="mt-4 rounded-sm bg-blue-50 p-4">
                   <p className="text-sm text-blue-800">
-                    <strong>No. Resi:</strong> {order.tracking_number}
+                    <strong>Tracking No.:</strong> {order.tracking_number}
                   </p>
                 </div>
               )}
@@ -413,7 +413,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
               {order.cancellation_reason && (
                 <div className="mt-4 rounded-sm bg-red-50 p-4">
                   <p className="text-sm text-red-800">
-                    <strong>Alasan Pembatalan:</strong>{' '}
+                    <strong>Cancellation Reason:</strong>{' '}
                     {order.cancellation_reason}
                   </p>
                 </div>
@@ -432,7 +432,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
               <div className="rounded-sm bg-white p-6 md:col-span-2">
                 <h2 className="mb-4 flex items-center gap-2 font-medium text-terra-900">
                   <Package size={18} />
-                  Produk Dipesan
+                  Ordered Items
                 </h2>
                 <div className="space-y-4">
                   {items.map((item) => {
@@ -469,11 +469,11 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                             <div className="flex flex-wrap items-center gap-2 text-sm">
                               <span className="text-terra-400 line-through">
                                 {item.original_price_formatted ||
-                                  `Rp ${(item.original_price || 0).toLocaleString('id-ID')}`}
+                                  `$${(item.original_price || 0).toLocaleString('en-US')}`}
                               </span>
                               <span className="font-medium text-green-600">
                                 {item.unit_price_formatted ||
-                                  `Rp ${item.unit_price.toLocaleString('id-ID')}`}
+                                  `$${item.unit_price.toLocaleString('en-US')}`}
                               </span>
                               <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
                                 -{item.discount_percentage}%
@@ -484,14 +484,14 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                             </div>
                           ) : (
                             <p className="text-sm text-terra-500">
-                              {item.quantity} x Rp{' '}
-                              {item.unit_price.toLocaleString('id-ID')}
+                              {item.quantity} x{' '}
+                              {item.unit_price_formatted || `$${item.unit_price.toLocaleString('en-US')}`}
                             </p>
                           )}
                         </div>
                         <p className="font-medium text-terra-900">
                           {item.subtotal_formatted ||
-                            `Rp ${item.subtotal.toLocaleString('id-ID')}`}
+                            `$${item.subtotal.toLocaleString('en-US')}`}
                         </p>
                       </div>
                     );
@@ -505,7 +505,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                 <div className="rounded-sm bg-white p-6">
                   <h2 className="mb-4 flex items-center gap-2 font-medium text-terra-900">
                     <MapPin size={18} />
-                    Alamat Pengiriman
+                    Shipping Address
                   </h2>
                   <p className="font-medium text-terra-900">
                     {order.shipping_name}
@@ -526,10 +526,10 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                 <div className="rounded-sm bg-white p-6">
                   <h2 className="mb-4 flex items-center gap-2 font-medium text-terra-900">
                     <CreditCard size={18} />
-                    Pembayaran
+                    Payment
                   </h2>
                   <div className="mb-2 flex justify-between text-sm">
-                    <span className="text-terra-500">Metode</span>
+                    <span className="text-terra-500">Method</span>
                     <span className="flex items-center gap-1 text-terra-900">
                       {isBankTransfer ? (
                         <Building2 size={14} />
@@ -551,7 +551,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                       <span>{order.subtotal_formatted}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-terra-500">Ongkir</span>
+                      <span className="text-terra-500">Shipping Fee</span>
                       <span>{order.shipping_cost_formatted}</span>
                     </div>
                     <div className="flex justify-between border-t border-terra-100 pt-2 font-medium text-terra-900">
@@ -565,16 +565,16 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                 {needsPayment && isMidtrans && (
                   <div className="rounded-sm border border-blue-200 bg-blue-50 p-6 shadow-sm">
                     <h2 className="mb-2 font-semibold text-blue-900">
-                      Selesaikan Pembayaran
+                      Complete Payment
                     </h2>
                     <p className="mb-4 text-sm text-blue-700">
-                      Silakan selesaikan pembayaran Anda via Midtrans.
+                      Please complete your payment via Midtrans.
                     </p>
                     <button
                       onClick={handleMidtransPayment}
                       className="w-full rounded-sm bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
                     >
-                      Bayar Sekarang
+                      Pay Now
                     </button>
                   </div>
                 )}
@@ -590,24 +590,24 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                         </div>
                         <div>
                           <h2 className="font-semibold text-terra-900">
-                            Transfer ke Rekening
+                            Direct Bank Transfer
                           </h2>
                           <p className="text-xs text-terra-500">
-                            Selesaikan pembayaran Anda
+                            Complete your wire payment
                           </p>
                         </div>
                       </div>
 
                       <div className="space-y-3">
                         <div className="rounded-sm border border-terra-100 bg-white/80 p-4 backdrop-blur">
-                          <p className="mb-1 text-xs text-terra-500">Bank</p>
+                          <p className="mb-1 text-xs text-terra-500">Bank Name</p>
                           <p className="font-semibold text-terra-900">
                             {paymentSettings.bank_name}
                           </p>
                         </div>
                         <div className="rounded-sm border border-terra-100 bg-white/80 p-4 backdrop-blur">
                           <p className="mb-1 text-xs text-terra-500">
-                            Nomor Rekening
+                            Account Number
                           </p>
                           <div className="flex items-center justify-between">
                             <p className="font-mono text-lg font-semibold tracking-wider text-terra-900">
@@ -620,7 +620,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                                 )
                               }
                               className="rounded-lg p-2 text-terra-500 transition-colors hover:bg-terra-100 hover:text-terra-700"
-                              title="Salin nomor rekening"
+                              title="Copy account number"
                             >
                               <Copy size={16} />
                             </button>
@@ -628,7 +628,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                         </div>
                         <div className="rounded-sm border border-terra-100 bg-white/80 p-4 backdrop-blur">
                           <p className="mb-1 text-xs text-terra-500">
-                            Atas Nama
+                            Account Beneficiary
                           </p>
                           <p className="font-semibold text-terra-900">
                             {paymentSettings.bank_account_name}
@@ -636,7 +636,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                         </div>
                         <div className="rounded-sm bg-terra-600 p-4">
                           <p className="mb-1 text-xs text-terra-200">
-                            Total yang Harus Ditransfer
+                            Total Transfer Amount
                           </p>
                           <div className="flex items-center justify-between">
                             <p className="text-2xl font-bold text-white">
@@ -647,7 +647,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                                 copyToClipboard(String(order.total || 0))
                               }
                               className="rounded-lg p-2 text-terra-200 transition-colors hover:bg-terra-500 hover:text-white"
-                              title="Salin nominal"
+                              title="Copy amount"
                             >
                               <Copy size={16} />
                             </button>
@@ -658,9 +658,9 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                       <div className="mt-4 flex items-center justify-center gap-2 rounded-sm bg-white/60 py-3 text-terra-600">
                         <Clock size={16} />
                         <p className="text-sm font-medium">
-                          Batas waktu:{' '}
+                          Payment deadline:{' '}
                           <span className="text-terra-800">
-                            {paymentSettings.payment_deadline_hours} jam
+                            {paymentSettings.payment_deadline_hours} hours
                           </span>
                         </p>
                       </div>
@@ -669,7 +669,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                         <div className="mt-3 flex items-center justify-center gap-2 rounded-sm bg-green-50 py-2 text-green-600">
                           <CheckCircle size={16} />
                           <p className="text-sm font-medium">
-                            Tersalin ke clipboard!
+                            Copied to clipboard!
                           </p>
                         </div>
                       )}
@@ -685,7 +685,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                       </div>
                       <div>
                         <h2 className="font-semibold text-amber-900">
-                          Bayar di Tempat (COD)
+                          Cash on Delivery (COD)
                         </h2>
                         <p className="text-xs text-amber-600">
                           Cash on Delivery
@@ -694,13 +694,13 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                     </div>
                     <div className="rounded-sm border border-amber-100 bg-white/80 p-4 backdrop-blur">
                       <p className="text-sm text-amber-800">
-                        Siapkan uang tunai sebesar:
+                        Please prepare exact cash amount:
                       </p>
                       <p className="mt-1 text-2xl font-bold text-amber-900">
                         {order.total_formatted}
                       </p>
                       <p className="mt-2 text-xs text-amber-600">
-                        Pembayaran dilakukan saat barang diterima
+                        Payment is settled upon delivery
                       </p>
                     </div>
                   </div>
@@ -715,18 +715,16 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                       </div>
                       <div>
                         <h2 className="font-semibold text-green-900">
-                          Lanjutkan via WhatsApp
+                          Continue via WhatsApp
                         </h2>
                         <p className="text-xs text-green-600">
-                          Hubungi admin untuk pembayaran
+                          Contact support for payment & confirmation
                         </p>
                       </div>
                     </div>
                     <div className="mb-4 rounded-sm border border-green-100 bg-white/80 p-4 backdrop-blur">
                       <p className="text-sm text-green-800">
-                        Klik tombol di bawah untuk mengirim detail pesanan ke
-                        admin via WhatsApp. Admin akan mengonfirmasi pesanan dan
-                        memberikan instruksi pembayaran.
+                        Click the button below to send your order details to support via WhatsApp. Our team will verify your order and provide payment instructions.
                       </p>
                     </div>
                     <a
@@ -738,7 +736,7 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 transition-colors group-hover:bg-white/30">
                         <MessageCircle size={18} />
                       </div>
-                      <span>Hubungi Admin via WhatsApp</span>
+                      <span>Contact Support via WhatsApp</span>
                     </a>
                   </div>
                 )}
@@ -756,8 +754,8 @@ export default function OrderShow({ order, paymentSettings }: Props) {
                     </div>
                     <span>
                       {isBankTransfer
-                        ? 'Konfirmasi Transfer via WhatsApp'
-                        : 'Konfirmasi Pesanan via WhatsApp'}
+                        ? 'Confirm Transfer via WhatsApp'
+                        : 'Confirm Order via WhatsApp'}
                     </span>
                   </a>
                 )}

@@ -46,10 +46,10 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
       string,
       { discount: number; type: 'fixed' | 'percent' }
     > = {
-      DISKON10: { discount: 10, type: 'percent' },
-      DISKON50K: { discount: 50000, type: 'fixed' },
+      DISCOUNT10: { discount: 10, type: 'percent' },
+      DISCOUNT50K: { discount: 50000, type: 'fixed' },
       WELCOME: { discount: 15, type: 'percent' },
-      LATIF100: { discount: 100000, type: 'fixed' },
+      RONICA100: { discount: 100000, type: 'fixed' },
     };
 
     const coupon = demoCoupons[couponInput.toUpperCase()];
@@ -64,15 +64,15 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
         isValid: true,
         message:
           coupon.type === 'percent'
-            ? `Diskon ${coupon.discount}%`
-            : `Diskon ${formatPrice(coupon.discount)}`,
+            ? `Discount ${coupon.discount}%`
+            : `Discount ${formatPrice(coupon.discount)}`,
       });
     } else {
       setAppliedCoupon({
         code: couponInput,
         discount: 0,
         isValid: false,
-        message: 'Kode kupon tidak valid',
+        message: 'Invalid coupon code',
       });
     }
     setCouponLoading(false);

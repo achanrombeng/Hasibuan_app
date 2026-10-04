@@ -15,10 +15,12 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-interface PaymentSettingsProps {
+interface Props {
   settings: {
     midtrans_enabled: boolean;
     midtrans_environment: string;
+    midtrans_server_key: string;
+    midtrans_client_key: string;
     whatsapp_payment_enabled: boolean;
     whatsapp_payment_message: string;
     bank_name: string;
@@ -35,23 +37,21 @@ export default function PaymentSettings({
   settings,
   midtransConfigured,
   whatsappNumber,
-}: PaymentSettingsProps) {
-  const { data, setData, post, processing } = useForm({
-    midtrans_enabled: settings.midtrans_enabled ?? true,
-    midtrans_environment: settings.midtrans_environment ?? 'sandbox',
-    whatsapp_payment_enabled: settings.whatsapp_payment_enabled ?? true,
-    whatsapp_payment_message:
-      settings.whatsapp_payment_message ??
-      'Halo, saya ingin melakukan pemesanan:',
-    bank_name: settings.bank_name ?? 'BCA',
-    bank_account_number: settings.bank_account_number ?? '',
-    bank_account_name: settings.bank_account_name ?? '',
-    cod_fee: settings.cod_fee ?? 5000,
-    payment_deadline_hours: settings.payment_deadline_hours ?? 24,
-  });
-
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+}: Props) {
   const { t } = useTranslation();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const { data, setData, post, processing, errors } = useForm({
+    midtrans_enabled: settings.midtrans_enabled,
+    midtrans_environment: settings.midtrans_environment,
+    whatsapp_payment_enabled: settings.whatsapp_payment_enabled,
+    whatsapp_payment_message: settings.whatsapp_payment_message,
+    bank_name: settings.bank_name,
+    bank_account_number: settings.bank_account_number,
+    bank_account_name: settings.bank_account_name,
+    cod_fee: settings.cod_fee,
+    payment_deadline_hours: settings.payment_deadline_hours,
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +60,8 @@ export default function PaymentSettings({
 
   const confirmSavePayment = () => {
     post('/admin/settings/payment', {
-      onError: () => {
+      preserveScroll: true,
+      onSuccess: () => {
         setShowConfirmDialog(false);
       },
     });
@@ -69,20 +70,20 @@ export default function PaymentSettings({
   return (
     <AdminLayout
       breadcrumbs={[
-        { title: 'Pengaturan', href: '/admin/settings' },
-        { title: 'Pembayaran', href: '/admin/settings/payment' },
+        { title: 'Settings', href: '/admin/settings' },
+        { title: 'Payment', href: '/admin/settings/payment' },
       ]}
     >
-      <Head title="Pengaturan Pembayaran" />
+      <Head title="Payment Settings" />
 
       <div className="w-full space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">
-            Pengaturan Pembayaran
+            Payment Settings
           </h1>
           <p className="mt-1 text-neutral-500">
-            Kelola metode pembayaran yang tersedia
+            Manage active payment methods and gateway configurations
           </p>
         </div>
 
@@ -100,7 +101,7 @@ export default function PaymentSettings({
                       Midtrans Payment Gateway
                     </h2>
                     <p className="text-sm text-neutral-500">
-                      Pembayaran online otomatis
+                      Automated online payment gateway
                     </p>
                   </div>
                 </div>
@@ -135,15 +136,15 @@ export default function PaymentSettings({
                     className={`text-sm font-medium ${midtransConfigured ? 'text-green-900' : 'text-amber-900'}`}
                   >
                     {midtransConfigured
-                      ? 'API Keys Terkonfigurasi'
-                      : 'Konfigurasi Diperlukan'}
+                      ? 'API Keys Configured'
+                      : 'Configuration Required'}
                   </p>
                   <p
                     className={`text-xs ${midtransConfigured ? 'text-green-700' : 'text-amber-700'}`}
                   >
                     {midtransConfigured
-                      ? 'Midtrans siap digunakan'
-                      : 'Tambahkan MIDTRANS_SERVER_KEY & MIDTRANS_CLIENT_KEY di .env'}
+                      ? 'Midtrans is ready to process transactions'
+                      : 'Add MIDTRANS_SERVER_KEY & MIDTRANS_CLIENT_KEY in .env'}
                   </p>
                 </div>
               </div>
@@ -168,7 +169,7 @@ export default function PaymentSettings({
               {/* Supported Methods */}
               <div>
                 <p className="mb-3 text-sm font-medium text-neutral-700">
-                  Metode Pembayaran
+                  Payment Channels
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {[
@@ -200,10 +201,10 @@ export default function PaymentSettings({
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold text-neutral-900">
-                      Pembayaran via WhatsApp
+                      WhatsApp Orders & Inquiries
                     </h2>
                     <p className="text-sm text-neutral-500">
-                      Hubungi admin untuk pembayaran manual
+                      Direct client communication for orders and manual settlement
                     </p>
                   </div>
                 </div>
@@ -228,10 +229,10 @@ export default function PaymentSettings({
                   <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600" />
                   <div>
                     <p className="text-sm font-medium text-green-900">
-                      WhatsApp Terkonfigurasi
+                      WhatsApp Configured
                     </p>
                     <p className="text-xs text-green-700">
-                      Nomor: {whatsappNumber}
+                      Phone Number: {whatsappNumber}
                     </p>
                   </div>
                 </div>
@@ -240,12 +241,12 @@ export default function PaymentSettings({
                   <AlertTriangle className="h-5 w-5 flex-shrink-0 text-amber-600" />
                   <div>
                     <p className="text-sm font-medium text-amber-900">
-                      Nomor WhatsApp Belum Diatur
+                      WhatsApp Number Not Set
                     </p>
                     <p className="text-xs text-amber-700">
-                      Atur di{' '}
+                      Configure in{' '}
                       <Link href="/admin/settings" className="underline">
-                        Pengaturan Umum
+                        General Settings
                       </Link>
                     </p>
                   </div>
@@ -255,7 +256,7 @@ export default function PaymentSettings({
               {/* Custom Message */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Pesan Awal (Template)
+                  Initial Greeting Template
                 </label>
                 <textarea
                   value={data.whatsapp_payment_message}
@@ -264,11 +265,10 @@ export default function PaymentSettings({
                   }
                   rows={3}
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  placeholder="Halo, saya ingin melakukan pemesanan:"
+                  placeholder="Hello, I would like to place an order:"
                 />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Pesan ini akan muncul di awal chat WhatsApp saat pelanggan
-                  memilih pembayaran via WhatsApp
+                  This greeting pre-populates in WhatsApp when clients initiate contact
                 </p>
               </div>
             </div>
@@ -283,10 +283,10 @@ export default function PaymentSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Transfer Bank
+                    Bank Wire Transfer
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Informasi rekening untuk pembayaran manual
+                    Bank account details for manual remittances
                   </p>
                 </div>
               </div>
@@ -295,19 +295,19 @@ export default function PaymentSettings({
             <div className="space-y-4 p-6">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Nama Bank
+                  Bank Name
                 </label>
                 <input
                   type="text"
                   value={data.bank_name}
                   onChange={(e) => setData('bank_name', e.target.value)}
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  placeholder="BCA"
+                  placeholder="BCA / Mandiri / International Bank"
                 />
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Nomor Rekening
+                  Account Number / IBAN
                 </label>
                 <input
                   type="text"
@@ -321,7 +321,7 @@ export default function PaymentSettings({
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Nama Pemilik Rekening
+                  Beneficiary Name
                 </label>
                 <input
                   type="text"
@@ -331,8 +331,7 @@ export default function PaymentSettings({
                   placeholder="PT Ronica Indonesia"
                 />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Informasi ini ditampilkan kepada pelanggan di halaman detail
-                  pesanan
+                  Displayed to clients during order confirmation and invoice generation
                 </p>
               </div>
             </div>
@@ -347,10 +346,10 @@ export default function PaymentSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Pengaturan Umum Pembayaran
+                    General Payment Settings
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Biaya tambahan dan batas waktu pembayaran
+                    Surcharges and expiration parameters
                   </p>
                 </div>
               </div>
@@ -359,7 +358,7 @@ export default function PaymentSettings({
             <div className="space-y-4 p-6">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Biaya COD (Rp)
+                  Cash on Delivery Surcharge (Rp)
                 </label>
                 <div className="relative">
                   <span className="absolute top-1/2 left-4 -translate-y-1/2 text-neutral-400">
@@ -377,13 +376,12 @@ export default function PaymentSettings({
                   />
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
-                  Biaya tambahan untuk pembayaran Cash on Delivery (0 untuk
-                  gratis)
+                  Additional surcharge for COD handling (0 for free)
                 </p>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Batas Waktu Pembayaran (Jam)
+                  Payment Expiration Window (Hours)
                 </label>
                 <input
                   type="number"
@@ -400,8 +398,7 @@ export default function PaymentSettings({
                   placeholder="24"
                 />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Pesanan akan otomatis dibatalkan jika belum dibayar dalam
-                  waktu ini (1-168 jam)
+                  Orders will automatically be cancelled if payment is not received within this window (1-168 hours)
                 </p>
               </div>
             </div>
@@ -411,15 +408,13 @@ export default function PaymentSettings({
           <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4">
             <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
             <div className="text-sm text-blue-700">
-              <p className="font-medium text-blue-900">Cara Kerja</p>
+              <p className="font-medium text-blue-900">How It Works</p>
               <ul className="mt-1 list-inside list-disc space-y-1">
                 <li>
-                  <strong>Midtrans:</strong> Pembayaran otomatis, status pesanan
-                  diupdate secara realtime
+                  <strong>Midtrans:</strong> Automated online settlement with real-time webhook updates
                 </li>
                 <li>
-                  <strong>WhatsApp:</strong> Pelanggan menghubungi admin,
-                  pembayaran manual (transfer/COD)
+                  <strong>WhatsApp:</strong> Direct contact with sales reps for custom quotations, B2B procurement, or manual remittance
                 </li>
               </ul>
             </div>
@@ -429,10 +424,10 @@ export default function PaymentSettings({
           <div className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white p-4">
             <div>
               <p className="font-medium text-neutral-900">
-                Dokumentasi Midtrans
+                Midtrans Documentation
               </p>
               <p className="text-sm text-neutral-500">
-                Pelajari integrasi payment gateway
+                Learn more about payment gateway integration
               </p>
             </div>
             <a
@@ -442,14 +437,14 @@ export default function PaymentSettings({
               className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
             >
               <ExternalLink className="h-4 w-4" />
-              Buka
+              Open
             </a>
           </div>
 
           {/* Sticky Submit Bar */}
           <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
             <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-              Pastikan perubahan sudah sesuai sebelum menyimpan
+              Ensure configurations are verified before saving
             </span>
             <button
               type="submit"
@@ -457,7 +452,7 @@ export default function PaymentSettings({
               className="ml-auto inline-flex items-center gap-2 rounded-xl bg-teal-600 px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-teal-700 active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
-              {processing ? 'Menyimpan...' : 'Simpan Pengaturan Pembayaran'}
+              {processing ? 'Saving...' : 'Save Payment Settings'}
             </button>
           </div>
         </form>

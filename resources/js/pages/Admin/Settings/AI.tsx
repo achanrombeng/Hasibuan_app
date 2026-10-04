@@ -13,33 +13,31 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-interface AiSettingsProps {
+interface Props {
   settings: {
+    ai_model?: string;
+    ai_temperature?: number;
+    ai_prompt_template?: string;
     gemini_api_key?: string;
-    ai_prompt_template: string;
-    ai_model: string;
-    ai_temperature: number;
   };
-  defaultPrompt: string;
-  configuredModel: string;
   availableModels: string[];
+  configuredModel: string;
 }
 
-export default function AiSettings({
+export default function AISettings({
   settings,
-  defaultPrompt,
-  configuredModel,
   availableModels,
-}: AiSettingsProps) {
-  const { data, setData, post, processing, errors } = useForm({
-    gemini_api_key: settings.gemini_api_key ?? '',
-    ai_prompt_template: settings.ai_prompt_template ?? '',
-    ai_model: settings.ai_model ?? '',
-    ai_temperature: settings.ai_temperature ?? 0.4,
-  });
-
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  configuredModel,
+}: Props) {
   const { t } = useTranslation();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const { data, setData, post, processing, errors } = useForm({
+    ai_model: settings.ai_model ?? '',
+    ai_temperature: Number(settings.ai_temperature ?? 0.4),
+    ai_prompt_template: settings.ai_prompt_template ?? '',
+    gemini_api_key: settings.gemini_api_key ?? '',
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,37 +46,35 @@ export default function AiSettings({
 
   const confirmSaveAi = () => {
     post('/admin/settings/ai', {
-      onError: () => {
-        setShowConfirmDialog(false);
-      },
+      preserveScroll: true,
+      onSuccess: () => setShowConfirmDialog(false),
     });
   };
 
   const handleResetPrompt = () => {
-    setData('ai_prompt_template', defaultPrompt);
+    setData('ai_prompt_template', '');
   };
 
-  const isUsingDefaultPrompt = data.ai_prompt_template === '';
-  const isUsingDefaultModel = data.ai_model === '';
+  const isUsingDefaultModel = !data.ai_model;
+  const isUsingDefaultPrompt = !data.ai_prompt_template;
 
   return (
     <AdminLayout
       breadcrumbs={[
-        { title: 'Pengaturan', href: '/admin/settings' },
+        { title: 'Settings', href: '/admin/settings' },
         { title: 'AI Auto-Fill', href: '/admin/settings/ai' },
       ]}
     >
-      <Head title="Pengaturan AI Auto-Fill" />
+      <Head title="AI Auto-Fill Settings" />
 
       <div className="w-full space-y-6">
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">
-            Pengaturan AI Auto-Fill
+            AI Auto-Fill Settings
           </h1>
           <p className="mt-1 text-neutral-500">
-            Konfigurasi model Gemini dan prompt untuk fitur analisis gambar
-            produk
+            Configure Gemini models and prompt templates for automated product image analysis
           </p>
         </div>
 
@@ -86,12 +82,9 @@ export default function AiSettings({
         <div className="flex items-start gap-3 rounded-xl border border-violet-100 bg-violet-50 p-4">
           <Sparkles className="mt-0.5 h-5 w-5 flex-shrink-0 text-violet-600" />
           <div className="text-sm text-violet-700">
-            <p className="font-medium text-violet-900">Cara Kerja</p>
+            <p className="font-medium text-violet-900">How It Works</p>
             <p className="mt-1">
-              Saat admin mengupload gambar di halaman{' '}
-              <strong>Tambah Produk</strong>, sistem mengirim gambar beserta
-              prompt ke Google Gemini API untuk mengisi form secara otomatis.
-              Ubah prompt dan model di sini untuk menyesuaikan perilaku AI.
+              When uploading product photography on the <strong>Add Product</strong> page, the system forwards images and prompts to the Google Gemini API to automatically populate specifications and descriptions. Customize models and prompts here to refine AI behavior.
             </p>
           </div>
         </div>
@@ -106,10 +99,10 @@ export default function AiSettings({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-neutral-900">
-                    Konfigurasi Model
+                    Model Configuration
                   </h2>
                   <p className="text-sm text-neutral-500">
-                    Model Gemini, API Key, dan parameter generasi
+                    Gemini model, API Key, and generation parameters
                   </p>
                 </div>
               </div>
@@ -128,26 +121,25 @@ export default function AiSettings({
                     rel="noreferrer"
                     className="text-xs text-violet-600 hover:underline"
                   >
-                    Dapatkan API Key gratis di Google AI Studio ↗
+                    Get a free API Key on Google AI Studio ↗
                   </a>
                 </div>
                 <input
                   type="password"
                   value={data.gemini_api_key}
                   onChange={(e) => setData('gemini_api_key', e.target.value)}
-                  placeholder="Paste GEMINI_API_KEY di sini (kosongkan jika menggunakan .env)"
+                  placeholder="Paste GEMINI_API_KEY here (leave blank to use .env)"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
                 />
                 <p className="mt-1.5 text-xs text-neutral-400">
-                  Jika diisi, nilai ini akan menggantikan GEMINI_API_KEY dari
-                  file .env
+                  If set, this value overrides GEMINI_API_KEY from your .env file
                 </p>
               </div>
 
               {/* Model selector */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
-                  Model Gemini
+                  Gemini Model
                 </label>
                 <select
                   value={data.ai_model}
@@ -155,7 +147,7 @@ export default function AiSettings({
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
                 >
                   <option value="">
-                    Default dari konfigurasi ({configuredModel})
+                    Default from configuration ({configuredModel})
                   </option>
                   {availableModels.map((model) => (
                     <option key={model} value={model}>
@@ -165,11 +157,11 @@ export default function AiSettings({
                 </select>
                 {isUsingDefaultModel && (
                   <p className="mt-2 text-xs text-neutral-500">
-                    Menggunakan model dari{' '}
+                    Using model from{' '}
                     <code className="rounded bg-neutral-100 px-1 py-0.5 font-mono text-xs">
                       GEMINI_MODEL
                     </code>{' '}
-                    di .env:{' '}
+                    in .env:{' '}
                     <span className="font-medium text-neutral-700">
                       {configuredModel}
                     </span>
@@ -197,12 +189,11 @@ export default function AiSettings({
                   className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-neutral-200 accent-violet-600"
                 />
                 <div className="mt-1 flex justify-between text-xs text-neutral-400">
-                  <span>0.0 — Deterministik</span>
-                  <span>1.0 — Kreatif</span>
+                  <span>0.0 — Deterministic</span>
+                  <span>1.0 — Creative</span>
                 </div>
                 <p className="mt-2 text-xs text-neutral-500">
-                  Nilai lebih rendah menghasilkan output yang konsisten dan
-                  presisi. Nilai lebih tinggi lebih variatif. Default:{' '}
+                  Lower values produce consistent, focused output. Higher values introduce variation. Default:{' '}
                   <span className="font-medium">0.4</span>
                 </p>
                 {errors.ai_temperature && (
@@ -224,10 +215,10 @@ export default function AiSettings({
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold text-neutral-900">
-                      Template Prompt
+                      Prompt Template
                     </h2>
                     <p className="text-sm text-neutral-500">
-                      Instruksi yang dikirim ke Gemini saat menganalisis gambar
+                      Instructions dispatched to Gemini during image analysis
                     </p>
                   </div>
                 </div>
@@ -237,7 +228,7 @@ export default function AiSettings({
                   className="inline-flex flex-shrink-0 items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  Reset ke Default
+                  Reset to Default
                 </button>
               </div>
             </div>
@@ -248,30 +239,28 @@ export default function AiSettings({
                 <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600" />
                 <div className="text-xs text-amber-700">
                   <p className="font-medium text-amber-900">
-                    Placeholder wajib
+                    Required Placeholders
                   </p>
                   <ul className="mt-1 space-y-1">
                     <li>
                       <code className="rounded bg-amber-100 px-1 font-mono">
                         {'{{CATEGORY_LIST}}'}
                       </code>{' '}
-                      — diganti otomatis dengan daftar kategori aktif dari
-                      database
+                      — automatically replaced with active categories from database
                     </li>
                     <li>
                       <code className="rounded bg-amber-100 px-1 font-mono">
                         {'{{CONTEXT_BLOCK}}'}
                       </code>{' '}
-                      — diganti dengan field yang sudah diisi admin (opsional,
-                      boleh kosong jika tidak ada)
+                      — populated with fields entered by administrator (optional)
                     </li>
                   </ul>
                   <p className="mt-2 text-amber-600">
-                    Template wajib mengandung{' '}
+                    Template must contain{' '}
                     <code className="rounded bg-amber-100 px-1 font-mono">
                       {'{{CATEGORY_LIST}}'}
                     </code>
-                    . Kosongkan template untuk kembali ke prompt bawaan.
+                    . Clear template to return to the system default prompt.
                   </p>
                 </div>
               </div>
@@ -282,11 +271,11 @@ export default function AiSettings({
                   <div className="mb-4 flex items-start gap-3 rounded-lg bg-red-50 p-3">
                     <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
                     <p className="text-xs font-medium text-red-700">
-                      Template tidak mengandung{' '}
+                      Template is missing{' '}
                       <code className="rounded bg-red-100 px-1 font-mono">
                         {'{{CATEGORY_LIST}}'}
                       </code>
-                      . AI tidak akan tahu kategori yang tersedia.
+                      . The AI will not receive the list of available categories.
                     </p>
                   </div>
                 )}
@@ -296,7 +285,7 @@ export default function AiSettings({
                 onChange={(e) => setData('ai_prompt_template', e.target.value)}
                 rows={22}
                 placeholder={
-                  'Kosongkan untuk menggunakan prompt bawaan sistem.\n\nAtau tulis prompt kustom yang mengandung placeholder:\n{{CATEGORY_LIST}} dan {{CONTEXT_BLOCK}}'
+                  'Leave blank to use default system prompt.\n\nOr write a custom prompt containing placeholders:\n{{CATEGORY_LIST}} and {{CONTEXT_BLOCK}}'
                 }
                 className="w-full resize-y rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 font-mono text-sm text-neutral-900 transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none"
               />
@@ -305,11 +294,11 @@ export default function AiSettings({
                 <span>
                   {isUsingDefaultPrompt ? (
                     <span className="text-teal-600">
-                      Menggunakan prompt bawaan sistem
+                      Using system default prompt
                     </span>
                   ) : (
                     <span>
-                      {data.ai_prompt_template.length} / 10.000 karakter
+                      {data.ai_prompt_template.length} / 10,000 characters
                     </span>
                   )}
                 </span>
@@ -325,7 +314,7 @@ export default function AiSettings({
           {/* Sticky Submit Bar */}
           <div className="sticky bottom-6 z-30 flex items-center justify-between rounded-2xl border border-neutral-200/80 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-md">
             <span className="hidden text-xs font-medium text-neutral-500 sm:inline">
-              Pastikan perubahan sudah sesuai sebelum menyimpan
+              Ensure all configurations are verified before saving
             </span>
             <button
               type="submit"
@@ -333,7 +322,7 @@ export default function AiSettings({
               className="ml-auto inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-violet-700 active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
-              {processing ? 'Menyimpan...' : 'Simpan Pengaturan AI'}
+              {processing ? 'Saving...' : 'Save AI Settings'}
             </button>
           </div>
         </form>

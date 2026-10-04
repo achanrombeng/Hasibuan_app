@@ -28,7 +28,7 @@ export const CompareDrawer: React.FC = () => {
         <div className="flex items-center gap-3">
           <GitCompare size={20} />
           <span className="font-medium">
-            Bandingkan Produk ({compareItems.length}/{maxItems})
+            Compare Products ({compareItems.length}/{maxItems})
           </span>
         </div>
         {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
@@ -93,7 +93,7 @@ export const CompareDrawer: React.FC = () => {
                       className="flex aspect-square items-center justify-center rounded-sm border-2 border-dashed border-terra-200 bg-terra-50"
                     >
                       <span className="text-sm text-terra-400">
-                        Tambah produk
+                        Add product
                       </span>
                     </div>
                   ),
@@ -106,13 +106,13 @@ export const CompareDrawer: React.FC = () => {
                   className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600"
                 >
                   <Trash2 size={16} />
-                  Hapus Semua
+                  Clear All
                 </button>
                 <Link
                   href={`/shop/compare?ids=${compareItems.map((p) => p.id).join(',')}`}
                   className={`rounded-full px-6 py-3 font-medium transition-colors ${compareItems.length >= 2 ? 'bg-terra-900 text-white hover:bg-wood-dark' : 'cursor-not-allowed bg-terra-200 text-terra-400'}`}
                 >
-                  Bandingkan {compareItems.length} Produk
+                  Compare {compareItems.length} {compareItems.length === 1 ? 'Product' : 'Products'}
                 </Link>
               </div>
             </div>

@@ -35,13 +35,13 @@ export interface SEOProps {
   canonical?: string;
 }
 
-const DEFAULT_LOCALE = 'id_ID';
+const DEFAULT_LOCALE = 'en_US';
 const DEFAULT_IMAGE = '/images/og-default.jpg';
 
 export const SEOHead: React.FC<SEOProps> = ({
   title,
   description,
-  keywords = ['furnitur', 'furniture', 'mebel', 'kursi', 'meja', 'lemari'],
+  keywords = ['furniture', 'luxury outdoor furniture', 'teak furniture', 'rattan chairs', 'outdoor living', 'designer furniture'],
   image = DEFAULT_IMAGE,
   url,
   type = 'website',
@@ -62,7 +62,7 @@ export const SEOHead: React.FC<SEOProps> = ({
   const resolvedDescription =
     description ||
     siteSettings?.site_description ||
-    `${resolvedSiteName} - Furnitur Berkualitas dengan Harga Terjangkau. Temukan koleksi kursi, meja, lemari, dan furnitur custom terbaik.`;
+    `${resolvedSiteName} - Premium Handcrafted Outdoor Furniture. Explore our exclusive collection of teak, rattan, and modern outdoor collections.`;
   const safeTitle = title || resolvedSiteName;
   // Don't append siteName here - app.tsx already does this via Inertia title callback
   const fullTitle = safeTitle;

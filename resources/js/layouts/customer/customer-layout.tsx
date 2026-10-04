@@ -27,10 +27,10 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Pesanan Saya', href: '/shop/orders', icon: Package },
+  { name: 'My Orders', href: '/shop/orders', icon: Package },
   { name: 'Wishlist', href: '/shop/wishlist', icon: Heart },
-  { name: 'Alamat', href: '/shop/addresses', icon: MapPin },
-  { name: 'Profil', href: '/settings/profile', icon: User },
+  { name: 'Addresses', href: '/shop/addresses', icon: MapPin },
+  { name: 'Profile', href: '/settings/profile', icon: User },
 ];
 
 export default function CustomerLayout({
@@ -68,7 +68,7 @@ export default function CustomerLayout({
             </Link>
             <div className="flex items-center gap-4">
               <span className="text-sm text-terra-600">
-                Halo, {auth.user.name}
+                Hello, {auth.user.name}
               </span>
               <button
                 type="button"

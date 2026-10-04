@@ -54,8 +54,8 @@ class ExtractProductFromImageAction
             $reason = trim((string) ($extracted['rejection_reason'] ?? ''));
             throw new NonFurnitureImageException(
                 $reason !== ''
-                    ? "Gambar ditolak: {$reason}"
-                    : 'Gambar yang diunggah bukan furnitur. Silakan unggah foto produk furnitur.'
+                    ? "Image rejected: {$reason}"
+                    : 'The uploaded image is not furniture. Please upload a furniture product photo.'
             );
         }
 

@@ -1,32 +1,32 @@
 import ShopLayout from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Clock, MapPin, Package, Truck } from 'lucide-react';
+import { Clock, Globe, MapPin, Package, Truck } from 'lucide-react';
 
 const SHIPPING_INFO = [
   {
     icon: Truck,
-    title: 'Area Jakarta',
-    time: '1-3 hari kerja',
-    desc: 'Gratis ongkir min. pembelian Rp 5.000.000',
+    title: 'Regional Delivery',
+    time: '1-3 business days',
+    desc: 'Local transport & direct factory dispatch',
   },
   {
     icon: MapPin,
-    title: 'Jawa & Bali',
-    time: '3-5 hari kerja',
-    desc: 'Ongkir dihitung berdasarkan volume',
+    title: 'Domestic Transport',
+    time: '3-7 business days',
+    desc: 'Door-to-door delivery across islands',
   },
   {
-    icon: Clock,
-    title: 'Luar Pulau',
-    time: '5-10 hari kerja',
-    desc: 'Tersedia pengiriman via kargo',
+    icon: Globe,
+    title: 'Worldwide Export',
+    time: 'FCL & LCL Sea Freight',
+    desc: 'Exports to Australia, US, Europe & Middle East',
   },
   {
     icon: Package,
-    title: 'Custom Order',
-    time: '2-4 minggu',
-    desc: 'Termasuk waktu produksi',
+    title: 'Custom Orders',
+    time: '2-4 weeks',
+    desc: 'Includes specialized craftsmanship & curing',
   },
 ];
 
@@ -36,7 +36,7 @@ export default function ShippingPolicy() {
 
   return (
     <>
-      <Head title={`Kebijakan Pengiriman - ${siteName}`} />
+      <Head title={`Shipping Policy - ${siteName}`} />
       <div className="bg-noise" />
       <ShopLayout>
         <main className="min-h-screen bg-sand-50 pb-20">
@@ -44,10 +44,10 @@ export default function ShippingPolicy() {
             {/* Header */}
             <div className="mb-12 text-center">
               <h1 className="mb-4 font-serif text-4xl text-terra-900 md:text-5xl">
-                Kebijakan Pengiriman
+                Shipping Policy
               </h1>
               <p className="text-lg text-terra-600">
-                Informasi lengkap mengenai pengiriman produk {siteName}
+                Comprehensive shipping and logistics information for {siteName}
               </p>
             </div>
 
@@ -78,84 +78,74 @@ export default function ShippingPolicy() {
             <div className="space-y-8 rounded-sm border border-terra-100 bg-white p-8 shadow-sm md:p-12">
               <section>
                 <h2 className="mb-4 font-serif text-2xl text-terra-900">
-                  Proses Pengiriman
+                  Shipping & Handling Process
                 </h2>
                 <ol className="list-decimal space-y-3 pl-6 text-terra-600">
-                  <li>Pesanan dikonfirmasi setelah pembayaran diterima</li>
+                  <li>Orders are confirmed and scheduled upon payment verification</li>
                   <li>
-                    Tim kami akan mempersiapkan dan mengemas produk dengan aman
+                    Our logistics team conducts rigorous quality checks and applies export-grade packaging
                   </li>
                   <li>
-                    Anda akan menerima nomor resi untuk tracking pengiriman
+                    You will receive bill of lading (B/L) or tracking details for monitoring your consignment
                   </li>
                   <li>
-                    Kurir akan menghubungi sebelum pengiriman untuk koordinasi
+                    Freight partners coordinate arrival and delivery schedules directly with your receiving team
                   </li>
-                  <li>Produk sampai di alamat tujuan</li>
+                  <li>Safe delivery to your specified destination or commercial warehouse</li>
                 </ol>
               </section>
 
               <section>
                 <h2 className="mb-4 font-serif text-2xl text-terra-900">
-                  Biaya Pengiriman
+                  Freight & Shipping Rates
                 </h2>
                 <ul className="list-disc space-y-2 pl-6 text-terra-600">
                   <li>
-                    <strong>Jakarta:</strong> Gratis untuk pembelian min. Rp
-                    5.000.000
+                    <strong>Domestic & Regional:</strong> Calculated by volume (CBM) and freight partner schedules.
                   </li>
                   <li>
-                    <strong>Bodetabek:</strong> Mulai dari Rp 150.000
+                    <strong>International LCL / FCL:</strong> Containerized sea freight rates quoted per 20ft/40ft HC container or grouped cargo.
                   </li>
                   <li>
-                    <strong>Jawa & Bali:</strong> Dihitung berdasarkan volume
-                    dan berat
-                  </li>
-                  <li>
-                    <strong>Luar Pulau:</strong> Menggunakan ekspedisi kargo,
-                    tarif sesuai lokasi
+                    <strong>Custom Clearance & Duties:</strong> Standard international terms apply (FOB, CIF, or DDP upon request).
                   </li>
                 </ul>
               </section>
 
               <section>
                 <h2 className="mb-4 font-serif text-2xl text-terra-900">
-                  Pengemasan
+                  Export Packaging Standards
                 </h2>
                 <p className="leading-relaxed text-terra-600">
-                  Semua produk dikemas dengan standar tinggi untuk memastikan
-                  keamanan selama pengiriman. Kami menggunakan bubble wrap,
-                  kardus tebal, dan palet kayu untuk produk berukuran besar.
+                  All furniture pieces are packed to international maritime export standards. We utilize multi-layer protective foam, corner edge guards, heavy-duty corrugated board, and fumigated wooden pallets or crates for maximum protection during transit.
                 </p>
               </section>
 
               <section>
                 <h2 className="mb-4 font-serif text-2xl text-terra-900">
-                  Penerimaan Barang
+                  Receipt of Goods & Inspection
                 </h2>
                 <ul className="list-disc space-y-2 pl-6 text-terra-600">
                   <li>
-                    Periksa kondisi kemasan sebelum menandatangani bukti terima
+                    Inspect exterior packaging condition before signing delivery receipts
                   </li>
                   <li>
-                    Dokumentasikan jika ada kerusakan kemasan saat diterima
+                    Document and photograph any visible container or carton damage upon arrival
                   </li>
                   <li>
-                    Laporkan kerusakan produk dalam 24 jam dengan foto bukti
+                    Notify our team within 48 hours in the rare event of transit damage
                   </li>
-                  <li>Simpan kemasan asli untuk keperluan klaim atau retur</li>
+                  <li>Keep original crates and packaging materials for insurance verification</li>
                 </ul>
               </section>
 
               <section>
                 <h2 className="mb-4 font-serif text-2xl text-terra-900">
-                  Catatan Penting
+                  Important Notice
                 </h2>
                 <div className="rounded-sm border border-amber-200 bg-amber-50 p-4">
                   <p className="text-sm text-amber-800">
-                    Waktu pengiriman dapat berbeda saat momen tertentu (Hari
-                    Raya, promo besar) karena volume pesanan yang tinggi. Kami
-                    akan selalu menginformasikan estimasi terbaru kepada Anda.
+                    Lead times for international maritime freight may vary due to global port congestion, adverse weather, or customs inspections. Our logistics specialists will maintain close communication and keep you informed throughout every stage of the journey.
                   </p>
                 </div>
               </section>

@@ -39,13 +39,13 @@ class CategoryUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama kategori wajib diisi.',
-            'name.max' => 'Nama kategori maksimal 255 karakter.',
-            'slug.unique' => 'Slug sudah digunakan.',
-            'image.image' => 'File harus berupa gambar.',
-            'image.max' => 'Ukuran gambar maksimal 2MB.',
-            'parent_id.exists' => 'Kategori induk tidak ditemukan.',
-            'parent_id.not_in' => 'Kategori tidak bisa menjadi induk dari dirinya sendiri.',
+            'name.required' => 'Category name is required.',
+            'name.max' => 'Category name may not exceed 255 characters.',
+            'slug.unique' => 'Slug is already in use.',
+            'image.image' => 'The file must be an image.',
+            'image.max' => 'The image size may not exceed 2MB.',
+            'parent_id.exists' => 'Parent category not found.',
+            'parent_id.not_in' => 'Category cannot be its own parent.',
         ];
     }
 }

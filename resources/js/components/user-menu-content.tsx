@@ -55,7 +55,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
               onClick={cleanup}
             >
               <LayoutGrid className="mr-2" />
-              Panel Admin
+              Admin Panel
             </Link>
           </DropdownMenuItem>
         )}
@@ -68,7 +68,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             onClick={cleanup}
           >
             <UserIcon className="mr-2" />
-            Profil Saya
+            My Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -80,7 +80,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             onClick={cleanup}
           >
             <Settings className="mr-2" />
-            Pengaturan
+            Settings
           </Link>
         </DropdownMenuItem>
       </DropdownMenuGroup>

@@ -18,50 +18,50 @@ import {
 const SECTIONS = [
   {
     icon: Database,
-    title: 'Informasi yang Kami Kumpulkan',
-    content: 'Kami mengumpulkan informasi yang Anda berikan secara langsung:',
+    title: 'Information We Collect',
+    content: 'We collect information provided directly by you when inquiring or placing orders:',
     items: [
-      'Nama lengkap dan informasi kontak (email, nomor telepon)',
-      'Alamat pengiriman dan penagihan',
-      'Informasi pembayaran (diproses secara aman melalui payment gateway)',
-      'Riwayat pesanan dan preferensi produk',
+      'Full legal name and commercial contact details (email address, telephone/WhatsApp number)',
+      'Billing, delivery, and maritime shipping port destination addresses',
+      'Payment verification information (securely processed via authorized banking channels)',
+      'Inquiry records, project custom specifications, and product preferences',
     ],
   },
   {
     icon: Eye,
-    title: 'Penggunaan Informasi',
-    content: 'Informasi Anda digunakan untuk:',
+    title: 'How We Use Your Information',
+    content: 'Your information is used strictly to deliver and improve our services:',
     items: [
-      'Memproses dan mengirimkan pesanan Anda',
-      'Berkomunikasi mengenai pesanan dan layanan',
-      'Mengirimkan informasi promosi (dengan persetujuan Anda)',
-      'Meningkatkan layanan dan pengalaman berbelanja',
+      'Processing, manufacturing, and fulfilling your bespoke orders',
+      'Communicating production updates, shipping schedules, and documentation',
+      'Sending curated product catalogs and new collection releases (with your consent)',
+      'Enhancing our website navigation and client experience',
     ],
   },
   {
     icon: Lock,
-    title: 'Keamanan Data',
-    content: `Kami menerapkan langkah-langkah keamanan teknis dan organisasional untuk melindungi data pribadi Anda dari akses tidak sah, perubahan, pengungkapan, atau penghancuran. Data sensitif dienkripsi menggunakan teknologi SSL/TLS terbaru.`,
+    title: 'Data Security',
+    content: `We implement strict technical and organizational measures to safeguard your personal and business data from unauthorized access, alteration, or disclosure. All data transmissions across our platform are secured with modern 256-bit SSL/TLS encryption.`,
     highlights: [
-      { icon: Shield, text: 'Enkripsi SSL 256-bit' },
-      { icon: Lock, text: 'Data tersimpan aman' },
-      { icon: FileCheck, text: 'Audit keamanan berkala' },
+      { icon: Shield, text: '256-Bit SSL Encryption' },
+      { icon: Lock, text: 'Secure Cloud Infrastructure' },
+      { icon: FileCheck, text: 'Periodic Security Audits' },
     ],
   },
   {
     icon: Share2,
-    title: 'Berbagi Informasi',
-    content: `Kami tidak menjual data pribadi Anda kepada pihak manapun. Informasi hanya dibagikan kepada pihak ketiga yang diperlukan untuk memproses pesanan (jasa pengiriman, payment gateway) dengan standar keamanan yang ketat dan perjanjian kerahasiaan.`,
+    title: 'Information Sharing',
+    content: `We respect your privacy and will never sell your personal information to third parties. Information is only shared with verified logistics carriers, customs brokers, and banking institutions strictly necessary to fulfill your order and under confidentiality obligations.`,
   },
   {
     icon: UserCheck,
-    title: 'Hak Anda',
-    content: 'Anda memiliki hak penuh atas data pribadi Anda:',
+    title: 'Your Rights',
+    content: 'You retain full control over your personal data at all times:',
     items: [
-      'Mengakses dan memperbarui informasi pribadi Anda',
-      'Meminta penghapusan data Anda (right to be forgotten)',
-      'Berhenti berlangganan dari komunikasi pemasaran',
-      'Mengajukan keluhan terkait privasi data',
+      'Access, review, or update your registered contact details',
+      'Request deletion of your profile and data records',
+      'Opt out of marketing communications at any time',
+      'Inquire about how your data is processed and stored',
     ],
   },
 ];
@@ -73,12 +73,12 @@ export default function PrivacyPolicy() {
   return (
     <>
       <SEOHead
-        title="Kebijakan Privasi"
-        description={`Kebijakan privasi ${siteName}. Ketahui bagaimana kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda.`}
+        title="Privacy Policy"
+        description={`Privacy Policy for ${siteName}. Learn how we collect, use, and protect your personal information.`}
         keywords={[
-          'kebijakan privasi',
           'privacy policy',
-          'perlindungan data',
+          'data protection',
+          'security policy',
           siteName.toLowerCase(),
         ]}
       />
@@ -92,13 +92,13 @@ export default function PrivacyPolicy() {
                 <Shield size={40} className="text-white" />
               </div>
               <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                Kebijakan Privasi
+                Privacy Policy
               </h1>
               <p className="mx-auto max-w-2xl text-lg opacity-90">
-                Komitmen kami dalam melindungi privasi dan data pribadi Anda
+                Our commitment to safeguarding your privacy and personal information
               </p>
               <p className="mt-4 text-sm opacity-70">
-                Terakhir diperbarui: Januari 2026
+                Last updated: 2026
               </p>
             </div>
           </div>
@@ -108,15 +108,15 @@ export default function PrivacyPolicy() {
             <div className="mx-auto flex max-w-[1000px] flex-wrap items-center justify-center gap-8 px-6">
               <div className="flex items-center gap-2 text-neutral-600">
                 <Lock className="h-5 w-5 text-teal-600" />
-                <span className="text-sm font-medium">Data Terenkripsi</span>
+                <span className="text-sm font-medium">Encrypted Data</span>
               </div>
               <div className="flex items-center gap-2 text-neutral-600">
                 <Shield className="h-5 w-5 text-teal-600" />
-                <span className="text-sm font-medium">Privasi Terjamin</span>
+                <span className="text-sm font-medium">Guaranteed Privacy</span>
               </div>
               <div className="flex items-center gap-2 text-neutral-600">
                 <UserCheck className="h-5 w-5 text-teal-600" />
-                <span className="text-sm font-medium">Kendali Penuh</span>
+                <span className="text-sm font-medium">Full Data Control</span>
               </div>
             </div>
           </div>
@@ -131,13 +131,10 @@ export default function PrivacyPolicy() {
                 </div>
                 <div>
                   <h2 className="mb-2 text-lg font-semibold text-teal-900">
-                    Privasi Anda adalah Prioritas Kami
+                    Your Privacy is Our Priority
                   </h2>
                   <p className="text-teal-700">
-                    Di {siteName}, kami berkomitmen untuk melindungi privasi
-                    setiap pelanggan. Kebijakan ini menjelaskan bagaimana kami
-                    mengumpulkan, menggunakan, dan menjaga keamanan informasi
-                    pribadi Anda.
+                    At {siteName}, we value the trust you place in us. This policy describes how we collect, handle, and protect your information when visiting our website or ordering our handcrafted furniture.
                   </p>
                 </div>
               </div>
@@ -199,10 +196,9 @@ export default function PrivacyPolicy() {
             <div className="mt-12 rounded-xl bg-gradient-to-br from-teal-600 to-teal-700 p-8 text-white md:p-10">
               <div className="text-center">
                 <Mail className="mx-auto mb-4 h-12 w-12 opacity-90" />
-                <h3 className="mb-2 text-2xl font-semibold">Hubungi Kami</h3>
+                <h3 className="mb-2 text-2xl font-semibold">Contact Us</h3>
                 <p className="mx-auto mb-6 max-w-md opacity-90">
-                  Jika Anda memiliki pertanyaan tentang kebijakan privasi ini,
-                  jangan ragu untuk menghubungi kami
+                  If you have any questions regarding this Privacy Policy or how your data is handled, please feel free to reach out
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-4">
                   {siteSettings?.contact_email && (

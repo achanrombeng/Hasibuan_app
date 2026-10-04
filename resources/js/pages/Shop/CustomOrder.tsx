@@ -7,36 +7,36 @@ import { CheckCircle, Palette, Ruler, Send, Upload, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 const FURNITURE_TYPES = [
-  'Kursi',
-  'Meja',
-  'Lemari',
-  'Sofa',
-  'Rak',
-  'Tempat Tidur',
-  'Meja TV',
-  'Nakas',
-  'Lainnya',
+  'Chairs',
+  'Tables',
+  'Cabinets & Storage',
+  'Sofas & Lounges',
+  'Shelving & Bookcases',
+  'Beds & Headboards',
+  'TV Consoles',
+  'Nightstands & Accent Tables',
+  'Others',
 ];
 
 const MATERIALS = [
-  { id: 'kayu-jati', name: 'Kayu Jati', description: 'Kuat dan tahan lama' },
+  { id: 'kayu-jati', name: 'Grade-A Teak Wood', description: 'Strong, weather-resistant, and durable' },
   {
     id: 'kayu-mahoni',
-    name: 'Kayu Mahoni',
-    description: 'Elegan dan berkelas',
+    name: 'Mahogany Wood',
+    description: 'Refined grain and elegant luxury finish',
   },
   {
     id: 'kayu-pinus',
-    name: 'Kayu Pinus',
-    description: 'Ringan dan ekonomis',
+    name: 'Pine Wood',
+    description: 'Lightweight with warm natural aesthetic',
   },
   {
     id: 'multipleks',
-    name: 'Multipleks/Plywood',
-    description: 'Modern dan praktis',
+    name: 'Plywood & Natural Veneer',
+    description: 'Modern, stable, and versatile',
   },
-  { id: 'rotan', name: 'Rotan', description: 'Natural dan artistik' },
-  { id: 'kombinasi', name: 'Kombinasi', description: 'Mix material' },
+  { id: 'rotan', name: 'All-Weather Rattan / Wicker', description: 'Organic texture and artisanal weave' },
+  { id: 'kombinasi', name: 'Mixed Materials', description: 'Wood, steel, rope, and outdoor fabric' },
 ];
 
 export default function CustomOrder() {
@@ -66,7 +66,7 @@ export default function CustomOrder() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length + previewImages.length > 5) {
-      showAlert('Maksimal 5 gambar', 'warning', 'Peringatan');
+      showAlert('Maximum 5 images allowed', 'warning', 'Notice');
       return;
     }
 
@@ -101,8 +101,8 @@ export default function CustomOrder() {
     return (
       <>
         <SEOHead
-          title="Custom Order Berhasil"
-          description={`Permintaan custom order Anda telah terkirim. Tim ${siteName} akan menghubungi Anda dalam 1-2 hari kerja.`}
+          title="Custom Order Submitted"
+          description={`Your custom order inquiry has been received. The ${siteName} team will contact you within 1-2 business days.`}
         />
         <div className="bg-noise" />
         <ShopLayout>
@@ -112,17 +112,16 @@ export default function CustomOrder() {
                 <CheckCircle size={48} className="text-wood-dark" />
               </div>
               <h1 className="mb-4 font-serif text-3xl text-terra-900">
-                Permintaan Terkirim!
+                Inquiry Received!
               </h1>
               <p className="mb-8 text-terra-600">
-                Terima kasih! Tim kami akan menghubungi Anda dalam 1-2 hari
-                kerja untuk konsultasi lebih lanjut.
+                Thank you! Our design and production team will review your specifications and contact you within 1-2 business days.
               </p>
               <button
                 onClick={() => setIsSuccess(false)}
                 className="rounded-full bg-terra-900 px-8 py-3 text-white transition-colors hover:bg-wood-dark"
               >
-                Buat Permintaan Lagi
+                Submit Another Inquiry
               </button>
             </div>
           </main>
@@ -134,14 +133,14 @@ export default function CustomOrder() {
   return (
     <>
       <SEOHead
-        title="Custom Order - Pesan Furnitur Sesuai Keinginan"
-        description={`Pesan furnitur custom sesuai keinginan Anda di ${siteName}. Pilih material, ukuran, dan desain. Konsultasi gratis dengan tim ahli kami.`}
+        title="Custom Order - Bespoke Handcrafted Furniture"
+        description={`Order bespoke handcrafted furniture tailored to your exact specifications at ${siteName}. Choose materials, dimensions, and custom finishes.`}
         keywords={[
-          'custom order',
-          'furnitur custom',
-          'pesan mebel',
-          'furniture custom jepara',
-          'desain furnitur',
+          'custom furniture',
+          'bespoke furniture',
+          'custom teak furniture',
+          'made to order furniture',
+          'custom outdoor furniture',
         ]}
       />
       <div className="bg-noise" />
@@ -158,10 +157,10 @@ export default function CustomOrder() {
                 <Ruler size={40} className="text-wood-light" />
               </div>
               <p className="text-xl opacity-90">
-                Wujudkan Furniture Impian Anda
+                Bring Your Dream Furniture to Life
               </p>
               <p className="mt-2 text-sm opacity-75">
-                Desain sesuai kebutuhan, material pilihan, ukuran presisi
+                Bespoke designs, export-grade materials, and precision dimensions
               </p>
             </div>
           </div>
@@ -174,10 +173,10 @@ export default function CustomOrder() {
                   <Palette size={24} className="text-wood-dark" />
                 </div>
                 <h3 className="mb-2 font-medium text-terra-900">
-                  Desain Bebas
+                  Bespoke Design
                 </h3>
                 <p className="text-sm text-terra-500">
-                  Upload referensi atau gambarkan ide Anda
+                  Upload architectural references or share your concepts
                 </p>
               </div>
               <div className="rounded-sm border border-terra-100 bg-white p-6 text-center">
@@ -185,10 +184,10 @@ export default function CustomOrder() {
                   <Ruler size={24} className="text-wood-dark" />
                 </div>
                 <h3 className="mb-2 font-medium text-terra-900">
-                  Ukuran Presisi
+                  Tailored Sizing
                 </h3>
                 <p className="text-sm text-terra-500">
-                  Sesuaikan dengan ruangan Anda
+                  Crafted precisely to complement your space
                 </p>
               </div>
               <div className="rounded-sm border border-terra-100 bg-white p-6 text-center">
@@ -196,10 +195,10 @@ export default function CustomOrder() {
                   <CheckCircle size={24} className="text-wood-dark" />
                 </div>
                 <h3 className="mb-2 font-medium text-terra-900">
-                  Garansi Kualitas
+                  Master Quality
                 </h3>
                 <p className="text-sm text-terra-500">
-                  Material premium, hasil sempurna
+                  Sustainable timber and flawless craftsmanship
                 </p>
               </div>
             </div>
@@ -210,14 +209,14 @@ export default function CustomOrder() {
               className="rounded-sm border border-terra-100 bg-white p-8"
             >
               <h2 className="mb-6 font-serif text-2xl text-terra-900">
-                Form Permintaan Custom
+                Custom Order Inquiry Form
               </h2>
 
               {/* Contact Info */}
               <div className="mb-8 grid gap-4 md:grid-cols-3">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-terra-700">
-                    Nama Lengkap *
+                    Full Name *
                   </label>
                   <input
                     type="text"
@@ -225,12 +224,12 @@ export default function CustomOrder() {
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="Nama Anda"
+                    placeholder="Your Full Name"
                   />
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-terra-700">
-                    Email *
+                    Email Address *
                   </label>
                   <input
                     type="email"
@@ -243,7 +242,7 @@ export default function CustomOrder() {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-terra-700">
-                    No. WhatsApp *
+                    Phone / WhatsApp *
                   </label>
                   <input
                     type="tel"
@@ -251,7 +250,7 @@ export default function CustomOrder() {
                     value={data.phone}
                     onChange={(e) => setData('phone', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="08xxxxxxxxxx"
+                    placeholder="+1 (555) 000-0000"
                   />
                 </div>
               </div>
@@ -260,7 +259,7 @@ export default function CustomOrder() {
               <div className="mb-8 grid gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-terra-700">
-                    Jenis Furniture *
+                    Furniture Category *
                   </label>
                   <select
                     required
@@ -268,7 +267,7 @@ export default function CustomOrder() {
                     onChange={(e) => setData('furniture_type', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 bg-white px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
                   >
-                    <option value="">Pilih jenis furniture</option>
+                    <option value="">Select furniture category</option>
                     {FURNITURE_TYPES.map((type) => (
                       <option key={type} value={type}>
                         {type}
@@ -286,7 +285,7 @@ export default function CustomOrder() {
                     onChange={(e) => setData('material', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 bg-white px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
                   >
-                    <option value="">Pilih material</option>
+                    <option value="">Select preferred material</option>
                     {MATERIALS.map((m) => (
                       <option key={m.id} value={m.id}>
                         {m.name} - {m.description}
@@ -299,7 +298,7 @@ export default function CustomOrder() {
               {/* Dimensions */}
               <div className="mb-8">
                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                  Ukuran (cm) - Opsional
+                  Dimensions (cm) - Optional
                 </label>
                 <div className="grid grid-cols-3 gap-4">
                   <input
@@ -307,21 +306,21 @@ export default function CustomOrder() {
                     value={data.width}
                     onChange={(e) => setData('width', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="Lebar"
+                    placeholder="Width"
                   />
                   <input
                     type="number"
                     value={data.height}
                     onChange={(e) => setData('height', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="Tinggi"
+                    placeholder="Height"
                   />
                   <input
                     type="number"
                     value={data.depth}
                     onChange={(e) => setData('depth', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="Kedalaman"
+                    placeholder="Depth"
                   />
                 </div>
               </div>
@@ -330,26 +329,26 @@ export default function CustomOrder() {
               <div className="mb-8 grid gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-terra-700">
-                    Warna/Finishing
+                    Finish / Color Preference
                   </label>
                   <input
                     type="text"
                     value={data.color}
                     onChange={(e) => setData('color', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="Contoh: Natural, Walnut, Putih"
+                    placeholder="e.g. Natural Teak, Dark Walnut, Weathered Grey"
                   />
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-terra-700">
-                    Estimasi Budget
+                    Estimated Budget
                   </label>
                   <input
                     type="text"
                     value={data.budget}
                     onChange={(e) => setData('budget', e.target.value)}
                     className="w-full rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                    placeholder="Contoh: 5-10 juta"
+                    placeholder="e.g. $1,500 - $3,000"
                   />
                 </div>
               </div>
@@ -357,7 +356,7 @@ export default function CustomOrder() {
               {/* Description */}
               <div className="mb-8">
                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                  Deskripsi Detail *
+                  Detailed Project Description *
                 </label>
                 <textarea
                   required
@@ -365,14 +364,14 @@ export default function CustomOrder() {
                   value={data.description}
                   onChange={(e) => setData('description', e.target.value)}
                   className="w-full resize-none rounded-sm border border-terra-200 px-4 py-3 outline-none focus:border-wood focus:ring-1 focus:ring-wood"
-                  placeholder="Jelaskan detail furniture yang Anda inginkan..."
+                  placeholder="Describe your project, layout dimensions, styling preferences, or special requirements..."
                 />
               </div>
 
               {/* Image Upload */}
               <div className="mb-8">
                 <label className="mb-2 block text-sm font-medium text-terra-700">
-                  Upload Referensi Gambar (Maks. 5)
+                  Upload Reference Images (Max. 5)
                 </label>
                 <input
                   ref={fileInputRef}
@@ -423,11 +422,11 @@ export default function CustomOrder() {
               >
                 {isSubmitting ? (
                   <>
-                    <span className="animate-spin">⏳</span> Mengirim...
+                    <span className="animate-spin">⏳</span> Submitting...
                   </>
                 ) : (
                   <>
-                    <Send size={20} /> Kirim Permintaan
+                    <Send size={20} /> Submit Inquiry
                   </>
                 )}
               </button>

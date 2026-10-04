@@ -38,7 +38,7 @@ export default function Contact() {
       phone: marketing1Phone,
       email: marketing1Email,
       icon: User,
-      badge: 'Utama',
+      badge: 'Primary',
     },
     {
       role: 'Marketing 2',
@@ -46,7 +46,7 @@ export default function Contact() {
       phone: marketing2Phone,
       email: marketing2Email,
       icon: UserCheck,
-      badge: 'Alternatif',
+      badge: 'Alternative',
     },
   ];
 
@@ -55,7 +55,7 @@ export default function Contact() {
       <SEOHead
         title={t('shop.contact.title')}
         description={t('shop.contact.seo_description', { siteName })}
-        keywords={['kontak', 'alamat toko furnitur', 'telepon', 'email']}
+        keywords={['contact', 'furniture showroom', 'phone', 'email']}
       />
       <div className="bg-noise" />
       <ShopLayout>
@@ -225,7 +225,7 @@ export default function Contact() {
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title={`Lokasi Showroom ${siteName}`}
+                      title={`${siteName} Showroom Location`}
                     ></iframe>
                   </div>
                 </div>
@@ -272,7 +272,7 @@ export default function Contact() {
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      title={`Lokasi Pabrik / Factory ${siteName}`}
+                      title={`${siteName} Factory Location`}
                     ></iframe>
                   </div>
                 </div>

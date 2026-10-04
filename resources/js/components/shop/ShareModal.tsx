@@ -97,7 +97,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-terra-100 p-6">
               <h2 className="font-serif text-xl text-terra-900">
-                Bagikan Produk
+                Share Product
               </h2>
               <button
                 onClick={onClose}
@@ -132,7 +132,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
             {/* Share Buttons */}
             <div className="p-6">
-              <p className="mb-4 text-sm text-terra-500">Bagikan melalui</p>
+              <p className="mb-4 text-sm text-terra-500">Share via</p>
               <div className="mb-6 grid grid-cols-4 gap-3">
                 {shareLinks.map((link) => (
                   <button
@@ -163,11 +163,11 @@ export const ShareModal: React.FC<ShareModalProps> = ({
                 >
                   {copied ? (
                     <>
-                      <Check size={18} /> Tersalin
+                      <Check size={18} /> Copied
                     </>
                   ) : (
                     <>
-                      <Copy size={18} /> Salin
+                      <Copy size={18} /> Copy Link
                     </>
                   )}
                 </button>

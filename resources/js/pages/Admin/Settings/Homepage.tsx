@@ -225,7 +225,7 @@ export default function HomepageSettings({
 
   const handleLogoFileSelect = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Silakan pilih file gambar (PNG, JPG, WEBP, SVG)');
+      alert('Please select an image file (PNG, JPG, WEBP, SVG)');
       return;
     }
     setLogoCompressing(true);
@@ -280,12 +280,8 @@ export default function HomepageSettings({
     hero_image_main: settings.hero_image_main,
     hero_product_name: settings.hero_product_name,
     trust_logos: settings.trust_logos,
-    values_badge:
-      settings.values_badge ||
-      (locale === 'en' ? 'WHY CHOOSE US' : 'MENGAPA MEMILIH KAMI'),
-    values_title:
-      settings.values_title ||
-      (locale === 'en' ? 'Our Philosophy' : 'Filosofi Kami'),
+    values_badge: settings.values_badge || 'WHY CHOOSE US',
+    values_title: settings.values_title || 'Our Philosophy',
     home_values: settings.home_values,
     carousel_banners: settings.carousel_banners,
     // Craftsmanship Section

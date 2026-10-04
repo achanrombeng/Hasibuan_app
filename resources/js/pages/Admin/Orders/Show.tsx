@@ -75,10 +75,10 @@ export default function ShowOrder({
   paymentStatuses,
 }: ShowOrderProps) {
   // Safe access to nested objects
-  const status = order.status || { value: 'pending', label: 'Menunggu' };
+  const status = order.status || { value: 'pending', label: 'Pending' };
   const paymentStatus = order.payment_status || {
     value: 'pending',
-    label: 'Menunggu',
+    label: 'Pending',
   };
   const paymentMethod = order.payment_method || {
     value: 'unknown',
@@ -164,11 +164,11 @@ export default function ShowOrder({
   return (
     <AdminLayout
       breadcrumbs={[
-        { title: 'Pesanan', href: '/admin/orders' },
+        { title: 'Orders', href: '/admin/orders' },
         { title: order.order_number, href: `/admin/orders/${order.id}` },
       ]}
     >
-      <Head title={`Pesanan ${order.order_number}`} />
+      <Head title={`Order ${order.order_number}`} />
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -184,7 +184,7 @@ export default function ShowOrder({
                 {order.order_number}
               </h1>
               <p className="mt-1 text-terra-500">
-                {new Date(order.created_at).toLocaleString('id-ID')}
+                {new Date(order.created_at).toLocaleString('en-US')}
               </p>
             </div>
           </div>
@@ -227,7 +227,7 @@ export default function ShowOrder({
             <div className="rounded-2xl border border-terra-100 bg-white shadow-sm">
               <div className="border-b border-terra-100 p-6">
                 <h2 className="text-lg font-semibold text-terra-900">
-                  Item Pesanan
+                  Ordered Items
                 </h2>
               </div>
               <div className="divide-y divide-terra-100">
@@ -313,7 +313,7 @@ export default function ShowOrder({
             <div className="rounded-2xl border border-terra-200 bg-gradient-to-br from-terra-50 to-terra-100/50 p-6 shadow-sm">
               <h2 className="mb-4 flex items-center gap-2 font-semibold text-terra-900">
                 <AlertCircle className="h-5 w-5" />
-                Aksi Cepat
+                Quick Actions
               </h2>
               <div className="space-y-3">
                 {/* Confirm Payment Button */}
@@ -324,7 +324,7 @@ export default function ShowOrder({
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
                   >
                     <Banknote className="h-5 w-5" />
-                    Konfirmasi Pembayaran
+                    Confirm Payment
                   </button>
                 )}
 
@@ -336,7 +336,7 @@ export default function ShowOrder({
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                   >
                     <Clock className="h-5 w-5" />
-                    Proses Pesanan
+                    Process Order
                   </button>
                 )}
 
@@ -348,7 +348,7 @@ export default function ShowOrder({
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-purple-600 px-4 py-3 font-medium text-white transition-colors hover:bg-purple-700 disabled:opacity-50"
                   >
                     <Truck className="h-5 w-5" />
-                    Kirim Pesanan
+                    Ship Order
                   </button>
                 )}
 
@@ -360,7 +360,7 @@ export default function ShowOrder({
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
                   >
                     <CheckCircle className="h-5 w-5" />
-                    Tandai Selesai
+                    Mark Delivered
                   </button>
                 )}
 
@@ -372,7 +372,7 @@ export default function ShowOrder({
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-100 px-4 py-3 font-medium text-red-700 transition-colors hover:bg-red-200 disabled:opacity-50"
                   >
                     <XCircle className="h-5 w-5" />
-                    Batalkan Pesanan
+                    Cancel Order
                   </button>
                 )}
 
@@ -380,14 +380,14 @@ export default function ShowOrder({
                 {status.value === 'delivered' && (
                   <div className="flex items-center justify-center gap-2 rounded-xl bg-green-100 px-4 py-3 font-medium text-green-700">
                     <CheckCircle className="h-5 w-5" />
-                    Pesanan Selesai
+                    Order Delivered
                   </div>
                 )}
 
                 {status.value === 'cancelled' && (
                   <div className="flex items-center justify-center gap-2 rounded-xl bg-red-100 px-4 py-3 font-medium text-red-700">
                     <XCircle className="h-5 w-5" />
-                    Pesanan Dibatalkan
+                    Order Cancelled
                   </div>
                 )}
               </div>
@@ -395,11 +395,11 @@ export default function ShowOrder({
 
             {/* Status Selects */}
             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 font-semibold text-terra-900">Ubah Status</h2>
+              <h2 className="mb-4 font-semibold text-terra-900">Change Status</h2>
               <div className="space-y-4">
                 <div>
                   <label className="mb-1 block text-sm text-terra-600">
-                    Status Pesanan
+                    Order Status
                   </label>
                   <select
                     value={status.value}
@@ -416,7 +416,7 @@ export default function ShowOrder({
                 </div>
                 <div>
                   <label className="mb-1 block text-sm text-terra-600">
-                    Status Pembayaran
+                    Payment Status
                   </label>
                   <select
                     value={paymentStatus.value}
@@ -437,7 +437,7 @@ export default function ShowOrder({
             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <User className="h-5 w-5 text-terra-500" />
-                <h2 className="font-semibold text-terra-900">Pelanggan</h2>
+                <h2 className="font-semibold text-terra-900">Customer</h2>
               </div>
               <div className="space-y-2 text-sm">
                 <p className="font-medium text-terra-900">
@@ -451,7 +451,7 @@ export default function ShowOrder({
               <div className="mb-4 flex items-center gap-3">
                 <MapPin className="h-5 w-5 text-terra-500" />
                 <h2 className="font-semibold text-terra-900">
-                  Alamat Pengiriman
+                  Shipping Address
                 </h2>
               </div>
               <div className="space-y-1 text-sm text-terra-600">
@@ -465,11 +465,11 @@ export default function ShowOrder({
             <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <CreditCard className="h-5 w-5 text-terra-500" />
-                <h2 className="font-semibold text-terra-900">Pembayaran</h2>
+                <h2 className="font-semibold text-terra-900">Payment</h2>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-terra-600">Metode</span>
+                  <span className="text-terra-600">Method</span>
                   <span className="text-terra-900">{paymentMethod.label}</span>
                 </div>
                 <div className="flex justify-between">
@@ -484,7 +484,7 @@ export default function ShowOrder({
             </div>
             {order.tracking_number && (
               <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
-                <h2 className="mb-2 font-semibold text-terra-900">No. Resi</h2>
+                <h2 className="mb-2 font-semibold text-terra-900">Tracking Number</h2>
                 <p className="font-mono text-sm text-terra-900">
                   {order.tracking_number}
                 </p>
@@ -493,7 +493,7 @@ export default function ShowOrder({
             {order.customer_notes && (
               <div className="rounded-2xl border border-terra-100 bg-white p-6 shadow-sm">
                 <h2 className="mb-2 font-semibold text-terra-900">
-                  Catatan Pelanggan
+                  Customer Notes
                 </h2>
                 <p className="text-sm text-terra-600">{order.customer_notes}</p>
               </div>
@@ -511,26 +511,26 @@ export default function ShowOrder({
                 <Truck className="h-5 w-5 text-purple-600" />
               </div>
               <h3 className="text-lg font-semibold text-terra-900">
-                Kirim Pesanan
+                Ship Order
               </h3>
             </div>
             <p className="mb-4 text-sm text-terra-600">
-              Masukkan nomor resi untuk pesanan{' '}
+              Enter tracking number for order{' '}
               <strong>{order.order_number}</strong>
             </p>
             <div className="mb-4">
               <label className="mb-1 block text-sm text-terra-600">
-                Nomor Resi (Opsional)
+                Tracking Number (Optional)
               </label>
               <input
                 type="text"
                 value={trackingNumber}
                 onChange={(e) => setTrackingNumber(e.target.value)}
-                placeholder="Contoh: JNE1234567890"
+                placeholder="e.g. DHL1234567890"
                 className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-2.5 font-mono text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
               />
               <p className="mt-1 text-xs text-terra-500">
-                Nomor resi bisa ditambahkan nanti jika belum tersedia
+                Tracking number can be updated later if not available yet
               </p>
             </div>
             <div className="flex gap-3">
@@ -538,7 +538,7 @@ export default function ShowOrder({
                 onClick={() => setShowShipModal(false)}
                 className="flex-1 rounded-xl border border-terra-200 px-4 py-2.5 text-terra-700 transition-colors hover:bg-terra-50"
               >
-                Batal
+                Cancel
               </button>
               <button
                 onClick={handleShip}
@@ -546,7 +546,7 @@ export default function ShowOrder({
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-purple-600 px-4 py-2.5 text-white transition-colors hover:bg-purple-700 disabled:opacity-50"
               >
                 <Truck className="h-4 w-4" />
-                Kirim Pesanan
+                Ship Order
               </button>
             </div>
           </div>
@@ -562,21 +562,21 @@ export default function ShowOrder({
                 <XCircle className="h-5 w-5 text-red-600" />
               </div>
               <h3 className="text-lg font-semibold text-terra-900">
-                Batalkan Pesanan
+                Cancel Order
               </h3>
             </div>
             <p className="mb-4 text-sm text-terra-600">
-              Apakah Anda yakin ingin membatalkan pesanan{' '}
+              Are you sure you want to cancel order{' '}
               <strong>{order.order_number}</strong>?
             </p>
             <div className="mb-4">
               <label className="mb-1 block text-sm text-terra-600">
-                Alasan Pembatalan
+                Cancellation Reason
               </label>
               <textarea
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
-                placeholder="Masukkan alasan pembatalan..."
+                placeholder="Enter cancellation reason..."
                 rows={3}
                 className="w-full rounded-xl border border-terra-200 bg-sand-50 px-4 py-2.5 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
               />
@@ -586,14 +586,14 @@ export default function ShowOrder({
                 onClick={() => setShowCancelModal(false)}
                 className="flex-1 rounded-xl border border-terra-200 px-4 py-2.5 text-terra-700 transition-colors hover:bg-terra-50"
               >
-                Batal
+                Cancel
               </button>
               <button
                 onClick={handleCancel}
                 disabled={processing}
                 className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 text-white transition-colors hover:bg-red-700 disabled:opacity-50"
               >
-                Ya, Batalkan
+                Yes, Cancel Order
               </button>
             </div>
           </div>

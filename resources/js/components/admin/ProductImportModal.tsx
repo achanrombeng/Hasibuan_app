@@ -69,7 +69,7 @@ export default function ProductImportModal({
         setReport(null);
       } else {
         setErrorMessage(
-          'Format file tidak didukung. Harap gunakan file .xlsx, .xls, atau .csv.',
+          'Unsupported file format. Please upload an .xlsx, .xls, or .csv file.',
         );
       }
     }
@@ -122,16 +122,15 @@ export default function ProductImportModal({
 
       if (response.status === 419) {
         setErrorMessage(
-          'Sesi Anda telah kedaluwarsa atau token keamanan tidak valid. Silakan muat ulang (refresh) halaman dan coba kembali.',
+          'Your session has expired or the security token is invalid. Please refresh the page and try again.',
         );
         return;
       }
 
       const contentType = response.headers.get('content-type') || '';
       if (!contentType.includes('application/json')) {
-        const text = await response.text();
         setErrorMessage(
-          `Gagal memproses file (${response.status}: ${response.statusText}). Silakan refresh halaman dan coba lagi.`,
+          `Failed to process file (${response.status}: ${response.statusText}). Please refresh the page and try again.`,
         );
         return;
       }
@@ -140,7 +139,7 @@ export default function ProductImportModal({
 
       if (!response.ok || !data.success) {
         setErrorMessage(
-          data.message || 'Terjadi kesalahan saat memproses file import.',
+          data.message || 'An error occurred while processing the import file.',
         );
       } else {
         setReport(data.report);
@@ -148,7 +147,7 @@ export default function ProductImportModal({
         router.reload({ only: ['products'] });
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Koneksi gagal saat mengunggah file.');
+      setErrorMessage(err.message || 'Network connection error while uploading file.');
     } finally {
       setIsUploading(false);
     }
@@ -165,11 +164,10 @@ export default function ProductImportModal({
             </div>
             <div>
               <DialogTitle className="text-xl font-bold text-terra-900">
-                Import Produk Massal
+                Bulk Product Import
               </DialogTitle>
               <DialogDescription className="text-sm text-terra-600">
-                Unggah file Excel (.xlsx) atau CSV untuk memasukkan banyak
-                produk sekaligus
+                Upload an Excel (.xlsx) or CSV spreadsheet to add or update multiple products at once
               </DialogDescription>
             </div>
           </div>
@@ -183,26 +181,25 @@ export default function ProductImportModal({
                 <Info className="mt-0.5 h-4 w-4 shrink-0 text-terra-700" />
                 <div className="text-xs text-terra-800">
                   <p className="font-semibold text-terra-900">
-                    Belum punya format Excel yang sesuai?
+                    Need the spreadsheet template?
                   </p>
                   <p className="mt-0.5 text-terra-600">
-                    Unduh template yang sudah dilengkapi nama kolom, contoh
-                    produk furniture, dan petunjuk.
+                    Download our template with pre-configured headers, sample furniture records, and guidelines.
                   </p>
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 <a
                   href="/admin/products/import/template?format=xlsx"
-                  download="ronica_template_produk.xlsx"
+                  download="ronica_template_products.xlsx"
                   className="inline-flex items-center gap-1.5 rounded-lg bg-terra-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-terra-800 active:scale-95"
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Template Excel (.xlsx)
+                  Excel Template (.xlsx)
                 </a>
                 <a
                   href="/admin/products/import/template?format=csv"
-                  download="ronica_template_produk.csv"
+                  download="ronica_template_products.csv"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-terra-200 bg-white px-3 py-1.5 text-xs font-semibold text-terra-800 shadow-sm transition-colors hover:bg-terra-50 active:scale-95"
                 >
                   <Download className="h-3.5 w-3.5" />
@@ -246,8 +243,7 @@ export default function ProductImportModal({
                         {file.name}
                       </p>
                       <p className="text-xs text-neutral-500">
-                        {(file.size / 1024).toFixed(1)} KB • Klik untuk ganti
-                        file
+                        {(file.size / 1024).toFixed(1)} KB • Click to replace file
                       </p>
                     </div>
                   </div>
@@ -258,11 +254,10 @@ export default function ProductImportModal({
                     </div>
                     <div className="mt-1 text-center">
                       <p className="text-sm font-semibold text-neutral-800">
-                        Tarik & jatuhkan file Excel / CSV di sini
+                        Drag & drop your Excel or CSV file here
                       </p>
                       <p className="mt-0.5 text-xs text-neutral-500">
-                        atau klik untuk memilih file dari komputer Anda (.xlsx,
-                        .xls, .csv)
+                        or click to browse from your computer (.xlsx, .xls, .csv)
                       </p>
                     </div>
                   </div>
@@ -279,12 +274,10 @@ export default function ProductImportModal({
                 />
                 <div className="text-xs text-neutral-700">
                   <span className="font-semibold text-neutral-900">
-                    Perbarui produk jika SKU / Nama sudah ada
+                    Update existing products if SKU already exists
                   </span>
                   <p className="mt-0.5 text-neutral-500">
-                    Jika dicentang, produk dengan SKU yang sama akan diperbarui
-                    dengan data dari file. Jika tidak, data tersebut akan
-                    dilewati.
+                    If checked, existing products with matching SKUs will be updated with data from the spreadsheet. Otherwise, they will be skipped.
                   </p>
                 </div>
               </label>
@@ -305,7 +298,7 @@ export default function ProductImportModal({
                   disabled={isUploading}
                   className="rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                 >
-                  Batal
+                  Cancel
                 </button>
                 <button
                   type="submit"
@@ -315,12 +308,12 @@ export default function ProductImportModal({
                   {isUploading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Memproses Data...
+                      Processing Data...
                     </>
                   ) : (
                     <>
                       <FileUp className="h-4 w-4" />
-                      Mulai Import
+                      Start Import
                     </>
                   )}
                 </button>
@@ -334,9 +327,9 @@ export default function ProductImportModal({
               <div className="flex items-center gap-3 rounded-xl border border-teal-200 bg-teal-50/70 p-4 text-teal-900">
                 <CheckCircle2 className="h-6 w-6 shrink-0 text-teal-600" />
                 <div>
-                  <h4 className="font-semibold">Proses Import Selesai!</h4>
+                  <h4 className="font-semibold">Import Completed Successfully!</h4>
                   <p className="text-xs text-teal-700">
-                    Data produk telah diproses dan disimpan ke katalog.
+                    Product data has been processed and saved to your catalog.
                   </p>
                 </div>
               </div>
@@ -344,25 +337,25 @@ export default function ProductImportModal({
               {/* Metric Cards */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <div className="rounded-xl border border-neutral-200 bg-white p-3 text-center shadow-xs">
-                  <p className="text-xs text-neutral-500">Total Baris</p>
+                  <p className="text-xs text-neutral-500">Total Rows</p>
                   <p className="text-xl font-bold text-neutral-900">
                     {report.total_rows}
                   </p>
                 </div>
                 <div className="rounded-xl border border-green-200 bg-green-50/40 p-3 text-center shadow-xs">
-                  <p className="text-xs text-green-700">Ditambahkan</p>
+                  <p className="text-xs text-green-700">Added</p>
                   <p className="text-xl font-bold text-green-700">
                     {report.imported}
                   </p>
                 </div>
                 <div className="rounded-xl border border-blue-200 bg-blue-50/40 p-3 text-center shadow-xs">
-                  <p className="text-xs text-blue-700">Diperbarui</p>
+                  <p className="text-xs text-blue-700">Updated</p>
                   <p className="text-xl font-bold text-blue-700">
                     {report.updated}
                   </p>
                 </div>
                 <div className="rounded-xl border border-amber-200 bg-amber-50/40 p-3 text-center shadow-xs">
-                  <p className="text-xs text-amber-700">Dilewati</p>
+                  <p className="text-xs text-amber-700">Skipped</p>
                   <p className="text-xl font-bold text-amber-700">
                     {report.skipped}
                   </p>
@@ -373,7 +366,7 @@ export default function ProductImportModal({
               {report.errors && report.errors.length > 0 && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4">
                   <p className="text-xs font-semibold text-amber-900">
-                    Catatan / Baris yang Dilewati ({report.errors.length}):
+                    Skipped Rows & Notes ({report.errors.length}):
                   </p>
                   <div className="mt-2 max-h-40 space-y-1.5 overflow-y-auto text-xs text-amber-800">
                     {report.errors.map((err, idx) => (
@@ -382,7 +375,7 @@ export default function ProductImportModal({
                         className="flex items-start gap-2 rounded-lg border border-amber-100 bg-white/70 p-2"
                       >
                         <span className="shrink-0 font-mono font-semibold text-amber-900">
-                          Baris {err.row} ({err.sku}):
+                          Row {err.row} ({err.sku}):
                         </span>
                         <span>{err.message}</span>
                       </div>
@@ -403,14 +396,14 @@ export default function ProductImportModal({
                   className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  Import File Lain
+                  Import Another File
                 </button>
                 <button
                   type="button"
                   onClick={handleClose}
                   className="rounded-xl bg-terra-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-terra-800"
                 >
-                  Selesai
+                  Done
                 </button>
               </div>
             </div>

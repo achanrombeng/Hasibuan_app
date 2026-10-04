@@ -56,14 +56,14 @@ export default function StockSale({
   return (
     <>
       <SEOHead
-        title="Stock Sale - Harga Pabrik"
-        description={`Stock Sale ${siteName}! Beli furnitur langsung dari pabrik dengan harga grosir. Cocok untuk reseller, kontraktor, dan pembelian dalam jumlah besar.`}
+        title="Stock Sale - Factory Direct Pricing"
+        description={`Stock Sale at ${siteName}! Buy directly from manufacturer at factory-direct wholesale pricing. Ideal for interior designers, hospitality contractors, and bulk purchases.`}
         keywords={[
           'stock sale',
-          'harga pabrik',
-          'grosir furnitur',
-          'harga grosir mebel',
-          'reseller furniture',
+          'factory direct',
+          'wholesale furniture',
+          'trade furniture',
+          'bulk furniture order',
         ]}
       />
       <div className="bg-noise" />
@@ -80,25 +80,25 @@ export default function StockSale({
                 <Package size={40} className="text-wood-light" />
               </div>
               <p className="text-xl opacity-90">
-                Harga Pabrik Langsung! Stok Gudang Ready
+                Direct Factory Pricing! In-Stock Warehouse Inventory
               </p>
               <p className="mt-2 text-sm opacity-75">
-                Dapatkan furniture berkualitas dengan harga grosir
+                Acquire export-grade furniture with wholesale direct manufacturing prices
               </p>
 
               {/* Benefits */}
               <div className="mt-8 flex flex-wrap justify-center gap-6">
                 <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2">
                   <span className="h-2 w-2 rounded-full bg-wood-light"></span>
-                  <span className="text-sm">Harga Pabrik</span>
+                  <span className="text-sm">Factory Direct</span>
                 </div>
                 <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2">
                   <span className="h-2 w-2 rounded-full bg-wood-light"></span>
-                  <span className="text-sm">Stok Ready</span>
+                  <span className="text-sm">Ready to Ship</span>
                 </div>
                 <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2">
                   <span className="h-2 w-2 rounded-full bg-wood-light"></span>
-                  <span className="text-sm">Pengiriman Cepat</span>
+                  <span className="text-sm">Global Logistics</span>
                 </div>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function StockSale({
                   />
                 </button>
                 <span className="text-terra-500">
-                  {products.meta.total} produk
+                  {products.meta.total} products
                 </span>
               </div>
               <select
@@ -128,23 +128,23 @@ export default function StockSale({
                 onChange={(e) => handleSort(e.target.value)}
                 className="rounded-full border border-terra-200 bg-white px-4 py-2 outline-none"
               >
-                <option value="-created_at">Terbaru</option>
-                <option value="created_at">Terlama</option>
-                <option value="name">A-Z</option>
-                <option value="-name">Z-A</option>
+                <option value="-created_at">Newest</option>
+                <option value="created_at">Oldest</option>
+                <option value="name">Name: A-Z</option>
+                <option value="-name">Name: Z-A</option>
               </select>
             </div>
 
             {/* Category Filter */}
             {showFilters && (
               <div className="mb-8 rounded-sm bg-white p-6">
-                <h3 className="mb-4 font-medium text-terra-900">Kategori</h3>
+                <h3 className="mb-4 font-medium text-terra-900">Categories</h3>
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => handleCategoryFilter(null)}
                     className={`rounded-full px-4 py-2 text-sm ${!safeFilters.filter?.category_id ? 'bg-terra-900 text-white' : 'bg-terra-100 text-terra-700 hover:bg-terra-200'}`}
                   >
-                    Semua
+                    All
                   </button>
                   {normalizedCategories.map((cat: ApiCategory) => (
                     <button
@@ -170,16 +170,16 @@ export default function StockSale({
               <div className="rounded-sm bg-white py-20 text-center">
                 <Warehouse size={48} className="mx-auto mb-4 text-terra-300" />
                 <h3 className="mb-2 text-xl font-medium text-terra-900">
-                  Belum Ada Produk Stock Sale
+                  No Stock Sale Products Available
                 </h3>
                 <p className="mb-6 text-terra-500">
-                  Nantikan penawaran harga pabrik dari kami!
+                  Stay tuned for upcoming factory-direct inventory offers!
                 </p>
                 <Link
                   href="/shop/products"
                   className="inline-flex items-center gap-2 rounded-full bg-terra-900 px-6 py-3 text-white hover:bg-wood-dark"
                 >
-                  Lihat Semua Produk
+                  Browse All Products
                 </Link>
               </div>
             )}
@@ -255,7 +255,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
           </span>
         </div>
         <span className="text-xs font-medium text-wood">
-          Lihat Detail &rarr;
+          View Details &rarr;
         </span>
       </div>
     </Link>

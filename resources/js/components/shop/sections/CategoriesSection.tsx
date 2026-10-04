@@ -216,7 +216,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                 type="button"
                 onClick={() => setCatalogModalOpen(true)}
                 className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-md active:scale-95"
-                title="Buka & Preview E-Katalog Produk (PDF / 3D Flipbook)"
+                title="Open & Preview E-Catalog (PDF / 3D Flipbook)"
               >
                 <BookOpen size={14} />
                 <span>E-CATALOG</span>
@@ -284,7 +284,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
               <Link
                 href={`/shop/category/${currentSlide.slug}`}
                 className="absolute inset-0 z-10 block cursor-pointer"
-                aria-label={`Lihat semua produk kategori ${currentSlide.categoryName}`}
+                aria-label={`View all products in ${currentSlide.categoryName}`}
               >
                 {/* Background Image Carousel with Fade Animation */}
                 <AnimatePresence mode="wait">

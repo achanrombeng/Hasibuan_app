@@ -31,7 +31,7 @@ export function WhatsAppButton({
   const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
   const siteName = siteSettings?.site_name || 'Ronica';
   const defaultMessage =
-    message || `Halo, saya tertarik dengan produk di ${siteName}`;
+    message || `Hello, I am interested in ${siteName} furniture collections`;
 
   const positionClasses = position === 'bottom-right' ? 'right-6' : 'left-6';
 
@@ -64,7 +64,7 @@ export function WhatsAppButton({
                 <div>
                   <div className="font-medium">{siteName}</div>
                   <div className="text-xs opacity-80">
-                    Biasanya membalas dalam 1 jam
+                    Typically replies within an hour
                   </div>
                 </div>
               </div>
@@ -80,11 +80,10 @@ export function WhatsAppButton({
             <div className="min-h-[120px] bg-[#E5DDD5] p-4">
               <div className="max-w-[85%] rounded-lg bg-white p-3 shadow-sm">
                 <p className="text-sm text-terra-700">
-                  Halo! 👋 Ada yang bisa kami bantu? Silakan chat kami untuk
-                  pertanyaan seputar produk, pemesanan, atau lainnya.
+                  Hello! 👋 How can we help you today? Chat with our team for product catalogs, custom inquiries, or export orders.
                 </p>
                 <p className="mt-1 text-right text-[10px] text-terra-400">
-                  Customer Service
+                  Client Support
                 </p>
               </div>
             </div>
@@ -96,7 +95,7 @@ export function WhatsAppButton({
                 className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 font-medium text-white transition-colors hover:bg-[#20BD5A]"
               >
                 <MessageCircle size={20} />
-                Mulai Chat
+                Start Chat
               </button>
             </div>
           </motion.div>
@@ -112,7 +111,7 @@ export function WhatsAppButton({
             exit={{ opacity: 0, x: 10 }}
             className="absolute right-16 bottom-0 rounded-lg bg-white px-4 py-2 whitespace-nowrap shadow-lg"
           >
-            <span className="text-sm text-terra-700">Butuh bantuan?</span>
+            <span className="text-sm text-terra-700">Need assistance?</span>
             <div className="absolute top-1/2 right-[-6px] h-0 w-0 -translate-y-1/2 border-t-[6px] border-b-[6px] border-l-[6px] border-t-transparent border-b-transparent border-l-white" />
           </motion.div>
         )}

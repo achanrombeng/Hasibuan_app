@@ -28,11 +28,11 @@ export default function CategoriesIndex({ categories }: Props) {
         title={t('shop.categories.title')}
         description={t('shop.categories.seo_description', { siteName })}
         keywords={[
-          'kategori furnitur',
-          'ruang tamu',
-          'ruang makan',
-          'kamar tidur',
-          'furnitur kantor',
+          'furniture categories',
+          'living room',
+          'dining room',
+          'bedroom',
+          'office furniture',
           'outdoor furniture',
         ]}
       />

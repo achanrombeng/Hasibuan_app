@@ -903,6 +903,6 @@ class SettingsController extends Controller
         Cache::forget('site_settings.id');
         Cache::forget('site_settings.en');
 
-        return back()->with('success', 'Pengaturan Footer berhasil disimpan');
+        return back()->with('success', 'Footer settings saved successfully.');
     }
 }

@@ -14,7 +14,7 @@ interface TagInputProps {
 export function TagInput({
   value = [],
   onChange,
-  placeholder = 'Tambah tag...',
+  placeholder = 'Add tag...',
   maxTags,
 }: TagInputProps) {
   const [inputValue, setInputValue] = useState('');

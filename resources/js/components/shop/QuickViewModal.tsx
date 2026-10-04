@@ -157,7 +157,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                     ))}
                   </div>
                   <span className="text-sm text-neutral-500">
-                    ({product.review_count} ulasan)
+                    ({product.review_count} {product.review_count === 1 ? 'review' : 'reviews'})
                   </span>
                 </div>
 
@@ -171,13 +171,13 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                   <span
                     className={`rounded-sm px-3 py-1 text-xs font-medium ${product.is_in_stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                   >
-                    {product.is_in_stock ? 'Tersedia' : 'Stok Habis'}
+                    {product.is_in_stock ? 'In Stock' : 'Out of Stock'}
                   </span>
                 </div>
 
                 {/* Quantity */}
                 <div className="mb-6 flex items-center gap-4">
-                  <span className="text-sm text-neutral-600">Jumlah:</span>
+                  <span className="text-sm text-neutral-600">Quantity:</span>
                   <div className="flex items-center rounded-sm border border-neutral-200 text-neutral-900">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}

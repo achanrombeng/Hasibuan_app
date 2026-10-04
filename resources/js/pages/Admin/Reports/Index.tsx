@@ -49,17 +49,17 @@ export default function ReportsIndex({
   };
 
   return (
-    <AdminLayout breadcrumbs={[{ title: 'Laporan', href: '/admin/reports' }]}>
-      <Head title="Laporan & Analitik" />
+    <AdminLayout breadcrumbs={[{ title: 'Reports', href: '/admin/reports' }]}>
+      <Head title="Reports & Analytics" />
 
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-terra-900">
-              Laporan & Analitik
+              Reports & Analytics
             </h1>
-            <p className="mt-1 text-terra-500">Pantau performa toko Anda</p>
+            <p className="mt-1 text-terra-500">Track and analyze store performance</p>
           </div>
           <div className="flex items-center gap-3">
             <select
@@ -67,9 +67,9 @@ export default function ReportsIndex({
               onChange={(e) => handlePeriodChange(e.target.value)}
               className="rounded-xl border border-terra-200 bg-sand-50 px-4 py-2.5 text-terra-900 transition-all focus:border-wood focus:ring-2 focus:ring-wood/50 focus:outline-none"
             >
-              <option value="week">7 Hari Terakhir</option>
-              <option value="month">30 Hari Terakhir</option>
-              <option value="year">Tahun Ini</option>
+              <option value="week">Last 7 Days</option>
+              <option value="month">Last 30 Days</option>
+              <option value="year">This Year</option>
             </select>
             <button className="inline-flex items-center gap-2 rounded-xl bg-wood-dark px-4 py-2.5 text-white transition-colors">
               <Download className="h-4 w-4" />
@@ -85,7 +85,7 @@ export default function ReportsIndex({
               <DollarSign className="h-6 w-6 text-green-600" />
             </div>
             <div className="mt-4">
-              <p className="text-sm text-terra-500">Total Penjualan</p>
+              <p className="text-sm text-terra-500">Total Sales</p>
               <p className="mt-1 text-2xl font-bold text-terra-900">
                 {summary.totalSales}
               </p>
@@ -96,7 +96,7 @@ export default function ReportsIndex({
               <ShoppingCart className="h-6 w-6 text-blue-600" />
             </div>
             <div className="mt-4">
-              <p className="text-sm text-terra-500">Total Pesanan</p>
+              <p className="text-sm text-terra-500">Total Orders</p>
               <p className="mt-1 text-2xl font-bold text-terra-900">
                 {summary.totalOrders}
               </p>
@@ -107,7 +107,7 @@ export default function ReportsIndex({
               <DollarSign className="h-6 w-6 text-wood" />
             </div>
             <div className="mt-4">
-              <p className="text-sm text-terra-500">Rata-rata Pesanan</p>
+              <p className="text-sm text-terra-500">Average Order Value</p>
               <p className="mt-1 text-2xl font-bold text-terra-900">
                 {summary.averageOrderValue}
               </p>
@@ -118,7 +118,7 @@ export default function ReportsIndex({
               <Users className="h-6 w-6 text-purple-600" />
             </div>
             <div className="mt-4">
-              <p className="text-sm text-terra-500">Total Pelanggan</p>
+              <p className="text-sm text-terra-500">Total Customers</p>
               <p className="mt-1 text-2xl font-bold text-terra-900">
                 {summary.totalCustomers}
               </p>
@@ -131,13 +131,13 @@ export default function ReportsIndex({
           <div className="rounded-2xl border border-terra-100 bg-white shadow-sm">
             <div className="border-b border-terra-100 p-6">
               <h2 className="text-lg font-semibold text-terra-900">
-                Produk Terlaris
+                Best Selling Products
               </h2>
             </div>
             <div className="divide-y divide-terra-100">
               {topProducts.length === 0 ? (
                 <div className="p-6 text-center text-terra-500">
-                  Belum ada data
+                  No data available
                 </div>
               ) : (
                 topProducts.map((product, index) => (
@@ -150,7 +150,7 @@ export default function ReportsIndex({
                         {product.name}
                       </p>
                       <p className="text-sm text-terra-500">
-                        {product.total_sold} terjual
+                        {product.total_sold} sold
                       </p>
                     </div>
                     <p className="font-medium text-terra-900">
@@ -166,13 +166,13 @@ export default function ReportsIndex({
           <div className="rounded-2xl border border-terra-100 bg-white shadow-sm">
             <div className="border-b border-terra-100 p-6">
               <h2 className="text-lg font-semibold text-terra-900">
-                Penjualan Harian
+                Daily Sales
               </h2>
             </div>
             <div className="max-h-96 divide-y divide-terra-100 overflow-y-auto">
               {salesByDay.length === 0 ? (
                 <div className="p-6 text-center text-terra-500">
-                  Belum ada data
+                  No data available
                 </div>
               ) : (
                 salesByDay.map((sale) => (
@@ -186,10 +186,10 @@ export default function ReportsIndex({
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-terra-900">
-                        Rp {sale.total.toLocaleString('id-ID')}
+                        Rp {sale.total.toLocaleString('en-US')}
                       </p>
                       <p className="text-sm text-terra-500">
-                        {sale.orders} pesanan
+                        {sale.orders} orders
                       </p>
                     </div>
                   </div>
@@ -203,7 +203,7 @@ export default function ReportsIndex({
         <div className="rounded-2xl border border-terra-100 bg-white shadow-sm">
           <div className="border-b border-terra-100 p-6">
             <h2 className="text-lg font-semibold text-terra-900">
-              Pelanggan Terbaik
+              Top Customers
             </h2>
           </div>
           <div className="overflow-x-auto">
@@ -214,13 +214,13 @@ export default function ReportsIndex({
                     #
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-terra-600">
-                    Pelanggan
+                    Customer
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-terra-600">
-                    Pesanan
+                    Orders
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-terra-600">
-                    Total Belanja
+                    Total Spend
                   </th>
                 </tr>
               </thead>
@@ -228,7 +228,7 @@ export default function ReportsIndex({
                 {topCustomers.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="py-6 text-center text-terra-500">
-                      Belum ada data
+                      No data available
                     </td>
                   </tr>
                 ) : (

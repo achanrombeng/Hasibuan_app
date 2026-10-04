@@ -160,7 +160,7 @@ function WishlistCard({
             href={`/shop/products/${product.slug}`}
             className="text-xs font-medium text-teal-700 hover:underline"
           >
-            Lihat Detail &rarr;
+            View Details &rarr;
           </Link>
         </div>
 

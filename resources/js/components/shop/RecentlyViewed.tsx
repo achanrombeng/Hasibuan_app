@@ -121,7 +121,7 @@ export function RecentlyViewedSection({
           <div className="flex items-center gap-3">
             <Clock size={24} className="text-terra-500" />
             <h2 className="font-serif text-xl text-terra-900">
-              Terakhir Dilihat
+              Recently Viewed
             </h2>
           </div>
           <div className="flex gap-2">
@@ -185,7 +185,7 @@ export function RecentlyViewedSection({
                     </span>
                   </div>
                   <span className="text-xs font-medium text-wood">
-                    Lihat Detail &rarr;
+                    View Details &rarr;
                   </span>
                 </div>
               </Link>
