@@ -206,7 +206,7 @@ class HandleInertiaRequests extends Middleware
             $settings = Setting::all()->pluck('value', 'key')->toArray();
 
             return [
-                'site_name' => $settings['site_name'] ?? 'Ronica',
+                'site_name' => $settings['site_name'] ?? config('app.name', 'hasibuan_app'),
                 'site_logo' => $settings['site_logo'] ?? '/ronica.png',
                 'site_description' => $settings['site_description'] ?? 'Toko furnitur premium Indonesia',
                 'contact_email' => $settings['contact_email'] ?? '',

@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle, RefreshCw, Shield } from 'lucide-react';
 
 export default function ReturnPolicy() {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
 
   return (
     <>

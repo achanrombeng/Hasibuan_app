@@ -82,7 +82,7 @@ export default function ProductsIndex({
 }: Props) {
   const { siteSettings, featuredCategories: sharedCategories } =
     usePage<SharedData>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const safeFilters = Array.isArray(filters) ? {} : filters;
 
   // Handle CategoryResource wrapping (data property) and sort alphabetically A-Z

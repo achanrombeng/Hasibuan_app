@@ -40,7 +40,7 @@ export default function Clearance({
   filters,
 }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const safeFilters = Array.isArray(filters) ? {} : filters;
 
   // Normalize categories

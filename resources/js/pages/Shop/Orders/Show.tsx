@@ -241,7 +241,7 @@ function OrderTimeline({
 
 export default function OrderShow({ order, paymentSettings }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const [cancelling, setCancelling] = useState(false);
   const [copied, setCopied] = useState(false);
   const { state: alertState, showAlert, closeAlert } = useAlertDialog();

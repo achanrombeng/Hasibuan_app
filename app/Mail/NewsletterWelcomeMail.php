@@ -22,7 +22,7 @@ class NewsletterWelcomeMail extends Mailable
 
     public function envelope(): Envelope
     {
-        $siteName = Setting::get('site_name', 'Ronica Outdoor Furniture');
+        $siteName = Setting::get('site_name', config('app.name', 'hasibuan_app'));
 
         return new Envelope(
             subject: "Welcome to the {$siteName} Family!",
@@ -34,7 +34,7 @@ class NewsletterWelcomeMail extends Mailable
         return new Content(
             view: 'emails.newsletter-welcome',
             with: [
-                'siteName' => Setting::get('site_name', 'Ronica Outdoor Furniture'),
+                'siteName' => Setting::get('site_name', config('app.name', 'hasibuan_app')),
                 'contactEmail' => Setting::get('contact_email', 'contact@ronicaoutdoor.com'),
                 'contactPhone' => Setting::get('contact_phone', '+62 812-3456-7890'),
             ],

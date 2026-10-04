@@ -110,7 +110,7 @@ export default function CheckoutIndex({
   const paymentList = Array.isArray(paymentMethods) ? paymentMethods : [];
 
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
 
   const safeCart: Cart = {
     items_count: cart?.items_count || 0,

@@ -29,7 +29,7 @@ export function WhatsAppButton({
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const defaultMessage =
     message || `Hello, I am interested in ${siteName} furniture collections`;
 

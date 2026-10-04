@@ -58,7 +58,7 @@ const STATUS_ICONS: Record<string, React.ReactNode> = {
 
 export default function OrdersIndex({ orders }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const { t } = useTranslation();
 
   return (

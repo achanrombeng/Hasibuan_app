@@ -58,7 +58,7 @@ export const SEOHead: React.FC<SEOProps> = ({
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
 
   // Use site settings as defaults
-  const resolvedSiteName = siteName || siteSettings?.site_name || 'Ronica';
+  const resolvedSiteName = siteName || siteSettings?.site_name || 'hasibuan_app';
   const resolvedDescription =
     description ||
     siteSettings?.site_description ||

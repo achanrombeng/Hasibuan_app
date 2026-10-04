@@ -120,7 +120,7 @@ class HomeController extends Controller
 
         // Page-specific Site Settings for SEO (siteSettings is shared via middleware)
         $pageSiteSettings = [
-            'name' => Setting::get('site_name', 'Ronica'),
+            'name' => Setting::get('site_name', config('app.name', 'hasibuan_app')),
             'description' => Setting::get('site_description', 'Toko furnitur premium Indonesia'),
         ];
 

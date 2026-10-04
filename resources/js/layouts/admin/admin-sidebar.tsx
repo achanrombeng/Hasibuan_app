@@ -136,7 +136,7 @@ export default function AdminSidebar({
 
   // Get site settings & notifications count
   const { siteSettings, newDealerInquiriesCount } = usePage<SharedData>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
 
   // Check if user has permission (simplified - will be enhanced later)
   const hasPermission = (permission?: string) => {

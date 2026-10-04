@@ -57,7 +57,7 @@ interface Props {
 
 export default function CartIndex({ cart }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const { t } = useTranslation();
   const [loading, setLoading] = useState<number | null>(null);
 

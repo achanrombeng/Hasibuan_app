@@ -15,7 +15,7 @@ interface Props {
 
 export default function WishlistIndex({ products }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const { t } = useTranslation();
   const [removingId, setRemovingId] = useState<number | null>(null);
 

@@ -36,7 +36,7 @@ export default function Home({
   // Get shared siteSettings with contact info
   const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
   const siteName =
-    siteSettings?.site_name || pageSiteSettings?.name || 'Ronica';
+    siteSettings?.site_name || pageSiteSettings?.name || 'hasibuan_app';
 
   return (
     <>

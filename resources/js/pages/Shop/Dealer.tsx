@@ -9,7 +9,7 @@ import { useState } from 'react';
 export default function Dealer() {
   const { t } = useTranslation();
   const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const [isSuccess, setIsSuccess] = useState(false);
 
   const { data, setData, post, processing, errors, reset } = useForm({

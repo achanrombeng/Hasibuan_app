@@ -8,7 +8,7 @@ import { Building2, Mail, Phone, Store, User, UserCheck } from 'lucide-react';
 export default function Contact() {
   const { t } = useTranslation();
   const { siteSettings } = usePage<{ siteSettings: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
 
   const marketing1Name =
     siteSettings?.marketing_1_name || siteSettings?.admin_1_name;

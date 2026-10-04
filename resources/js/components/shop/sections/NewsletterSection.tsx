@@ -26,7 +26,7 @@ const itemVariants = {
 export const NewsletterSection = () => {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
   const { t } = useTranslation();
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState('');
 

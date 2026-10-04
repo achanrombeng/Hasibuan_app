@@ -12,7 +12,7 @@ import { SiteSettings } from '@/types';
 
 export default function Register() {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const { t } = useTranslation();
 
   return (

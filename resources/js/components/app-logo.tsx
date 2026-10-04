@@ -3,7 +3,7 @@ import { usePage } from '@inertiajs/react';
 
 export default function AppLogo() {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const siteLogo = siteSettings?.site_logo || '/ronica.png';
 
   return (

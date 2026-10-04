@@ -16,7 +16,7 @@ const PLACEHOLDER_CATEGORY = '/images/placeholder-category.svg';
 
 export default function CategoriesIndex({ categories }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'Ronica';
+  const siteName = siteSettings?.site_name || 'hasibuan_app';
   const { t } = useTranslation();
   const categoriesList = Array.isArray(categories)
     ? categories
