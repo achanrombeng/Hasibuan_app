@@ -32,37 +32,37 @@ export default function AdminHeader({
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-neutral-200/80 bg-white/95 backdrop-blur-md">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-8">
         {/* Left side - Mobile menu + Breadcrumbs */}
         <div className="flex items-center gap-4">
           {/* Mobile menu button */}
           <button
             onClick={onMobileMenuClick}
-            className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-50 lg:hidden"
+            className="rounded-lg p-2 text-neutral-600 transition-colors hover:bg-neutral-100 lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
 
           {/* Breadcrumbs */}
-          <nav className="hidden items-center gap-2 text-sm sm:flex">
+          <nav className="hidden items-center gap-2 text-xs sm:flex">
             <Link
               href="/admin"
-              className="text-neutral-500 transition-colors hover:text-neutral-900"
+              className="text-[11px] tracking-[0.2em] uppercase font-light text-neutral-500 transition-colors hover:text-neutral-950"
             >
               Dashboard
             </Link>
             {breadcrumbs.map((crumb, index) => (
               <div key={crumb.href} className="flex items-center gap-2">
-                <ChevronRight className="h-4 w-4 text-neutral-300" />
+                <ChevronRight className="h-3.5 w-3.5 text-neutral-300" />
                 {index === breadcrumbs.length - 1 ? (
-                  <span className="font-medium text-neutral-900">
+                  <span className="text-[11px] tracking-[0.2em] uppercase font-medium text-neutral-950">
                     {crumb.title}
                   </span>
                 ) : (
                   <Link
                     href={crumb.href}
-                    className="text-neutral-500 transition-colors hover:text-neutral-900"
+                    className="text-[11px] tracking-[0.2em] uppercase font-light text-neutral-500 transition-colors hover:text-neutral-950"
                   >
                     {crumb.title}
                   </Link>
@@ -73,17 +73,17 @@ export default function AdminHeader({
         </div>
 
         {/* Right side - Language Switcher + Log Out + User Profile */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {/* Language Switcher */}
           <LanguageSwitcher variant="toggle" />
 
           {/* Log Out Button */}
           <button
             onClick={handleLogout}
-            className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 hover:text-red-700"
+            className="inline-flex items-center gap-2 border border-neutral-200 bg-white hover:border-neutral-900 hover:bg-neutral-950 text-neutral-700 hover:text-white px-3.5 py-1.5 text-[10px] tracking-[0.2em] uppercase font-light transition-all duration-200 cursor-pointer"
             title={t('admin.header.logout')}
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{t('admin.header.logout')}</span>
           </button>
 
@@ -91,9 +91,9 @@ export default function AdminHeader({
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-3 rounded-xl p-1.5 pr-3 transition-colors hover:bg-neutral-50"
+              className="flex items-center gap-3 p-1.5 pr-2.5 transition-colors hover:bg-neutral-50 cursor-pointer"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 border border-neutral-200 text-neutral-800">
                 {auth.user.avatar ? (
                   <img
                     src={auth.user.avatar}
@@ -101,16 +101,16 @@ export default function AdminHeader({
                     className="h-full w-full rounded-full object-cover"
                   />
                 ) : (
-                  <span className="text-sm font-medium text-neutral-700">
+                  <span className="text-xs font-serif font-medium text-neutral-800">
                     {getInitials(auth.user.name)}
                   </span>
                 )}
               </div>
               <div className="hidden text-left md:block">
-                <p className="text-sm font-medium text-neutral-900">
+                <p className="font-serif text-sm tracking-wide text-neutral-900">
                   {auth.user.name}
                 </p>
-                <p className="text-xs text-neutral-500">
+                <p className="text-[9px] tracking-[0.22em] uppercase text-neutral-400 font-light">
                   {t('admin.header.administrator')}
                 </p>
               </div>

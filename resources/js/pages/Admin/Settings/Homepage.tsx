@@ -280,15 +280,21 @@ export default function HomepageSettings({
     hero_image_main: settings.hero_image_main,
     hero_product_name: settings.hero_product_name,
     trust_logos: settings.trust_logos,
-    values_badge: settings.values_badge || 'WHY CHOOSE US',
-    values_title: settings.values_title || 'Our Philosophy',
+    values_badge: settings.values_badge || 'OUR PHILOSOPHY',
+    values_title: settings.values_title || 'VITRUVIAN VALUES & COMMITMENTS',
     home_values: settings.home_values,
     carousel_banners: settings.carousel_banners,
     // Craftsmanship Section
-    craftsmanship_title_1: settings.craftsmanship_title_1 || '',
-    craftsmanship_desc_1: settings.craftsmanship_desc_1 || '',
-    craftsmanship_title_2: settings.craftsmanship_title_2 || '',
-    craftsmanship_desc_2: settings.craftsmanship_desc_2 || '',
+    craftsmanship_title_1:
+      settings.craftsmanship_title_1 || 'HANDCRAFTED ALL-WEATHER WEAVING',
+    craftsmanship_desc_1:
+      settings.craftsmanship_desc_1 ||
+      'Traditional hand-weaving techniques passed through generations of master artisans form the soul of our furniture. Woven over rust-proof aluminum frameworks, each strand is engineered to withstand tropical rain, UV exposure, and coastal breezes while offering enduring tactile warmth.',
+    craftsmanship_title_2:
+      settings.craftsmanship_title_2 || 'GRADE-A CERTIFIED SUSTAINABLE TEAK',
+    craftsmanship_desc_2:
+      settings.craftsmanship_desc_2 ||
+      'Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.',
     // Section visibility
     section_carousel_banners_visible:
       settings.section_carousel_banners_visible ?? true,
@@ -857,7 +863,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.hero_badge}
                   onChange={(e) => setData('hero_badge', e.target.value)}
-                  placeholder="Latest Collection 2025"
+                  placeholder="RH OUTDOOR 2026"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -869,7 +875,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.hero_product_name}
                   onChange={(e) => setData('hero_product_name', e.target.value)}
-                  placeholder="Premium Lounge Chair"
+                  placeholder="Architectural Teak Lounge"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -881,7 +887,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.hero_title}
                   onChange={(e) => setData('hero_title', e.target.value)}
-                  placeholder="Designs that"
+                  placeholder="THE ARCHITECTURAL TEAK & ROPE"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -895,7 +901,7 @@ export default function HomepageSettings({
                   onChange={(e) =>
                     setData('hero_title_highlight', e.target.value)
                   }
-                  placeholder="breathe."
+                  placeholder="COLLECTION"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -907,7 +913,7 @@ export default function HomepageSettings({
                   value={data.hero_description}
                   onChange={(e) => setData('hero_description', e.target.value)}
                   rows={3}
-                  placeholder="Minimalist furniture crafted from sustainable materials..."
+                  placeholder="Vitruvian Balance, Enduring Proportion & Master Craftsmanship from Jepara"
                   className="w-full resize-none rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -1142,7 +1148,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.values_badge || ''}
                   onChange={(e) => setData('values_badge', e.target.value)}
-                  placeholder="WHY CHOOSE US"
+                  placeholder="OUR PHILOSOPHY"
                   className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -1154,7 +1160,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.values_title || ''}
                   onChange={(e) => setData('values_title', e.target.value)}
-                  placeholder="Our Philosophy"
+                  placeholder="VITRUVIAN VALUES & COMMITMENTS"
                   className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -1211,7 +1217,7 @@ export default function HomepageSettings({
                         onChange={(e) =>
                           updateValue(index, 'title', e.target.value)
                         }
-                        placeholder="Sustainable Materials"
+                        placeholder="SOLID INDONESIAN TEAK"
                         className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                       />
                     </div>
@@ -1225,7 +1231,7 @@ export default function HomepageSettings({
                           updateValue(index, 'desc', e.target.value)
                         }
                         rows={2}
-                        placeholder="Every product uses wood from responsibly managed forests..."
+                        placeholder="Sustainably harvested Blora teak, aged and kiln-dried with exceptional natural oil content..."
                         className="w-full resize-none rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                       />
                     </div>
@@ -1276,7 +1282,7 @@ export default function HomepageSettings({
                       onChange={(e) =>
                         setData('craftsmanship_title_1', e.target.value)
                       }
-                      placeholder="Handcrafted, Unique Touch"
+                      placeholder="HANDCRAFTED ALL-WEATHER WEAVING"
                       className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                     />
                   </div>
@@ -1393,7 +1399,7 @@ export default function HomepageSettings({
                       onChange={(e) =>
                         setData('craftsmanship_title_2', e.target.value)
                       }
-                      placeholder="Strength of Nature, Timeless Elegance"
+                      placeholder="GRADE-A CERTIFIED SUSTAINABLE TEAK"
                       className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-neutral-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                     />
                   </div>

@@ -71,48 +71,80 @@ class HomeController extends Controller
         // Hero Settings (with locale support)
         $locale = app()->getLocale();
         $heroSettings = [
-            'badge' => Setting::get("hero_badge_{$locale}", Setting::get('hero_badge', $locale === 'en' ? 'Latest Collection 2025' : 'Koleksi Terbaru 2025')),
-            'title' => Setting::get("hero_title_{$locale}", Setting::get('hero_title', $locale === 'en' ? 'Design that' : 'Desain yang')),
-            'title_highlight' => Setting::get("hero_title_highlight_{$locale}", Setting::get('hero_title_highlight', $locale === 'en' ? 'breathes.' : 'bernafas.')),
-            'description' => Setting::get("hero_description_{$locale}", Setting::get('hero_description', $locale === 'en' ? 'Minimalist furniture from sustainable materials. Made for those who find luxury in simplicity.' : 'Furniture minimalis dari bahan berkelanjutan. Dibuat untuk mereka yang menemukan kemewahan dalam kesederhanaan.')),
-            'image_main' => Setting::get('hero_image_main', '/images/placeholder-hero.svg'),
-            'image_secondary' => Setting::get('hero_image_secondary', '/images/placeholder-hero.svg'),
-            'product_name' => Setting::get("hero_product_name_{$locale}", Setting::get('hero_product_name', $locale === 'en' ? 'Premium Lounge Chair' : 'Kursi Santai Premium')),
+            'badge' => Setting::get("hero_badge_{$locale}", Setting::get('hero_badge', 'RH OUTDOOR 2026')),
+            'title' => Setting::get("hero_title_{$locale}", Setting::get('hero_title', 'THE ARCHITECTURAL TEAK & ROPE')),
+            'title_highlight' => Setting::get("hero_title_highlight_{$locale}", Setting::get('hero_title_highlight', 'COLLECTION')),
+            'description' => Setting::get("hero_description_{$locale}", Setting::get('hero_description', 'Vitruvian Balance, Enduring Proportion & Master Craftsmanship from Jepara')),
+            'image_main' => Setting::get('hero_image_main', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2400&auto=format&fit=crop'),
+            'image_secondary' => Setting::get('hero_image_secondary', 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2400&auto=format&fit=crop'),
+            'product_name' => Setting::get("hero_product_name_{$locale}", Setting::get('hero_product_name', 'Architectural Teak Lounge')),
             'media_type' => Setting::get('hero_media_type', 'image'),
         ];
 
         // Trust/Press Logos
-        $trustLogos = json_decode(Setting::get('trust_logos', '["Kompas", "Tempo", "Forbes Indonesia", "Bisnis Indonesia", "The Jakarta Post"]'), true);
+        $trustLogos = json_decode(Setting::get('trust_logos', json_encode([
+            ['name' => 'ARCHITECTURAL DIGEST', 'logo_url' => ''],
+            ['name' => 'ELLE DECOR', 'logo_url' => ''],
+            ['name' => 'WALLPAPER*', 'logo_url' => ''],
+            ['name' => 'DEZEEN', 'logo_url' => ''],
+            ['name' => 'VOGUE LIVING', 'logo_url' => ''],
+            ['name' => 'THE LOCAL PROJECT', 'logo_url' => ''],
+        ])), true);
 
         // Values/Features (with locale support)
-        $defaultValues = $locale === 'en' ? [
-            ['icon' => 'leaf', 'title' => 'Sustainable Materials', 'desc' => 'Every product uses wood from responsibly managed forests and recycled materials.'],
-            ['icon' => 'truck', 'title' => 'Free Shipping', 'desc' => 'Free shipping for purchases over Rp 5 million throughout Indonesia.'],
-            ['icon' => 'shield-check', 'title' => 'Lifetime Warranty', 'desc' => 'Lifetime warranty for all structural damage because we believe in our quality.'],
-        ] : [
-            ['icon' => 'leaf', 'title' => 'Bahan Berkelanjutan', 'desc' => 'Setiap produk menggunakan kayu dari hutan yang dikelola secara bertanggung jawab dan bahan daur ulang.'],
-            ['icon' => 'truck', 'title' => 'Gratis Pengiriman', 'desc' => 'Pengiriman gratis untuk pembelian di atas Rp 5 juta ke seluruh Indonesia.'],
-            ['icon' => 'shield-check', 'title' => 'Garansi Selamanya', 'desc' => 'Garansi seumur hidup untuk semua kerusakan struktural karena kami percaya dengan kualitas kami.'],
+        $defaultValues = [
+            ['icon' => 'leaf', 'title' => 'SOLID INDONESIAN TEAK', 'desc' => 'Sustainably harvested Blora teak, aged and kiln-dried with exceptional natural oil content for enduring structural resilience.'],
+            ['icon' => 'sparkles', 'title' => 'ALL-WEATHER ARTISANAL WEAVE', 'desc' => 'Hand-woven by generational masters of Cirebon using high-density synthetic fibers engineered to resist UV, moisture, and sea salt.'],
+            ['icon' => 'shield-check', 'title' => 'ARCHITECTURAL SCALE & PROPORTION', 'desc' => 'Engineered for monumental spaces with classical Vitruvian balance, seamless joins, and export-grade structural warranties.'],
         ];
         $values = json_decode(Setting::get("home_values_{$locale}", Setting::get('home_values', json_encode($defaultValues))), true);
 
         // Carousel Banners
-        $carouselBanners = json_decode(Setting::get('carousel_banners', '[]'), true) ?? [];
+        $carouselBanners = json_decode(Setting::get('carousel_banners', json_encode([
+            [
+                'id' => 'outdoor-architectural',
+                'image_url' => 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2400&auto=format&fit=crop',
+                'media_type' => 'image',
+                'link' => '/shop/products?filter[category]=collections',
+                'sort_order' => 1,
+            ],
+            [
+                'id' => 'contemporary-living',
+                'image_url' => 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2400&auto=format&fit=crop',
+                'media_type' => 'image',
+                'link' => '/shop/products?filter[category]=chairs',
+                'sort_order' => 2,
+            ],
+            [
+                'id' => 'sculptural-dining',
+                'image_url' => 'https://images.unsplash.com/photo-1617806118233-18e1de247200?q=80&w=2400&auto=format&fit=crop',
+                'media_type' => 'image',
+                'link' => '/shop/products?filter[category]=dining-sets',
+                'sort_order' => 3,
+            ],
+            [
+                'id' => 'resort-poolside',
+                'image_url' => 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2400&auto=format&fit=crop',
+                'media_type' => 'image',
+                'link' => '/shop/products?filter[category]=sun-loungers',
+                'sort_order' => 4,
+            ],
+        ])), true) ?? [];
         usort($carouselBanners, fn ($a, $b) => ($a['sort_order'] ?? 0) - ($b['sort_order'] ?? 0));
 
         // Craftsmanship Settings (with locale support)
         $craftsmanshipSettings = [
-            'title_1' => Setting::get("craftsmanship_title_1_{$locale}", Setting::get('craftsmanship_title_1', 'Handcrafted, Unique Touch')),
-            'desc_1' => Setting::get("craftsmanship_desc_1_{$locale}", Setting::get('craftsmanship_desc_1', 'Hand-woven traditional rattan forms the soul of Ronica furniture, reflecting craftsmanship passed down through generations of master artisans. This finely woven natural material not only adds aesthetic elegance but also gives our furniture a breathing, durable structure and timeless character.')),
+            'title_1' => Setting::get("craftsmanship_title_1_{$locale}", Setting::get('craftsmanship_title_1', 'HANDCRAFTED ALL-WEATHER WEAVING')),
+            'desc_1' => Setting::get("craftsmanship_desc_1_{$locale}", Setting::get('craftsmanship_desc_1', 'Traditional hand-weaving techniques passed through generations of master artisans form the soul of our furniture. Woven over rust-proof aluminum frameworks, each strand is engineered to withstand tropical rain, UV exposure, and coastal breezes while offering enduring tactile warmth.')),
             'images_1' => json_decode(Setting::get('craftsmanship_images_1', json_encode([
-                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1200&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1600&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=1200&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop',
             ])), true) ?? [],
-            'title_2' => Setting::get("craftsmanship_title_2_{$locale}", Setting::get('craftsmanship_title_2', 'Strength of Nature, Timeless Elegance')),
-            'desc_2' => Setting::get("craftsmanship_desc_2_{$locale}", Setting::get('craftsmanship_desc_2', 'The premium teak wood used in our furniture is one of nature\'s most durable and cherished materials. Rich in natural protective oils, it offers superior resistance against moisture, intense sunlight, and outdoor weather elements. As years pass, its texture and warm tone grow even more beautiful.')),
+            'title_2' => Setting::get("craftsmanship_title_2_{$locale}", Setting::get('craftsmanship_title_2', 'GRADE-A CERTIFIED SUSTAINABLE TEAK')),
+            'desc_2' => Setting::get("craftsmanship_desc_2_{$locale}", Setting::get('craftsmanship_desc_2', "Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.")),
             'images_2' => json_decode(Setting::get('craftsmanship_images_2', json_encode([
-                'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1600&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop',
             ])), true) ?? [],
@@ -124,24 +156,24 @@ class HomeController extends Controller
             'description' => Setting::get('site_description', 'Toko furnitur premium Indonesia'),
         ];
 
-        // Section Visibility
+        // Section Visibility (Synced with Admin Homepage Settings defaults)
         $sectionVisibility = [
             'carousel_banners' => filter_var(Setting::get('section_carousel_banners_visible', '1'), FILTER_VALIDATE_BOOLEAN),
-            'hero' => filter_var(Setting::get('section_hero_visible', '0'), FILTER_VALIDATE_BOOLEAN),
-            'trust' => filter_var(Setting::get('section_trust_visible', '0'), FILTER_VALIDATE_BOOLEAN),
+            'hero' => filter_var(Setting::get('section_hero_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+            'trust' => filter_var(Setting::get('section_trust_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'categories' => filter_var(Setting::get('section_categories_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'craftsmanship' => filter_var(Setting::get('section_craftsmanship_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'catalog' => filter_var(Setting::get('section_catalog_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'values' => filter_var(Setting::get('section_values_visible', '1'), FILTER_VALIDATE_BOOLEAN),
-            'products' => filter_var(Setting::get('section_products_visible', '0'), FILTER_VALIDATE_BOOLEAN),
+            'products' => filter_var(Setting::get('section_products_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'testimonials' => filter_var(Setting::get('section_testimonials_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'articles' => filter_var(Setting::get('section_articles_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'newsletter' => filter_var(Setting::get('section_newsletter_visible', '1'), FILTER_VALIDATE_BOOLEAN),
         ];
 
         $valuesSettings = [
-            'badge' => Setting::get("values_badge_{$locale}", Setting::get('values_badge', $locale === 'en' ? 'WHY CHOOSE US' : 'MENGAPA MEMILIH KAMI')),
-            'title' => Setting::get("values_title_{$locale}", Setting::get('values_title', $locale === 'en' ? 'Our Philosophy' : 'Filosofi Kami')),
+            'badge' => Setting::get("values_badge_{$locale}", Setting::get('values_badge', 'OUR PHILOSOPHY')),
+            'title' => Setting::get("values_title_{$locale}", Setting::get('values_title', 'VITRUVIAN VALUES & COMMITMENTS')),
             'values' => $values ?? [],
         ];
 

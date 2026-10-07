@@ -1,13 +1,13 @@
 import { ApiProduct } from '@/types/shop';
 import { Link } from '@inertiajs/react';
+import React from 'react';
+import { ProductImagePlaceholder } from './ProductImagePlaceholder';
 
 interface ProductCardProps {
   product: ApiProduct;
   className?: string;
   onClick?: () => void;
 }
-
-import { ProductImagePlaceholder } from './ProductImagePlaceholder';
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
@@ -21,45 +21,55 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <Link
       href={`/shop/products/${product.slug}`}
       onClick={onClick}
-      className={`group block transition-all duration-400 ease-out hover:-translate-y-2 hover:scale-105 ${className}`}
+      className={`group flex flex-col bg-[#fafaf9] border border-neutral-200/80 p-4 transition-all duration-300 hover:border-neutral-400 ${className}`}
     >
-      {/* Product Card Container */}
-      <div className="relative mb-4 overflow-hidden rounded-xl border border-neutral-100 bg-white shadow-xs transition-all duration-500 group-hover:shadow-xl">
-        {/* Image Container */}
-        <div className="flex aspect-square items-center justify-center overflow-hidden bg-white p-3">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={product.name}
-              className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-            />
-          ) : (
-            <ProductImagePlaceholder
-              name={product.name}
-              sku={product.sku}
-              category={product.category?.name}
-              size="md"
-            />
-          )}
-        </div>
+      {/* Product Image Frame */}
+      <div className="relative aspect-square w-full overflow-hidden bg-white mb-4">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-contain p-2 rh-image-zoom transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <ProductImagePlaceholder
+            name={product.name}
+            sku={product.sku}
+            category={product.category?.name}
+            size="md"
+          />
+        )}
 
-        {/* Hover Overlay Badge */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/15">
-          <span className="translate-y-3 rounded-sm bg-white/95 px-4 py-2 text-xs font-semibold tracking-wider text-neutral-800 uppercase opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
-            View Detail
+        {/* RH Hover Overlay Action */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-center justify-center">
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-5 py-2.5 bg-white text-neutral-900 text-[10px] tracking-[0.25em] uppercase font-medium shadow-md">
+            VIEW PIECE
           </span>
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="space-y-1">
-        <span className="text-xs font-medium tracking-wider text-teal-600 uppercase">
-          {product.category?.name}
+      {/* Product Meta & Typography */}
+      <div className="space-y-1.5 mt-auto">
+        <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
+          {product.category?.name || 'COLLECTION'}
         </span>
-        <h3 className="font-display text-lg leading-snug font-medium text-neutral-800 transition-colors group-hover:text-teal-600">
+        <h4 className="font-serif text-base tracking-[0.04em] uppercase text-neutral-900 group-hover:text-neutral-600 transition-colors line-clamp-1 font-normal">
           {product.name}
-        </h3>
+        </h4>
+        <p className="text-[11px] text-neutral-500 tracking-wide font-light line-clamp-1">
+          {product.sku ? `SKU: ${product.sku}` : 'Handcrafted Teak & All-Weather Fiber'}
+        </p>
+
+        {/* Pricing & Trade Note */}
+        <div className="pt-2 border-t border-neutral-200/60 flex items-center justify-between text-[11px] tracking-wider text-neutral-800">
+          <span className="font-medium">TRADE & RESIDENCE</span>
+          <span className="text-[10px] tracking-[0.2em] text-neutral-500 uppercase">
+            EXPLORE
+          </span>
+        </div>
       </div>
     </Link>
   );
 };
+
+export default ProductCard;

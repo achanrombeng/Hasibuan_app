@@ -1,5 +1,6 @@
 import { BreadcrumbStructuredData, SEOHead } from '@/components/seo';
 import { CatalogModal } from '@/components/shop/CatalogModal';
+import { ProductCard } from '@/components/shop/ProductCard';
 import { ProductImagePlaceholder } from '@/components/shop/ProductImagePlaceholder';
 import { ShopLayout } from '@/layouts/ShopLayout';
 import { SharedData } from '@/types';
@@ -246,61 +247,59 @@ export default function ProductsIndex({
       <BreadcrumbStructuredData items={breadcrumbItems} />
       <div className="bg-noise" />
       <ShopLayout>
-        <main className="min-h-screen bg-sand-50 pb-20">
-          {/* Hero Banner */}
-          <div className="mb-12 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
-            <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-              <h1 className="mb-3 font-serif text-4xl font-bold md:text-5xl">
+        <main className="min-h-screen bg-white pb-24 select-none">
+          {/* Monumental Editorial Header - Black Luxury Banner */}
+          <div className="border-b border-neutral-900 bg-neutral-950 py-16 md:py-24 px-6 text-white">
+            <div className="mx-auto max-w-[1720px] text-center space-y-3">
+              <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-400">
+                ARCHITECTURAL CATALOGUE
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-white uppercase">
                 {normalizedCurrentCategory
                   ? normalizedCurrentCategory.name
-                  : 'All Products'}
+                  : 'CURATED COLLECTIONS'}
               </h1>
-              <p className="text-xl opacity-90">
+              <div className="w-12 h-[1px] bg-neutral-700 mx-auto mt-4" />
+              <p className="mx-auto max-w-2xl text-xs md:text-sm font-light text-neutral-300 tracking-wide pt-2">
                 {products.meta.total}{' '}
                 {products.meta.total === 1
-                  ? 'quality product found'
-                  : 'quality products found'}
+                  ? 'ARCHITECTURAL PIECE DOCUMENTED'
+                  : 'ARCHITECTURAL PIECES DOCUMENTED'}
               </p>
             </div>
           </div>
 
-          <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-            {/* Category Cards Showcase Grid (FIRST SECTION) */}
-            <div className="mb-14">
-              <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div className="mx-auto max-w-[1720px] px-6 sm:px-12 py-12 md:py-16">
+            {/* Category Cards Showcase Grid */}
+            <div className="mb-16">
+              <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end border-b border-neutral-200/80 pb-6">
                 <div>
-                  <div className="mb-2 flex flex-wrap items-center gap-2.5">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 px-3.5 py-1 text-xs font-semibold tracking-wider text-teal-700 uppercase">
-                      <Layers size={14} />
-                      <span>Product Categories</span>
-                    </div>
-                  </div>
-                  <h2 className="font-serif text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl">
-                    Explore by Category
+                  <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block mb-1">
+                    GALLERY ARCHIVES
+                  </span>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-light uppercase tracking-wide text-neutral-900">
+                    EXPLORE BY CATEGORY
                   </h2>
-                  <p className="mt-1 text-sm text-neutral-500">
-                    Select a furniture category to view our curated collection
-                  </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  {/* Action Button: E-Catalog PDF / Word */}
+                  {/* Action Button: Source Book Modal */}
                   <button
                     type="button"
                     onClick={() => setCatalogModalOpen(true)}
-                    className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-xs font-semibold text-white shadow-md transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-lg active:scale-95"
+                    className="inline-flex cursor-pointer items-center gap-2 border border-neutral-900 bg-neutral-900 px-5 py-2.5 text-[11px] font-medium tracking-[0.2em] text-white uppercase hover:bg-neutral-800 transition-colors"
                   >
-                    <BookOpen size={16} />
-                    <span>E-CATALOG</span>
+                    <BookOpen size={14} />
+                    <span>SOURCE BOOKS</span>
                   </button>
 
                   {selectedCategory && (
                     <Link
                       href="/shop/products"
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-teal-600 transition-colors hover:text-teal-700 hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wider text-neutral-700 hover:text-black uppercase transition-colors"
                     >
-                      <span>View All Products</span>
-                      <ArrowRight size={16} />
+                      <span>VIEW ALL</span>
+                      <ArrowRight size={14} />
                     </Link>
                   )}
                 </div>
@@ -322,46 +321,36 @@ export default function ProductsIndex({
                     <Link
                       key={cat.id}
                       href={targetHref}
-                      className={`group relative overflow-hidden rounded-2xl bg-neutral-900 text-left transition-all duration-400 ${
+                      className={`group relative overflow-hidden bg-neutral-900 text-left transition-all duration-300 border ${
                         isSelected
-                          ? 'scale-[1.02] shadow-2xl ring-4 ring-teal-500'
-                          : 'hover:-translate-y-1.5 hover:shadow-xl'
+                          ? 'border-neutral-900 ring-2 ring-neutral-900'
+                          : 'border-neutral-200/80 hover:border-neutral-400'
                       }`}
                     >
                       <div className="relative aspect-[4/3] w-full overflow-hidden">
                         <img
                           src={bgImage}
                           alt={cat.name}
-                          className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
+                          className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                         />
                         {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 transition-opacity group-hover:opacity-90" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 transition-opacity group-hover:opacity-95" />
 
                         {/* Active Status Badge */}
                         {isSelected && (
-                          <div className="absolute top-3 right-3 rounded-full bg-teal-500 px-3 py-1 text-xs font-semibold text-white shadow-md">
-                            Active
+                          <div className="absolute top-3 right-3 bg-white px-2.5 py-1 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-900 shadow-sm">
+                            SELECTED
                           </div>
                         )}
 
                         {/* Category Info Overlay */}
                         <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-5">
-                          <span className="text-xs font-medium tracking-wider text-teal-300 uppercase">
-                            {cat.products_count !== undefined
-                              ? `${cat.products_count} ${cat.products_count === 1 ? 'Product' : 'Products'}`
-                              : 'Furniture Collection'}
+                          <span className="text-[10px] font-light tracking-[0.25em] text-neutral-300 uppercase">
+                            COLLECTION
                           </span>
-                          <h3 className="mt-0.5 font-serif text-lg font-bold text-white transition-colors group-hover:text-teal-200 md:text-xl">
+                          <h3 className="mt-0.5 font-serif text-base md:text-lg font-light uppercase tracking-wide text-white group-hover:text-neutral-200 transition-colors">
                             {cat.name}
                           </h3>
-                          <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-white/80 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">
-                            <span>
-                              {isSelected
-                                ? 'Active Category'
-                                : 'Select Category'}
-                            </span>
-                            <ChevronRight size={14} />
-                          </div>
                         </div>
                       </div>
                     </Link>
@@ -406,20 +395,20 @@ export default function ProductsIndex({
             </div>
 
             {/* Search & Controls Header */}
-            <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+            <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center border-b border-neutral-200/80 pb-6">
               {/* Breadcrumb */}
-              <nav className="flex items-center gap-2 text-sm text-neutral-500">
+              <nav className="flex items-center gap-2 text-xs tracking-wider uppercase font-light text-neutral-500">
                 <Link
                   href="/shop"
-                  className="transition-colors hover:text-teal-600"
+                  className="transition-colors hover:text-black"
                 >
-                  Home
+                  HOME
                 </Link>
                 <span>/</span>
                 <span className="font-medium text-neutral-900">
                   {normalizedCurrentCategory
-                    ? normalizedCurrentCategory.name
-                    : 'All Products'}
+                    ? normalizedCurrentCategory.name.toUpperCase()
+                    : 'ALL PRODUCTS'}
                 </span>
               </nav>
 
@@ -427,36 +416,36 @@ export default function ProductsIndex({
               <div className="flex items-center gap-3">
                 <div className="relative flex-1 md:w-80">
                   <Search
-                    className="absolute top-1/2 left-4 -translate-y-1/2 text-neutral-400"
-                    size={20}
+                    className="absolute top-1/2 left-3.5 -translate-y-1/2 text-neutral-400"
+                    size={16}
                   />
                   <input
                     type="text"
-                    placeholder="Search products..."
+                    placeholder="SEARCH COLLECTION..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-200 bg-white py-3 pr-4 pl-12 shadow-sm transition-colors focus:border-teal-500 focus:outline-none"
+                    className="w-full border border-neutral-200 bg-white py-2.5 pr-4 pl-10 text-xs tracking-wider uppercase text-neutral-900 transition-colors focus:border-neutral-900 focus:outline-none"
                   />
                 </div>
                 <button
                   onClick={() => setShowFilters(true)}
-                  className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-700 shadow-sm transition-all hover:border-teal-500 hover:text-teal-600 active:scale-[0.98]"
+                  className="flex items-center gap-2 border border-neutral-200 bg-white px-4 py-2.5 text-[11px] tracking-[0.2em] uppercase font-light text-neutral-800 transition-colors hover:border-neutral-900 cursor-pointer"
                 >
-                  <SlidersHorizontal size={20} />
-                  <span className="hidden sm:inline">Filter</span>
+                  <SlidersHorizontal size={15} />
+                  <span>FILTER</span>
                 </button>
-                <div className="hidden items-center gap-1 rounded-sm border border-neutral-200 p-1 md:flex">
+                <div className="hidden items-center gap-1 border border-neutral-200 p-1 md:flex">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`rounded-sm p-2 transition-colors ${viewMode === 'grid' ? 'bg-teal-500 text-white' : 'text-neutral-500 hover:bg-neutral-100'}`}
+                    className={`p-1.5 transition-colors cursor-pointer ${viewMode === 'grid' ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:bg-neutral-100'}`}
                   >
-                    <Grid3X3 size={18} />
+                    <Grid3X3 size={15} />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`rounded-sm p-2 transition-colors ${viewMode === 'list' ? 'bg-teal-500 text-white' : 'text-neutral-500 hover:bg-neutral-100'}`}
+                    className={`p-1.5 transition-colors cursor-pointer ${viewMode === 'list' ? 'bg-neutral-900 text-white' : 'text-neutral-500 hover:bg-neutral-100'}`}
                   >
-                    <LayoutList size={18} />
+                    <LayoutList size={15} />
                   </button>
                 </div>
               </div>
@@ -464,44 +453,41 @@ export default function ProductsIndex({
 
             {/* Active Filters */}
             {hasActiveFilters && (
-              <div className="mb-6 flex flex-wrap items-center gap-2">
-                <span className="text-sm text-neutral-500">
-                  Active Filters:
+              <div className="mb-6 flex flex-wrap items-center gap-2 text-xs">
+                <span className="tracking-wider uppercase text-neutral-400 font-light">
+                  ACTIVE:
                 </span>
 
                 {selectedCategory && (
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className="flex items-center gap-1 rounded-full bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100"
+                    className="flex items-center gap-1.5 border border-neutral-300 bg-neutral-50 px-3 py-1 text-xs tracking-wider uppercase font-light text-neutral-800 hover:border-neutral-900 transition-colors"
                   >
-                    {normalizedCategories.find(
-                      (c: ApiCategory) =>
-                        Number(c.id) === Number(selectedCategory),
-                    )?.name ||
-                      (normalizedCurrentCategory &&
-                      Number(normalizedCurrentCategory.id) ===
-                        Number(selectedCategory)
-                        ? normalizedCurrentCategory.name
-                        : 'Category')}
-                    <X size={14} />
+                    <span>
+                      {normalizedCategories.find(
+                        (c: ApiCategory) =>
+                          Number(c.id) === Number(selectedCategory),
+                      )?.name || 'Category'}
+                    </span>
+                    <X size={12} />
                   </button>
                 )}
 
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="flex items-center gap-1 rounded-sm bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100"
+                    className="flex items-center gap-1.5 border border-neutral-300 bg-neutral-50 px-3 py-1 text-xs tracking-wider uppercase font-light text-neutral-800 hover:border-neutral-900 transition-colors"
                   >
-                    Search: {searchQuery}
-                    <X size={14} />
+                    <span>{searchQuery}</span>
+                    <X size={12} />
                   </button>
                 )}
 
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-neutral-500 underline hover:text-neutral-900"
+                  className="text-xs tracking-wider uppercase text-neutral-500 underline hover:text-black ml-2"
                 >
-                  Clear All
+                  CLEAR ALL
                 </button>
               </div>
             )}
@@ -697,16 +683,16 @@ function FilterDrawer({
           <div className="flex gap-3">
             <button
               onClick={onApply}
-              className="flex-1 rounded-sm bg-teal-600 py-3 font-medium text-white shadow-sm transition-colors hover:bg-teal-700"
+              className="flex-1 bg-neutral-900 py-3.5 text-[11px] tracking-[0.25em] uppercase font-medium text-white hover:bg-neutral-800 transition-colors cursor-pointer"
             >
-              Apply Filters
+              APPLY FILTERS
             </button>
             {hasActiveFilters && (
               <button
                 onClick={onClear}
-                className="rounded-sm border border-neutral-200 bg-white px-4 py-3 text-neutral-600 transition-colors hover:border-neutral-300 hover:text-neutral-900"
+                className="border border-neutral-300 bg-white px-5 py-3.5 text-[11px] tracking-[0.2em] uppercase font-light text-neutral-800 hover:border-neutral-900 transition-colors cursor-pointer"
               >
-                Reset
+                RESET
               </button>
             )}
           </div>
@@ -726,141 +712,76 @@ interface ProductGridProps {
 function ProductGrid({ products, viewMode }: ProductGridProps) {
   if (products.length === 0) {
     return (
-      <div className="py-20 text-center">
-        <ShoppingBag className="mx-auto mb-4 text-neutral-300" size={64} />
-        <h3 className="mb-2 text-xl font-medium text-neutral-900">
-          No products found
+      <div className="py-24 text-center border border-neutral-200/80 bg-[#fafaf9] p-12">
+        <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block mb-2">
+          NO PIECES DOCUMENTED
+        </span>
+        <h3 className="font-serif text-2xl font-light uppercase text-neutral-900 mb-2">
+          No Products Match Your Criteria
         </h3>
-        <p className="text-neutral-500">
-          Try adjusting your filter or search keywords
+        <p className="text-xs text-neutral-500 font-light max-w-md mx-auto">
+          Try clearing filters or choosing another category from our archives.
         </p>
       </div>
     );
   }
 
-  return (
-    <div
-      className={
-        viewMode === 'grid'
-          ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'
-          : 'space-y-6'
-      }
-    >
-      {products.map((product, index) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          viewMode={viewMode}
-          index={index}
-        />
-      ))}
-    </div>
-  );
-}
-
-// ==================== Product Card ====================
-interface ProductCardProps {
-  product: ApiProduct;
-  viewMode: 'grid' | 'list';
-  index: number;
-}
-
-function ProductCard({ product, viewMode, index }: ProductCardProps) {
-  const imageUrl =
-    product.primary_image?.image_url || product.images?.[0]?.image_url;
-
   if (viewMode === 'list') {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05 }}
-      >
-        <Link
-          href={`/shop/products/${product.slug}`}
-          className="group flex gap-6 rounded-2xl border border-neutral-100 bg-white p-5 transition-all duration-300 hover:border-neutral-200 hover:shadow-lg"
-        >
-          <div className="relative flex h-48 w-48 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-neutral-50 p-3">
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={product.name}
-                className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
-              />
-            ) : (
-              <ProductImagePlaceholder
-                name={product.name}
-                sku={product.sku}
-                category={product.category?.name}
-                size="sm"
-              />
-            )}
-          </div>
-          <div className="flex flex-1 flex-col justify-between py-2">
-            <div>
-              <p className="mb-1 text-xs font-semibold tracking-wider text-neutral-400 uppercase">
-                {product.category?.name}
-              </p>
-              <h3 className="mb-2 font-serif text-xl font-bold text-neutral-900 transition-colors group-hover:text-teal-700">
-                {product.name}
-              </h3>
-              <p className="line-clamp-2 text-sm leading-relaxed text-neutral-600">
-                {product.short_description}
-              </p>
-            </div>
-            <div className="flex items-center justify-end pt-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-teal-600 uppercase group-hover:text-teal-700">
-                View Details &rarr;
-              </span>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
+      <div className="space-y-4">
+        {products.map((product) => {
+          const imageUrl =
+            product.primary_image?.image_url || product.images?.[0]?.image_url;
+
+          return (
+            <Link
+              key={product.id}
+              href={`/shop/products/${product.slug}`}
+              className="group flex flex-col sm:flex-row gap-6 border border-neutral-200/80 bg-[#fafaf9] p-5 hover:border-neutral-400 transition-all duration-300"
+            >
+              <div className="relative aspect-square w-full sm:w-48 shrink-0 overflow-hidden bg-white">
+                {imageUrl ? (
+                  <img
+                    src={imageUrl}
+                    alt={product.name}
+                    className="w-full h-full object-contain p-2 transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <ProductImagePlaceholder name={product.name} sku={product.sku} size="sm" />
+                )}
+              </div>
+              <div className="flex flex-1 flex-col justify-between py-1">
+                <div className="space-y-1.5">
+                  <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
+                    {product.category?.name || 'COLLECTION'}
+                  </span>
+                  <h4 className="font-serif text-lg tracking-[0.04em] uppercase text-neutral-900 group-hover:text-neutral-600 transition-colors">
+                    {product.name}
+                  </h4>
+                  <p className="text-xs text-neutral-500 font-light line-clamp-2 leading-relaxed">
+                    {product.short_description || 'Handcrafted from premium teak and all-weather materials.'}
+                  </p>
+                </div>
+                <div className="pt-4 flex items-center justify-between border-t border-neutral-200/60 mt-4 text-[11px] tracking-wider text-neutral-800">
+                  <span className="font-medium">TRADE & RESIDENCE</span>
+                  <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-900 group-hover:translate-x-1 transition-transform">
+                    VIEW PIECE &rarr;
+                  </span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      className="group"
-    >
-      <Link
-        href={`/shop/products/${product.slug}`}
-        className="block transition-all duration-400 ease-out hover:z-10 hover:-translate-y-2 hover:scale-105"
-      >
-        <div className="relative mb-4 flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-neutral-100 bg-white p-3 shadow-xs transition-all duration-500 group-hover:shadow-2xl sm:p-4">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={product.name}
-              className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
-            />
-          ) : (
-            <ProductImagePlaceholder
-              name={product.name}
-              sku={product.sku}
-              category={product.category?.name}
-              size="md"
-            />
-          )}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/10">
-            <span className="translate-y-3 rounded-full bg-white/95 px-5 py-2.5 text-xs font-bold tracking-wider text-neutral-800 uppercase opacity-0 shadow-lg backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white">
-              View Detail
-            </span>
-          </div>
-        </div>
-        <div>
-          <p className="mb-1 text-xs font-semibold tracking-wider text-neutral-400 uppercase">
-            {product.category?.name}
-          </p>
-          <h3 className="mb-1.5 font-serif text-lg font-bold text-neutral-900 transition-colors group-hover:text-teal-700">
-            {product.name}
-          </h3>
-        </div>
-      </Link>
-    </motion.div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
   );
 }
 
@@ -922,9 +843,9 @@ function Pagination({ meta }: PaginationProps) {
           onClick={() => goToPage(current - 1)}
           disabled={current === 1}
           aria-label="Previous Page"
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-600 shadow-2xs transition-all hover:border-teal-500 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center border border-neutral-200 bg-white text-neutral-600 transition-colors hover:border-neutral-900 hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={16} />
         </button>
         {pages.map((page, i) =>
           typeof page === 'number' ? (
@@ -932,10 +853,10 @@ function Pagination({ meta }: PaginationProps) {
               key={i}
               type="button"
               onClick={() => goToPage(page)}
-              className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-sm font-semibold shadow-2xs transition-all ${
+              className={`flex h-10 w-10 cursor-pointer items-center justify-center text-xs tracking-wider transition-colors ${
                 page === current
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'border border-neutral-200 bg-white text-neutral-700 hover:border-teal-500 hover:text-teal-700'
+                  ? 'bg-neutral-900 text-white font-medium'
+                  : 'border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-900 hover:text-black'
               }`}
             >
               {page}
@@ -954,9 +875,9 @@ function Pagination({ meta }: PaginationProps) {
           onClick={() => goToPage(current + 1)}
           disabled={current === last}
           aria-label="Next Page"
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-neutral-200 bg-white text-neutral-600 shadow-2xs transition-all hover:border-teal-500 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center border border-neutral-200 bg-white text-neutral-600 transition-colors hover:border-neutral-900 hover:text-black disabled:cursor-not-allowed disabled:opacity-30"
         >
-          <ChevronRight size={18} />
+          <ChevronRight size={16} />
         </button>
       </div>
     </div>

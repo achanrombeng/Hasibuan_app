@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@200;300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -8,14 +8,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* Font Families - Modern Sans-Serif (per design.md) */
+  /* Font Families - RH Vitruvian Architecture (Cormorant Garamond serif + Inter sans) */
   --font-sans:
-    'Plus Jakarta Sans', 'Inter', 'Manrope', ui-sans-serif, system-ui,
+    'Inter', 'Plus Jakarta Sans', ui-sans-serif, system-ui,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   --font-serif:
-    'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif; /* No serif as per design.md */
-  --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, sans-serif;
+    'Cormorant Garamond', 'Cinzel', Didot, 'Bodoni MT', Georgia, serif;
+  --font-display:
+    'Cormorant Garamond', 'Cinzel', Didot, 'Bodoni MT', Georgia, serif;
 
   /* Primary Brand Bronze (derived from Turkish website #BB976D) */
   --color-teal-50: #faf7f2;
@@ -291,3 +292,39 @@
 .df-container .df-viewer {
   height: 100% !important;
 }
+
+/* RH (Restoration Hardware) Architectural Design Utilities */
+.rh-tracking-wide {
+  letter-spacing: 0.22em;
+}
+
+.rh-tracking-wider {
+  letter-spacing: 0.32em;
+}
+
+.rh-tracking-widest {
+  letter-spacing: 0.42em;
+}
+
+.rh-serif {
+  font-family: var(--font-serif);
+  font-feature-settings: 'liga', 'clig', 'dlig';
+}
+
+.rh-border-subtle {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.dark .rh-border-subtle {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Subtle image zoom transition on hover */
+.rh-image-zoom {
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
+}
+
+.group:hover .rh-image-zoom {
+  transform: scale(1.04);
+}
+

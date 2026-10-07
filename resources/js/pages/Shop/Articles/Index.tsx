@@ -1,6 +1,5 @@
 import Pagination from '@/components/pagination';
 import { SEOHead } from '@/components/seo';
-import { Badge } from '@/components/ui/badge';
 import ShopLayout from '@/layouts/ShopLayout';
 import { Link, router } from '@inertiajs/react';
 import {
@@ -137,48 +136,53 @@ export default function ArticlesIndex({
   return (
     <>
       <SEOHead
-        title="Articles & News"
-        description="Discover the latest inspiration and tips on furniture and home decor."
+        title="Journal & News"
+        description="Discover inspiration, design essays, and material craftsmanship insights."
         keywords={[
+          'journal',
           'articles',
           'news',
-          'furniture tips',
-          'outdoor furniture',
-          'decor inspiration',
+          'furniture design',
+          'craftsmanship',
+          'architectural living',
         ]}
       />
       <div className="bg-noise" />
       <ShopLayout>
-        <main className="min-h-screen bg-sand-50 pb-20">
-          {/* Hero */}
-          <div className="mb-12 bg-gradient-to-r from-teal-600 to-teal-700 py-16 text-white">
-            <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-              <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                Articles & News
+        <main className="min-h-screen bg-white pb-24">
+          {/* Monumental Editorial Header - Black Luxury Banner */}
+          <div className="border-b border-neutral-900 bg-neutral-950 py-16 md:py-24 px-6 text-white">
+            <div className="mx-auto max-w-[1720px] text-center space-y-3">
+              <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-400">
+                THE ARCHITECTURAL JOURNAL
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-white uppercase">
+                DESIGN ESSAYS & DISPATCHES
               </h1>
-              <p className="text-xl opacity-90">
-                Discover the latest inspiration and tips on furniture
+              <div className="w-12 h-[1px] bg-neutral-700 mx-auto mt-4" />
+              <p className="mx-auto max-w-2xl text-xs md:text-sm font-light text-neutral-300 tracking-wide pt-2">
+                Explorations in material integrity, artisanal craftsmanship, and enduring architectural living.
               </p>
             </div>
           </div>
 
-          <div className="mx-auto max-w-[1400px] px-6 md:px-12">
+          <div className="mx-auto max-w-[1720px] px-6 sm:px-12 pt-12 md:pt-16">
             {/* Search & Filter Section */}
-            <div className="mx-auto mb-10 max-w-3xl space-y-4">
-              {/* Main Input & Buttons Bar */}
+            <div className="mx-auto mb-14 max-w-3xl space-y-4">
+              {/* Main Input & Action Buttons Bar */}
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {/* Search Input */}
                 <div className="relative flex-1">
-                  <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+                  <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-neutral-400" />
                   <input
                     type="text"
-                    placeholder="Search articles & news..."
+                    placeholder="Search articles & essays..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleSearch();
                     }}
-                    className="w-full rounded-xl border border-neutral-200 bg-white py-3 pr-10 pl-11 text-sm text-neutral-900 shadow-xs transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                    className="w-full border border-neutral-300 bg-white py-3 pr-10 pl-11 text-xs tracking-wider text-neutral-900 placeholder-neutral-400 transition-colors focus:border-neutral-900 focus:outline-none"
                   />
                   {search && (
                     <button
@@ -187,7 +191,7 @@ export default function ArticlesIndex({
                         setSearch('');
                         applyFilters({ search: '' });
                       }}
-                      className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+                      className="absolute top-1/2 right-3 -translate-y-1/2 p-1 text-neutral-400 hover:text-neutral-900"
                       title="Clear search"
                     >
                       <X className="h-4 w-4" />
@@ -200,30 +204,32 @@ export default function ArticlesIndex({
                   <button
                     type="button"
                     onClick={handleSearch}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-teal-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition-all hover:bg-teal-700 active:scale-95 sm:flex-none"
+                    className="inline-flex flex-1 items-center justify-center gap-2 bg-neutral-900 px-6 py-3 text-[11px] font-medium tracking-[0.2em] text-white uppercase transition-colors hover:bg-neutral-800 sm:flex-none"
                   >
-                    <Search className="h-4 w-4" />
+                    <Search className="h-3.5 w-3.5" />
                     <span>Search</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setShowFilters(!showFilters)}
-                    className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium shadow-sm transition-all active:scale-95 sm:flex-none ${
+                    className={`inline-flex flex-1 items-center justify-center gap-2 border px-5 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-colors sm:flex-none ${
                       showFilters || activeFilterCount > 0
-                        ? 'border-teal-600 bg-teal-50 text-teal-800 ring-2 ring-teal-600/20'
-                        : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50'
+                        ? 'border-neutral-900 bg-neutral-900 text-white'
+                        : 'border-neutral-300 bg-white text-neutral-800 hover:border-neutral-900'
                     }`}
                   >
-                    <SlidersHorizontal className="h-4 w-4 text-teal-600" />
+                    <SlidersHorizontal className="h-3.5 w-3.5" />
                     <span>Filter</span>
                     {activeFilterCount > 0 && (
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-[11px] font-bold text-white">
+                      <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold ${
+                        showFilters ? 'bg-white text-neutral-900' : 'bg-neutral-900 text-white'
+                      }`}>
                         {activeFilterCount}
                       </span>
                     )}
                     <ChevronDown
-                      className={`h-4 w-4 text-neutral-500 transition-transform duration-200 ${
+                      className={`h-3.5 w-3.5 transition-transform duration-200 ${
                         showFilters ? 'rotate-180' : ''
                       }`}
                     />
@@ -233,26 +239,26 @@ export default function ArticlesIndex({
 
               {/* Expandable Filter Panel */}
               {showFilters && (
-                <div className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition-all">
+                <div className="space-y-5 border border-neutral-200/80 bg-[#fafaf9] p-6 transition-all">
                   {/* Sort By */}
                   <div>
-                    <label className="mb-2 block text-xs font-semibold tracking-wider text-neutral-500 uppercase">
+                    <label className="mb-2.5 block text-[10px] font-medium tracking-[0.25em] text-neutral-500 uppercase">
                       Sort By
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {[
-                        { id: 'latest', label: 'Latest (Terbaru)' },
-                        { id: 'oldest', label: 'Oldest (Terlama)' },
-                        { id: 'popular', label: 'Most Viewed (Populer)' },
+                        { id: 'latest', label: 'Latest Dispatches' },
+                        { id: 'oldest', label: 'Archive Order' },
+                        { id: 'popular', label: 'Most Read' },
                       ].map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
                           onClick={() => handleSortChange(opt.id)}
-                          className={`rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+                          className={`px-4 py-2 text-[10px] tracking-[0.2em] uppercase font-medium transition-colors ${
                             sort === opt.id
-                              ? 'bg-teal-600 text-white shadow-xs'
-                              : 'border border-neutral-200 bg-neutral-50 text-neutral-700 hover:bg-neutral-100'
+                              ? 'bg-neutral-900 text-white'
+                              : 'border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900'
                           }`}
                         >
                           {opt.label}
@@ -264,17 +270,17 @@ export default function ArticlesIndex({
                   {/* Tag Filter */}
                   {availableTags.length > 0 && (
                     <div>
-                      <label className="mb-2 block text-xs font-semibold tracking-wider text-neutral-500 uppercase">
-                        Filter by Topic / Tag
+                      <label className="mb-2.5 block text-[10px] font-medium tracking-[0.25em] text-neutral-500 uppercase">
+                        Filter by Topic
                       </label>
                       <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
                           onClick={() => handleTagSelect('')}
-                          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                          className={`px-3.5 py-1.5 text-[10px] tracking-[0.2em] uppercase font-medium transition-colors ${
                             !tag
-                              ? 'bg-neutral-900 text-white shadow-xs'
-                              : 'border border-neutral-200 bg-neutral-50 text-neutral-700 hover:bg-neutral-100'
+                              ? 'bg-neutral-900 text-white'
+                              : 'border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900'
                           }`}
                         >
                           All Topics
@@ -284,13 +290,13 @@ export default function ArticlesIndex({
                             key={t}
                             type="button"
                             onClick={() => handleTagSelect(t)}
-                            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                            className={`px-3.5 py-1.5 text-[10px] tracking-[0.2em] uppercase font-medium transition-colors ${
                               tag === t
-                                ? 'bg-teal-600 text-white shadow-xs'
-                                : 'border border-neutral-200 bg-neutral-50 text-neutral-700 hover:border-teal-300 hover:bg-teal-50/50 hover:text-teal-700'
+                                ? 'bg-neutral-900 text-white'
+                                : 'border border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900'
                             }`}
                           >
-                            #{t}
+                            {t}
                           </button>
                         ))}
                       </div>
@@ -299,21 +305,21 @@ export default function ArticlesIndex({
 
                   {/* Reset Button */}
                   {activeFilterCount > 0 && (
-                    <div className="flex items-center justify-between border-t border-neutral-100 pt-3 text-xs text-neutral-500">
-                      <span>
+                    <div className="flex items-center justify-between border-t border-neutral-200 pt-4 text-xs text-neutral-500">
+                      <span className="text-[11px] font-light">
                         Active filters:{' '}
                         {tag && (
-                          <strong className="mr-2 text-neutral-900">
-                            Tag: #{tag}
+                          <strong className="mr-2 font-medium text-neutral-900 uppercase">
+                            Topic: {tag}
                           </strong>
                         )}
                         {search && (
-                          <strong className="mr-2 text-neutral-900">
+                          <strong className="mr-2 font-medium text-neutral-900">
                             "{search}"
                           </strong>
                         )}
                         {sort !== 'latest' && (
-                          <strong className="text-neutral-900">
+                          <strong className="font-medium text-neutral-900 uppercase">
                             Sort: {sort}
                           </strong>
                         )}
@@ -321,22 +327,22 @@ export default function ArticlesIndex({
                       <button
                         type="button"
                         onClick={handleReset}
-                        className="inline-flex items-center gap-1 font-medium text-red-600 hover:text-red-700 hover:underline"
+                        className="inline-flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-neutral-900 hover:underline"
                       >
-                        <RotateCcw className="h-3.5 w-3.5" />
-                        Reset All Filters
+                        <RotateCcw className="h-3 w-3" />
+                        Reset Filters
                       </button>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Active Filter Badges (shown when filter panel is collapsed) */}
+              {/* Active Filter Badges */}
               {!showFilters && activeFilterCount > 0 && (
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="text-neutral-500">Filters:</span>
+                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                  <span className="text-[10px] tracking-wider uppercase text-neutral-400">Filters:</span>
                   {search && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-3 py-1 text-neutral-700 shadow-2xs">
+                    <span className="inline-flex items-center gap-1.5 border border-neutral-300 bg-white px-3 py-1 text-[11px] text-neutral-800">
                       "{search}"
                       <button
                         type="button"
@@ -344,31 +350,31 @@ export default function ArticlesIndex({
                           setSearch('');
                           applyFilters({ search: '' });
                         }}
-                        className="hover:text-red-600"
+                        className="hover:text-neutral-900"
                       >
                         <X className="h-3 w-3" />
                       </button>
                     </span>
                   )}
                   {tag && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 font-medium text-teal-800 shadow-2xs">
-                      #{tag}
+                    <span className="inline-flex items-center gap-1.5 border border-neutral-900 bg-neutral-900 px-3 py-1 text-[10px] tracking-wider uppercase text-white">
+                      {tag}
                       <button
                         type="button"
                         onClick={() => handleTagSelect('')}
-                        className="hover:text-red-600"
+                        className="hover:opacity-75"
                       >
                         <X className="h-3 w-3" />
                       </button>
                     </span>
                   )}
                   {sort !== 'latest' && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-3 py-1 text-neutral-700 shadow-2xs">
+                    <span className="inline-flex items-center gap-1.5 border border-neutral-300 bg-white px-3 py-1 text-[11px] uppercase text-neutral-800">
                       Sort: {sort}
                       <button
                         type="button"
                         onClick={() => handleSortChange('latest')}
-                        className="hover:text-red-600"
+                        className="hover:text-neutral-900"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -377,7 +383,7 @@ export default function ArticlesIndex({
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="ml-1 text-xs font-semibold text-red-600 hover:underline"
+                    className="ml-2 text-[10px] tracking-wider uppercase font-medium text-neutral-500 hover:text-neutral-900 hover:underline"
                   >
                     Clear all
                   </button>
@@ -387,73 +393,85 @@ export default function ArticlesIndex({
 
             {/* Articles Grid */}
             {!hasArticles ? (
-              <div className="py-16 text-center">
-                <p className="text-gray-500">No articles found</p>
+              <div className="py-24 text-center">
+                <p className="font-serif text-xl font-light text-neutral-500 uppercase tracking-widest">
+                  No essays found
+                </p>
+                <p className="mt-2 text-xs text-neutral-400 font-light">
+                  Try adjusting your search query or filter criteria.
+                </p>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
                   {articles.data.map((article) => (
                     <Link
                       key={article.id}
                       href={`/shop/articles/${article.slug}`}
-                      className="group overflow-hidden rounded-xl border border-terra-100 bg-white shadow-sm transition-all hover:shadow-md"
+                      className="group flex flex-col border border-neutral-200/80 bg-white p-5 transition-all duration-300 hover:border-neutral-400"
                     >
                       {/* Featured Image */}
-                      <div className="aspect-video overflow-hidden bg-gray-100">
+                      <div className="aspect-[16/10] w-full overflow-hidden bg-neutral-100 mb-5 relative">
                         {article.featured_image_url ? (
                           <img
                             src={article.featured_image_url}
                             alt={article.title}
-                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center">
-                            <span className="text-4xl text-gray-300">📄</span>
+                          <div className="flex h-full items-center justify-center bg-neutral-50">
+                            <span className="font-serif text-sm tracking-widest uppercase text-neutral-300">
+                              ARCHITECTURAL DISPATCH
+                            </span>
                           </div>
                         )}
                       </div>
 
                       {/* Content */}
-                      <div className="p-5">
-                        <h3 className="line-clamp-2 text-xl font-semibold text-gray-900 transition-colors group-hover:text-terra-600">
-                          {article.title}
-                        </h3>
+                      <div className="flex flex-1 flex-col justify-between space-y-3">
+                        <div>
+                          <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block mb-2">
+                            ESSAY · {article.formatted_published_at || 'ARCHIVE'}
+                          </span>
 
-                        <p className="mt-2 line-clamp-3 text-sm text-gray-600">
-                          {article.excerpt_truncated}
-                        </p>
+                          <h3 className="font-serif text-xl font-light tracking-[0.04em] uppercase text-neutral-900 transition-colors group-hover:text-neutral-600 line-clamp-2">
+                            {article.title}
+                          </h3>
 
-                        {/* Metadata */}
-                        <div className="mt-4 flex flex-wrap gap-3 text-xs text-gray-500">
-                          <div className="flex items-center">
-                            <User className="mr-1 h-3.5 w-3.5" />
-                            {article.author_name}
-                          </div>
-                          <div className="flex items-center">
-                            <Calendar className="mr-1 h-3.5 w-3.5" />
-                            {article.formatted_published_at}
-                          </div>
-                          <div className="flex items-center">
-                            <Clock className="mr-1 h-3.5 w-3.5" />
-                            {article.read_time} min read
-                          </div>
+                          <p className="mt-2 text-xs font-light leading-relaxed text-neutral-500 line-clamp-3">
+                            {article.excerpt_truncated}
+                          </p>
                         </div>
 
-                        {/* Tags */}
-                        {article.tags && article.tags.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {article.tags.slice(0, 3).map((t, idx) => (
-                              <Badge
-                                key={idx}
-                                variant="secondary"
-                                className="text-xs"
-                              >
-                                {t}
-                              </Badge>
-                            ))}
+                        <div>
+                          {/* Tags */}
+                          {article.tags && article.tags.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                              {article.tags.slice(0, 3).map((t, idx) => (
+                                <span
+                                  key={idx}
+                                  className="border border-neutral-200 bg-neutral-50/50 px-2 py-0.5 text-[9px] tracking-[0.15em] uppercase text-neutral-600"
+                                >
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Metadata & CTA */}
+                          <div className="mt-5 flex items-center justify-between border-t border-neutral-100 pt-3">
+                            <div className="flex items-center gap-3 text-[10px] tracking-wider text-neutral-400 uppercase font-light">
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {article.read_time}m read
+                              </span>
+                            </div>
+
+                            <span className="text-[10px] tracking-[0.25em] uppercase font-medium text-neutral-900 border-b border-neutral-900 pb-0.5 transition-colors group-hover:border-neutral-500 group-hover:text-neutral-500">
+                              READ ESSAY
+                            </span>
                           </div>
-                        )}
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -461,7 +479,7 @@ export default function ArticlesIndex({
 
                 {/* Pagination */}
                 {hasMultiplePages && (
-                  <div className="mt-12 rounded-xl border border-terra-100 bg-white shadow-xs">
+                  <div className="mt-16 border-t border-neutral-200/80 pt-8">
                     <Pagination pagination={articles} showPerPage={false} />
                   </div>
                 )}

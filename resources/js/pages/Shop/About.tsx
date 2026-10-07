@@ -93,98 +93,160 @@ As a family business, Ronica is always passionate about quality, sustainability 
       />
       <div className="bg-noise" />
       <ShopLayout>
-        <main className="min-h-screen bg-sand-50 pb-20">
-          {/* Fixed Nature/Wood Banner Header */}
-          <div className="mb-12 bg-[#96724d] py-16 text-white md:mb-16">
-            <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-              <h1 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                About Us
+        <main className="min-h-screen bg-white pb-24 select-none">
+          {/* Monumental Editorial Header - Black Luxury Banner */}
+          <div className="border-b border-neutral-900 bg-neutral-950 py-16 md:py-24 px-6 text-white">
+            <div className="mx-auto max-w-[1720px] text-center space-y-3">
+              <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-400">
+                ATELIER & CRAFTSMANSHIP
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-white uppercase">
+                {storyTitle}
               </h1>
-              <p className="mx-auto max-w-2xl text-xl opacity-90">
-                Discover the story of Ronica’s handcrafted outdoor furniture
+              <div className="w-12 h-[1px] bg-neutral-700 mx-auto mt-4" />
+              <p className="mx-auto max-w-2xl text-xs md:text-sm font-light text-neutral-300 tracking-wide pt-2">
+                {storySubtitle || 'Rooted in Indonesian heritage, refined for luxury architectural residences worldwide.'}
               </p>
             </div>
           </div>
 
           {/* Main Content Section */}
-          <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-            <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-sm md:p-10 lg:p-12">
-              <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-16">
-                {/* Left Column: Image Carousel */}
-                <div
-                  className="relative min-h-[380px] w-full overflow-hidden rounded-xl bg-neutral-100 shadow-inner sm:min-h-[460px] lg:col-span-5 xl:col-span-5"
-                  onMouseEnter={() => setIsAutoPlaying(false)}
-                  onMouseLeave={() => setIsAutoPlaying(true)}
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={currentImageIndex}
-                      src={carouselImages[currentImageIndex]}
-                      alt={`Ronica Craftsmanship ${currentImageIndex + 1}`}
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.98 }}
-                      transition={{ duration: 0.5, ease: 'easeOut' }}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </AnimatePresence>
+          <div className="mx-auto max-w-[1720px] px-6 sm:px-12 py-16 md:py-24">
+            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
+              {/* Left Column: Editorial Image Carousel */}
+              <div
+                className="relative aspect-[4/5] w-full overflow-hidden border border-neutral-200/80 bg-neutral-100 lg:col-span-5"
+                onMouseEnter={() => setIsAutoPlaying(false)}
+                onMouseLeave={() => setIsAutoPlaying(true)}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentImageIndex}
+                    src={carouselImages[currentImageIndex]}
+                    alt={`Atelier Craftsmanship ${currentImageIndex + 1}`}
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="h-full w-full object-cover object-center"
+                  />
+                </AnimatePresence>
 
-                  {/* Navigation Arrows */}
-                  {carouselImages.length > 1 && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={handlePrev}
-                        className="absolute top-1/2 left-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-md backdrop-blur-xs transition-all hover:scale-105 hover:bg-white active:scale-95"
-                        aria-label="Previous image"
-                      >
-                        <ChevronLeft size={20} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        className="absolute top-1/2 right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/85 text-neutral-800 shadow-md backdrop-blur-xs transition-all hover:scale-105 hover:bg-white active:scale-95"
-                        aria-label="Next image"
-                      >
-                        <ChevronRight size={20} />
-                      </button>
-
-                      {/* Carousel Pagination Dots */}
-                      <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/30 px-3 py-1.5 backdrop-blur-xs">
-                        {carouselImages.map((_, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => setCurrentImageIndex(idx)}
-                            className={`h-2 cursor-pointer rounded-full transition-all ${
-                              idx === currentImageIndex
-                                ? 'w-6 bg-white'
-                                : 'w-2 bg-white/50 hover:bg-white/80'
-                            }`}
-                            aria-label={`Slide ${idx + 1}`}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
+                {/* Subtle Image Counter Badge */}
+                <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-xs px-3 py-1 text-[10px] tracking-[0.2em] uppercase font-light text-neutral-800 border border-neutral-200">
+                  {currentImageIndex + 1} / {carouselImages.length}
                 </div>
 
-                {/* Right Column: Story Text Content */}
-                <div className="flex flex-col justify-center lg:col-span-7 xl:col-span-7">
-                  <h2 className="mb-6 font-serif text-2xl leading-tight font-bold tracking-tight text-neutral-900 md:text-3xl lg:text-[2rem]">
-                    {storyTitle}
-                    {storySubtitle && (
-                      <span className="mt-1 block font-sans text-xl font-semibold text-neutral-800 md:text-2xl">
-                        {storySubtitle}
-                      </span>
-                    )}
-                  </h2>
+                {/* Navigation Arrows */}
+                {carouselImages.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handlePrev}
+                      className="absolute top-1/2 left-4 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center bg-white/90 text-neutral-900 border border-neutral-200 shadow-sm transition-all hover:bg-neutral-900 hover:text-white"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft size={18} strokeWidth={1.5} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="absolute top-1/2 right-4 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center bg-white/90 text-neutral-900 border border-neutral-200 shadow-sm transition-all hover:bg-neutral-900 hover:text-white"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight size={18} strokeWidth={1.5} />
+                    </button>
 
-                  <div className="space-y-4 text-sm leading-relaxed text-neutral-700 md:text-[15px] lg:text-base lg:leading-relaxed">
-                    {paragraphs.map((paragraph, idx) => (
-                      <p key={idx}>{paragraph}</p>
-                    ))}
+                    {/* Pagination Dots */}
+                    <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 bg-black/40 px-3 py-1.5 backdrop-blur-xs">
+                      {carouselImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setCurrentImageIndex(idx)}
+                          className={`h-1.5 cursor-pointer transition-all ${
+                            idx === currentImageIndex
+                              ? 'w-6 bg-white'
+                              : 'w-1.5 bg-white/50 hover:bg-white/80'
+                          }`}
+                          aria-label={`Slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Right Column: Editorial Narrative */}
+              <div className="flex flex-col justify-start lg:col-span-7 space-y-8">
+                <div className="space-y-3">
+                  <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block">
+                    THE ARCHITECTURAL MANIFESTO
+                  </span>
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light tracking-[0.04em] uppercase text-neutral-900">
+                    HARMONY OF WOOD, WEAVE & TIMELESS PROPORTIONS
+                  </h2>
+                </div>
+
+                <div className="space-y-6 text-xs sm:text-sm leading-relaxed text-neutral-600 font-light tracking-wide">
+                  {paragraphs.map((paragraph, idx) => (
+                    <p key={idx} className="first-letter:text-3xl first-letter:font-serif first-letter:float-left first-letter:mr-2.5 first-letter:text-neutral-900">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Atelier Pillars */}
+                <div className="pt-8 border-t border-neutral-200/80 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
+                      01 / HERITAGE
+                    </span>
+                    <h4 className="font-serif text-sm uppercase text-neutral-900 font-medium">
+                      JEPARA & CIREBON
+                    </h4>
+                    <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
+                      Generations of master woodwork joined with intricate hand-knitted weaves.
+                    </p>
                   </div>
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
+                      02 / MATERIALS
+                    </span>
+                    <h4 className="font-serif text-sm uppercase text-neutral-900 font-medium">
+                      GRADE-A PERHUTANI
+                    </h4>
+                    <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
+                      Sustainably harvested teak, Rehau fiber, and all-weather Sunbrella textiles.
+                    </p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
+                      03 / GLOBAL REACH
+                    </span>
+                    <h4 className="font-serif text-sm uppercase text-neutral-900 font-medium">
+                      15+ COUNTRIES
+                    </h4>
+                    <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
+                      Fulfilling private estates, five-star resorts, and architectural projects worldwide.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="pt-6 flex flex-wrap items-center gap-4">
+                  <a
+                    href="/shop/products"
+                    className="px-8 py-3.5 bg-neutral-900 text-white text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-neutral-800 transition-colors"
+                  >
+                    EXPLORE COLLECTIONS
+                  </a>
+                  <a
+                    href="/shop/contact"
+                    className="px-8 py-3.5 border border-neutral-900 text-neutral-900 text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-neutral-900 hover:text-white transition-colors"
+                  >
+                    CONTACT ATELIER
+                  </a>
                 </div>
               </div>
             </div>

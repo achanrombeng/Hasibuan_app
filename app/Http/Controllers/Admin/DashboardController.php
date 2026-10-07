@@ -6,9 +6,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\ProductStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\Category;
+use App\Models\DealerInquiry;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Models\PromoBanner;
 use App\Models\User;
 use Inertia\Inertia;
@@ -22,6 +25,9 @@ class DashboardController extends Controller
         $totalProducts = Product::where('status', '!=', ProductStatus::DRAFT)->count();
         $totalCategories = Category::count();
         $activeBanners = PromoBanner::active()->count();
+        $totalInquiries = DealerInquiry::count();
+        $totalArticles = Article::count();
+        $totalReviews = ProductReview::count();
         $totalOrders = Order::count();
         $totalCustomers = User::role('customer')->count();
         $totalRevenue = Order::where('payment_status', 'paid')->sum('total');
@@ -61,6 +67,9 @@ class DashboardController extends Controller
                 'totalProducts' => $totalProducts,
                 'totalCategories' => $totalCategories,
                 'activeBanners' => $activeBanners,
+                'totalInquiries' => $totalInquiries,
+                'totalArticles' => $totalArticles,
+                'totalReviews' => $totalReviews,
                 'totalOrders' => $totalOrders,
                 'totalCustomers' => $totalCustomers,
                 'totalRevenue' => (float) $totalRevenue,

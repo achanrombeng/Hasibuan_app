@@ -1,119 +1,176 @@
+import { CatalogModal } from '@/components/shop/CatalogModal';
+import { SiteSettings } from '@/types';
 import {
   ApiCategory,
   ApiProduct,
-  CarouselBannerSlide,
   CraftsmanshipSettings,
   HeroSettings,
   HomeTestimonial,
   HomeValue,
   ValuesSettings,
 } from '@/types/shop';
+import { usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { ArticleItem, ArticlesSection } from './sections/ArticlesSection';
-import { CarouselBannerSection } from './sections/CarouselBannerSection';
-import { CatalogSection } from './sections/CatalogSection';
-import { CategoriesSection } from './sections/CategoriesSection';
-import { CraftsmanshipSection } from './sections/CraftsmanshipSection';
-import { NewsletterSection } from './sections/NewsletterSection';
-import { ProductsSection } from './sections/ProductsSection';
-import { TestimonialsSection } from './sections/TestimonialsSection';
-import { ValuesSection } from './sections/ValuesSection';
+import React, { useState } from 'react';
+import { ArticleItem } from './sections/ArticlesSection';
+import { RHArticlesSection } from './sections/RHArticlesSection';
+import { RHCraftsmanshipSection } from './sections/RHCraftsmanshipSection';
+import { RHGallerySection } from './sections/RHGallerySection';
+import { RHHeroSection } from './sections/RHHeroSection';
+import { RHInteriorDesignSection } from './sections/RHInteriorDesignSection';
+import { RHManifestoSection } from './sections/RHManifestoSection';
+import { RHPressSection } from './sections/RHPressSection';
+import { RHProductShowcase } from './sections/RHProductShowcase';
+import { RHSourceBooksSection } from './sections/RHSourceBooksSection';
+import { RHTrustSection } from './sections/RHTrustSection';
+import { RHValuesSection } from './sections/RHValuesSection';
 
 interface SectionVisibility {
-  hero: boolean;
-  carousel_banners: boolean;
-  trust: boolean;
-  categories: boolean;
-  craftsmanship: boolean;
-  catalog: boolean;
-  values: boolean;
-  products: boolean;
-  testimonials: boolean;
+  hero?: boolean;
+  carousel_banners?: boolean;
+  trust?: boolean;
+  categories?: boolean;
+  craftsmanship?: boolean;
+  catalog?: boolean;
+  values?: boolean;
+  products?: boolean;
+  testimonials?: boolean;
   articles?: boolean;
-  newsletter: boolean;
+  newsletter?: boolean;
 }
 
 interface LandingViewProps {
-  featuredProducts: ApiProduct[];
-  featuredCategories: ApiCategory[];
+  featuredProducts?: ApiProduct[];
+  featuredCategories?: ApiCategory[];
   categories?: ApiCategory[];
   articles?: ArticleItem[];
-  testimonials: HomeTestimonial[];
-  heroSettings: HeroSettings;
+  testimonials?: HomeTestimonial[];
+  heroSettings?: HeroSettings;
   craftsmanshipSettings?: CraftsmanshipSettings;
-  trustLogos: string[] | { name: string; logo_url?: string }[];
-  values: HomeValue[];
+  trustLogos?: (string | { name: string; logo_url?: string })[];
+  values?: HomeValue[];
   valuesSettings?: ValuesSettings;
-  carouselBanners?: CarouselBannerSlide[];
+  carouselBanners?: any[];
   sectionVisibility?: Partial<SectionVisibility>;
 }
 
 export const LandingView: React.FC<LandingViewProps> = ({
-  featuredProducts,
-  featuredCategories,
-  categories,
-  articles,
-  testimonials,
+  featuredProducts = [],
+  featuredCategories = [],
+  categories = [],
+  articles = [],
+  testimonials = [],
   heroSettings,
   craftsmanshipSettings,
-  trustLogos,
-  values,
+  trustLogos = [],
+  values = [],
   valuesSettings,
-  carouselBanners,
+  carouselBanners = [],
   sectionVisibility,
 }) => {
-  // Default sections visibility
-  const visibility = sectionVisibility ?? {
-    hero: false,
-    carousel_banners: true,
-    trust: false,
-    categories: true,
-    craftsmanship: true,
-    catalog: true,
-    values: true,
-    products: false,
-    testimonials: true,
-    articles: true,
-    newsletter: true,
+  const [catalogModalOpen, setCatalogModalOpen] = useState(false);
+  const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
+
+  // Defaults synced with Admin Settings
+  const visibility: SectionVisibility = {
+    hero: sectionVisibility?.hero ?? true,
+    carousel_banners: sectionVisibility?.carousel_banners ?? true,
+    trust: sectionVisibility?.trust ?? true,
+    categories: sectionVisibility?.categories ?? true,
+    craftsmanship: sectionVisibility?.craftsmanship ?? true,
+    catalog: sectionVisibility?.catalog ?? true,
+    values: sectionVisibility?.values ?? true,
+    products: sectionVisibility?.products ?? true,
+    testimonials: sectionVisibility?.testimonials ?? true,
+    articles: sectionVisibility?.articles ?? true,
+    newsletter: sectionVisibility?.newsletter ?? true,
   };
 
   const activeCategories =
     categories && categories.length > 0 ? categories : featuredCategories;
+
+  const showHero =
+    visibility.hero ||
+    (visibility.carousel_banners && carouselBanners && carouselBanners.length > 0);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="overflow-hidden"
+      className="overflow-hidden bg-[#fcfcfb]"
     >
-      {visibility.carousel_banners &&
-        carouselBanners &&
-        carouselBanners.length > 0 && (
-          <CarouselBannerSection banners={carouselBanners} />
-        )}
+      {/* 1. RH Monumental Lookbook Hero (Sync with Admin Carousel Banners & Hero Settings) */}
+      {showHero && (
+        <RHHeroSection
+          banners={carouselBanners}
+          heroSettings={heroSettings}
+          onOpenCatalog={() => setCatalogModalOpen(true)}
+        />
+      )}
+
+      {/* 2. Media / Press Trust Logos (Sync with Admin Trust Logos) */}
+      {visibility.trust && trustLogos && trustLogos.length > 0 && (
+        <RHTrustSection logos={trustLogos} />
+      )}
+
+      {/* 3. Vitruvian Architectural Gallery (Sync with Admin Categories) */}
       {visibility.categories && (
-        <CategoriesSection categories={activeCategories} />
+        <RHGallerySection categories={activeCategories} />
       )}
-      {visibility.craftsmanship && (
-        <CraftsmanshipSection settings={craftsmanshipSettings} />
+
+      {/* 4. Museum Product Collection Showcase (Sync with Admin Products) */}
+      {visibility.products && (
+        <RHProductShowcase products={featuredProducts} />
       )}
-      {visibility.catalog && <CatalogSection categories={activeCategories} />}
+
+      {/* 5. Signature RH Source Books / 3D Lookbook (Sync with Admin Catalog Settings) */}
+      {visibility.catalog && (
+        <RHSourceBooksSection
+          title={siteSettings?.catalog_title || 'THE 2026 SOURCE BOOKS'}
+          pdfUrl={siteSettings?.catalog_pdf_url || '/catalogs/ronica-catalog-2026.pdf'}
+          onOpenCatalog={() => setCatalogModalOpen(true)}
+        />
+      )}
+
+      {/* 6. Vitruvian Architectural Manifesto / Philosophy */}
+      <RHManifestoSection />
+
+      {/* 7. Vitruvian Core Values (Sync with Admin Home Values & Philosophy) */}
       {visibility.values && (
-        <ValuesSection
-          badge={valuesSettings?.badge}
-          title={valuesSettings?.title}
+        <RHValuesSection
+          badge={valuesSettings?.badge || 'OUR PHILOSOPHY'}
+          title={valuesSettings?.title || 'VITRUVIAN VALUES & COMMITMENTS'}
           values={valuesSettings?.values || values}
         />
       )}
-      {visibility.products && <ProductsSection products={featuredProducts} />}
+
+      {/* 8. RH Interior Design Studio & Atelier Consultation */}
+      <RHInteriorDesignSection />
+
+      {/* 9. Material Provenance & Master Craftsmanship (Sync with Admin Craftsmanship Settings) */}
+      {visibility.craftsmanship && (
+        <RHCraftsmanshipSection settings={craftsmanshipSettings} />
+      )}
+
+      {/* 10. Press Accolades & Testimonials (Sync with Admin Testimonials) */}
       {visibility.testimonials && (
-        <TestimonialsSection testimonials={testimonials} />
+        <RHPressSection testimonials={testimonials} />
       )}
-      {(visibility.articles ?? true) && articles && articles.length > 0 && (
-        <ArticlesSection articles={articles} />
+
+      {/* 11. Architectural Journal Essays (Sync with Admin Articles) */}
+      {visibility.articles && articles && articles.length > 0 && (
+        <RHArticlesSection articles={articles} />
       )}
-      {visibility.newsletter && <NewsletterSection />}
+
+      {/* Interactive 3D Flipbook Modal */}
+      <CatalogModal
+        isOpen={catalogModalOpen}
+        onClose={() => setCatalogModalOpen(false)}
+        title={siteSettings?.catalog_title || 'Ronica Product Catalogue 2026'}
+        pdfUrl={siteSettings?.catalog_pdf_url || '/catalogs/ronica-catalog-2026.pdf'}
+        initialMode="3d"
+      />
     </motion.div>
   );
 };

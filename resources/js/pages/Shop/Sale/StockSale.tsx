@@ -70,7 +70,7 @@ export default function StockSale({
       <ShopLayout>
         <main className="min-h-screen bg-sand-50 pt-28 pb-20">
           {/* Hero Banner */}
-          <div className="mb-12 bg-gradient-to-r from-terra-900 to-terra-700 py-16 text-white">
+          <div className="mb-12 border-b border-neutral-900 bg-neutral-950 py-16 text-white">
             <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
               <div className="mb-4 flex items-center justify-center gap-3">
                 <Warehouse size={40} className="text-wood-light" />

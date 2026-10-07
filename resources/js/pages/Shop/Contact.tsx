@@ -33,20 +33,20 @@ export default function Contact() {
   // Build Admin 1 & Admin 2 contact cards
   const adminCards = [
     {
-      role: 'Marketing 1',
-      name: marketing1Name || 'Marketing 1',
+      role: 'Client Concierge I',
+      name: marketing1Name || 'Client Advisor',
       phone: marketing1Phone,
       email: marketing1Email,
       icon: User,
-      badge: 'Primary',
+      badge: 'Primary Liaison',
     },
     {
-      role: 'Marketing 2',
-      name: marketing2Name || 'Marketing 2',
+      role: 'Client Concierge II',
+      name: marketing2Name || 'Trade Specialist',
       phone: marketing2Phone,
       email: marketing2Email,
       icon: UserCheck,
-      badge: 'Alternative',
+      badge: 'Contract Advisor',
     },
   ];
 
@@ -55,156 +55,157 @@ export default function Contact() {
       <SEOHead
         title={t('shop.contact.title')}
         description={t('shop.contact.seo_description', { siteName })}
-        keywords={['contact', 'furniture showroom', 'phone', 'email']}
+        keywords={['contact', 'furniture showroom', 'phone', 'email', 'private consultation']}
       />
       <div className="bg-noise" />
       <ShopLayout>
-        <main className="min-h-screen bg-sand-50 pb-16">
-          {/* Hero */}
-          <div className="mb-10 bg-gradient-to-r from-teal-600 to-teal-700 py-12 text-white">
-            <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-              <h1 className="mb-3 font-serif text-4xl font-bold md:text-5xl">
-                {t('shop.contact.hero_title')}
+        <main className="min-h-screen bg-white pb-24">
+          {/* Monumental Editorial Header - Black Luxury Banner */}
+          <div className="border-b border-neutral-900 bg-neutral-950 py-16 md:py-24 px-6 text-white">
+            <div className="mx-auto max-w-[1720px] text-center space-y-3">
+              <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-400">
+                CLIENT SERVICES & GALLERIES
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-white uppercase">
+                {t('shop.contact.hero_title') || 'CONNECT WITH OUR ATELIER'}
               </h1>
-              <p className="text-lg opacity-90">
-                {t('shop.contact.hero_subtitle')}
+              <div className="w-12 h-[1px] bg-neutral-700 mx-auto mt-4" />
+              <p className="mx-auto max-w-2xl text-xs md:text-sm font-light text-neutral-300 tracking-wide pt-2">
+                {t('shop.contact.hero_subtitle') || 'Private gallery appointments, custom material advisory, and international freight coordination.'}
               </p>
             </div>
           </div>
 
-          <div className="mx-auto max-w-[1400px] px-6 md:px-12">
-            {/* Admin 1 & Admin 2 Contact Cards */}
-            <div className="mb-12">
-              <h2 className="mb-6 font-serif text-2xl font-bold text-terra-900">
-                {t('shop.contact.contact_info')}
-              </h2>
-              <div className="grid gap-6 sm:grid-cols-2">
+          <div className="mx-auto max-w-[1720px] px-6 sm:px-12 py-16 md:py-24 space-y-20">
+            {/* Section 1: Executive Concierge Liaisons */}
+            <div>
+              <div className="mb-10 text-center max-w-xl mx-auto space-y-2">
+                <span className="text-[10px] tracking-[0.3em] uppercase font-light text-neutral-400">
+                  DIRECT CONTACT
+                </span>
+                <h2 className="font-serif text-2xl md:text-3xl font-light tracking-[0.05em] text-neutral-900 uppercase">
+                  {t('shop.contact.contact_info')}
+                </h2>
+              </div>
+
+              <div className="grid gap-8 sm:grid-cols-2 max-w-5xl mx-auto">
                 {adminCards.map((admin, i) => (
                   <div
                     key={i}
-                    className="flex flex-col justify-between rounded-2xl border border-terra-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+                    className="border border-neutral-200/80 bg-[#fafaf9] p-8 md:p-10 space-y-6 transition-all hover:border-neutral-400"
                   >
-                    <div>
-                      <div className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3.5">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                            <admin.icon size={24} />
-                          </div>
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <span className="text-[10px] tracking-[0.25em] uppercase font-light text-neutral-400 block">
+                          {admin.role}
+                        </span>
+                        <h3 className="font-serif text-2xl font-light tracking-[0.04em] uppercase text-neutral-900">
+                          {admin.name}
+                        </h3>
+                      </div>
+                      <span className="border border-neutral-200 bg-white px-2.5 py-1 text-[9px] tracking-[0.15em] uppercase text-neutral-600 font-medium">
+                        {admin.badge}
+                      </span>
+                    </div>
+
+                    <div className="space-y-4 border-t border-neutral-200/80 pt-6">
+                      {/* Phone */}
+                      {admin.phone ? (
+                        <div className="flex items-center gap-3 text-xs">
+                          <Phone size={14} className="text-neutral-400" />
                           <div>
-                            <span className="text-xs font-semibold tracking-wider text-teal-700 uppercase">
-                              {admin.role}
+                            <span className="block text-[9px] tracking-[0.2em] uppercase font-medium text-neutral-400">
+                              {t('shop.contact.info_phone')}
                             </span>
-                            <h3 className="font-serif text-xl font-bold text-terra-900">
-                              {admin.name}
-                            </h3>
+                            <a
+                              href={`tel:${admin.phone}`}
+                              className="font-light tracking-wider text-neutral-900 hover:underline underline-offset-4"
+                            >
+                              {admin.phone}
+                            </a>
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="flex items-center gap-3 text-xs text-neutral-400">
+                          <Phone size={14} />
+                          <div>
+                            <span className="block text-[9px] tracking-[0.2em] uppercase font-medium text-neutral-400">
+                              {t('shop.contact.info_phone')}
+                            </span>
+                            <span className="italic font-light">
+                              {t('shop.contact.phone_not_set')}
+                            </span>
+                          </div>
+                        </div>
+                      )}
 
-                      <div className="space-y-3 border-t border-terra-100/70 pt-3">
-                        {admin.phone ? (
-                          <div className="flex items-center gap-3 text-sm text-terra-600">
-                            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-teal-700">
-                              <Phone size={15} />
-                            </div>
-                            <div>
-                              <span className="block text-[11px] font-medium tracking-wider text-terra-500 uppercase">
-                                {t('shop.contact.info_phone')}
-                              </span>
-                              <a
-                                href={`tel:${admin.phone}`}
-                                className="font-medium text-terra-800 transition-colors hover:text-teal-700 hover:underline"
-                              >
-                                {admin.phone}
-                              </a>
-                            </div>
+                      {/* Email */}
+                      {admin.email ? (
+                        <div className="flex items-center gap-3 text-xs">
+                          <Mail size={14} className="text-neutral-400" />
+                          <div className="min-w-0 flex-1 truncate">
+                            <span className="block text-[9px] tracking-[0.2em] uppercase font-medium text-neutral-400">
+                              {t('shop.contact.info_email')}
+                            </span>
+                            <a
+                              href={`mailto:${admin.email}`}
+                              className="block truncate font-light tracking-wider text-neutral-900 hover:underline underline-offset-4"
+                            >
+                              {admin.email}
+                            </a>
                           </div>
-                        ) : (
-                          <div className="flex items-center gap-3 text-sm text-terra-400">
-                            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-terra-400">
-                              <Phone size={15} />
-                            </div>
-                            <div>
-                              <span className="block text-[11px] font-medium tracking-wider text-terra-400 uppercase">
-                                {t('shop.contact.info_phone')}
-                              </span>
-                              <span className="italic">
-                                {t('shop.contact.phone_not_set')}
-                              </span>
-                            </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-3 text-xs text-neutral-400">
+                          <Mail size={14} />
+                          <div>
+                            <span className="block text-[9px] tracking-[0.2em] uppercase font-medium text-neutral-400">
+                              {t('shop.contact.info_email')}
+                            </span>
+                            <span className="italic font-light">
+                              {t('shop.contact.email_not_set')}
+                            </span>
                           </div>
-                        )}
-
-                        {admin.email ? (
-                          <div className="flex items-center gap-3 text-sm text-terra-600">
-                            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-teal-700">
-                              <Mail size={15} />
-                            </div>
-                            <div className="min-w-0 flex-1 truncate">
-                              <span className="block text-[11px] font-medium tracking-wider text-terra-500 uppercase">
-                                {t('shop.contact.info_email')}
-                              </span>
-                              <a
-                                href={`mailto:${admin.email}`}
-                                className="block truncate font-medium text-terra-800 transition-colors hover:text-teal-700 hover:underline"
-                              >
-                                {admin.email}
-                              </a>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-3 text-sm text-terra-400">
-                            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-sand-100 text-terra-400">
-                              <Mail size={15} />
-                            </div>
-                            <div>
-                              <span className="block text-[11px] font-medium tracking-wider text-terra-400 uppercase">
-                                {t('shop.contact.info_email')}
-                              </span>
-                              <span className="italic">
-                                {t('shop.contact.email_not_set')}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Map Section - Split into 2 columns (Left: Showroom, Right: Factory) */}
+            {/* Section 2: Showroom & Factory Gallery Locations */}
             <div>
-              <div className="mb-6">
-                <h2 className="font-serif text-2xl font-bold text-terra-900">
+              <div className="mb-10 text-center max-w-xl mx-auto space-y-2">
+                <span className="text-[10px] tracking-[0.3em] uppercase font-light text-neutral-400">
+                  GEOGRAPHIC PRESENCE
+                </span>
+                <h2 className="font-serif text-2xl md:text-3xl font-light tracking-[0.05em] text-neutral-900 uppercase">
                   {t('shop.contact.our_location')}
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                {/* Left: Showroom Map */}
-                <div className="flex flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-                  <div className="mb-4 flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                      <Store size={24} />
-                    </div>
-                    <div className="min-w-0 flex-1">
+              <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+                {/* Left: Showroom Map Card */}
+                <div className="flex flex-col border border-neutral-200/80 bg-white p-8 md:p-10 space-y-6">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-serif text-xl font-bold text-terra-900">
-                          {siteSettings?.showroom_name || 'Showroom'}
-                        </h3>
-                        <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-terra-700">
+                        <Store size={18} className="text-neutral-700" />
+                        <span className="text-[10px] tracking-[0.25em] uppercase font-light text-neutral-500">
                           {t('shop.contact.showroom_address')}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm leading-relaxed text-terra-600">
-                        {siteSettings?.showroom_address || 'Jepara, Indonesia'}
+                      <h3 className="font-serif text-2xl font-light tracking-[0.04em] uppercase text-neutral-900">
+                        {siteSettings?.showroom_name || 'GALLERY SHOWROOM'}
+                      </h3>
+                      <p className="text-xs text-neutral-500 font-light leading-relaxed pt-1">
+                        {siteSettings?.showroom_address || 'Jepara, Central Java, Indonesia'}
                       </p>
                     </div>
                   </div>
 
-                  <div className="relative aspect-[16/10] min-h-[280px] w-full overflow-hidden rounded-xl border border-terra-100 bg-sand-100 shadow-inner">
+                  <div className="relative aspect-[16/10] min-h-[300px] w-full overflow-hidden border border-neutral-200/80 bg-neutral-100">
                     <iframe
                       src={(() => {
                         const rawUrl = siteSettings?.maps_showroom_url;
@@ -226,32 +227,30 @@ export default function Contact() {
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       title={`${siteName} Showroom Location`}
-                    ></iframe>
+                    />
                   </div>
                 </div>
 
-                {/* Right: Factory Map */}
-                <div className="flex flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white p-6 shadow-sm transition-all hover:shadow-md">
-                  <div className="mb-4 flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-                      <Building2 size={24} />
-                    </div>
-                    <div className="min-w-0 flex-1">
+                {/* Right: Factory Map Card */}
+                <div className="flex flex-col border border-neutral-200/80 bg-white p-8 md:p-10 space-y-6">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-serif text-xl font-bold text-terra-900">
-                          {siteSettings?.factory_name || 'Factory'}
-                        </h3>
-                        <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-terra-700">
+                        <Building2 size={18} className="text-neutral-700" />
+                        <span className="text-[10px] tracking-[0.25em] uppercase font-light text-neutral-500">
                           {t('shop.contact.factory_address')}
                         </span>
                       </div>
-                      <p className="mt-1 text-sm leading-relaxed text-terra-600">
-                        {siteSettings?.factory_address || 'Cirebon, Indonesia'}
+                      <h3 className="font-serif text-2xl font-light tracking-[0.04em] uppercase text-neutral-900">
+                        {siteSettings?.factory_name || 'MANUFACTURING ATELIER'}
+                      </h3>
+                      <p className="text-xs text-neutral-500 font-light leading-relaxed pt-1">
+                        {siteSettings?.factory_address || 'Cirebon, West Java, Indonesia'}
                       </p>
                     </div>
                   </div>
 
-                  <div className="relative aspect-[16/10] min-h-[280px] w-full overflow-hidden rounded-xl border border-terra-100 bg-sand-100 shadow-inner">
+                  <div className="relative aspect-[16/10] min-h-[300px] w-full overflow-hidden border border-neutral-200/80 bg-neutral-100">
                     <iframe
                       src={(() => {
                         const rawUrl = siteSettings?.maps_factory_url;
@@ -273,7 +272,7 @@ export default function Contact() {
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       title={`${siteName} Factory Location`}
-                    ></iframe>
+                    />
                   </div>
                 </div>
               </div>

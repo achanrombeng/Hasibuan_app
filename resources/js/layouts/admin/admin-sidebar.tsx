@@ -11,6 +11,7 @@ import {
   Megaphone,
   Package,
   PanelBottom,
+  Phone,
   Settings,
   Star,
   Store,
@@ -22,7 +23,7 @@ import {
 import { cn } from '@/lib/utils';
 import { SharedData } from '@/types';
 
-interface NavItem {
+export interface NavItem {
   titleKey: string;
   href: string;
   icon: React.ElementType;
@@ -34,12 +35,6 @@ const mainNavItems: NavItem[] = [
     titleKey: 'admin.sidebar.dashboard',
     href: '/admin',
     icon: LayoutDashboard,
-  },
-  {
-    titleKey: 'admin.sidebar.products',
-    href: '/admin/products',
-    icon: Package,
-    permission: 'view products',
   },
   {
     titleKey: 'admin.sidebar.categories',
@@ -85,18 +80,43 @@ const settingsNavItems: NavItem[] = [
     icon: Megaphone,
     permission: 'manage settings',
   },
+  // --- MENU PER HALAMAN (Direct flat links) ---
   {
-    titleKey: 'admin.sidebar.homepage_settings',
+    titleKey: 'admin.sidebar.page_home',
     href: '/admin/settings/homepage',
     icon: LayoutTemplate,
     permission: 'manage settings',
   },
   {
-    titleKey: 'admin.sidebar.about_page',
+    titleKey: 'admin.sidebar.page_about',
     href: '/admin/settings/about',
     icon: Info,
     permission: 'manage settings',
   },
+  {
+    titleKey: 'admin.sidebar.page_products',
+    href: '/admin/products',
+    icon: Package,
+    permission: 'view products',
+  },
+  {
+    titleKey: 'admin.sidebar.page_blog',
+    href: '/admin/articles',
+    icon: FileText,
+    permission: 'view articles',
+  },
+  {
+    titleKey: 'admin.sidebar.page_dealer',
+    href: '/admin/dealer-inquiries',
+    icon: Briefcase,
+  },
+  {
+    titleKey: 'admin.sidebar.page_contacts',
+    href: '/admin/settings',
+    icon: Phone,
+    permission: 'manage settings',
+  },
+  // --- GENERAL SETTINGS ---
   {
     titleKey: 'admin.sidebar.footer_settings',
     href: '/admin/settings/footer',
@@ -108,12 +128,6 @@ const settingsNavItems: NavItem[] = [
     href: '/admin/profile',
     icon: Users,
     permission: '',
-  },
-  {
-    titleKey: 'admin.sidebar.settings',
-    href: '/admin/settings',
-    icon: Settings,
-    permission: 'manage settings',
   },
 ];
 
@@ -138,10 +152,9 @@ export default function AdminSidebar({
   const { siteSettings, newDealerInquiriesCount } = usePage<SharedData>().props;
   const siteName = siteSettings?.site_name || 'hasibuan_app';
 
-  // Check if user has permission (simplified - will be enhanced later)
+  // Check if user has permission
   const hasPermission = (permission?: string) => {
     if (!permission) return true;
-    // For now, return true. Will be connected to actual permissions later
     return true;
   };
 
@@ -158,37 +171,94 @@ export default function AdminSidebar({
   };
 
   const handleNavClick = () => {
-    // Close mobile sidebar when navigating
     setMobileOpen(false);
   };
 
   const { t } = useTranslation();
 
+  const renderNavItem = (item: NavItem, isMobile: boolean) => {
+    const isDealerInquiries =
+      item.href === '/admin/dealer-inquiries' ||
+      item.titleKey === 'admin.sidebar.page_dealer';
+    const hasNewInquiries =
+      isDealerInquiries && (newDealerInquiriesCount ?? 0) > 0;
+
+    return (
+      <Link
+        key={item.href + item.titleKey}
+        href={item.href}
+        onClick={handleNavClick}
+        className={cn(
+          'group relative flex items-center gap-3 py-2.5 text-xs font-light tracking-[0.1em] uppercase transition-all',
+          !isMobile && collapsed ? 'justify-center px-2' : 'px-3.5',
+          isActive(item.href)
+            ? 'border-l-2 border-[#c5a880] bg-[#1e1d1b] text-white shadow-sm'
+            : 'text-neutral-400 hover:bg-neutral-900/80 hover:text-white',
+        )}
+        title={
+          !isMobile && collapsed
+            ? `${t(item.titleKey)}${
+                hasNewInquiries ? ` (${newDealerInquiriesCount} new)` : ''
+              }`
+            : undefined
+        }
+      >
+        <div className="relative flex items-center justify-center">
+          <item.icon className="h-4 w-4 flex-shrink-0" />
+          {!isMobile && collapsed && hasNewInquiries && (
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c5a880] opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c5a880] ring-2 ring-[#111110]"></span>
+            </span>
+          )}
+        </div>
+
+        {(isMobile || !collapsed) && (
+          <span className="flex-1 truncate">{t(item.titleKey)}</span>
+        )}
+
+        {(isMobile || !collapsed) && hasNewInquiries && (
+          <span className="ml-auto inline-flex items-center justify-center rounded border border-[#524431] bg-[#2a241c] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#d6b78d]">
+            {newDealerInquiriesCount}
+          </span>
+        )}
+      </Link>
+    );
+  };
+
   const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (
     <>
       {/* Logo */}
-      <div className="flex h-16 items-center justify-between border-b border-white/10 px-4">
+      <div className="flex h-16 items-center justify-between border-b border-neutral-800/80 px-4">
         <Link
           href="/admin"
           className="flex items-center gap-3"
           onClick={handleNavClick}
         >
-          <img
-            src="/assets/images/logo.webp"
-            alt={siteName}
-            className={cn(
-              'h-8 w-auto object-contain brightness-0 invert transition-all',
-              !isMobile && collapsed && 'hidden h-10',
-            )}
-          />
-          {(isMobile || !collapsed) && (
-            <span className="text-lg font-semibold text-white">Admin</span>
+          {!isMobile && collapsed ? (
+            <span className="font-serif text-lg font-light tracking-[0.2em] text-[#c5a880]">
+              RH
+            </span>
+          ) : (
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-xl font-light tracking-[0.3em] text-white">
+                  R H
+                </span>
+                <span className="border border-[#3d3324] bg-[#1e1b16] px-1.5 py-0.5 text-[9px] font-medium tracking-[0.25em] text-[#c5a880] uppercase">
+                  ADMIN
+                </span>
+              </div>
+              <span className="mt-0.5 text-[8px] font-light tracking-[0.35em] text-neutral-500 uppercase">
+                {siteName} · CURATOR
+              </span>
+            </div>
           )}
         </Link>
         {isMobile ? (
           <button
             onClick={() => setMobileOpen(false)}
-            className="rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
@@ -196,13 +266,13 @@ export default function AdminSidebar({
           <button
             onClick={() => setCollapsed(!collapsed)}
             className={cn(
-              'rounded-lg p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white',
+              'rounded-lg p-1.5 text-neutral-500 transition-colors hover:bg-neutral-800 hover:text-white cursor-pointer',
               collapsed && 'mx-auto',
             )}
           >
             <ChevronLeft
               className={cn(
-                'h-5 w-5 transition-transform',
+                'h-4 w-4 transition-transform',
                 collapsed && 'rotate-180',
               )}
             />
@@ -211,103 +281,44 @@ export default function AdminSidebar({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-4">
+      <nav className="flex-1 overflow-x-hidden overflow-y-auto px-3 py-4">
         {/* Main Menu */}
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {(isMobile || !collapsed) && (
-            <p className="mb-2 px-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+            <p className="mb-2 px-3 text-[10px] font-medium tracking-[0.25em] text-neutral-500 uppercase">
               {t('admin.sidebar.main_menu')}
             </p>
           )}
           {mainNavItems
             .filter((item) => hasPermission(item.permission))
-            .map((item) => {
-              const isDealerInquiries = item.href === '/admin/dealer-inquiries';
-              const hasNewInquiries =
-                isDealerInquiries && (newDealerInquiriesCount ?? 0) > 0;
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={handleNavClick}
-                  className={cn(
-                    'group relative flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition-all',
-                    !isMobile && collapsed ? 'justify-center px-2' : 'px-3',
-                    isActive(item.href)
-                      ? 'bg-white/15 text-white shadow-lg'
-                      : 'text-white/70 hover:bg-white/10 hover:text-white',
-                  )}
-                  title={
-                    !isMobile && collapsed && hasNewInquiries
-                      ? `${t(item.titleKey)} (${newDealerInquiriesCount} new)`
-                      : undefined
-                  }
-                >
-                  <div className="relative flex items-center justify-center">
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    {!isMobile && collapsed && hasNewInquiries && (
-                      <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-[#705335]"></span>
-                      </span>
-                    )}
-                  </div>
-                  {(isMobile || !collapsed) && (
-                    <span className="flex-1 truncate">{t(item.titleKey)}</span>
-                  )}
-                  {(isMobile || !collapsed) && hasNewInquiries && (
-                    <span className="ml-auto inline-flex items-center justify-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white shadow-sm ring-1 ring-amber-400/40">
-                      {newDealerInquiriesCount}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
+            .map((item) => renderNavItem(item, isMobile))}
         </div>
 
         {/* Settings Menu */}
-        <div className="mt-8 space-y-1">
+        <div className="mt-8 space-y-0.5">
           {(isMobile || !collapsed) && (
-            <p className="mb-2 px-3 text-xs font-medium tracking-wider text-white/40 uppercase">
+            <p className="mb-2 px-3 text-[10px] font-medium tracking-[0.25em] text-neutral-500 uppercase">
               {t('admin.sidebar.settings_section')}
             </p>
           )}
           {settingsNavItems
             .filter((item) => hasPermission(item.permission))
-            .map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={handleNavClick}
-                className={cn(
-                  'flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition-all',
-                  !isMobile && collapsed ? 'justify-center px-2' : 'px-3',
-                  isActive(item.href)
-                    ? 'bg-white/15 text-white shadow-lg'
-                    : 'text-white/70 hover:bg-white/10 hover:text-white',
-                )}
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {(isMobile || !collapsed) && (
-                  <span className="truncate">{t(item.titleKey)}</span>
-                )}
-              </Link>
-            ))}
+            .map((item) => renderNavItem(item, isMobile))}
         </div>
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-white/10 p-4">
+      <div className="border-t border-neutral-800/80 p-4">
         <Link
           href="/"
+          target="_blank"
           onClick={handleNavClick}
           className={cn(
-            'flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium text-white/70 transition-all hover:bg-white/10 hover:text-white',
+            'flex items-center gap-3 py-2.5 text-xs font-light tracking-[0.12em] text-neutral-400 uppercase transition-all hover:bg-neutral-900 hover:text-[#c5a880]',
             !isMobile && collapsed ? 'justify-center px-2' : 'px-3',
           )}
         >
-          <Store className="h-5 w-5 flex-shrink-0" />
+          <Store className="h-4 w-4 flex-shrink-0" />
           {(isMobile || !collapsed) && (
             <span className="truncate">{t('admin.sidebar.view_store')}</span>
           )}
@@ -321,7 +332,7 @@ export default function AdminSidebar({
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -329,7 +340,7 @@ export default function AdminSidebar({
       {/* Mobile Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-gradient-to-b from-teal-900 via-teal-800 to-teal-950 transition-transform duration-300 lg:hidden',
+          'fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-neutral-800/80 bg-[#111110] transition-transform duration-300 lg:hidden',
           mobileOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -339,7 +350,7 @@ export default function AdminSidebar({
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 hidden flex-col bg-gradient-to-b from-teal-900 via-teal-800 to-teal-950 transition-all duration-300 lg:flex',
+          'fixed inset-y-0 left-0 z-50 hidden flex-col border-r border-neutral-800/80 bg-[#111110] transition-all duration-300 lg:flex',
           collapsed ? 'w-20' : 'w-72',
         )}
       >

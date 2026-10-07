@@ -92,7 +92,7 @@ export default function Clearance({
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="mb-12 bg-gradient-to-r from-teal-600 to-teal-500 py-16 text-white"
+            className="mb-12 border-b border-neutral-900 bg-neutral-950 py-16 text-white"
           >
             <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
               <motion.div

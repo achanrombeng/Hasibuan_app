@@ -52,7 +52,7 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-sand-50">
+    <div className="min-h-screen bg-[#fcfcfb] text-neutral-900 antialiased selection:bg-neutral-900 selection:text-white">
       <Toaster position="top-right" richColors />
       {/* Sidebar */}
       <AdminSidebar
@@ -65,7 +65,7 @@ export default function AdminLayout({
       {/* Main Content */}
       <div
         className={cn(
-          'transition-all duration-300',
+          'min-h-screen transition-all duration-300',
           collapsed ? 'lg:pl-20' : 'lg:pl-72',
         )}
       >
@@ -76,7 +76,7 @@ export default function AdminLayout({
         />
 
         {/* Page Content */}
-        <main className="p-4 sm:p-6">{children}</main>
+        <main className="mx-auto max-w-[1720px] p-6 sm:p-8 lg:p-10">{children}</main>
       </div>
     </div>
   );

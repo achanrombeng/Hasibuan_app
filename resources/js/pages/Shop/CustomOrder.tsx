@@ -146,21 +146,18 @@ export default function CustomOrder() {
       <div className="bg-noise" />
       <ShopLayout>
         <main className="min-h-screen bg-sand-50 pt-28 pb-20">
-          {/* Hero Banner */}
-          <div className="mb-12 bg-gradient-to-r from-wood-dark to-terra-800 py-16 text-white">
-            <div className="mx-auto max-w-[1400px] px-6 text-center md:px-12">
-              <div className="mb-4 flex items-center justify-center gap-3">
-                <Palette size={40} className="text-wood-light" />
-                <h1 className="font-serif text-4xl font-bold md:text-5xl">
-                  CUSTOM ORDER
-                </h1>
-                <Ruler size={40} className="text-wood-light" />
-              </div>
-              <p className="text-xl opacity-90">
-                Bring Your Dream Furniture to Life
-              </p>
-              <p className="mt-2 text-sm opacity-75">
-                Bespoke designs, export-grade materials, and precision dimensions
+          {/* Monumental Editorial Header - Black Luxury Banner */}
+          <div className="mb-12 border-b border-neutral-900 bg-neutral-950 py-16 md:py-24 px-6 text-white">
+            <div className="mx-auto max-w-[1720px] text-center space-y-3">
+              <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-400">
+                BESPOKE ATELIER
+              </span>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-white uppercase">
+                CUSTOM ARCHITECTURAL COMMISSION
+              </h1>
+              <div className="w-12 h-[1px] bg-neutral-700 mx-auto mt-4" />
+              <p className="mx-auto max-w-2xl text-xs md:text-sm font-light text-neutral-300 tracking-wide pt-2">
+                Bring your dream furniture to life with bespoke designs, export-grade materials, and precision dimensions.
               </p>
             </div>
           </div>
