@@ -251,6 +251,16 @@ export interface ValuesSettings {
   values: HomeValue[];
 }
 
+export interface SectionBgConfig {
+  type: 'default' | 'color' | 'image';
+  color?: string;
+  image?: string;
+  overlay?: number;
+  text_theme?: 'auto' | 'light' | 'dark';
+}
+
+export type SectionBackgroundsMap = Record<string, SectionBgConfig>;
+
 export interface HomePageProps {
   featuredProducts: { data: ApiProduct[] };
   featuredCategories: { data: ApiCategory[] };
@@ -262,4 +272,6 @@ export interface HomePageProps {
   valuesSettings?: ValuesSettings;
   pageSiteSettings: HomeSiteSettings;
   carouselBanners: CarouselBannerSlide[];
+  sectionBackgrounds?: SectionBackgroundsMap;
 }
+

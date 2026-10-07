@@ -1,28 +1,64 @@
-import { ApiProduct } from '@/types/shop';
+import { cn } from '@/lib/utils';
+import { ApiProduct, SectionBgConfig } from '@/types/shop';
 import { Link } from '@inertiajs/react';
 import React from 'react';
 import { ProductCard } from '../ProductCard';
+import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
 interface RHProductShowcaseProps {
   products: ApiProduct[];
+  bgConfig?: SectionBgConfig;
 }
 
 export const RHProductShowcase: React.FC<RHProductShowcaseProps> = ({
   products = [],
+  bgConfig,
 }) => {
+  const isCustom = bgConfig && bgConfig.type !== 'default';
+  const isDark = isDarkTheme(bgConfig);
+
   return (
-    <section className="w-full bg-white py-20 md:py-28 px-4 sm:px-6 lg:px-12 border-b border-neutral-200/60">
-      <div className="max-w-[1720px] mx-auto space-y-14">
+    <section
+      className={cn(
+        'w-full py-20 md:py-28 px-4 sm:px-6 lg:px-12 border-b transition-colors relative overflow-hidden',
+        !isCustom && 'bg-white border-neutral-200/60',
+        isCustom && isDark && 'text-white border-white/10',
+        isCustom && !isDark && 'text-neutral-900 border-neutral-200/60',
+      )}
+      style={getSectionBgStyles(bgConfig)}
+    >
+      <SectionBgOverlay config={bgConfig} />
+      <div className="relative z-10 max-w-[1720px] mx-auto space-y-14">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-500">
+          <span
+            className={cn(
+              'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
+              isDark ? 'text-neutral-300' : 'text-neutral-500',
+            )}
+          >
             MUSEUM COLLECTION
           </span>
-          <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-neutral-900 uppercase">
+          <h2
+            className={cn(
+              'font-serif text-2xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] uppercase',
+              isDark ? 'text-white' : 'text-neutral-900',
+            )}
+          >
             CURATED ARCHITECTURAL PIECES
           </h2>
-          <div className="w-12 h-[1px] bg-neutral-400 mx-auto mt-4" />
-          <p className="text-xs sm:text-sm text-neutral-500 tracking-[0.08em] font-light uppercase max-w-xl mx-auto pt-2">
+          <div
+            className={cn(
+              'w-12 h-[1px] mx-auto mt-4',
+              isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+            )}
+          />
+          <p
+            className={cn(
+              'text-xs sm:text-sm tracking-[0.08em] font-light uppercase max-w-xl mx-auto pt-2',
+              isDark ? 'text-neutral-300' : 'text-neutral-500',
+            )}
+          >
             Masterworks of enduring proportion, hand-finished in our central Java workshops.
           </p>
         </div>

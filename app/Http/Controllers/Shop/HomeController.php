@@ -152,7 +152,7 @@ class HomeController extends Controller
 
         // Page-specific Site Settings for SEO (siteSettings is shared via middleware)
         $pageSiteSettings = [
-            'name' => Setting::get('site_name', config('app.name', 'hasibuan_app')),
+            'name' => Setting::get('site_name', config('app.name', 'Hasibuan Design')),
             'description' => Setting::get('site_description', 'Toko furnitur premium Indonesia'),
         ];
 
@@ -177,6 +177,9 @@ class HomeController extends Controller
             'values' => $values ?? [],
         ];
 
+        // Section Backgrounds
+        $sectionBackgrounds = json_decode(Setting::get('section_backgrounds', '{}'), true) ?: [];
+
         return Inertia::render('Shop/Home', [
             'featuredProducts' => ProductResource::collection($featuredProducts),
             'landingCategories' => CategoryResource::collection($displayCategories),
@@ -191,6 +194,7 @@ class HomeController extends Controller
             'valuesSettings' => $valuesSettings,
             'pageSiteSettings' => $pageSiteSettings,
             'sectionVisibility' => $sectionVisibility,
+            'sectionBackgrounds' => $sectionBackgrounds,
         ]);
     }
 }

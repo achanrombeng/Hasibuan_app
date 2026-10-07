@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 
 export const Footer: React.FC = () => {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'RONICA';
+  const siteName = siteSettings?.site_name || 'Hasibuan Design';
   const [subscribed, setSubscribed] = useState(false);
 
   const { data, setData, post, processing, reset } = useForm({
@@ -113,7 +113,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-[11px] tracking-[0.16em] uppercase font-light text-neutral-400">
               <li>
                 <Link href="/shop/custom-order" className="hover:text-white transition-colors">
-                  RH INTERIOR DESIGN
+                  HASIBUAN INTERIOR DESIGN
                 </Link>
               </li>
               <li>
@@ -195,14 +195,16 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. MONUMENTAL BRAND MONOGRAM & LEGAL FOOTER */}
+      {/* 3. BRAND MONOGRAM & LEGAL FOOTER */}
       <div className="border-t border-neutral-800/80 py-12 px-6 sm:px-12 text-center space-y-6">
-        <div>
-          <span className="font-serif text-3xl sm:text-4xl tracking-[0.35em] font-light text-white block">
-            R H
-          </span>
-          <span className="text-[9px] tracking-[0.45em] uppercase text-neutral-500 font-light mt-1 block">
-            {siteName} · CURATOR OF LUXURY HOME FURNISHINGS
+        <div className="flex flex-col items-center">
+          <img
+            src="/images/hasibuan-footer-logo.png"
+            alt={siteName}
+            className="h-8 sm:h-10 w-auto object-contain brightness-0 invert opacity-90 mb-3"
+          />
+          <span className="text-[9px] tracking-[0.45em] uppercase text-neutral-400 font-light block">
+            {siteName} · THE CONTEMPORARY AND ART FINES FURNITURE
           </span>
         </div>
 

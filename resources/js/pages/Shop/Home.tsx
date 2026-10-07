@@ -26,11 +26,13 @@ export default function Home({
   pageSiteSettings,
   carouselBanners,
   sectionVisibility,
+  sectionBackgrounds,
 }: HomePageProps & {
   landingCategories: any;
   categories?: any;
   articles?: any;
   sectionVisibility?: any;
+  sectionBackgrounds?: any;
 }) {
   const [bannerVisible, setBannerVisible] = useState(false);
   // Get shared siteSettings with contact info
@@ -143,6 +145,7 @@ export default function Home({
             valuesSettings={valuesSettings}
             carouselBanners={carouselBanners}
             sectionVisibility={sectionVisibility}
+            sectionBackgrounds={sectionBackgrounds}
           />{' '}
         </main>
       </ShopLayout>

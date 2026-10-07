@@ -8,6 +8,7 @@ import {
   HomeTestimonial,
   HomeValue,
   ValuesSettings,
+  SectionBackgroundsMap,
 } from '@/types/shop';
 import { usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
@@ -21,7 +22,6 @@ import { RHInteriorDesignSection } from './sections/RHInteriorDesignSection';
 import { RHManifestoSection } from './sections/RHManifestoSection';
 import { RHPressSection } from './sections/RHPressSection';
 import { RHProductShowcase } from './sections/RHProductShowcase';
-import { RHSourceBooksSection } from './sections/RHSourceBooksSection';
 import { RHTrustSection } from './sections/RHTrustSection';
 import { RHValuesSection } from './sections/RHValuesSection';
 
@@ -52,6 +52,7 @@ interface LandingViewProps {
   valuesSettings?: ValuesSettings;
   carouselBanners?: any[];
   sectionVisibility?: Partial<SectionVisibility>;
+  sectionBackgrounds?: SectionBackgroundsMap;
 }
 
 export const LandingView: React.FC<LandingViewProps> = ({
@@ -67,6 +68,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
   valuesSettings,
   carouselBanners = [],
   sectionVisibility,
+  sectionBackgrounds,
 }) => {
   const [catalogModalOpen, setCatalogModalOpen] = useState(false);
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
@@ -106,61 +108,72 @@ export const LandingView: React.FC<LandingViewProps> = ({
           banners={carouselBanners}
           heroSettings={heroSettings}
           onOpenCatalog={() => setCatalogModalOpen(true)}
+          bgConfig={sectionBackgrounds?.['hero']}
         />
       )}
 
       {/* 2. Media / Press Trust Logos (Sync with Admin Trust Logos) */}
       {visibility.trust && trustLogos && trustLogos.length > 0 && (
-        <RHTrustSection logos={trustLogos} />
+        <RHTrustSection
+          logos={trustLogos}
+          bgConfig={sectionBackgrounds?.['trust']}
+        />
       )}
 
       {/* 3. Vitruvian Architectural Gallery (Sync with Admin Categories) */}
       {visibility.categories && (
-        <RHGallerySection categories={activeCategories} />
+        <RHGallerySection
+          categories={activeCategories}
+          bgConfig={sectionBackgrounds?.['categories']}
+        />
       )}
 
       {/* 4. Museum Product Collection Showcase (Sync with Admin Products) */}
       {visibility.products && (
-        <RHProductShowcase products={featuredProducts} />
-      )}
-
-      {/* 5. Signature RH Source Books / 3D Lookbook (Sync with Admin Catalog Settings) */}
-      {visibility.catalog && (
-        <RHSourceBooksSection
-          title={siteSettings?.catalog_title || 'THE 2026 SOURCE BOOKS'}
-          pdfUrl={siteSettings?.catalog_pdf_url || '/catalogs/ronica-catalog-2026.pdf'}
-          onOpenCatalog={() => setCatalogModalOpen(true)}
+        <RHProductShowcase
+          products={featuredProducts}
+          bgConfig={sectionBackgrounds?.['products']}
         />
       )}
 
-      {/* 6. Vitruvian Architectural Manifesto / Philosophy */}
-      <RHManifestoSection />
+      {/* 5. Vitruvian Architectural Manifesto / Philosophy */}
+      <RHManifestoSection bgConfig={sectionBackgrounds?.['manifesto']} />
 
-      {/* 7. Vitruvian Core Values (Sync with Admin Home Values & Philosophy) */}
+      {/* 6. Vitruvian Core Values (Sync with Admin Home Values & Philosophy) */}
       {visibility.values && (
         <RHValuesSection
           badge={valuesSettings?.badge || 'OUR PHILOSOPHY'}
           title={valuesSettings?.title || 'VITRUVIAN VALUES & COMMITMENTS'}
           values={valuesSettings?.values || values}
+          bgConfig={sectionBackgrounds?.['values']}
         />
       )}
 
-      {/* 8. RH Interior Design Studio & Atelier Consultation */}
-      <RHInteriorDesignSection />
+      {/* 7. RH Interior Design Studio & Atelier Consultation */}
+      <RHInteriorDesignSection bgConfig={sectionBackgrounds?.['interior_design']} />
 
-      {/* 9. Material Provenance & Master Craftsmanship (Sync with Admin Craftsmanship Settings) */}
+      {/* 8. Material Provenance & Master Craftsmanship (Sync with Admin Craftsmanship Settings) */}
       {visibility.craftsmanship && (
-        <RHCraftsmanshipSection settings={craftsmanshipSettings} />
+        <RHCraftsmanshipSection
+          settings={craftsmanshipSettings}
+          bgConfig={sectionBackgrounds?.['craftsmanship']}
+        />
       )}
 
-      {/* 10. Press Accolades & Testimonials (Sync with Admin Testimonials) */}
+      {/* 9. Press Accolades & Testimonials (Sync with Admin Testimonials) */}
       {visibility.testimonials && (
-        <RHPressSection testimonials={testimonials} />
+        <RHPressSection
+          testimonials={testimonials}
+          bgConfig={sectionBackgrounds?.['testimonials']}
+        />
       )}
 
-      {/* 11. Architectural Journal Essays (Sync with Admin Articles) */}
+      {/* 10. Architectural Journal Essays (Sync with Admin Articles) */}
       {visibility.articles && articles && articles.length > 0 && (
-        <RHArticlesSection articles={articles} />
+        <RHArticlesSection
+          articles={articles}
+          bgConfig={sectionBackgrounds?.['articles']}
+        />
       )}
 
       {/* Interactive 3D Flipbook Modal */}

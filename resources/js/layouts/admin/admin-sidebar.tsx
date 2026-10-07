@@ -150,7 +150,7 @@ export default function AdminSidebar({
 
   // Get site settings & notifications count
   const { siteSettings, newDealerInquiriesCount } = usePage<SharedData>().props;
-  const siteName = siteSettings?.site_name || 'hasibuan_app';
+  const siteName = siteSettings?.site_name || 'Hasibuan Design';
 
   // Check if user has permission
   const hasPermission = (permission?: string) => {
@@ -237,20 +237,20 @@ export default function AdminSidebar({
         >
           {!isMobile && collapsed ? (
             <span className="font-serif text-lg font-light tracking-[0.2em] text-[#c5a880]">
-              RH
+              HD
             </span>
           ) : (
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-serif text-xl font-light tracking-[0.3em] text-white">
-                  R H
+                <span className="font-serif text-lg font-light tracking-[0.2em] text-white">
+                  HASIBUAN
                 </span>
                 <span className="border border-[#3d3324] bg-[#1e1b16] px-1.5 py-0.5 text-[9px] font-medium tracking-[0.25em] text-[#c5a880] uppercase">
                   ADMIN
                 </span>
               </div>
-              <span className="mt-0.5 text-[8px] font-light tracking-[0.35em] text-neutral-500 uppercase">
-                {siteName} · CURATOR
+              <span className="mt-0.5 text-[8px] font-light tracking-[0.35em] text-neutral-400 uppercase">
+                {siteName}
               </span>
             </div>
           )}

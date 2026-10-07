@@ -22,8 +22,8 @@ class SettingsController extends Controller
 
         return Inertia::render('Admin/Settings/Index', [
             'settings' => [
-                'site_name' => $settings['site_name'] ?? config('app.name', 'hasibuan_app'),
-                'site_logo' => $settings['site_logo'] ?? '/ronica.png',
+                'site_name' => $settings['site_name'] ?? config('app.name', 'Hasibuan Design'),
+                'site_logo' => $settings['site_logo'] ?? '/images/hasibuan-logo.png',
                 'site_description' => $settings['site_description'] ?? '',
                 'contact_email' => $settings['contact_email'] ?? '',
                 'contact_email_2' => $settings['contact_email_2'] ?? '',
@@ -294,7 +294,7 @@ class SettingsController extends Controller
         return Inertia::render('Admin/Settings/Homepage', [
             'locale' => $locale,
             'settings' => [
-                'site_logo' => $settings['site_logo'] ?? '/ronica.png',
+                'site_logo' => $settings['site_logo'] ?? '/images/hasibuan-logo.png',
                 // Hero Section (locale-aware)
                 'hero_badge' => $settings["hero_badge_{$locale}"] ?? $settings['hero_badge'] ?? 'RH OUTDOOR 2026',
                 'hero_title' => $settings["hero_title_{$locale}"] ?? $settings['hero_title'] ?? 'THE ARCHITECTURAL TEAK & ROPE',
@@ -377,6 +377,8 @@ class SettingsController extends Controller
                 'section_products_visible' => filter_var($settings['section_products_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_testimonials_visible' => filter_var($settings['section_testimonials_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_newsletter_visible' => filter_var($settings['section_newsletter_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                // Section Backgrounds (JSON object)
+                'section_backgrounds' => $settings['section_backgrounds'] ?? '{}',
             ],
         ]);
     }
@@ -427,6 +429,10 @@ class SettingsController extends Controller
             'section_products_visible' => ['required', 'boolean'],
             'section_testimonials_visible' => ['required', 'boolean'],
             'section_newsletter_visible' => ['required', 'boolean'],
+            // Section Backgrounds
+            'section_backgrounds' => ['nullable', 'string'],
+            'section_bg_files' => ['nullable', 'array'],
+            'section_bg_files.*' => ['nullable', 'file', 'max:15360', 'mimes:jpg,jpeg,png,webp,gif,svg'],
         ]);
 
         $locale = app()->getLocale();
@@ -528,6 +534,31 @@ class SettingsController extends Controller
             $validated['carousel_banners'] = json_encode($banners);
         }
         unset($validated['carousel_banner_files']);
+
+        // Handle section backgrounds and uploaded background image files
+        if (isset($validated['section_backgrounds'])) {
+            $sectionBgs = json_decode($validated['section_backgrounds'], true) ?: [];
+            $bgFiles = $request->file('section_bg_files', []);
+
+            foreach ($bgFiles as $secKey => $file) {
+                if ($file && $file->isValid()) {
+                    $path = $file->store('settings/backgrounds', 'public');
+                    if (!isset($sectionBgs[$secKey])) {
+                        $sectionBgs[$secKey] = [
+                            'type' => 'image',
+                            'color' => '#ffffff',
+                            'overlay' => 40,
+                            'text_theme' => 'light',
+                        ];
+                    }
+                    $sectionBgs[$secKey]['image'] = '/storage/'.$path;
+                    $sectionBgs[$secKey]['type'] = 'image';
+                }
+            }
+
+            $validated['section_backgrounds'] = json_encode($sectionBgs);
+        }
+        unset($validated['section_bg_files']);
 
         // Keys that need locale-specific storage
         $localeKeys = [

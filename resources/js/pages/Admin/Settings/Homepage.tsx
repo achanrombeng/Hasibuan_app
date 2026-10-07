@@ -26,6 +26,8 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
+import { SectionBackgroundsManager } from './SectionBackgroundsManager';
+import { SectionBgConfig } from '@/types/shop';
 
 interface CarouselBanner {
   id: string;
@@ -69,6 +71,7 @@ interface HomepageSettingsProps {
     section_products_visible: boolean;
     section_testimonials_visible: boolean;
     section_newsletter_visible: boolean;
+    section_backgrounds?: string;
   };
 }
 
@@ -213,7 +216,7 @@ export default function HomepageSettings({
   const [newLogoUrl, setNewLogoUrl] = useState('');
 
   // Site logo state
-  const initialSiteLogo = settings.site_logo || '/ronica.png';
+  const initialSiteLogo = settings.site_logo || '/images/hasibuan-logo.png';
   const [siteLogoPreview, setSiteLogoPreview] =
     useState<string>(initialSiteLogo);
   const [siteLogoFile, setSiteLogoFile] = useState<File | null>(null);
@@ -246,9 +249,75 @@ export default function HomepageSettings({
 
   const resetLogoToDefault = () => {
     setSiteLogoFile(null);
-    setSiteLogoPreview('/ronica.png');
+    setSiteLogoPreview('/images/hasibuan-logo.png');
     if (logoInputRef.current) logoInputRef.current.value = '';
   };
+
+  // Section Backgrounds state
+  const initialSectionBackgrounds: Record<string, SectionBgConfig> = (() => {
+    try {
+      return JSON.parse(settings.section_backgrounds || '{}');
+    } catch {
+      return {};
+    }
+  })();
+  const [sectionBackgrounds, setSectionBackgrounds] = useState<
+    Record<string, SectionBgConfig>
+  >(initialSectionBackgrounds);
+  const [sectionBgFiles, setSectionBgFiles] = useState<Map<string, File>>(
+    new Map(),
+  );
+  const [sectionBgPreviews, setSectionBgPreviews] = useState<
+    Map<string, string>
+  >(new Map());
+
+  const handleSectionBgFileSelect = useCallback(
+    async (sectionKey: string, file: File) => {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file (PNG, JPG, WEBP, SVG)');
+        return;
+      }
+      let processedFile = file;
+      try {
+        processedFile = await compressImage(file, {
+          maxSizeMB: 2,
+          maxWidthOrHeight: 1920,
+        });
+      } catch {
+        // use original
+      }
+      const preview = URL.createObjectURL(processedFile);
+      setSectionBgFiles((prev) => new Map(prev).set(sectionKey, processedFile));
+      setSectionBgPreviews((prev) => new Map(prev).set(sectionKey, preview));
+      setSectionBackgrounds((prev) => ({
+        ...prev,
+        [sectionKey]: {
+          ...(prev[sectionKey] || {
+            type: 'image',
+            color: '#ffffff',
+            overlay: 40,
+            text_theme: 'light',
+          }),
+          type: 'image',
+          image: preview,
+        },
+      }));
+    },
+    [],
+  );
+
+  const handleSectionBgFileRemove = useCallback((sectionKey: string) => {
+    setSectionBgFiles((prev) => {
+      const next = new Map(prev);
+      next.delete(sectionKey);
+      return next;
+    });
+    setSectionBgPreviews((prev) => {
+      const next = new Map(prev);
+      next.delete(sectionKey);
+      return next;
+    });
+  }, []);
 
   // Hero media state
   const isUploadedFile = settings.hero_image_main.startsWith(
@@ -466,6 +535,12 @@ export default function HomepageSettings({
         detectMediaTypeFromUrl(data.hero_image_main || ''),
       );
     }
+
+    // Section Backgrounds
+    formData.append('section_backgrounds', JSON.stringify(sectionBackgrounds));
+    sectionBgFiles.forEach((file, key) => {
+      formData.append(`section_bg_files[${key}]`, file);
+    });
 
     router.post('/admin/settings/homepage', formData, {
       forceFormData: true,
@@ -834,6 +909,15 @@ export default function HomepageSettings({
               </div>
             </div>
           </div>
+
+          {/* Section Background Customization (Import Gambar / Pilihan Warna untuk setiap sub-bagian) */}
+          <SectionBackgroundsManager
+            backgrounds={sectionBackgrounds}
+            onChange={setSectionBackgrounds}
+            onFileSelect={handleSectionBgFileSelect}
+            onFileRemove={handleSectionBgFileRemove}
+            filePreviews={sectionBgPreviews}
+          />
 
           {/* Hero Section Settings */}
           <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">

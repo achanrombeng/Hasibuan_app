@@ -1,4 +1,4 @@
-import { CarouselBannerSlide, HeroSettings } from '@/types/shop';
+import { CarouselBannerSlide, HeroSettings, SectionBgConfig } from '@/types/shop';
 import { Link } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -22,12 +22,14 @@ interface RHHeroSectionProps {
   banners?: CarouselBannerSlide[];
   heroSettings?: HeroSettings;
   onOpenCatalog?: () => void;
+  bgConfig?: SectionBgConfig;
 }
 
 export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
   banners,
   heroSettings,
   onOpenCatalog,
+  bgConfig,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -150,19 +152,34 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
   return (
     <section
       className="relative w-full h-[88vh] min-h-[620px] max-h-[960px] bg-black overflow-hidden select-none"
+      style={bgConfig?.type === 'color' && bgConfig.color ? { backgroundColor: bgConfig.color } : undefined}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Background Images / Media with Crossfade */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={slide.id}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-0 z-0"
+      {/* Custom Background Image if specified */}
+      {bgConfig?.type === 'image' && bgConfig.image && (
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: `url("${bgConfig.image}")` }}
         >
+          <div
+            className="absolute inset-0 bg-black pointer-events-none"
+            style={{ opacity: (bgConfig.overlay ?? 40) / 100 }}
+          />
+        </div>
+      )}
+
+      {/* Background Images / Media with Crossfade */}
+      {!(bgConfig?.type === 'image' && bgConfig.image) && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 z-0"
+          >
           {slide.mediaType === 'video' ? (
             <video
               src={slide.image}
@@ -183,6 +200,7 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/45 pointer-events-none" />
         </motion.div>
       </AnimatePresence>
+      )}
 
       {/* Symmetrical Monumental Overlay Content */}
       <div className="relative z-10 w-full h-full flex flex-col justify-end items-center pb-16 md:pb-24 px-6 text-center text-white">

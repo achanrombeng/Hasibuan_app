@@ -10,7 +10,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   BookOpen,
   ChevronDown,
-  Heart,
   LayoutDashboard,
   Loader2,
   LogOut,
@@ -56,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
   } = page.props;
   const url = page.url;
 
-  const siteName = siteSettings?.site_name || 'RONICA';
+  const siteName = siteSettings?.site_name || 'Hasibuan Design';
   const siteLogo = siteSettings?.site_logo;
   const user = auth?.user;
   const isAdmin =
@@ -239,27 +238,18 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
 
-            {/* Center: Monumental RH Typographic Logo or Admin Site Logo */}
+            {/* Center: Hasibuan Design Logo */}
             <div className="shrink-0 text-center">
               <Link
                 href="/shop"
                 onClick={onLogoClick}
                 className="inline-flex flex-col items-center group cursor-pointer"
               >
-                {siteLogo && siteLogo !== '/ronica.png' && siteLogo !== '/logo-top.png' ? (
-                  <img
-                    src={siteLogo}
-                    alt={siteName}
-                    className="h-8 md:h-10 w-auto object-contain mb-1 transition-opacity group-hover:opacity-85"
-                  />
-                ) : (
-                  <span className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.38em] text-neutral-950 group-hover:opacity-80 transition-opacity">
-                    R H
-                  </span>
-                )}
-                <span className="text-[9px] sm:text-[10px] tracking-[0.45em] font-light uppercase text-neutral-500 mt-1">
-                  {siteName} · CURATOR OF LUXURY HOME
-                </span>
+                <img
+                  src={siteLogo || '/images/hasibuan-logo.png'}
+                  alt={siteName}
+                  className="h-9 sm:h-11 md:h-12 w-auto object-contain transition-opacity group-hover:opacity-85"
+                />
               </Link>
             </div>
 
@@ -275,16 +265,6 @@ export const Header: React.FC<HeaderProps> = ({
                 <Search size={18} strokeWidth={1.5} />
               </button>
 
-              {/* Wishlist / Saved */}
-              <Link
-                href="/shop/wishlist"
-                className="hidden sm:flex items-center gap-1.5 text-[11px] tracking-[0.25em] uppercase font-light text-neutral-700 hover:text-black transition-colors"
-                title="Saved Items"
-              >
-                <Heart size={13} strokeWidth={1.5} />
-                <span className="hidden xl:inline">SAVED</span>
-                <span>({wishlistCount})</span>
-              </Link>
 
               {/* Language Switcher */}
               <div className="hidden sm:flex items-center">
@@ -624,14 +604,17 @@ export const Header: React.FC<HeaderProps> = ({
             >
               {/* Drawer Header */}
               <div className="p-6 border-b border-neutral-200 flex items-center justify-between">
-                <div>
-                  <span className="font-serif text-2xl font-light tracking-[0.3em] uppercase">
-                    R H
-                  </span>
-                  <span className="block text-[9px] tracking-[0.3em] uppercase text-neutral-400">
-                    {siteName}
-                  </span>
-                </div>
+                <Link
+                  href="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-block"
+                >
+                  <img
+                    src={siteLogo || '/images/hasibuan-logo.png'}
+                    alt={siteName}
+                    className="h-8 w-auto object-contain"
+                  />
+                </Link>
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}

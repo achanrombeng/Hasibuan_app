@@ -3,12 +3,12 @@ import { usePage } from '@inertiajs/react';
 
 export default function AppLogo() {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'hasibuan_app';
-  const siteLogo = siteSettings?.site_logo || '/ronica.png';
+  const siteName = siteSettings?.site_name || 'Hasibuan Design';
+  const siteLogo = siteSettings?.site_logo || '/images/hasibuan-logo.png';
 
   return (
     <>
-      <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-teal-500/10 p-1 text-teal-600">
+      <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-neutral-100 p-1">
         <img
           src={siteLogo}
           alt={siteName}

@@ -1,26 +1,57 @@
-import { ApiCategory } from '@/types/shop';
+import { cn } from '@/lib/utils';
+import { ApiCategory, SectionBgConfig } from '@/types/shop';
 import { Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
 import React from 'react';
+import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
 interface RHGallerySectionProps {
   categories?: ApiCategory[];
+  bgConfig?: SectionBgConfig;
 }
 
-export const RHGallerySection: React.FC<RHGallerySectionProps> = ({ categories = [] }) => {
+export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
+  categories = [],
+  bgConfig,
+}) => {
+  const isCustom = bgConfig && bgConfig.type !== 'default';
+  const isDark = isDarkTheme(bgConfig);
+
   return (
-    <section className="w-full bg-[#fcfcfb] py-16 md:py-28 px-4 sm:px-6 lg:px-12 border-b border-neutral-200/60">
-      <div className="max-w-[1720px] mx-auto space-y-16 md:space-y-24">
-        
+    <section
+      className={cn(
+        'w-full py-16 md:py-28 px-4 sm:px-6 lg:px-12 border-b transition-colors relative overflow-hidden',
+        !isCustom && 'bg-[#fcfcfb] border-neutral-200/60',
+        isCustom && isDark && 'text-white border-white/10',
+        isCustom && !isDark && 'text-neutral-900 border-neutral-200/60',
+      )}
+      style={getSectionBgStyles(bgConfig)}
+    >
+      <SectionBgOverlay config={bgConfig} />
+      <div className="relative z-10 max-w-[1720px] mx-auto space-y-16 md:space-y-24">
         {/* Section Header - Architectural Vitruvian Quote / Title */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-500">
-            THE WORLD OF RONICA
+          <span
+            className={cn(
+              'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
+              isDark ? 'text-neutral-300' : 'text-neutral-500',
+            )}
+          >
+            HASIBUAN DESIGN
           </span>
-          <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-neutral-900 uppercase">
+          <h2
+            className={cn(
+              'font-serif text-2xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] uppercase',
+              isDark ? 'text-white' : 'text-neutral-900',
+            )}
+          >
             ARCHITECTURAL PROPORTION & LIVING
           </h2>
-          <div className="w-12 h-[1px] bg-neutral-400 mx-auto mt-4" />
+          <div
+            className={cn(
+              'w-12 h-[1px] mx-auto mt-4',
+              isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+            )}
+          />
         </div>
 
         {/* 1. Grand Full-Width Architectural Showcase */}

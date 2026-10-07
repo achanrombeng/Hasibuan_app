@@ -1,7 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <!-- Background -->
-  <rect width="32" height="32" rx="4" fill="#0d9488"/>
-  <!-- Stylized "F" for Ronica -->
-  <path d="M8 6 L24 6 L24 10 L12 10 L12 14 L22 14 L22 18 L12 18 L12 26 L8 26 Z" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="sphereGrad" cx="35%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#ff4d4d"/>
+      <stop offset="25%" stop-color="#e02424"/>
+      <stop offset="70%" stop-color="#c81e1e"/>
+      <stop offset="100%" stop-color="#8f1111"/>
+    </radialGradient>
+    <ellipse id="shadow" cx="32" cy="58" rx="20" ry="3.5" fill="#444444" opacity="0.25"/>
+  </defs>
+
+  <!-- Shadow under sphere -->
+  <use href="#shadow" />
+
+  <!-- Red 3D Sphere -->
+  <circle cx="32" cy="30" r="26" fill="url(#sphereGrad)" />
+
+  <!-- Sphere Top-Left Specular Sheen -->
+  <path d="M18 16 A 20 20 0 0 1 36 10 A 18 18 0 0 0 20 24 Z" fill="#ffffff" opacity="0.35" />
+
+  <!-- Classic Serif Capital "H" -->
+  <text 
+    x="32" 
+    y="40" 
+    font-family="'Times New Roman', 'Cormorant Garamond', Georgia, serif" 
+    font-size="33" 
+    font-weight="bold" 
+    fill="#ffffff" 
+    text-anchor="middle"
+    style="text-shadow: 0 1px 2px rgba(0,0,0,0.35);"
+  >H</text>
 </svg>

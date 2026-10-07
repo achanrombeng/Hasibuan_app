@@ -1,11 +1,11 @@
 {
-    "name": "Ronica",
-    "short_name": "Ronica",
-    "description": "Premium quality furniture for modern living",
+    "name": "Hasibuan Design",
+    "short_name": "Hasibuan",
+    "description": "Hasibuan Design – Teak Indoor Design And Manufacturer",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#0d9488",
+    "theme_color": "#c92a2a",
     "orientation": "portrait-primary",
     "icons": [
         {

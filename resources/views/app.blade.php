@@ -6,22 +6,22 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Default SEO Meta Tags --}}
-        <meta name="author" content="Ronica Outdoor Furniture">
-        <meta name="theme-color" content="#BB976D">
-        <meta name="msapplication-TileColor" content="#BB976D">
+        <meta name="author" content="Hasibuan Design">
+        <meta name="theme-color" content="#c92a2a">
+        <meta name="msapplication-TileColor" content="#c92a2a">
 
         {{-- Default Open Graph --}}
         <meta property="og:type" content="website">
-        <meta property="og:site_name" content="Ronica Outdoor Furniture">
+        <meta property="og:site_name" content="Hasibuan Design">
         <meta property="og:locale" content="en_US">
-        <meta property="og:image" content="{{ url('/logo.png') }}">
+        <meta property="og:image" content="{{ url('/images/hasibuan-logo.png') }}">
         <meta property="og:image:width" content="1024">
         <meta property="og:image:height" content="400">
 
         {{-- Default Twitter Card --}}
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@ronica">
-        <meta name="twitter:image" content="{{ url('/logo.png') }}">
+        <meta name="twitter:site" content="@hasibuandesign">
+        <meta name="twitter:image" content="{{ url('/images/hasibuan-logo.png') }}">
 
         {{-- Geo Tags for Local SEO --}}
         <meta name="geo.region" content="ID">
@@ -57,12 +57,15 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Ronica') }}</title>
+        <title inertia>{{ config('app.name', 'Hasibuan Design') }}</title>
 
-        {{-- Favicon --}}
-        <link rel="icon" href="/favicon.png" type="image/png">
-        <link rel="apple-touch-icon" href="/favicon.png">
-        <link rel="manifest" href="/site.webmanifest">
+        {{-- Favicon with cache busting --}}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=hd2026">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=hd2026">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=hd2026">
+        <link rel="shortcut icon" href="/favicon.ico?v=hd2026">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=hd2026">
+        <link rel="manifest" href="/site.webmanifest?v=hd2026">
 
         {{-- Preconnect for Performance --}}
         <link rel="preconnect" href="https://fonts.googleapis.com">

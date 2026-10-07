@@ -12,7 +12,7 @@ import { SiteSettings } from '@/types';
 
 export default function Register() {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'hasibuan_app';
+  const siteName = siteSettings?.site_name || 'Hasibuan Design';
   const { t } = useTranslation();
 
   return (
@@ -30,8 +30,8 @@ export default function Register() {
         {({ processing, errors }) => (
           <>
             <div className="grid gap-5">
-              <div className="grid gap-2">
-                <Label htmlFor="name" className="font-medium text-neutral-700">
+              <div className="grid gap-1.5">
+                <Label htmlFor="name" className="text-[10px] tracking-[0.22em] uppercase font-medium text-neutral-700">
                   {t('auth.register.name_label')}
                 </Label>
                 <input
@@ -43,13 +43,13 @@ export default function Register() {
                   autoComplete="name"
                   name="name"
                   placeholder={t('auth.register.name_placeholder')}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/50 focus:outline-none"
+                  className="w-full border border-neutral-300/80 bg-neutral-50/40 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
                 />
                 <InputError message={errors.name} />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="font-medium text-neutral-700">
+              <div className="grid gap-1.5">
+                <Label htmlFor="email" className="text-[10px] tracking-[0.22em] uppercase font-medium text-neutral-700">
                   {t('auth.register.email_label')}
                 </Label>
                 <input
@@ -60,15 +60,15 @@ export default function Register() {
                   autoComplete="email"
                   name="email"
                   placeholder={t('auth.register.email_placeholder')}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/50 focus:outline-none"
+                  className="w-full border border-neutral-300/80 bg-neutral-50/40 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
                 />
                 <InputError message={errors.email} />
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-1.5">
                 <Label
                   htmlFor="password"
-                  className="font-medium text-neutral-700"
+                  className="text-[10px] tracking-[0.22em] uppercase font-medium text-neutral-700"
                 >
                   {t('auth.register.password_label')}
                 </Label>
@@ -80,15 +80,15 @@ export default function Register() {
                   autoComplete="new-password"
                   name="password"
                   placeholder={t('auth.register.password_placeholder')}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/50 focus:outline-none"
+                  className="w-full border border-neutral-300/80 bg-neutral-50/40 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
                 />
                 <InputError message={errors.password} />
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-1.5">
                 <Label
                   htmlFor="password_confirmation"
-                  className="font-medium text-neutral-700"
+                  className="text-[10px] tracking-[0.22em] uppercase font-medium text-neutral-700"
                 >
                   {t('auth.register.confirm_password_label')}
                 </Label>
@@ -100,7 +100,7 @@ export default function Register() {
                   autoComplete="new-password"
                   name="password_confirmation"
                   placeholder={t('auth.register.confirm_password_placeholder')}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/50 focus:outline-none"
+                  className="w-full border border-neutral-300/80 bg-neutral-50/40 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
                 />
                 <InputError message={errors.password_confirmation} />
               </div>
@@ -110,19 +110,19 @@ export default function Register() {
                 tabIndex={5}
                 disabled={processing}
                 data-test="register-user-button"
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-6 py-3.5 font-medium text-white shadow-sm transition-all duration-300 hover:bg-teal-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-2 flex w-full items-center justify-center gap-2 bg-[#111111] hover:bg-black px-6 py-3.5 text-[11px] tracking-[0.28em] uppercase font-medium text-white shadow-sm transition-all duration-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
               >
                 {processing && <Spinner className="text-white" />}
                 {t('auth.register.submit')}
               </button>
             </div>
 
-            <div className="pt-2 text-center text-sm text-neutral-500">
-              {t('auth.register.has_account')}{' '}
+            <div className="mt-4 pt-5 border-t border-neutral-100 text-center text-xs text-neutral-500 font-light">
+              <span>{t('auth.register.has_account')}</span>{' '}
               <TextLink
                 href={login()}
                 tabIndex={6}
-                className="font-medium text-teal-600 transition-colors hover:text-teal-700"
+                className="font-medium text-neutral-900 hover:text-black tracking-[0.15em] uppercase text-[11px] underline underline-offset-4 ml-1 transition-colors"
               >
                 {t('auth.register.login_link')}
               </TextLink>

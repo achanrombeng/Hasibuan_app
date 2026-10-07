@@ -7,7 +7,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import AuthLayout from '@/layouts/auth-layout';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 
 interface LoginProps {
   status?: string;
@@ -30,7 +30,7 @@ export default function Login({
       <Head title={t('auth.login.page_title')} />
 
       {status && (
-        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-center text-sm font-medium text-green-600">
+        <div className="mb-6 border border-emerald-200 bg-emerald-50/80 px-4 py-3 text-center text-xs font-light tracking-wide text-emerald-800">
           {status}
         </div>
       )}
@@ -43,8 +43,12 @@ export default function Login({
         {({ processing, errors }) => (
           <>
             <div className="grid gap-5">
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="font-medium text-neutral-700">
+              {/* Email Address */}
+              <div className="grid gap-1.5">
+                <Label
+                  htmlFor="email"
+                  className="text-[10px] tracking-[0.22em] uppercase font-medium text-neutral-700"
+                >
                   {t('auth.login.email_label')}
                 </Label>
                 <input
@@ -56,23 +60,24 @@ export default function Login({
                   tabIndex={1}
                   autoComplete="email"
                   placeholder={t('auth.login.email_placeholder')}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/50 focus:outline-none"
+                  className="w-full border border-neutral-300/80 bg-neutral-50/40 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
                 />
                 <InputError message={errors.email} />
               </div>
 
-              <div className="grid gap-2">
+              {/* Password */}
+              <div className="grid gap-1.5">
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="password"
-                    className="font-medium text-neutral-700"
+                    className="text-[10px] tracking-[0.22em] uppercase font-medium text-neutral-700"
                   >
                     {t('auth.login.password_label')}
                   </Label>
                   {canResetPassword && (
                     <TextLink
                       href={request()}
-                      className="text-sm text-teal-600 transition-colors hover:text-teal-700"
+                      className="text-[11px] tracking-wider uppercase text-neutral-500 hover:text-black transition-colors font-light"
                       tabIndex={5}
                     >
                       {t('auth.login.forgot_password')}
@@ -87,36 +92,51 @@ export default function Login({
                   tabIndex={2}
                   autoComplete="current-password"
                   placeholder={t('auth.login.password_placeholder')}
-                  className="w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all placeholder:text-neutral-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/50 focus:outline-none"
+                  className="w-full border border-neutral-300/80 bg-neutral-50/40 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900 focus:outline-none transition-all"
                 />
                 <InputError message={errors.password} />
               </div>
 
-              <div className="flex items-center space-x-3">
+              {/* Remember Me */}
+              <div className="flex items-center space-x-2.5 pt-1">
                 <Checkbox
                   id="remember"
                   name="remember"
                   tabIndex={3}
-                  className="border-neutral-300 data-[state=checked]:border-teal-600 data-[state=checked]:bg-teal-600"
+                  className="border-neutral-300 rounded-[2px] data-[state=checked]:border-neutral-900 data-[state=checked]:bg-neutral-900"
                 />
                 <Label
                   htmlFor="remember"
-                  className="cursor-pointer text-sm text-neutral-600"
+                  className="cursor-pointer text-xs font-light text-neutral-600 select-none"
                 >
                   {t('auth.login.remember_me')}
                 </Label>
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 tabIndex={4}
                 disabled={processing}
                 data-test="login-button"
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-6 py-3.5 font-medium text-white shadow-sm transition-all duration-300 hover:bg-teal-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-2 flex w-full items-center justify-center gap-2 bg-[#111111] hover:bg-black px-6 py-3.5 text-[11px] tracking-[0.28em] uppercase font-medium text-white shadow-sm transition-all duration-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
               >
                 {processing && <Spinner className="text-white" />}
                 {t('auth.login.submit')}
               </button>
+
+              {/* Register Link */}
+              {canRegister && (
+                <div className="mt-4 pt-5 border-t border-neutral-100 text-center text-xs text-neutral-500 font-light">
+                  <span>{t('auth.login.no_account') || "Don't have an account?"}</span>{' '}
+                  <Link
+                    href="/register"
+                    className="font-medium text-neutral-900 hover:text-black tracking-[0.15em] uppercase text-[11px] underline underline-offset-4 ml-1 transition-colors"
+                  >
+                    {t('auth.login.register_link') || 'Register'}
+                  </Link>
+                </div>
+              )}
             </div>
           </>
         )}

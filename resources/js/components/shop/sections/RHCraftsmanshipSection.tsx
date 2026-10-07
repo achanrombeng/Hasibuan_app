@@ -1,12 +1,16 @@
-import { CraftsmanshipSettings } from '@/types/shop';
+import { cn } from '@/lib/utils';
+import { CraftsmanshipSettings, SectionBgConfig } from '@/types/shop';
 import React from 'react';
+import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
 interface RHCraftsmanshipSectionProps {
   settings?: CraftsmanshipSettings;
+  bgConfig?: SectionBgConfig;
 }
 
 export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
   settings,
+  bgConfig,
 }) => {
   const title1 = settings?.title_1 || 'HANDCRAFTED ALL-WEATHER WEAVING';
   const desc1 =
@@ -16,7 +20,7 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
   const title2 = settings?.title_2 || 'GRADE-A CERTIFIED SUSTAINABLE TEAK';
   const desc2 =
     settings?.desc_2 ||
-    "Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.";
+    'Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.';
 
   const craftImage =
     Array.isArray(settings?.images_1) && settings.images_1.length > 0
@@ -28,19 +32,45 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
       ? settings.images_2[0]
       : 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1600&auto=format&fit=crop';
 
+  const isCustom = bgConfig && bgConfig.type !== 'default';
+  const isDark = isDarkTheme(bgConfig);
+
   return (
-    <section className="w-full bg-[#fcfcfb] py-20 md:py-32 px-6 sm:px-12 lg:px-20 border-b border-neutral-200/60">
-      <div className="max-w-[1720px] mx-auto space-y-20 md:space-y-32">
-        
+    <section
+      className={cn(
+        'w-full py-20 md:py-32 px-6 sm:px-12 lg:px-20 border-b transition-colors relative overflow-hidden',
+        !isCustom && 'bg-[#fcfcfb] border-neutral-200/60',
+        isCustom && isDark && 'text-white border-white/10',
+        isCustom && !isDark && 'text-neutral-900 border-neutral-200/60',
+      )}
+      style={getSectionBgStyles(bgConfig)}
+    >
+      <SectionBgOverlay config={bgConfig} />
+      <div className="relative z-10 max-w-[1720px] mx-auto space-y-20 md:space-y-32">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-500">
+          <span
+            className={cn(
+              'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
+              isDark ? 'text-neutral-300' : 'text-neutral-500',
+            )}
+          >
             MATERIAL PROVENANCE
           </span>
-          <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-neutral-900 uppercase">
+          <h2
+            className={cn(
+              'font-serif text-2xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] uppercase',
+              isDark ? 'text-white' : 'text-neutral-900',
+            )}
+          >
             THE ART OF MASTER CRAFTSMANSHIP
           </h2>
-          <div className="w-12 h-[1px] bg-neutral-400 mx-auto mt-4" />
+          <div
+            className={cn(
+              'w-12 h-[1px] mx-auto mt-4',
+              isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+            )}
+          />
         </div>
 
         {/* Feature 1: Teak Wood (Image Left, Text Right) */}
@@ -55,14 +85,34 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
             </div>
           </div>
           <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
-            <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block">
+            <span
+              className={cn(
+                'text-[10px] tracking-[0.3em] uppercase font-light block',
+                isDark ? 'text-neutral-400' : 'text-neutral-500',
+              )}
+            >
               INDONESIAN TIMBER
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase text-neutral-900">
+            <h3
+              className={cn(
+                'font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase',
+                isDark ? 'text-white' : 'text-neutral-900',
+              )}
+            >
               {title2}
             </h3>
-            <div className="w-10 h-[1px] bg-neutral-400 mx-auto lg:mx-0" />
-            <p className="text-xs sm:text-sm text-neutral-600 font-light leading-relaxed tracking-wide">
+            <div
+              className={cn(
+                'w-10 h-[1px] mx-auto lg:mx-0',
+                isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+              )}
+            />
+            <p
+              className={cn(
+                'text-xs sm:text-sm font-light leading-relaxed tracking-wide',
+                isDark ? 'text-neutral-200' : 'text-neutral-600',
+              )}
+            >
               {desc2}
             </p>
           </div>
@@ -71,14 +121,34 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
         {/* Feature 2: Hand Weaving (Text Left, Image Right) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           <div className="lg:col-span-5 order-2 lg:order-1 space-y-6 text-center lg:text-left">
-            <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block">
+            <span
+              className={cn(
+                'text-[10px] tracking-[0.3em] uppercase font-light block',
+                isDark ? 'text-neutral-400' : 'text-neutral-500',
+              )}
+            >
               ARTISAN WEAVING
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase text-neutral-900">
+            <h3
+              className={cn(
+                'font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase',
+                isDark ? 'text-white' : 'text-neutral-900',
+              )}
+            >
               {title1}
             </h3>
-            <div className="w-10 h-[1px] bg-neutral-400 mx-auto lg:mx-0" />
-            <p className="text-xs sm:text-sm text-neutral-600 font-light leading-relaxed tracking-wide">
+            <div
+              className={cn(
+                'w-10 h-[1px] mx-auto lg:mx-0',
+                isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+              )}
+            />
+            <p
+              className={cn(
+                'text-xs sm:text-sm font-light leading-relaxed tracking-wide',
+                isDark ? 'text-neutral-200' : 'text-neutral-600',
+              )}
+            >
               {desc1}
             </p>
           </div>
@@ -92,7 +162,6 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );
