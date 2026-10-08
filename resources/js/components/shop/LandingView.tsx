@@ -36,6 +36,8 @@ interface SectionVisibility {
   products?: boolean;
   testimonials?: boolean;
   articles?: boolean;
+  manifesto?: boolean;
+  interior_design?: boolean;
   newsletter?: boolean;
 }
 
@@ -85,6 +87,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
     products: sectionVisibility?.products ?? true,
     testimonials: sectionVisibility?.testimonials ?? true,
     articles: sectionVisibility?.articles ?? true,
+    manifesto: sectionVisibility?.manifesto ?? true,
+    interior_design: sectionVisibility?.interior_design ?? true,
     newsletter: sectionVisibility?.newsletter ?? true,
   };
 
@@ -102,11 +106,11 @@ export const LandingView: React.FC<LandingViewProps> = ({
       exit={{ opacity: 0 }}
       className="overflow-hidden bg-[#fcfcfb]"
     >
-      {/* 1. RH Monumental Lookbook Hero (Sync with Admin Carousel Banners & Hero Settings) */}
+      {/* 1. Hasibuan Monumental Lookbook Hero (Sync with Admin Carousel Banners & Hero Settings) */}
       {showHero && (
         <RHHeroSection
-          banners={carouselBanners}
-          heroSettings={heroSettings}
+          banners={visibility.carousel_banners ? carouselBanners : []}
+          heroSettings={visibility.hero ? heroSettings : undefined}
           onOpenCatalog={() => setCatalogModalOpen(true)}
           bgConfig={sectionBackgrounds?.['hero']}
         />
@@ -137,7 +141,9 @@ export const LandingView: React.FC<LandingViewProps> = ({
       )}
 
       {/* 5. Vitruvian Architectural Manifesto / Philosophy */}
-      <RHManifestoSection bgConfig={sectionBackgrounds?.['manifesto']} />
+      {visibility.manifesto && (
+        <RHManifestoSection bgConfig={sectionBackgrounds?.['manifesto']} />
+      )}
 
       {/* 6. Vitruvian Core Values (Sync with Admin Home Values & Philosophy) */}
       {visibility.values && (
@@ -149,8 +155,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
         />
       )}
 
-      {/* 7. RH Interior Design Studio & Atelier Consultation */}
-      <RHInteriorDesignSection bgConfig={sectionBackgrounds?.['interior_design']} />
+      {/* 7. Hasibuan Interior Design Studio & Atelier Consultation */}
+      {visibility.interior_design && (
+        <RHInteriorDesignSection bgConfig={sectionBackgrounds?.['interior_design']} />
+      )}
 
       {/* 8. Material Provenance & Master Craftsmanship (Sync with Admin Craftsmanship Settings) */}
       {visibility.craftsmanship && (
@@ -177,13 +185,15 @@ export const LandingView: React.FC<LandingViewProps> = ({
       )}
 
       {/* Interactive 3D Flipbook Modal */}
-      <CatalogModal
-        isOpen={catalogModalOpen}
-        onClose={() => setCatalogModalOpen(false)}
-        title={siteSettings?.catalog_title || 'Ronica Product Catalogue 2026'}
-        pdfUrl={siteSettings?.catalog_pdf_url || '/catalogs/ronica-catalog-2026.pdf'}
-        initialMode="3d"
-      />
+      {visibility.catalog && (
+        <CatalogModal
+          isOpen={catalogModalOpen}
+          onClose={() => setCatalogModalOpen(false)}
+          title={siteSettings?.catalog_title || 'Ronica Product Catalogue 2026'}
+          pdfUrl={siteSettings?.catalog_pdf_url || '/catalogs/ronica-catalog-2026.pdf'}
+          initialMode="3d"
+        />
+      )}
     </motion.div>
   );
 };

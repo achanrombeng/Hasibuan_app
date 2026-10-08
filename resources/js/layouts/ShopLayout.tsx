@@ -13,6 +13,7 @@ import { toast, Toaster } from 'sonner';
 interface ShopLayoutProps {
   children: ReactNode;
   showFooter?: boolean;
+  showNewsletter?: boolean;
   showWhatsApp?: boolean;
   whatsAppMessage?: string;
   bannerVisible?: boolean;
@@ -22,6 +23,7 @@ interface ShopLayoutProps {
 export function ShopLayout({
   children,
   showFooter = true,
+  showNewsletter = true,
   showWhatsApp = true,
   whatsAppMessage = "Hello, I'd like to inquire about a product",
   bannerVisible = false,
@@ -58,6 +60,7 @@ export function ShopLayout({
   return (
     <>
       <Toaster position="top-right" richColors />
+
       {/* Custom Cursor - smooth following effect like realteakfurniture.com */}
       <CustomCursor />
 
@@ -71,7 +74,7 @@ export function ShopLayout({
 
       {children}
 
-      {showFooter && <Footer />}
+      {showFooter && <Footer showNewsletter={showNewsletter} />}
 
       {showWhatsApp && (
         <WhatsAppButton phoneNumber={whatsAppPhone} message={whatsAppMessage} />

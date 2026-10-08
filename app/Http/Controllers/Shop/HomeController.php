@@ -71,7 +71,7 @@ class HomeController extends Controller
         // Hero Settings (with locale support)
         $locale = app()->getLocale();
         $heroSettings = [
-            'badge' => Setting::get("hero_badge_{$locale}", Setting::get('hero_badge', 'RH OUTDOOR 2026')),
+            'badge' => Setting::get("hero_badge_{$locale}", Setting::get('hero_badge', 'HASIBUAN OUTDOOR 2026')),
             'title' => Setting::get("hero_title_{$locale}", Setting::get('hero_title', 'THE ARCHITECTURAL TEAK & ROPE')),
             'title_highlight' => Setting::get("hero_title_highlight_{$locale}", Setting::get('hero_title_highlight', 'COLLECTION')),
             'description' => Setting::get("hero_description_{$locale}", Setting::get('hero_description', 'Vitruvian Balance, Enduring Proportion & Master Craftsmanship from Jepara')),
@@ -148,6 +148,8 @@ class HomeController extends Controller
                 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
                 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop',
             ])), true) ?? [],
+            'row_1_visible' => filter_var(Setting::get('craftsmanship_row_1_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+            'row_2_visible' => filter_var(Setting::get('craftsmanship_row_2_visible', '1'), FILTER_VALIDATE_BOOLEAN),
         ];
 
         // Page-specific Site Settings for SEO (siteSettings is shared via middleware)
@@ -168,6 +170,8 @@ class HomeController extends Controller
             'products' => filter_var(Setting::get('section_products_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'testimonials' => filter_var(Setting::get('section_testimonials_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'articles' => filter_var(Setting::get('section_articles_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+            'manifesto' => filter_var(Setting::get('section_manifesto_visible', '1'), FILTER_VALIDATE_BOOLEAN),
+            'interior_design' => filter_var(Setting::get('section_interior_design_visible', '1'), FILTER_VALIDATE_BOOLEAN),
             'newsletter' => filter_var(Setting::get('section_newsletter_visible', '1'), FILTER_VALIDATE_BOOLEAN),
         ];
 

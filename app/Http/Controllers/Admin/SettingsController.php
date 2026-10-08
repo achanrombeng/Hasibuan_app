@@ -296,7 +296,7 @@ class SettingsController extends Controller
             'settings' => [
                 'site_logo' => $settings['site_logo'] ?? '/images/hasibuan-logo.png',
                 // Hero Section (locale-aware)
-                'hero_badge' => $settings["hero_badge_{$locale}"] ?? $settings['hero_badge'] ?? 'RH OUTDOOR 2026',
+                'hero_badge' => $settings["hero_badge_{$locale}"] ?? $settings['hero_badge'] ?? 'HASIBUAN OUTDOOR 2026',
                 'hero_title' => $settings["hero_title_{$locale}"] ?? $settings['hero_title'] ?? 'THE ARCHITECTURAL TEAK & ROPE',
                 'hero_title_highlight' => $settings["hero_title_highlight_{$locale}"] ?? $settings['hero_title_highlight'] ?? 'COLLECTION',
                 'hero_description' => $settings["hero_description_{$locale}"] ?? $settings['hero_description'] ?? 'Vitruvian Balance, Enduring Proportion & Master Craftsmanship from Jepara',
@@ -366,6 +366,8 @@ class SettingsController extends Controller
                     'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop',
                 ]),
+                'craftsmanship_row_1_visible' => filter_var($settings['craftsmanship_row_1_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'craftsmanship_row_2_visible' => filter_var($settings['craftsmanship_row_2_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 // Section visibility (not locale-specific)
                 'section_carousel_banners_visible' => filter_var($settings['section_carousel_banners_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_hero_visible' => filter_var($settings['section_hero_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
@@ -376,6 +378,9 @@ class SettingsController extends Controller
                 'section_values_visible' => filter_var($settings['section_values_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_products_visible' => filter_var($settings['section_products_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_testimonials_visible' => filter_var($settings['section_testimonials_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'section_articles_visible' => filter_var($settings['section_articles_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'section_manifesto_visible' => filter_var($settings['section_manifesto_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+                'section_interior_design_visible' => filter_var($settings['section_interior_design_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 'section_newsletter_visible' => filter_var($settings['section_newsletter_visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
                 // Section Backgrounds (JSON object)
                 'section_backgrounds' => $settings['section_backgrounds'] ?? '{}',
@@ -414,6 +419,8 @@ class SettingsController extends Controller
             'craftsmanship_images_2' => ['nullable', 'string'],
             'craftsmanship_images_2_files' => ['nullable', 'array'],
             'craftsmanship_images_2_files.*' => ['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,webp,gif'],
+            'craftsmanship_row_1_visible' => ['nullable', 'boolean'],
+            'craftsmanship_row_2_visible' => ['nullable', 'boolean'],
             // Carousel banners
             'carousel_banners' => ['nullable', 'string'],
             'carousel_banner_files' => ['nullable', 'array'],
@@ -428,6 +435,9 @@ class SettingsController extends Controller
             'section_values_visible' => ['required', 'boolean'],
             'section_products_visible' => ['required', 'boolean'],
             'section_testimonials_visible' => ['required', 'boolean'],
+            'section_articles_visible' => ['nullable', 'boolean'],
+            'section_manifesto_visible' => ['nullable', 'boolean'],
+            'section_interior_design_visible' => ['nullable', 'boolean'],
             'section_newsletter_visible' => ['required', 'boolean'],
             // Section Backgrounds
             'section_backgrounds' => ['nullable', 'string'],
@@ -460,8 +470,11 @@ class SettingsController extends Controller
             $mime = $file->getMimeType();
             $validated['hero_media_type'] = str_starts_with($mime, 'video/') ? 'video' : 'image';
         } elseif (! empty($validated['hero_image_main'])) {
-            // URL mode — clean up old uploaded file
-            $this->deleteOldHeroFile();
+            // URL mode — clean up old uploaded file only if changed
+            $currentHero = Setting::get('hero_image_main');
+            if ($currentHero && $currentHero !== $validated['hero_image_main']) {
+                $this->deleteOldHeroFile();
+            }
 
             // Auto-detect media type from URL extension
             $ext = strtolower(pathinfo(parse_url($validated['hero_image_main'], PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
@@ -846,39 +859,70 @@ class SettingsController extends Controller
         $settings = Setting::all()->pluck('value', 'key')->toArray();
 
         $defaultCol1Links = json_encode([
-            ['label' => 'Semua Produk', 'url' => '/shop/products'],
-            ['label' => 'Hot Sale', 'url' => '/shop/products/hot-sale'],
-            ['label' => 'Produk Terbaru', 'url' => '/shop/products?sort=newest'],
+            ['label' => 'JEPARA CRAFT ATELIER', 'url' => '/shop/about'],
+            ['label' => 'JAKARTA DESIGN SUITE', 'url' => '/shop/about'],
+            ['label' => 'SCHEDULE PRIVATE VISIT', 'url' => '/shop/contact'],
+            ['label' => 'OUR HERITAGE & PROVENANCE', 'url' => '/shop/about'],
         ]);
 
         $defaultCol2Links = json_encode([
-            ['label' => 'Tentang Kami', 'url' => '/shop/about'],
-            ['label' => 'Kontak', 'url' => '/shop/contact'],
-            ['label' => 'FAQ', 'url' => '/shop/faq'],
+            ['label' => 'HASIBUAN INTERIOR DESIGN', 'url' => '/shop/custom-order'],
+            ['label' => 'TRADE & B2B PROGRAM', 'url' => '/shop/dealer'],
+            ['label' => 'CUSTOM CONTRACT ORDERS', 'url' => '/shop/custom-order'],
+            ['label' => 'DIGITAL SOURCE BOOKS', 'url' => '/shop/catalogs'],
+        ]);
+
+        $defaultCol3Links = json_encode([
+            ['label' => 'CLIENT CONCIERGE', 'url' => '/shop/contact'],
+            ['label' => 'WHITE-GLOVE DELIVERY', 'url' => '/shop/shipping-policy'],
+            ['label' => 'RETURNS & SATISFACTION', 'url' => '/shop/return-policy'],
+            ['label' => 'CARE & TIMBER WARRANTY', 'url' => '/shop/faq'],
+        ]);
+
+        $defaultCol4Links = json_encode([
+            ['label' => 'VITRUVIAN PRINCIPLES', 'url' => '/shop/about'],
+            ['label' => 'SUSTAINABLE TEAK FORESTRY', 'url' => '/shop/about'],
+            ['label' => 'ARCHITECTURAL ESSAYS', 'url' => '/shop/articles'],
+            ['label' => 'ETHICAL SOURCING', 'url' => '/shop/privacy-policy'],
         ]);
 
         return Inertia::render('Admin/Settings/Footer', [
             'settings' => [
-                'footer_description' => $settings['footer_description'] ?? '',
-                'footer_copyright' => $settings['footer_copyright'] ?? '',
-                'footer_col1_title' => $settings['footer_col1_title'] ?? 'Belanja',
+                'footer_description' => $settings['footer_description'] ?? 'Minimalist furniture crafted from sustainable materials. Created for those who find luxury in simplicity.',
+                'footer_tagline' => $settings['footer_tagline'] ?? 'HASIBUAN DESIGN · THE CONTEMPORARY AND ART FINES FURNITURE',
+                'footer_copyright' => $settings['footer_copyright'] ?? '© ' . date('Y') . ' HASIBUAN DESIGN. ALL RIGHTS RESERVED. ARCHITECTURAL & INTERIOR DESIGN DESIGNS PROTECTED.',
+                'footer_show_newsletter' => array_key_exists('footer_show_newsletter', $settings) ? filter_var($settings['footer_show_newsletter'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_newsletter_badge' => $settings['footer_newsletter_badge'] ?? 'STAY CONNECTED',
+                'footer_newsletter_title' => $settings['footer_newsletter_title'] ?? 'BE THE FIRST TO KNOW',
+                'footer_newsletter_subtitle' => $settings['footer_newsletter_subtitle'] ?? 'Sign up to receive exclusive previews of new collections, seasonal source books, and private gallery events.',
+                'footer_col1_title' => $settings['footer_col1_title'] ?? 'GALLERIES & STUDIOS',
                 'footer_col1_links' => $settings['footer_col1_links'] ?? $defaultCol1Links,
-                'footer_col2_title' => $settings['footer_col2_title'] ?? 'Perusahaan',
+                'footer_col2_title' => $settings['footer_col2_title'] ?? 'DESIGN & ARCHITECTURE',
                 'footer_col2_links' => $settings['footer_col2_links'] ?? $defaultCol2Links,
-                'footer_contact_title' => $settings['footer_contact_title'] ?? 'Informasi Kontak',
-                'footer_show_factory' => array_key_exists('footer_show_factory', $settings) ? filter_var($settings['footer_show_factory'], FILTER_VALIDATE_BOOLEAN) : true,
-                'footer_show_showroom' => array_key_exists('footer_show_showroom', $settings) ? filter_var($settings['footer_show_showroom'], FILTER_VALIDATE_BOOLEAN) : true,
-                'footer_show_phone' => array_key_exists('footer_show_phone', $settings) ? filter_var($settings['footer_show_phone'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_col3_title' => $settings['footer_col3_title'] ?? 'CLIENT SERVICES',
+                'footer_col3_links' => $settings['footer_col3_links'] ?? $defaultCol3Links,
+                'footer_col4_title' => $settings['footer_col4_title'] ?? 'PHILOSOPHY & ETHOS',
+                'footer_col4_links' => $settings['footer_col4_links'] ?? $defaultCol4Links,
+                'footer_contact_title' => $settings['footer_contact_title'] ?? 'CONTACT & CONCIERGE',
+                'footer_show_factory' => array_key_exists('footer_show_factory', $settings) ? filter_var($settings['footer_show_factory'], FILTER_VALIDATE_BOOLEAN) : false,
+                'footer_show_showroom' => array_key_exists('footer_show_showroom', $settings) ? filter_var($settings['footer_show_showroom'], FILTER_VALIDATE_BOOLEAN) : false,
+                'footer_show_phone' => array_key_exists('footer_show_phone', $settings) ? filter_var($settings['footer_show_phone'], FILTER_VALIDATE_BOOLEAN) : false,
                 'footer_show_whatsapp' => array_key_exists('footer_show_whatsapp', $settings) ? filter_var($settings['footer_show_whatsapp'], FILTER_VALIDATE_BOOLEAN) : true,
-                'footer_show_email' => array_key_exists('footer_show_email', $settings) ? filter_var($settings['footer_show_email'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_show_email' => array_key_exists('footer_show_email', $settings) ? filter_var($settings['footer_show_email'], FILTER_VALIDATE_BOOLEAN) : false,
                 'footer_show_socials' => array_key_exists('footer_show_socials', $settings) ? filter_var($settings['footer_show_socials'], FILTER_VALIDATE_BOOLEAN) : true,
                 'footer_show_privacy' => array_key_exists('footer_show_privacy', $settings) ? filter_var($settings['footer_show_privacy'], FILTER_VALIDATE_BOOLEAN) : true,
                 'footer_show_terms' => array_key_exists('footer_show_terms', $settings) ? filter_var($settings['footer_show_terms'], FILTER_VALIDATE_BOOLEAN) : true,
                 'youtube_url' => $settings['youtube_url'] ?? '',
                 'footer_privacy_url' => $settings['footer_privacy_url'] ?? '/shop/privacy-policy',
                 'footer_terms_url' => $settings['footer_terms_url'] ?? '/shop/terms',
+                'footer_show_sitemap' => array_key_exists('footer_show_sitemap', $settings) ? filter_var($settings['footer_show_sitemap'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_sitemap_url' => $settings['footer_sitemap_url'] ?? '/sitemap.xml',
+                'footer_show_accessibility' => array_key_exists('footer_show_accessibility', $settings) ? filter_var($settings['footer_show_accessibility'], FILTER_VALIDATE_BOOLEAN) : true,
+                'footer_accessibility_text' => $settings['footer_accessibility_text'] ?? 'ACCESSIBILITY',
                 // Inherited site contact info for reference & social media management
-                'site_description' => $settings['site_description'] ?? '',
+                'site_name' => $settings['site_name'] ?? 'Hasibuan Design',
+                'site_description' => $settings['site_description'] ?? 'Hasibuan Design – Teak Indoor Design And Manufacturer',
+                'site_logo' => $settings['site_logo'] ?? '/images/hasibuan-logo.png',
                 'contact_email' => $settings['contact_email'] ?? '',
                 'contact_phone' => $settings['contact_phone'] ?? '',
                 'contact_whatsapp' => $settings['contact_whatsapp'] ?? '',
@@ -898,11 +942,20 @@ class SettingsController extends Controller
     {
         $validated = $request->validate([
             'footer_description' => ['nullable', 'string', 'max:1000'],
+            'footer_tagline' => ['nullable', 'string', 'max:255'],
             'footer_copyright' => ['nullable', 'string', 'max:255'],
+            'footer_show_newsletter' => ['required', 'boolean'],
+            'footer_newsletter_badge' => ['nullable', 'string', 'max:100'],
+            'footer_newsletter_title' => ['nullable', 'string', 'max:255'],
+            'footer_newsletter_subtitle' => ['nullable', 'string', 'max:500'],
             'footer_col1_title' => ['required', 'string', 'max:100'],
             'footer_col1_links' => ['nullable', 'string'],
             'footer_col2_title' => ['required', 'string', 'max:100'],
             'footer_col2_links' => ['nullable', 'string'],
+            'footer_col3_title' => ['required', 'string', 'max:100'],
+            'footer_col3_links' => ['nullable', 'string'],
+            'footer_col4_title' => ['required', 'string', 'max:100'],
+            'footer_col4_links' => ['nullable', 'string'],
             'footer_contact_title' => ['required', 'string', 'max:100'],
             'footer_show_factory' => ['required', 'boolean'],
             'footer_show_showroom' => ['required', 'boolean'],
@@ -912,6 +965,8 @@ class SettingsController extends Controller
             'footer_show_socials' => ['required', 'boolean'],
             'footer_show_privacy' => ['required', 'boolean'],
             'footer_show_terms' => ['required', 'boolean'],
+            'footer_show_sitemap' => ['required', 'boolean'],
+            'footer_show_accessibility' => ['required', 'boolean'],
             'social_links' => ['nullable', 'string'],
             'facebook_url' => ['nullable', 'string', 'max:255'],
             'instagram_url' => ['nullable', 'string', 'max:255'],
@@ -920,6 +975,8 @@ class SettingsController extends Controller
             'linkedin_url' => ['nullable', 'string', 'max:255'],
             'footer_privacy_url' => ['nullable', 'string', 'max:255'],
             'footer_terms_url' => ['nullable', 'string', 'max:255'],
+            'footer_sitemap_url' => ['nullable', 'string', 'max:255'],
+            'footer_accessibility_text' => ['nullable', 'string', 'max:255'],
         ]);
 
         if ($request->has('social_links')) {

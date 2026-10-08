@@ -3,11 +3,19 @@ import { useTranslation } from '@/hooks/use-translation';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import { compressImage } from '@/utils/image-compress';
 import { Head, router, useForm } from '@inertiajs/react';
+import { toast } from 'sonner';
 import MDEditor from '@uiw/react-md-editor';
+import { Switch } from '@/components/ui/switch';
 import {
   ArrowDown,
+  ArrowRight,
   ArrowUp,
   BookOpen,
+  Building2,
+  Check,
+  CheckCircle2,
+  Eye,
+  EyeOff,
   Home,
   Image,
   LayoutGrid,
@@ -26,7 +34,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
-import { SectionBackgroundsManager } from './SectionBackgroundsManager';
+import { SingleSectionBackgroundControl } from './SectionBackgroundsManager';
 import { SectionBgConfig } from '@/types/shop';
 
 interface CarouselBanner {
@@ -60,6 +68,8 @@ interface HomepageSettingsProps {
     craftsmanship_title_2?: string;
     craftsmanship_desc_2?: string;
     craftsmanship_images_2?: string;
+    craftsmanship_row_1_visible?: boolean;
+    craftsmanship_row_2_visible?: boolean;
     // Section visibility
     section_carousel_banners_visible: boolean;
     section_hero_visible: boolean;
@@ -70,6 +80,9 @@ interface HomepageSettingsProps {
     section_values_visible: boolean;
     section_products_visible: boolean;
     section_testimonials_visible: boolean;
+    section_articles_visible?: boolean;
+    section_manifesto_visible?: boolean;
+    section_interior_design_visible?: boolean;
     section_newsletter_visible: boolean;
     section_backgrounds?: string;
   };
@@ -86,59 +99,20 @@ interface TrustLogo {
   logo_url?: string;
 }
 
-const SECTIONS = [
-  {
-    key: 'logo',
-    label: 'Website Logo',
-    icon: Image,
-    desc: 'Store logo & header',
-  },
-  { key: 'hero', label: 'Hero', icon: Home, desc: 'Main hero banner' },
-  {
-    key: 'carousel_banners',
-    label: 'Carousel Banners',
-    icon: SlidersHorizontal,
-    desc: 'Carousel banners',
-  },
-  {
-    key: 'trust',
-    label: 'Trust Logos',
-    icon: Users,
-    desc: 'Media & brand logos',
-  },
-  {
-    key: 'categories',
-    label: 'Categories',
-    icon: LayoutGrid,
-    desc: 'Product categories',
-  },
-  {
-    key: 'craftsmanship',
-    label: 'Craftsmanship',
-    icon: Sparkles,
-    desc: 'Craft & materials',
-  },
-  { key: 'catalog', label: 'Catalog', icon: BookOpen, desc: 'Flipbook PDF' },
-  { key: 'values', label: 'Core Values', icon: Quote, desc: 'Features & USP' },
-  {
-    key: 'products',
-    label: 'Featured Products',
-    icon: ShoppingBag,
-    desc: 'Selected products',
-  },
-  {
-    key: 'testimonials',
-    label: 'Testimonials',
-    icon: MessageSquare,
-    desc: 'Customer reviews',
-  },
-  {
-    key: 'newsletter',
-    label: 'Newsletter',
-    icon: Mail,
-    desc: 'Subscribe form',
-  },
-];
+export type HomepageVisibilityField =
+  | 'section_hero_visible'
+  | 'section_carousel_banners_visible'
+  | 'section_trust_visible'
+  | 'section_categories_visible'
+  | 'section_products_visible'
+  | 'section_manifesto_visible'
+  | 'section_values_visible'
+  | 'section_interior_design_visible'
+  | 'section_craftsmanship_visible'
+  | 'section_testimonials_visible'
+  | 'section_articles_visible'
+  | 'section_newsletter_visible'
+  | 'section_catalog_visible';
 
 export default function HomepageSettings({
   settings,
@@ -364,6 +338,10 @@ export default function HomepageSettings({
     craftsmanship_desc_2:
       settings.craftsmanship_desc_2 ||
       'Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.',
+    craftsmanship_row_1_visible:
+      settings.craftsmanship_row_1_visible ?? true,
+    craftsmanship_row_2_visible:
+      settings.craftsmanship_row_2_visible ?? true,
     // Section visibility
     section_carousel_banners_visible:
       settings.section_carousel_banners_visible ?? true,
@@ -376,6 +354,10 @@ export default function HomepageSettings({
     section_values_visible: settings.section_values_visible ?? true,
     section_products_visible: settings.section_products_visible ?? true,
     section_testimonials_visible: settings.section_testimonials_visible ?? true,
+    section_articles_visible: settings.section_articles_visible ?? true,
+    section_manifesto_visible: settings.section_manifesto_visible ?? true,
+    section_interior_design_visible:
+      settings.section_interior_design_visible ?? true,
     section_newsletter_visible: settings.section_newsletter_visible ?? true,
   });
 
@@ -475,6 +457,14 @@ export default function HomepageSettings({
     craftsmanshipFiles2.forEach((file, index) => {
       formData.append(`craftsmanship_images_2_files[${index}]`, file);
     });
+    formData.append(
+      'craftsmanship_row_1_visible',
+      data.craftsmanship_row_1_visible ? '1' : '0',
+    );
+    formData.append(
+      'craftsmanship_row_2_visible',
+      data.craftsmanship_row_2_visible ? '1' : '0',
+    );
 
     // Section visibility
     formData.append(
@@ -514,6 +504,18 @@ export default function HomepageSettings({
       data.section_testimonials_visible ? '1' : '0',
     );
     formData.append(
+      'section_articles_visible',
+      data.section_articles_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_manifesto_visible',
+      data.section_manifesto_visible ? '1' : '0',
+    );
+    formData.append(
+      'section_interior_design_visible',
+      data.section_interior_design_visible ? '1' : '0',
+    );
+    formData.append(
       'section_newsletter_visible',
       data.section_newsletter_visible ? '1' : '0',
     );
@@ -549,10 +551,20 @@ export default function HomepageSettings({
       onSuccess: () => {
         setProcessing(false);
         setShowConfirmDialog(false);
+        toast.success(
+          t('messages.homepage_settings_saved') ||
+            'Homepage settings saved successfully',
+        );
       },
       onError: (errors) => {
         setProcessing(false);
         setShowConfirmDialog(false);
+        const firstErr = Object.values(errors)[0];
+        toast.error(
+          typeof firstErr === 'string'
+            ? firstErr
+            : 'Failed to save settings. Please review form fields.',
+        );
         console.error('Validation errors:', errors);
       },
       onFinish: () => setProcessing(false),
@@ -759,11 +771,6 @@ export default function HomepageSettings({
     setCraftsmanshipImages2(updated);
   };
 
-  const toggleSection = (key: string) => {
-    const fieldName = `section_${key}_visible` as keyof typeof data;
-    setData(fieldName, !data[fieldName]);
-  };
-
   return (
     <AdminLayout
       breadcrumbs={[
@@ -786,7 +793,7 @@ export default function HomepageSettings({
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form noValidate onSubmit={handleSubmit} className="space-y-6">
           {/* Site Logo Section Settings */}
           <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
             <div className="mb-6 flex items-center justify-between">
@@ -910,34 +917,66 @@ export default function HomepageSettings({
             </div>
           </div>
 
-          {/* Section Background Customization (Import Gambar / Pilihan Warna untuk setiap sub-bagian) */}
-          <SectionBackgroundsManager
-            backgrounds={sectionBackgrounds}
-            onChange={setSectionBackgrounds}
-            onFileSelect={handleSectionBgFileSelect}
-            onFileRemove={handleSectionBgFileRemove}
-            filePreviews={sectionBgPreviews}
-          />
-
           {/* Hero Section Settings */}
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-                <Home className="h-5 w-5 text-blue-600" />
+          <div
+            id="hero-section"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
+          >
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
+                  <Home className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Hero Section
+                  </h2>
+                  <p className="text-sm text-neutral-500">
+                    Editing:{' '}
+                    <span className="font-medium text-teal-600">
+                      {locale === 'id' ? 'Indonesian' : 'English'}
+                    </span>{' '}
+                    — switch language to edit the other version
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  Hero Section
-                </h2>
-                <p className="text-sm text-neutral-500">
-                  Editing:{' '}
-                  <span className="font-medium text-teal-600">
-                    {locale === 'id' ? 'Indonesian' : 'English'}
-                  </span>{' '}
-                  — switch language to edit the other version
-                </p>
+
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-neutral-50/70 px-3 py-1.5">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_hero_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_hero_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_hero_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_hero_visible', checked)
+                  }
+                  aria-label="Toggle Hero Section visibility"
+                />
               </div>
             </div>
+
+            {!data.section_hero_visible && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-xs text-amber-800">
+                <EyeOff className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>
+                  Sub-bagian <strong>Hero Section</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                </span>
+              </div>
+            )}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-700">
@@ -947,7 +986,7 @@ export default function HomepageSettings({
                   type="text"
                   value={data.hero_badge}
                   onChange={(e) => setData('hero_badge', e.target.value)}
-                  placeholder="RH OUTDOOR 2026"
+                  placeholder="HASIBUAN OUTDOOR 2026"
                   className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
               </div>
@@ -1002,11 +1041,26 @@ export default function HomepageSettings({
                 />
               </div>
             </div>
+
+            {/* Background Setting for Hero Section */}
+            <div className="mt-6 pt-6 border-t border-neutral-100">
+              <SingleSectionBackgroundControl
+                sectionKey="hero"
+                backgrounds={sectionBackgrounds}
+                onChange={setSectionBackgrounds}
+                onFileSelect={handleSectionBgFileSelect}
+                onFileRemove={handleSectionBgFileRemove}
+                filePreviews={sectionBgPreviews}
+              />
+            </div>
           </div>
 
           {/* Carousel Banners */}
-          <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div className="mb-6 flex items-center justify-between">
+          <div
+            id="carousel-banners"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
+          >
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50">
                   <SlidersHorizontal className="h-5 w-5 text-indigo-600" />
@@ -1020,16 +1074,53 @@ export default function HomepageSettings({
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={addBanner}
-                disabled={carouselBanners.length >= 10}
-                className="inline-flex items-center gap-2 rounded-lg bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-50"
-              >
-                <Plus size={16} />
-                Add Banner
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-neutral-50/70 px-3 py-1.5">
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                      data.section_carousel_banners_visible
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                    }`}
+                  >
+                    {data.section_carousel_banners_visible ? (
+                      <>
+                        <Eye className="h-3 w-3" /> Ditampilkan
+                      </>
+                    ) : (
+                      <>
+                        <EyeOff className="h-3 w-3" /> Disembunyikan
+                      </>
+                    )}
+                  </span>
+                  <Switch
+                    checked={data.section_carousel_banners_visible}
+                    onCheckedChange={(checked) =>
+                      setData('section_carousel_banners_visible', checked)
+                    }
+                    aria-label="Toggle Carousel Banners visibility"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={addBanner}
+                  disabled={carouselBanners.length >= 10}
+                  className="inline-flex items-center gap-2 rounded-lg bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 disabled:opacity-50"
+                >
+                  <Plus size={16} />
+                  Add Banner
+                </button>
+              </div>
             </div>
+
+            {!data.section_carousel_banners_visible && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-xs text-amber-800">
+                <EyeOff className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>
+                  Sub-bagian <strong>Carousel Banners</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                </span>
+              </div>
+            )}
 
             {carouselBanners.length === 0 ? (
               <div className="rounded-lg border-2 border-dashed border-neutral-200 py-12 text-center">
@@ -1150,7 +1241,7 @@ export default function HomepageSettings({
                           {/* URL fallback */}
                           {!displayImage && (
                             <input
-                              type="url"
+                              type="text"
                               value={banner.image_url}
                               onChange={(e) => {
                                 const url = e.target.value;
@@ -1173,12 +1264,12 @@ export default function HomepageSettings({
                             Target URL (optional)
                           </label>
                           <input
-                            type="url"
+                            type="text"
                             value={banner.link || ''}
                             onChange={(e) =>
                               updateBanner(index, 'link', e.target.value)
                             }
-                            placeholder="https://example.com/promo"
+                            placeholder="https://example.com/promo or /shop/products"
                             className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                           />
                           <p className="mt-1 text-xs text-neutral-400">
@@ -1193,12 +1284,343 @@ export default function HomepageSettings({
             )}
           </div>
 
+          {/* Trust Logos / Media Coverage Settings */}
+          <div
+            id="trust-logos"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
+          >
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50">
+                  <Users className="h-5 w-5 text-emerald-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Trust Logos & Media Press
+                  </h2>
+                  <p className="text-sm text-neutral-500">
+                    Liputan media pers arsitektural dan publikasi internasional (AD, Elle Decor, Wallpaper*, dll.)
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-neutral-50/70 px-3 py-1.5">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_trust_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_trust_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_trust_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_trust_visible', checked)
+                  }
+                  aria-label="Toggle Trust Logos visibility"
+                />
+              </div>
+            </div>
+
+            {!data.section_trust_visible && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-xs text-amber-800">
+                <EyeOff className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>
+                  Sub-bagian <strong>Trust Logos & Media Press</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                </span>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                {trustLogos.map((logo, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-neutral-50 p-3"
+                  >
+                    <span className="font-mono text-xs font-medium text-neutral-800 truncate">
+                      {logo.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeTrustLogo(index)}
+                      className="text-neutral-400 hover:text-red-500 p-1 transition-colors"
+                      title="Hapus logo"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="text"
+                  value={newLogoName}
+                  onChange={(e) => setNewLogoName(e.target.value)}
+                  placeholder="Nama media baru (contoh: ARCHITECTURAL DIGEST)"
+                  className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-teal-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={addTrustLogo}
+                  disabled={!newLogoName.trim()}
+                  className="inline-flex items-center gap-1 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700 disabled:opacity-50"
+                >
+                  <Plus className="h-4 w-4" /> Tambah Logo
+                </button>
+              </div>
+            </div>
+
+            {/* Background Setting for Trust Logos Section */}
+            <div className="mt-6 pt-6 border-t border-neutral-100">
+              <SingleSectionBackgroundControl
+                sectionKey="trust"
+                backgrounds={sectionBackgrounds}
+                onChange={setSectionBackgrounds}
+                onFileSelect={handleSectionBgFileSelect}
+                onFileRemove={handleSectionBgFileRemove}
+                filePreviews={sectionBgPreviews}
+              />
+            </div>
+          </div>
+
+          {/* Categories Gallery Section */}
+          <div
+            id="categories"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
+                  <LayoutGrid className="h-5 w-5 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Categories Gallery (Vitruvian Gallery)
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Galeri kurasi kategori arsitektur (Monaco Suite, Dining, Living, Bar Sets, dll.)
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_categories_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_categories_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_categories_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_categories_visible', checked)
+                  }
+                  aria-label="Toggle Categories Gallery visibility"
+                />
+              </div>
+            </div>
+
+            {/* Quick link & info */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-neutral-200/80 bg-neutral-50/70 p-4">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-neutral-800">
+                  Manajemen Item Kategori
+                </p>
+                <p className="text-[11px] text-neutral-500">
+                  Item kategori, foto arsitektur, dan slug navigasi dikelola secara terpusat pada halaman Kategori.
+                </p>
+              </div>
+              <a
+                href="/admin/categories"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors shrink-0"
+              >
+                Buka Manajemen Kategori <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+
+            {/* Background Setting */}
+            <SingleSectionBackgroundControl
+              sectionKey="categories"
+              backgrounds={sectionBackgrounds}
+              onChange={setSectionBackgrounds}
+              onFileSelect={handleSectionBgFileSelect}
+              onFileRemove={handleSectionBgFileRemove}
+              filePreviews={sectionBgPreviews}
+            />
+          </div>
+
+          {/* Featured Products Showcase Section */}
+          <div
+            id="products"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-50">
+                  <ShoppingBag className="h-5 w-5 text-rose-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Featured Products Showcase
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Pameran produk museum & furnitur unggulan beresolusi tinggi di etalase beranda
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_products_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_products_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_products_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_products_visible', checked)
+                  }
+                  aria-label="Toggle Featured Products visibility"
+                />
+              </div>
+            </div>
+
+            {/* Quick link & info */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-neutral-200/80 bg-neutral-50/70 p-4">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-neutral-800">
+                  Manajemen Produk Unggulan
+                </p>
+                <p className="text-[11px] text-neutral-500">
+                  Produk yang tampil di beranda dapat ditandai sebagai produk unggulan (Featured) pada Manajemen Produk.
+                </p>
+              </div>
+              <a
+                href="/admin/products"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors shrink-0"
+              >
+                Buka Manajemen Produk <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+
+            {/* Background Setting */}
+            <SingleSectionBackgroundControl
+              sectionKey="products"
+              backgrounds={sectionBackgrounds}
+              onChange={setSectionBackgrounds}
+              onFileSelect={handleSectionBgFileSelect}
+              onFileRemove={handleSectionBgFileRemove}
+              filePreviews={sectionBgPreviews}
+            />
+          </div>
+
+          {/* Architectural Manifesto Section */}
+          <div
+            id="manifesto"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50">
+                  <BookOpen className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Architectural Manifesto
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Pernyataan filosofi rancang bangun Vitruvian: &ldquo;Pieces that define space, not just furnish&rdquo;
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_manifesto_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_manifesto_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_manifesto_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_manifesto_visible', checked)
+                  }
+                  aria-label="Toggle Manifesto visibility"
+                />
+              </div>
+            </div>
+
+            {/* Background Setting */}
+            <SingleSectionBackgroundControl
+              sectionKey="manifesto"
+              backgrounds={sectionBackgrounds}
+              onChange={setSectionBackgrounds}
+              onFileSelect={handleSectionBgFileSelect}
+              onFileRemove={handleSectionBgFileRemove}
+              filePreviews={sectionBgPreviews}
+            />
+          </div>
+
           {/* Values / Features (Our Philosophy) Settings */}
           <div
             id="values"
             className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
           >
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50">
                   <Quote className="h-5 w-5 text-green-600" />
@@ -1212,15 +1634,52 @@ export default function HomepageSettings({
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={addValue}
-                className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700"
-              >
-                <Plus size={16} />
-                Add Point
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-neutral-50/70 px-3 py-1.5">
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                      data.section_values_visible
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                    }`}
+                  >
+                    {data.section_values_visible ? (
+                      <>
+                        <Eye className="h-3 w-3" /> Ditampilkan
+                      </>
+                    ) : (
+                      <>
+                        <EyeOff className="h-3 w-3" /> Disembunyikan
+                      </>
+                    )}
+                  </span>
+                  <Switch
+                    checked={data.section_values_visible}
+                    onCheckedChange={(checked) =>
+                      setData('section_values_visible', checked)
+                    }
+                    aria-label="Toggle Values Section visibility"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={addValue}
+                  className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700"
+                >
+                  <Plus size={16} />
+                  Add Point
+                </button>
+              </div>
             </div>
+
+            {!data.section_values_visible && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-xs text-amber-800">
+                <EyeOff className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>
+                  Sub-bagian <strong>Core Values & Philosophy</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                </span>
+              </div>
+            )}
 
             {/* Header Inputs */}
             <div className="mb-6 grid grid-cols-1 gap-4 rounded-xl border border-neutral-100 bg-neutral-50 p-4 sm:grid-cols-2">
@@ -1323,6 +1782,98 @@ export default function HomepageSettings({
                 </div>
               ))}
             </div>
+
+            {/* Background Setting for Core Values Section */}
+            <div className="mt-6 pt-6 border-t border-neutral-100">
+              <SingleSectionBackgroundControl
+                sectionKey="values"
+                backgrounds={sectionBackgrounds}
+                onChange={setSectionBackgrounds}
+                onFileSelect={handleSectionBgFileSelect}
+                onFileRemove={handleSectionBgFileRemove}
+                filePreviews={sectionBgPreviews}
+              />
+            </div>
+          </div>
+
+          {/* Interior Design Atelier Section */}
+          <div
+            id="interior-design"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-50">
+                  <Building2 className="h-5 w-5 text-cyan-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Interior Design Studio (Atelier)
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Layanan konsultasi desain privat, trade arsitek, dan atelier pesanan khusus
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_interior_design_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_interior_design_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_interior_design_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_interior_design_visible', checked)
+                  }
+                  aria-label="Toggle Interior Design Studio visibility"
+                />
+              </div>
+            </div>
+
+            {/* Quick link & info */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-neutral-200/80 bg-neutral-50/70 p-4">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-neutral-800">
+                  Konsultasi & Pesanan Kustom
+                </p>
+                <p className="text-[11px] text-neutral-500">
+                  Mengajak klien dan arsitek untuk membuat pesanan kustom furnitur atau konsultasi interior.
+                </p>
+              </div>
+              <a
+                href="/admin/custom-orders"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors shrink-0"
+              >
+                Lihat Pesanan Kustom <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+
+            {/* Background Setting */}
+            <SingleSectionBackgroundControl
+              sectionKey="interior_design"
+              backgrounds={sectionBackgrounds}
+              onChange={setSectionBackgrounds}
+              onFileSelect={handleSectionBgFileSelect}
+              onFileRemove={handleSectionBgFileRemove}
+              filePreviews={sectionBgPreviews}
+            />
           </div>
 
           {/* Craftsmanship Section Settings */}
@@ -1330,7 +1881,7 @@ export default function HomepageSettings({
             id="craftsmanship"
             className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm"
           >
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50">
                   <Sparkles className="h-5 w-5 text-amber-600" />
@@ -1345,16 +1896,93 @@ export default function HomepageSettings({
                   </p>
                 </div>
               </div>
+
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-neutral-50/70 px-3 py-1.5">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_craftsmanship_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_craftsmanship_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_craftsmanship_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_craftsmanship_visible', checked)
+                  }
+                  aria-label="Toggle Craftsmanship Section visibility"
+                />
+              </div>
             </div>
+
+            {!data.section_craftsmanship_visible && (
+              <div className="mb-6 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-xs text-amber-800">
+                <EyeOff className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>
+                  Sub-bagian <strong>Craftsmanship Section</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                </span>
+              </div>
+            )}
 
             <div className="space-y-8">
               {/* Row 1: Handcrafted Touch */}
               <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
-                    Row 1: Craftsmanship / Rattan (Text Left, Slider Right)
-                  </h3>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200/60 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-amber-100 text-xs font-bold text-amber-800">
+                      1
+                    </span>
+                    <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
+                      Row 1: Craftsmanship / Rattan (Text Left, Slider Right)
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1 shadow-xs">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                        data.craftsmanship_row_1_visible
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                      }`}
+                    >
+                      {data.craftsmanship_row_1_visible ? (
+                        <>
+                          <Eye className="h-3 w-3" /> Ditampilkan
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="h-3 w-3" /> Disembunyikan
+                        </>
+                      )}
+                    </span>
+                    <Switch
+                      checked={data.craftsmanship_row_1_visible}
+                      onCheckedChange={(checked) =>
+                        setData('craftsmanship_row_1_visible', checked)
+                      }
+                      aria-label="Toggle Row 1 visibility"
+                    />
+                  </div>
                 </div>
+
+                {!data.craftsmanship_row_1_visible && (
+                  <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-2.5 text-xs text-amber-800">
+                    <EyeOff className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                    <span>
+                      <strong>Row 1 (Craftsmanship / Rattan)</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                    </span>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
@@ -1466,12 +2094,52 @@ export default function HomepageSettings({
 
               {/* Row 2: Strength of Nature */}
               <div className="space-y-4 rounded-xl border border-neutral-100 bg-neutral-50/50 p-5">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
-                    Row 2: Strength of Nature / Teak Wood (Slider Left, Text
-                    Right)
-                  </h3>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200/60 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-amber-100 text-xs font-bold text-amber-800">
+                      2
+                    </span>
+                    <h3 className="text-sm font-bold tracking-wider text-amber-900 uppercase">
+                      Row 2: Strength of Nature / Teak Wood (Slider Left, Text Right)
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1 shadow-xs">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                        data.craftsmanship_row_2_visible
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                      }`}
+                    >
+                      {data.craftsmanship_row_2_visible ? (
+                        <>
+                          <Eye className="h-3 w-3" /> Ditampilkan
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="h-3 w-3" /> Disembunyikan
+                        </>
+                      )}
+                    </span>
+                    <Switch
+                      checked={data.craftsmanship_row_2_visible}
+                      onCheckedChange={(checked) =>
+                        setData('craftsmanship_row_2_visible', checked)
+                      }
+                      aria-label="Toggle Row 2 visibility"
+                    />
+                  </div>
                 </div>
+
+                {!data.craftsmanship_row_2_visible && (
+                  <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50/80 p-2.5 text-xs text-amber-800">
+                    <EyeOff className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                    <span>
+                      <strong>Row 2 (Strength of Nature / Teak Wood)</strong> saat ini sedang disembunyikan dari halaman depan toko.
+                    </span>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-1 block text-sm font-medium text-neutral-700">
@@ -1580,7 +2248,287 @@ export default function HomepageSettings({
                   </div>
                 </div>
               </div>
+
+              {/* Background Setting for Craftsmanship Section */}
+              <div className="mt-6 pt-6 border-t border-neutral-200">
+                <SingleSectionBackgroundControl
+                  sectionKey="craftsmanship"
+                  backgrounds={sectionBackgrounds}
+                  onChange={setSectionBackgrounds}
+                  onFileSelect={handleSectionBgFileSelect}
+                  onFileRemove={handleSectionBgFileRemove}
+                  filePreviews={sectionBgPreviews}
+                />
+              </div>
             </div>
+          </div>
+
+          {/* Testimonials & Press Accolades Section */}
+          <div
+            id="testimonials"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-50">
+                  <MessageSquare className="h-5 w-5 text-violet-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Press Accolades & Testimonials
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Kutipan ulasan eksklusif dari klien arsitektur dan publikasi media terkemuka
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_testimonials_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_testimonials_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_testimonials_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_testimonials_visible', checked)
+                  }
+                  aria-label="Toggle Testimonials visibility"
+                />
+              </div>
+            </div>
+
+            {/* Quick link & info */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-neutral-200/80 bg-neutral-50/70 p-4">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-neutral-800">
+                  Manajemen Ulasan & Testimoni
+                </p>
+                <p className="text-[11px] text-neutral-500">
+                  Ulasan pelanggan dan testimoni dikelola melalui menu Ulasan Produk.
+                </p>
+              </div>
+              <a
+                href="/admin/reviews"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors shrink-0"
+              >
+                Buka Manajemen Ulasan <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+
+            {/* Background Setting */}
+            <SingleSectionBackgroundControl
+              sectionKey="testimonials"
+              backgrounds={sectionBackgrounds}
+              onChange={setSectionBackgrounds}
+              onFileSelect={handleSectionBgFileSelect}
+              onFileRemove={handleSectionBgFileRemove}
+              filePreviews={sectionBgPreviews}
+            />
+          </div>
+
+          {/* Architectural Journal & Articles Section */}
+          <div
+            id="articles"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-6"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
+                  <BookOpen className="h-5 w-5 text-orange-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    Architectural Journal (Articles)
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Koleksi esai arsitektur, kurasi material, dan jurnal berkala Hasibuan Design
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_articles_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_articles_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_articles_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_articles_visible', checked)
+                  }
+                  aria-label="Toggle Articles visibility"
+                />
+              </div>
+            </div>
+
+            {/* Quick link & info */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-neutral-200/80 bg-neutral-50/70 p-4">
+              <div className="space-y-0.5">
+                <p className="text-xs font-medium text-neutral-800">
+                  Manajemen Artikel & Jurnal
+                </p>
+                <p className="text-[11px] text-neutral-500">
+                  Publikasikan esai baru, ubah sampul, atau kelola artikel pada Manajemen Artikel.
+                </p>
+              </div>
+              <a
+                href="/admin/articles"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors shrink-0"
+              >
+                Buka Manajemen Artikel <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+
+            {/* Background Setting */}
+            <SingleSectionBackgroundControl
+              sectionKey="articles"
+              backgrounds={sectionBackgrounds}
+              onChange={setSectionBackgrounds}
+              onFileSelect={handleSectionBgFileSelect}
+              onFileRemove={handleSectionBgFileRemove}
+              filePreviews={sectionBgPreviews}
+            />
+          </div>
+
+          {/* VIP Newsletter Section */}
+          <div
+            id="newsletter"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-4"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
+                  <Mail className="h-5 w-5 text-blue-700" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    VIP Newsletter
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Formulir berlangganan buletin privat dan katalog berkala di bagian bawah beranda
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_newsletter_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_newsletter_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_newsletter_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_newsletter_visible', checked)
+                  }
+                  aria-label="Toggle VIP Newsletter visibility"
+                />
+              </div>
+            </div>
+
+            <p className="text-xs text-neutral-500">
+              Bagian ini memungkinkan pengunjung mendaftarkan alamat email mereka untuk menerima kabar rilis koleksi baru, jurnal eksklusif, dan undangan privat Hasibuan Design.
+            </p>
+          </div>
+
+          {/* 3D Catalog Flipbook Modal Section */}
+          <div
+            id="catalog"
+            className="scroll-mt-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm space-y-4"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-50">
+                  <BookOpen className="h-5 w-5 text-sky-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    3D Catalog Flipbook Modal
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    Modal interaktif flipbook 3D untuk membalik lembaran katalog digital
+                  </p>
+                </div>
+              </div>
+
+              {/* Section Visibility Switch */}
+              <div className="flex items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 shadow-2xs">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold border ${
+                    data.section_catalog_visible
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                  }`}
+                >
+                  {data.section_catalog_visible ? (
+                    <>
+                      <Eye className="h-3 w-3" /> Ditampilkan
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="h-3 w-3" /> Disembunyikan
+                    </>
+                  )}
+                </span>
+                <Switch
+                  checked={data.section_catalog_visible}
+                  onCheckedChange={(checked) =>
+                    setData('section_catalog_visible', checked)
+                  }
+                  aria-label="Toggle 3D Catalog Flipbook Modal visibility"
+                />
+              </div>
+            </div>
+
+            <p className="text-xs text-neutral-500">
+              Menampilkan tombol &ldquo;View 3D Flipbook&rdquo; pada banner hero untuk membuka pengalaman membaca katalog digital interaktif tiga dimensi.
+            </p>
           </div>
 
           {/* Sticky Submit Bar */}

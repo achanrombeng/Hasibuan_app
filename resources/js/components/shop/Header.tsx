@@ -464,7 +464,7 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
       </header>
 
-      {/* 4. RH MINIMALIST SEARCH OVERLAY MODAL */}
+      {/* 4. HASIBUAN MINIMALIST SEARCH OVERLAY MODAL */}
       <AnimatePresence>
         {searchOpen && (
           <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm">
@@ -537,7 +537,7 @@ export const Header: React.FC<HeaderProps> = ({
                               />
                             ) : (
                               <div className="w-full h-full bg-neutral-100 flex items-center justify-center text-[8px] text-neutral-400">
-                                RH
+                                Hasibuan
                               </div>
                             )}
                           </div>

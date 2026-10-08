@@ -55,7 +55,7 @@ export const RHInteriorDesignSection: React.FC<RHInteriorDesignSectionProps> = (
               isDark ? 'text-white' : 'text-neutral-900',
             )}
           >
-            RH INTERIOR DESIGN & ARCHITECTURE
+            HASIBUAN INTERIOR DESIGN & ARCHITECTURE
           </h2>
           <div
             className={cn(

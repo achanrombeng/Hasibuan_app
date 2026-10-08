@@ -3,6 +3,8 @@ import { SectionBgConfig } from '@/types/shop';
 import {
   BookOpen,
   Check,
+  ChevronDown,
+  ChevronUp,
   Eye,
   Home,
   Image as ImageIcon,
@@ -13,6 +15,7 @@ import {
   Palette,
   Quote,
   RefreshCw,
+  RotateCcw,
   ShoppingBag,
   SlidersHorizontal,
   Sparkles,
@@ -834,3 +837,598 @@ export const SectionBackgroundsManager: React.FC<SectionBackgroundsManagerProps>
     </div>
   );
 };
+
+export interface SingleSectionBackgroundControlProps {
+  sectionKey: string;
+  backgrounds: Record<string, SectionBgConfig>;
+  onChange: (updated: Record<string, SectionBgConfig>) => void;
+  onFileSelect: (sectionKey: string, file: File) => void;
+  onFileRemove: (sectionKey: string) => void;
+  filePreviews: Map<string, string>;
+  title?: string;
+  defaultExpanded?: boolean;
+  className?: string;
+}
+
+export const SingleSectionBackgroundControl: React.FC<SingleSectionBackgroundControlProps> = ({
+  sectionKey,
+  backgrounds,
+  onChange,
+  onFileSelect,
+  onFileRemove,
+  filePreviews,
+  title,
+  defaultExpanded = true,
+  className,
+}) => {
+  const sectionDef = SUB_SECTIONS.find((s) => s.key === sectionKey) || {
+    key: sectionKey,
+    name: title || sectionKey,
+    category: 'Sub-Bagian',
+    description: 'Pengaturan latar belakang sub-bagian',
+    defaultType: 'Default',
+    defaultBgColor: '#ffffff',
+    icon: Palette,
+  };
+
+  const config: SectionBgConfig = backgrounds[sectionKey] || {
+    type: 'default',
+    color: sectionDef.defaultBgColor,
+    image: '',
+    overlay: 40,
+    text_theme: 'auto',
+  };
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(defaultExpanded);
+  const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
+  const previewUrl = filePreviews.get(sectionKey) || config.image || '';
+
+  const updateConfig = (updates: Partial<SectionBgConfig>) => {
+    onChange({
+      ...backgrounds,
+      [sectionKey]: {
+        ...config,
+        ...updates,
+      },
+    });
+  };
+
+  const resetToDefault = () => {
+    onFileRemove(sectionKey);
+    const updated = { ...backgrounds };
+    delete updated[sectionKey];
+    onChange(updated);
+  };
+
+  const isCustom = config.type && config.type !== 'default';
+
+  return (
+    <div
+      className={cn(
+        'rounded-xl border border-neutral-200/90 bg-neutral-50/40 p-4 sm:p-5 transition-all shadow-2xs',
+        className,
+      )}
+    >
+      {/* Header bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-700 border border-teal-100/80">
+            <Palette className="h-4.5 w-4.5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h4 className="text-sm font-bold text-neutral-900">
+                Pengaturan Background Sub-Bagian
+              </h4>
+              {/* Status Badge */}
+              {!isCustom ? (
+                <span className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-semibold text-neutral-600">
+                  Bawaan Tema
+                </span>
+              ) : config.type === 'color' ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-2 py-0.5 text-[11px] font-medium text-neutral-800 shadow-2xs">
+                  <span
+                    className="h-2.5 w-2.5 rounded-full border border-black/10 shrink-0"
+                    style={{ backgroundColor: config.color || sectionDef.defaultBgColor }}
+                  />
+                  Warna: {config.color || sectionDef.defaultBgColor}
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-teal-50 border border-teal-200 px-2 py-0.5 text-[11px] font-semibold text-teal-700">
+                  <ImageIcon className="h-3 w-3" />
+                  Gambar Latar ({config.overlay ?? 40}%)
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-neutral-500">
+              Pilih warna solid atau gunakan foto latar khusus untuk sub-bagian ini
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isCustom && (
+            <button
+              type="button"
+              onClick={resetToDefault}
+              className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
+              title="Kembalikan background ke bawaan tema"
+            >
+              <RotateCcw className="h-3 w-3" /> Reset Bawaan
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+          >
+            {isExpanded ? (
+              <>
+                <ChevronUp className="h-3.5 w-3.5" /> Sembunyikan Opsi
+              </>
+            ) : (
+              <>
+                <ChevronDown className="h-3.5 w-3.5" /> Atur Background
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Expanded Controls */}
+      {isExpanded && (
+        <div className="mt-4 pt-4 border-t border-neutral-200/70 space-y-5">
+          {/* 3-Way Type Selector */}
+          <div>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-neutral-500 mb-2">
+              Pilih Jenis Background
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <button
+                type="button"
+                onClick={() => updateConfig({ type: 'default' })}
+                className={cn(
+                  'flex items-center gap-3 rounded-xl border p-3 text-left transition-all',
+                  config.type === 'default'
+                    ? 'border-teal-600 bg-teal-50/80 text-teal-950 ring-2 ring-teal-600/20 shadow-xs'
+                    : 'border-neutral-200 bg-white hover:border-neutral-300 text-neutral-700',
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex h-8 w-8 items-center justify-center rounded-lg shrink-0',
+                    config.type === 'default'
+                      ? 'bg-teal-600 text-white'
+                      : 'bg-neutral-100 text-neutral-600',
+                  )}
+                >
+                  <RefreshCw className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-semibold text-xs sm:text-sm">Bawaan Tema</div>
+                  <div className="text-[10px] text-neutral-500 truncate">
+                    {sectionDef.defaultType}
+                  </div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  updateConfig({
+                    type: 'color',
+                    color: config.color || sectionDef.defaultBgColor,
+                  })
+                }
+                className={cn(
+                  'flex items-center gap-3 rounded-xl border p-3 text-left transition-all',
+                  config.type === 'color'
+                    ? 'border-teal-600 bg-teal-50/80 text-teal-950 ring-2 ring-teal-600/20 shadow-xs'
+                    : 'border-neutral-200 bg-white hover:border-neutral-300 text-neutral-700',
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex h-8 w-8 items-center justify-center rounded-lg shrink-0',
+                    config.type === 'color'
+                      ? 'bg-teal-600 text-white'
+                      : 'bg-neutral-100 text-neutral-600',
+                  )}
+                >
+                  <Palette className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-semibold text-xs sm:text-sm">Warna Solid</div>
+                  <div className="text-[10px] text-neutral-500 truncate">
+                    Pilih warna / kode HEX
+                  </div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  updateConfig({
+                    type: 'image',
+                    overlay: config.overlay ?? 40,
+                  })
+                }
+                className={cn(
+                  'flex items-center gap-3 rounded-xl border p-3 text-left transition-all',
+                  config.type === 'image'
+                    ? 'border-teal-600 bg-teal-50/80 text-teal-950 ring-2 ring-teal-600/20 shadow-xs'
+                    : 'border-neutral-200 bg-white hover:border-neutral-300 text-neutral-700',
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex h-8 w-8 items-center justify-center rounded-lg shrink-0',
+                    config.type === 'image'
+                      ? 'bg-teal-600 text-white'
+                      : 'bg-neutral-100 text-neutral-600',
+                  )}
+                >
+                  <ImageIcon className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="font-semibold text-xs sm:text-sm">Gambar Latar</div>
+                  <div className="text-[10px] text-neutral-500 truncate">
+                    Upload foto / link URL
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Panel: Solid Color */}
+          {config.type === 'color' && (
+            <div className="rounded-xl border border-neutral-200 bg-white p-4.5 space-y-4 shadow-2xs">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-100 pb-3">
+                <div>
+                  <h5 className="text-xs font-bold text-neutral-900">
+                    Palet Warna Rekomendasi Hasibuan Design
+                  </h5>
+                  <p className="text-[11px] text-neutral-500">
+                    Pilih tone netral arsitektur atau gunakan warna khusus.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-medium text-neutral-700 bg-neutral-50 border border-neutral-200 px-2 py-0.5 rounded">
+                    {config.color || sectionDef.defaultBgColor}
+                  </span>
+                  <input
+                    type="color"
+                    value={config.color || sectionDef.defaultBgColor}
+                    onChange={(e) => updateConfig({ color: e.target.value })}
+                    className="h-7 w-7 cursor-pointer rounded border border-neutral-300 bg-white p-0.5"
+                  />
+                </div>
+              </div>
+
+              {/* Swatches */}
+              <div className="flex flex-wrap gap-2">
+                {PRESET_COLORS.map((preset) => {
+                  const isSelected =
+                    (config.color || '').toLowerCase() === preset.value.toLowerCase();
+                  return (
+                    <button
+                      key={preset.value}
+                      type="button"
+                      onClick={() => updateConfig({ color: preset.value })}
+                      className={cn(
+                        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs transition-all',
+                        isSelected
+                          ? 'border-neutral-900 bg-neutral-900 text-white font-medium shadow-xs'
+                          : 'border-neutral-200 bg-white hover:border-neutral-300 text-neutral-700',
+                      )}
+                    >
+                      <span
+                        className="h-3 w-3 rounded-full border border-black/15 shrink-0"
+                        style={{ backgroundColor: preset.value }}
+                      />
+                      <span>{preset.label}</span>
+                      {isSelected && <Check className="h-3 w-3 ml-0.5" />}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Custom HEX & Contrast */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                    Kode Warna HEX Kustom
+                  </label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-neutral-400 text-xs font-mono">
+                      #
+                    </span>
+                    <input
+                      type="text"
+                      value={(config.color || '').replace('#', '')}
+                      onChange={(e) =>
+                        updateConfig({
+                          color: e.target.value
+                            ? `#${e.target.value.replace('#', '')}`
+                            : '',
+                        })
+                      }
+                      placeholder="e.g. 1a1a1a"
+                      className="w-full rounded-lg border border-neutral-300 bg-white pl-6 pr-3 py-1.5 text-xs font-mono text-neutral-900 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                    Adaptasi Kontras Teks
+                  </label>
+                  <select
+                    value={config.text_theme || 'auto'}
+                    onChange={(e) =>
+                      updateConfig({
+                        text_theme: e.target.value as 'auto' | 'light' | 'dark',
+                      })
+                    }
+                    className="w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1.5 text-xs text-neutral-900 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  >
+                    <option value="auto">Otomatis (Berdasarkan warna background)</option>
+                    <option value="light">Teks Terang / Putih (Background gelap)</option>
+                    <option value="dark">Teks Gelap / Hitam (Background terang)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Panel: Image Background */}
+          {config.type === 'image' && (
+            <div className="rounded-xl border border-neutral-200 bg-white p-4.5 space-y-4 shadow-2xs">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-100 pb-3">
+                <div>
+                  <h5 className="text-xs font-bold text-neutral-900">
+                    Upload atau Tautkan Foto Latar
+                  </h5>
+                  <p className="text-[11px] text-neutral-500">
+                    Mendukung JPG, PNG, WEBP beresolusi tinggi (Maks. 15MB).
+                  </p>
+                </div>
+                {previewUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onFileRemove(sectionKey);
+                      updateConfig({ image: '' });
+                    }}
+                    className="inline-flex items-center gap-1 text-xs text-red-600 hover:text-red-700 font-medium"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> Hapus Gambar
+                  </button>
+                )}
+              </div>
+
+              {/* Upload vs URL Tabs */}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setImageInputMode('upload')}
+                  className={cn(
+                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                    imageInputMode === 'upload'
+                      ? 'bg-neutral-900 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200',
+                  )}
+                >
+                  <Upload className="h-3 w-3 inline mr-1" />
+                  Upload File Gambar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setImageInputMode('url')}
+                  className={cn(
+                    'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+                    imageInputMode === 'url'
+                      ? 'bg-neutral-900 text-white'
+                      : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200',
+                  )}
+                >
+                  <ImageIcon className="h-3 w-3 inline mr-1" />
+                  Link URL Gambar
+                </button>
+              </div>
+
+              {imageInputMode === 'upload' ? (
+                <div className="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-neutral-300 bg-neutral-50/60 p-5 transition-colors hover:border-teal-500 text-center">
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) onFileSelect(sectionKey, file);
+                    }}
+                    className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                  />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-50 text-teal-600 mb-2">
+                    <Upload className="h-5 w-5" />
+                  </div>
+                  <p className="text-xs font-semibold text-neutral-800">
+                    Klik atau seret foto latar ke sini
+                  </p>
+                  <p className="text-[10px] text-neutral-400 mt-0.5">
+                    JPG, PNG, WEBP (Maksimal 15MB)
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                    URL Gambar (https://...)
+                  </label>
+                  <input
+                    type="text"
+                    value={config.image || ''}
+                    onChange={(e) => updateConfig({ image: e.target.value })}
+                    placeholder="https://images.unsplash.com/photo-..."
+                    className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs text-neutral-900 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  />
+                </div>
+              )}
+
+              {/* Overlay Slider & Text Contrast */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-neutral-100">
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-[11px] font-semibold text-neutral-800">
+                      Lapisan Gelap (Dark Overlay)
+                    </label>
+                    <span className="font-mono text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
+                      {config.overlay ?? 40}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="90"
+                    step="5"
+                    value={config.overlay ?? 40}
+                    onChange={(e) =>
+                      updateConfig({ overlay: parseInt(e.target.value, 10) })
+                    }
+                    className="w-full cursor-pointer accent-teal-600"
+                  />
+                  <div className="flex justify-between text-[10px] text-neutral-400">
+                    <span>0% (Terang)</span>
+                    <span>40% (Ideal)</span>
+                    <span>90% (Gelap)</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                    Warna Teks Kontras
+                  </label>
+                  <select
+                    value={config.text_theme || 'auto'}
+                    onChange={(e) =>
+                      updateConfig({
+                        text_theme: e.target.value as 'auto' | 'light' | 'dark',
+                      })
+                    }
+                    className="w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1.5 text-xs text-neutral-900 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                  >
+                    <option value="auto">Otomatis (Teks putih jika overlay ≥ 30%)</option>
+                    <option value="light">Teks Terang / Putih (Rekomendasi untuk foto)</option>
+                    <option value="dark">Teks Gelap / Hitam (Jika foto cerah)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Mini Live Preview */}
+          <div className="rounded-xl border border-neutral-200 bg-white p-3.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-neutral-700 flex items-center gap-1.5">
+                <Eye className="h-3 w-3 text-neutral-500" />
+                Live Preview Latar: {sectionDef.name}
+              </span>
+              <span className="text-[10px] text-neutral-400">
+                {config.type === 'default'
+                  ? 'Bawaan Tema'
+                  : config.type === 'color'
+                    ? `Warna: ${config.color || sectionDef.defaultBgColor}`
+                    : `Foto dengan Overlay ${config.overlay ?? 40}%`}
+              </span>
+            </div>
+
+            <div
+              className="relative overflow-hidden rounded-lg border border-neutral-200/80 p-5 text-center transition-all min-h-[100px] flex flex-col items-center justify-center"
+              style={{
+                backgroundColor:
+                  config.type === 'color'
+                    ? config.color || sectionDef.defaultBgColor
+                    : config.type === 'default'
+                      ? sectionDef.defaultBgColor
+                      : '#111111',
+                backgroundImage:
+                  config.type === 'image' && previewUrl
+                    ? `url("${previewUrl}")`
+                    : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {config.type === 'image' && (
+                <div
+                  className="absolute inset-0 pointer-events-none transition-opacity"
+                  style={{
+                    backgroundColor: '#000000',
+                    opacity: (config.overlay ?? 40) / 100,
+                  }}
+                />
+              )}
+
+              <div className="relative z-10 space-y-1 max-w-sm">
+                <span
+                  className={cn(
+                    'text-[9px] tracking-[0.2em] uppercase font-light',
+                    config.text_theme === 'light' ||
+                      (config.type === 'image' && (config.overlay ?? 40) >= 30) ||
+                      (config.type === 'color' &&
+                        config.color &&
+                        ['#0a0a0a', '#171717', '#262626', '#161616', '#1e261f', '#281e18'].includes(
+                          config.color,
+                        )) ||
+                      (config.type === 'default' &&
+                        ['#0a0a0a', '#161616'].includes(sectionDef.defaultBgColor))
+                      ? 'text-neutral-300'
+                      : 'text-neutral-500',
+                  )}
+                >
+                  {sectionDef.category}
+                </span>
+                <h5
+                  className={cn(
+                    'font-serif text-sm sm:text-base font-light tracking-[0.06em] uppercase',
+                    config.text_theme === 'light' ||
+                      (config.type === 'image' && (config.overlay ?? 40) >= 30) ||
+                      (config.type === 'color' &&
+                        config.color &&
+                        ['#0a0a0a', '#171717', '#262626', '#161616', '#1e261f', '#281e18'].includes(
+                          config.color,
+                        )) ||
+                      (config.type === 'default' &&
+                        ['#0a0a0a', '#161616'].includes(sectionDef.defaultBgColor))
+                      ? 'text-white'
+                      : 'text-neutral-900',
+                  )}
+                >
+                  {sectionDef.name}
+                </h5>
+                <p
+                  className={cn(
+                    'text-[10px] font-light line-clamp-1',
+                    config.text_theme === 'light' ||
+                      (config.type === 'image' && (config.overlay ?? 40) >= 30) ||
+                      (config.type === 'color' &&
+                        config.color &&
+                        ['#0a0a0a', '#171717', '#262626', '#161616', '#1e261f', '#281e18'].includes(
+                          config.color,
+                        )) ||
+                      (config.type === 'default' &&
+                        ['#0a0a0a', '#161616'].includes(sectionDef.defaultBgColor))
+                      ? 'text-neutral-300'
+                      : 'text-neutral-600',
+                  )}
+                >
+                  {sectionDef.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+

@@ -125,6 +125,7 @@ export default function Home({
 
       <ShopLayout
         showFooter={true}
+        showNewsletter={sectionVisibility?.newsletter ?? true}
         showWhatsApp={true}
         whatsAppMessage={`Halo, saya tertarik dengan produk di ${siteSettings?.site_name || pageSiteSettings.name}`}
         bannerVisible={bannerVisible}

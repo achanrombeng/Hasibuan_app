@@ -34,11 +34,11 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Default curated RH Lookbook slides
+  // Default curated Hasibuan Lookbook slides
   const defaultSlides: HeroSlide[] = [
     {
       id: 'outdoor-architectural',
-      tag: 'RH OUTDOOR 2026',
+      tag: 'HASIBUAN OUTDOOR 2026',
       title: 'THE ARCHITECTURAL TEAK & ROPE COLLECTION',
       subtitle:
         'Vitruvian Balance, Enduring Proportion & Master Craftsmanship from Jepara',
@@ -51,7 +51,7 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
     },
     {
       id: 'contemporary-living',
-      tag: 'RH CONTEMPORARY',
+      tag: 'HASIBUAN CONTEMPORARY',
       title: 'CONTEMPORARY LIVING & SCULPTURAL LOUNGE',
       subtitle:
         'Monumental Scale, Pure Forms and Natural Sustained Teak Hardwoods',
@@ -64,7 +64,7 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
     },
     {
       id: 'sculptural-dining',
-      tag: 'RH INTERIORS',
+      tag: 'HASIBUAN INTERIORS',
       title: 'SCULPTURAL DINING & ARTISAN PROPORTIONS',
       subtitle:
         'Precision Crafted Solid Teak, Hand-Woven Fibers and Architectural Symmetry',
@@ -77,7 +77,7 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
     },
     {
       id: 'resort-poolside',
-      tag: 'RH RESORT & SUN',
+      tag: 'HASIBUAN RESORT & SUN',
       title: 'THE RESORT & POOLSIDE SOURCE BOOK',
       subtitle:
         'Sculptural Sunbeds, Daybeds and Architectural Furnishings Built for the Elements',
@@ -96,7 +96,7 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
   if (banners && banners.length > 0) {
     resolvedSlides = banners.map((b, idx) => ({
       id: b.id || `banner-${idx}`,
-      tag: 'RH COLLECTION',
+      tag: 'HASIBUAN COLLECTION',
       title:
         (b as any).title ||
         (idx === 0 && heroSettings?.title
@@ -123,7 +123,7 @@ export const RHHeroSection: React.FC<RHHeroSectionProps> = ({
     resolvedSlides = [
       {
         id: 'admin-hero',
-        tag: heroSettings.badge || 'RH CURATION',
+        tag: heroSettings.badge || 'HASIBUAN CURATION',
         title: `${heroSettings.title} ${heroSettings.title_highlight || ''}`.trim(),
         subtitle: heroSettings.description || 'Pure Forms and Natural Materials',
         image: heroSettings.image_main,

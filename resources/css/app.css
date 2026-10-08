@@ -8,7 +8,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* Font Families - RH Vitruvian Architecture (Cormorant Garamond serif + Inter sans) */
+  /* Font Families - Hasibuan Vitruvian Architecture (Cormorant Garamond serif + Inter sans) */
   --font-sans:
     'Inter', 'Plus Jakarta Sans', ui-sans-serif, system-ui,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -293,7 +293,7 @@
   height: 100% !important;
 }
 
-/* RH (Restoration Hardware) Architectural Design Utilities */
+/* Hasibuan Architectural Design Utilities */
 .rh-tracking-wide {
   letter-spacing: 0.22em;
 }

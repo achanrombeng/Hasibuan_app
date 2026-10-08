@@ -40,7 +40,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           />
         )}
 
-        {/* RH Hover Overlay Action */}
+        {/* Hasibuan Hover Overlay Action */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-center justify-center">
           <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-5 py-2.5 bg-white text-neutral-900 text-[10px] tracking-[0.25em] uppercase font-medium shadow-md">
             VIEW PIECE

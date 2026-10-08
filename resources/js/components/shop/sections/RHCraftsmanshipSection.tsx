@@ -32,6 +32,13 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
       ? settings.images_2[0]
       : 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1600&auto=format&fit=crop';
 
+  const row1Visible = settings?.row_1_visible ?? true;
+  const row2Visible = settings?.row_2_visible ?? true;
+
+  if (!row1Visible && !row2Visible) {
+    return null;
+  }
+
   const isCustom = bgConfig && bgConfig.type !== 'default';
   const isDark = isDarkTheme(bgConfig);
 
@@ -73,95 +80,99 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
           />
         </div>
 
-        {/* Feature 1: Teak Wood (Image Left, Text Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          <div className="lg:col-span-7 overflow-hidden bg-neutral-100">
-            <div className="aspect-[16/10] w-full overflow-hidden">
-              <img
-                src={woodImage}
-                alt="Teak Hardwoods"
-                className="w-full h-full object-cover object-center rh-image-zoom"
+        {/* Feature 1: Teak Wood (Row 2 in Admin Settings) */}
+        {row2Visible && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div className="lg:col-span-7 overflow-hidden bg-neutral-100">
+              <div className="aspect-[16/10] w-full overflow-hidden">
+                <img
+                  src={woodImage}
+                  alt="Teak Hardwoods"
+                  className="w-full h-full object-cover object-center rh-image-zoom"
+                />
+              </div>
+            </div>
+            <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
+              <span
+                className={cn(
+                  'text-[10px] tracking-[0.3em] uppercase font-light block',
+                  isDark ? 'text-neutral-400' : 'text-neutral-500',
+                )}
+              >
+                INDONESIAN TIMBER
+              </span>
+              <h3
+                className={cn(
+                  'font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase',
+                  isDark ? 'text-white' : 'text-neutral-900',
+                )}
+              >
+                {title2}
+              </h3>
+              <div
+                className={cn(
+                  'w-10 h-[1px] mx-auto lg:mx-0',
+                  isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+                )}
               />
+              <p
+                className={cn(
+                  'text-xs sm:text-sm font-light leading-relaxed tracking-wide',
+                  isDark ? 'text-neutral-200' : 'text-neutral-600',
+                )}
+              >
+                {desc2}
+              </p>
             </div>
           </div>
-          <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
-            <span
-              className={cn(
-                'text-[10px] tracking-[0.3em] uppercase font-light block',
-                isDark ? 'text-neutral-400' : 'text-neutral-500',
-              )}
-            >
-              INDONESIAN TIMBER
-            </span>
-            <h3
-              className={cn(
-                'font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase',
-                isDark ? 'text-white' : 'text-neutral-900',
-              )}
-            >
-              {title2}
-            </h3>
-            <div
-              className={cn(
-                'w-10 h-[1px] mx-auto lg:mx-0',
-                isDark ? 'bg-neutral-500' : 'bg-neutral-400',
-              )}
-            />
-            <p
-              className={cn(
-                'text-xs sm:text-sm font-light leading-relaxed tracking-wide',
-                isDark ? 'text-neutral-200' : 'text-neutral-600',
-              )}
-            >
-              {desc2}
-            </p>
-          </div>
-        </div>
+        )}
 
-        {/* Feature 2: Hand Weaving (Text Left, Image Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          <div className="lg:col-span-5 order-2 lg:order-1 space-y-6 text-center lg:text-left">
-            <span
-              className={cn(
-                'text-[10px] tracking-[0.3em] uppercase font-light block',
-                isDark ? 'text-neutral-400' : 'text-neutral-500',
-              )}
-            >
-              ARTISAN WEAVING
-            </span>
-            <h3
-              className={cn(
-                'font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase',
-                isDark ? 'text-white' : 'text-neutral-900',
-              )}
-            >
-              {title1}
-            </h3>
-            <div
-              className={cn(
-                'w-10 h-[1px] mx-auto lg:mx-0',
-                isDark ? 'bg-neutral-500' : 'bg-neutral-400',
-              )}
-            />
-            <p
-              className={cn(
-                'text-xs sm:text-sm font-light leading-relaxed tracking-wide',
-                isDark ? 'text-neutral-200' : 'text-neutral-600',
-              )}
-            >
-              {desc1}
-            </p>
-          </div>
-          <div className="lg:col-span-7 order-1 lg:order-2 overflow-hidden bg-neutral-100">
-            <div className="aspect-[16/10] w-full overflow-hidden">
-              <img
-                src={craftImage}
-                alt="Handcrafted Weaving"
-                className="w-full h-full object-cover object-center rh-image-zoom"
+        {/* Feature 2: Hand Weaving (Row 1 in Admin Settings) */}
+        {row1Visible && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div className="lg:col-span-5 order-2 lg:order-1 space-y-6 text-center lg:text-left">
+              <span
+                className={cn(
+                  'text-[10px] tracking-[0.3em] uppercase font-light block',
+                  isDark ? 'text-neutral-400' : 'text-neutral-500',
+                )}
+              >
+                ARTISAN WEAVING
+              </span>
+              <h3
+                className={cn(
+                  'font-serif text-2xl sm:text-3xl md:text-4xl font-light tracking-[0.06em] uppercase',
+                  isDark ? 'text-white' : 'text-neutral-900',
+                )}
+              >
+                {title1}
+              </h3>
+              <div
+                className={cn(
+                  'w-10 h-[1px] mx-auto lg:mx-0',
+                  isDark ? 'bg-neutral-500' : 'bg-neutral-400',
+                )}
               />
+              <p
+                className={cn(
+                  'text-xs sm:text-sm font-light leading-relaxed tracking-wide',
+                  isDark ? 'text-neutral-200' : 'text-neutral-600',
+                )}
+              >
+                {desc1}
+              </p>
+            </div>
+            <div className="lg:col-span-7 order-1 lg:order-2 overflow-hidden bg-neutral-100">
+              <div className="aspect-[16/10] w-full overflow-hidden">
+                <img
+                  src={craftImage}
+                  alt="Handcrafted Weaving"
+                  className="w-full h-full object-cover object-center rh-image-zoom"
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

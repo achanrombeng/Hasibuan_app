@@ -243,6 +243,8 @@ export interface CraftsmanshipSettings {
   title_2: string;
   desc_2: string;
   images_2: string[];
+  row_1_visible?: boolean;
+  row_2_visible?: boolean;
 }
 
 export interface ValuesSettings {
