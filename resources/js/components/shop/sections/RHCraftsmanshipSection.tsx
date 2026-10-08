@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { CraftsmanshipSettings, SectionBgConfig } from '@/types/shop';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
@@ -55,7 +56,13 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
       <SectionBgOverlay config={bgConfig} />
       <div className="relative z-10 max-w-[1720px] mx-auto space-y-20 md:space-y-32">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3"
+        >
           <span
             className={cn(
               'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
@@ -78,12 +85,18 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
               isDark ? 'bg-neutral-500' : 'bg-neutral-400',
             )}
           />
-        </div>
+        </motion.div>
 
         {/* Feature 1: Teak Wood (Row 2 in Admin Settings) */}
         {row2Visible && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            <div className="lg:col-span-7 overflow-hidden bg-neutral-100">
+            <motion.div
+              initial={{ opacity: 0, x: -35 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-7 overflow-hidden bg-neutral-100"
+            >
               <div className="aspect-[16/10] w-full overflow-hidden">
                 <img
                   src={woodImage}
@@ -91,8 +104,14 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
                   className="w-full h-full object-cover object-center rh-image-zoom"
                 />
               </div>
-            </div>
-            <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 35 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-5 space-y-6 text-center lg:text-left"
+            >
               <span
                 className={cn(
                   'text-[10px] tracking-[0.3em] uppercase font-light block',
@@ -123,14 +142,20 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
               >
                 {desc2}
               </p>
-            </div>
+            </motion.div>
           </div>
         )}
 
         {/* Feature 2: Hand Weaving (Row 1 in Admin Settings) */}
         {row1Visible && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            <div className="lg:col-span-5 order-2 lg:order-1 space-y-6 text-center lg:text-left">
+            <motion.div
+              initial={{ opacity: 0, x: -35 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-5 order-2 lg:order-1 space-y-6 text-center lg:text-left"
+            >
               <span
                 className={cn(
                   'text-[10px] tracking-[0.3em] uppercase font-light block',
@@ -161,8 +186,14 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
               >
                 {desc1}
               </p>
-            </div>
-            <div className="lg:col-span-7 order-1 lg:order-2 overflow-hidden bg-neutral-100">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 35 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-7 order-1 lg:order-2 overflow-hidden bg-neutral-100"
+            >
               <div className="aspect-[16/10] w-full overflow-hidden">
                 <img
                   src={craftImage}
@@ -170,7 +201,7 @@ export const RHCraftsmanshipSection: React.FC<RHCraftsmanshipSectionProps> = ({
                   className="w-full h-full object-cover object-center rh-image-zoom"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         )}
       </div>

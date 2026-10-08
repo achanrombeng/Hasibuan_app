@@ -580,9 +580,9 @@ export default function ProductBulkImageModal({
                                 setActiveItemForSearch(item.id);
                                 setSearchQuery(item.detectedSku);
                               }}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1.5 font-medium text-amber-900 hover:bg-amber-100"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-2.5 py-1.5 font-medium text-neutral-800 shadow-xs transition-colors hover:border-neutral-900 hover:text-neutral-900"
                             >
-                              <Search className="h-3.5 w-3.5 text-amber-700" />
+                              <Search className="h-3.5 w-3.5 text-neutral-500" />
                               <span>Select Product Manually</span>
                             </button>
                           )}

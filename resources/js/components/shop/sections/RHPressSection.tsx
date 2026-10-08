@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { HomeTestimonial, SectionBgConfig } from '@/types/shop';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
@@ -52,7 +53,13 @@ export const RHPressSection: React.FC<RHPressSectionProps> = ({
       <SectionBgOverlay config={bgConfig} />
       <div className="relative z-10 max-w-[1400px] mx-auto space-y-16">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3"
+        >
           <span
             className={cn(
               'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
@@ -75,13 +82,35 @@ export const RHPressSection: React.FC<RHPressSectionProps> = ({
               isDark ? 'bg-neutral-500' : 'bg-neutral-400',
             )}
           />
-        </div>
+        </motion.div>
 
         {/* 3-Column Reviews */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.12,
+              },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
+        >
           {quotes.slice(0, 3).map((item) => (
-            <div
+            <motion.div
               key={item.id}
+              variants={{
+                hidden: { opacity: 0, y: 25 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
               className={cn(
                 'text-center p-6 sm:p-8 border flex flex-col justify-between transition-colors',
                 isDark
@@ -128,9 +157,9 @@ export const RHPressSection: React.FC<RHPressSectionProps> = ({
                   {item.location}
                 </span>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

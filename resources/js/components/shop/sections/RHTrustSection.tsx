@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { SectionBgConfig } from '@/types/shop';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
@@ -37,7 +38,13 @@ export const RHTrustSection: React.FC<RHTrustSectionProps> = ({
       style={getSectionBgStyles(bgConfig)}
     >
       <SectionBgOverlay config={bgConfig} />
-      <div className="relative z-10 max-w-[1400px] mx-auto text-center space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 max-w-[1400px] mx-auto text-center space-y-6"
+      >
         <span
           className={cn(
             'text-[10px] tracking-[0.35em] uppercase font-light block',
@@ -47,10 +54,32 @@ export const RHTrustSection: React.FC<RHTrustSectionProps> = ({
           FEATURED IN & ARCHITECTURAL ACCREDITATIONS
         </span>
 
-        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 lg:gap-20">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.08,
+              },
+            },
+          }}
+          className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 lg:gap-20"
+        >
           {normalizedLogos.map((logo, idx) => (
-            <div
+            <motion.div
               key={`${logo.name}-${idx}`}
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
               className={cn(
                 'flex items-center justify-center transition-opacity duration-300',
                 isDark
@@ -77,10 +106,10 @@ export const RHTrustSection: React.FC<RHTrustSectionProps> = ({
                   {logo.name}
                 </span>
               )}
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

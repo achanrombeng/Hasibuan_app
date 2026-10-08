@@ -215,7 +215,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
               <button
                 type="button"
                 onClick={() => setCatalogModalOpen(true)}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:from-teal-700 hover:to-teal-800 hover:shadow-md active:scale-95"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-neutral-900 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-black hover:shadow-md active:scale-95"
                 title="Open & Preview E-Catalog (PDF / 3D Flipbook)"
               >
                 <BookOpen size={14} />
@@ -246,7 +246,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
                     {isActive && (
                       <motion.div
                         layoutId="activeCategoryBar"
-                        className="absolute top-1/2 left-0 hidden h-6 w-1.5 -translate-y-1/2 rounded-r-sm bg-teal-500 lg:block"
+                        className="absolute top-1/2 left-0 hidden h-6 w-1.5 -translate-y-1/2 rounded-r-sm bg-neutral-900 lg:block"
                         transition={{
                           type: 'spring',
                           stiffness: 300,

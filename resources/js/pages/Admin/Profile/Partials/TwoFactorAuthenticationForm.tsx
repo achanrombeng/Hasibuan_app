@@ -142,7 +142,7 @@ export default function TwoFactorAuthenticationForm({
                 <button
                   type="button"
                   onClick={() => setShowSetupModal(true)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98]"
+                  className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-black active:scale-[0.98]"
                 >
                   <ShieldCheck className="h-4 w-4" />
                   Continue Setup
@@ -152,7 +152,7 @@ export default function TwoFactorAuthenticationForm({
                   type="button"
                   onClick={handleEnable}
                   disabled={enabling}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-2.5 font-medium text-white shadow-md transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50"
                 >
                   <ShieldCheck className="h-4 w-4" />
                   Enable 2FA

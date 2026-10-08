@@ -122,7 +122,7 @@ export default function UsersIndex({ users, filters }: UsersIndexProps) {
             <div className="flex items-center gap-2.5">
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-xl bg-[#a67c52] px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#8e6843] active:scale-[0.98]"
+                className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-black active:scale-[0.98]"
               >
                 Search
               </button>

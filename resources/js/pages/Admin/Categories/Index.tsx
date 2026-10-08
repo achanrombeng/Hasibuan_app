@@ -373,7 +373,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                 onClick={openReorderModal}
                 className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-white px-4 py-2.5 font-medium text-neutral-700 shadow-sm transition-all hover:border-neutral-400 hover:bg-neutral-50"
               >
-                <ArrowUpDown className="h-4 w-4 text-[#a67c52]" />
+                <ArrowUpDown className="h-4 w-4 text-neutral-900" />
                 Reorder Categories
               </button>
               <Link
@@ -501,7 +501,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
         <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <ArrowUpDown className="h-5 w-5 text-[#a67c52]" />
+              <ArrowUpDown className="h-5 w-5 text-neutral-900" />
               Reorder Categories (Navbar & List)
             </DialogTitle>
             <DialogDescription>
@@ -518,7 +518,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                 className="flex items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-neutral-50/70 p-3.5 transition-all hover:border-neutral-300 hover:bg-white"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[#a67c52]/15 text-xs font-bold text-[#a67c52]">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-neutral-900/15 text-xs font-bold text-neutral-900">
                     {idx + 1}
                   </span>
                   <div className="min-w-0 truncate">
@@ -572,7 +572,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
               type="button"
               onClick={handleSaveOrder}
               disabled={isSavingOrder}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#a67c52] px-5 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50"
             >
               <Check className="h-4 w-4" />
               {isSavingOrder ? 'Saving...' : 'Save New Order'}

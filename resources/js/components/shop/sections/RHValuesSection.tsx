@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { HomeValue, SectionBgConfig } from '@/types/shop';
+import { motion } from 'framer-motion';
 import {
   Award,
   CheckCircle2,
@@ -55,7 +56,13 @@ export const RHValuesSection: React.FC<RHValuesSectionProps> = ({
       <SectionBgOverlay config={bgConfig} />
       <div className="relative z-10 max-w-[1500px] mx-auto space-y-16">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-2xl mx-auto space-y-3"
+        >
           <span
             className={cn(
               'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light block',
@@ -78,16 +85,38 @@ export const RHValuesSection: React.FC<RHValuesSectionProps> = ({
               isDark ? 'bg-neutral-500' : 'bg-neutral-400',
             )}
           />
-        </div>
+        </motion.div>
 
         {/* Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.14,
+              },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
+        >
           {values.map((item, idx) => {
             const IconComponent = iconMap[item.icon] || CheckCircle2;
 
             return (
-              <div
+              <motion.div
                 key={idx}
+                variants={{
+                  hidden: { opacity: 0, y: 25 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
                 className={cn(
                   'border p-8 sm:p-10 flex flex-col items-center text-center space-y-4 transition-colors',
                   isDark
@@ -121,10 +150,10 @@ export const RHValuesSection: React.FC<RHValuesSectionProps> = ({
                 >
                   {item.desc}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

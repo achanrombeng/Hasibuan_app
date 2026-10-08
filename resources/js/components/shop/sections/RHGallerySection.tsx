@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ApiCategory, SectionBgConfig } from '@/types/shop';
 import { Link } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
@@ -29,7 +30,13 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
       <SectionBgOverlay config={bgConfig} />
       <div className="relative z-10 max-w-[1720px] mx-auto space-y-16 md:space-y-24">
         {/* Section Header - Architectural Vitruvian Quote / Title */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3"
+        >
           <span
             className={cn(
               'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
@@ -52,10 +59,16 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
               isDark ? 'bg-neutral-500' : 'bg-neutral-400',
             )}
           />
-        </div>
+        </motion.div>
 
         {/* 1. Grand Full-Width Architectural Showcase */}
-        <div className="relative group overflow-hidden bg-neutral-950">
+        <motion.div
+          initial={{ opacity: 0, y: 35, scale: 0.99 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative group overflow-hidden bg-neutral-950"
+        >
           <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2400&auto=format&fit=crop"
@@ -84,12 +97,18 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
               EXPLORE COLLECTION
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* 2. Symmetrical Vitruvian Dual Showcase (2-Column) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
           {/* Card Left: Architectural Dining */}
-          <div className="group relative flex flex-col bg-white border border-neutral-200/70 p-6 md:p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative flex flex-col bg-white border border-neutral-200/70 p-6 md:p-8"
+          >
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100 mb-6">
               <img
                 src="https://images.unsplash.com/photo-1617806118233-18e1de247200?q=80&w=1600&auto=format&fit=crop"
@@ -116,10 +135,16 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Card Right: Architectural Lounge */}
-          <div className="group relative flex flex-col bg-white border border-neutral-200/70 p-6 md:p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative flex flex-col bg-white border border-neutral-200/70 p-6 md:p-8"
+          >
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100 mb-6">
               <img
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1600&auto=format&fit=crop"
@@ -146,13 +171,37 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
                 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* 3. Three-Column Curated Architectural Triptych */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.12,
+              },
+            },
+          }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+        >
           {/* Triptych 1: Sun Loungers */}
-          <div className="group bg-white border border-neutral-200/70 p-5 flex flex-col">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 25 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="group bg-white border border-neutral-200/70 p-5 flex flex-col"
+          >
             <div className="aspect-[4/3] w-full overflow-hidden bg-neutral-100 mb-4">
               <img
                 src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200&auto=format&fit=crop"
@@ -174,10 +223,20 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
                 VIEW SUNBEDS
               </Link>
             </div>
-          </div>
+          </motion.div>
 
           {/* Triptych 2: Natural Rattan */}
-          <div className="group bg-white border border-neutral-200/70 p-5 flex flex-col">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 25 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="group bg-white border border-neutral-200/70 p-5 flex flex-col"
+          >
             <div className="aspect-[4/3] w-full overflow-hidden bg-neutral-100 mb-4">
               <img
                 src="https://images.unsplash.com/photo-1580481072645-022f9a6d8310?q=80&w=1200&auto=format&fit=crop"
@@ -199,10 +258,20 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
                 VIEW RATTAN
               </Link>
             </div>
-          </div>
+          </motion.div>
 
           {/* Triptych 3: Tables & Flooring */}
-          <div className="group bg-white border border-neutral-200/70 p-5 flex flex-col sm:col-span-2 lg:col-span-1">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 25 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="group bg-white border border-neutral-200/70 p-5 flex flex-col sm:col-span-2 lg:col-span-1"
+          >
             <div className="aspect-[4/3] w-full overflow-hidden bg-neutral-100 mb-4">
               <img
                 src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1200&auto=format&fit=crop"
@@ -224,8 +293,8 @@ export const RHGallerySection: React.FC<RHGallerySectionProps> = ({
                 VIEW BAR SETS
               </Link>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
       </div>
     </section>

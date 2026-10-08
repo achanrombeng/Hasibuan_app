@@ -77,7 +77,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             >
               {/* Rating */}
               <div className="mb-6 flex items-center gap-2">
-                <Quote size={20} className="text-teal-500" />
+                <Quote size={20} className="text-neutral-900" />
                 <div className="ml-auto flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -85,7 +85,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                       size={14}
                       className={
                         i < t.rating
-                          ? 'fill-accent-500 text-accent-500'
+                          ? 'fill-neutral-900 text-neutral-900'
                           : 'text-neutral-200'
                       }
                     />

@@ -106,7 +106,7 @@ export const NewsletterSection = () => {
                   <button
                     type="submit"
                     disabled={processing}
-                    className="flex items-center justify-center gap-2 rounded-sm bg-amber-400 px-8 py-4 font-semibold text-neutral-800 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 rounded-sm bg-neutral-900 px-8 py-4 font-semibold text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {processing ? (
                       <>

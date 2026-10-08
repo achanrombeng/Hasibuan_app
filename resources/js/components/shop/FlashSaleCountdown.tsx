@@ -70,9 +70,9 @@ export function FlashSaleCountdown({
   return (
     <div className={`rounded-sm p-6 text-white ${className}`}>
       <div className="mb-4 flex items-center justify-center gap-2">
-        <Flame className="animate-pulse text-accent-500" size={24} />
+        <Flame className="animate-pulse text-white" size={24} />
         <h3 className="text-lg font-medium">{title}</h3>
-        <Clock size={20} className="text-accent-500" />
+        <Clock size={20} className="text-white/80" />
       </div>
 
       <div className="flex items-center justify-center gap-3">

@@ -524,7 +524,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
             onClick={() => setShowLivePreview(!showLivePreview)}
             className="inline-flex items-center gap-2 self-start rounded-xl border border-neutral-200 bg-white px-4 py-2 text-xs font-medium text-neutral-700 shadow-sm transition-all hover:bg-neutral-50"
           >
-            <Sparkles className="h-4 w-4 text-[#a67c52]" />
+            <Sparkles className="h-4 w-4 text-neutral-900" />
             {showLivePreview ? 'Hide Live Preview' : 'Show Live Preview'}
             {showLivePreview ? (
               <ChevronUp className="h-3.5 w-3.5" />
@@ -539,7 +539,7 @@ export default function FooterSettings({ settings }: FooterSettingsProps) {
           <div className="overflow-hidden rounded-2xl border border-neutral-800 bg-[#111111] text-white shadow-2xl transition-all">
             <div className="flex items-center justify-between border-b border-neutral-800/80 bg-neutral-900/60 px-5 py-3 text-xs tracking-wider text-neutral-400">
               <span className="flex items-center gap-2 font-medium text-white">
-                <PanelBottom className="h-4 w-4 text-[#a67c52]" />
+                <PanelBottom className="h-4 w-4 text-neutral-900" />
                 LIVE PREVIEW · HASIBUAN STOREFRONT FOOTER
               </span>
               <span className="text-[10px] text-neutral-400">

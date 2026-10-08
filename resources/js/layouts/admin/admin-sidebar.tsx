@@ -192,7 +192,7 @@ export default function AdminSidebar({
           'group relative flex items-center gap-3 py-2.5 text-xs font-light tracking-[0.1em] uppercase transition-all',
           !isMobile && collapsed ? 'justify-center px-2' : 'px-3.5',
           isActive(item.href)
-            ? 'border-l-2 border-[#c5a880] bg-[#1e1d1b] text-white shadow-sm'
+            ? 'border-l-2 border-white bg-neutral-900 text-white shadow-sm'
             : 'text-neutral-400 hover:bg-neutral-900/80 hover:text-white',
         )}
         title={
@@ -207,8 +207,8 @@ export default function AdminSidebar({
           <item.icon className="h-4 w-4 flex-shrink-0" />
           {!isMobile && collapsed && hasNewInquiries && (
             <span className="absolute -top-1 -right-1 flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c5a880] opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#c5a880] ring-2 ring-[#111110]"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-white ring-2 ring-[#111110]"></span>
             </span>
           )}
         </div>
@@ -218,7 +218,7 @@ export default function AdminSidebar({
         )}
 
         {(isMobile || !collapsed) && hasNewInquiries && (
-          <span className="ml-auto inline-flex items-center justify-center rounded border border-[#524431] bg-[#2a241c] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#d6b78d]">
+          <span className="ml-auto inline-flex items-center justify-center rounded border border-neutral-700 bg-neutral-800 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-neutral-200">
             {newDealerInquiriesCount}
           </span>
         )}
@@ -236,7 +236,7 @@ export default function AdminSidebar({
           onClick={handleNavClick}
         >
           {!isMobile && collapsed ? (
-            <span className="font-serif text-lg font-light tracking-[0.2em] text-[#c5a880]">
+            <span className="font-serif text-lg font-light tracking-[0.2em] text-white">
               HD
             </span>
           ) : (
@@ -245,7 +245,7 @@ export default function AdminSidebar({
                 <span className="font-serif text-lg font-light tracking-[0.2em] text-white">
                   HASIBUAN
                 </span>
-                <span className="border border-[#3d3324] bg-[#1e1b16] px-1.5 py-0.5 text-[9px] font-medium tracking-[0.25em] text-[#c5a880] uppercase">
+                <span className="border border-neutral-700 bg-neutral-800 px-1.5 py-0.5 text-[9px] font-medium tracking-[0.25em] text-neutral-300 uppercase">
                   ADMIN
                 </span>
               </div>
@@ -314,7 +314,7 @@ export default function AdminSidebar({
           target="_blank"
           onClick={handleNavClick}
           className={cn(
-            'flex items-center gap-3 py-2.5 text-xs font-light tracking-[0.12em] text-neutral-400 uppercase transition-all hover:bg-neutral-900 hover:text-[#c5a880]',
+            'flex items-center gap-3 py-2.5 text-xs font-light tracking-[0.12em] text-neutral-400 uppercase transition-all hover:bg-neutral-900 hover:text-white',
             !isMobile && collapsed ? 'justify-center px-2' : 'px-3',
           )}
         >

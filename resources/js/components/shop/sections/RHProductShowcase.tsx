@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ApiProduct, SectionBgConfig } from '@/types/shop';
 import { Link } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { ProductCard } from '../ProductCard';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
@@ -30,7 +31,13 @@ export const RHProductShowcase: React.FC<RHProductShowcaseProps> = ({
       <SectionBgOverlay config={bgConfig} />
       <div className="relative z-10 max-w-[1720px] mx-auto space-y-14">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3"
+        >
           <span
             className={cn(
               'text-[10px] md:text-xs tracking-[0.35em] uppercase font-light',
@@ -61,13 +68,39 @@ export const RHProductShowcase: React.FC<RHProductShowcaseProps> = ({
           >
             Masterworks of enduring proportion, hand-finished in our central Java workshops.
           </p>
-        </div>
+        </motion.div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.08,
+              },
+            },
+          }}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+        >
           {products.length > 0 ? (
             products.slice(0, 8).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div
+                key={product.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))
           ) : (
             // Fallback luxury showcase items if DB has no images yet
@@ -105,8 +138,16 @@ export const RHProductShowcase: React.FC<RHProductShowcaseProps> = ({
                   'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1200&auto=format&fit=crop',
               },
             ].map((p) => (
-              <div
+              <motion.div
                 key={p.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
                 className="group flex flex-col bg-[#fafaf9] border border-neutral-200/80 p-4 transition-all duration-300"
               >
                 <div className="relative aspect-square w-full overflow-hidden bg-neutral-100 mb-4">
@@ -136,20 +177,26 @@ export const RHProductShowcase: React.FC<RHProductShowcaseProps> = ({
                     <span className="text-neutral-400 text-[10px]">INQUIRE</span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))
           )}
-        </div>
+        </motion.div>
 
         {/* View All Button */}
-        <div className="text-center pt-6">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center pt-6"
+        >
           <Link
             href="/shop/products"
             className="inline-block px-10 py-3.5 border border-neutral-900 text-neutral-900 text-[11px] tracking-[0.28em] uppercase font-medium hover:bg-neutral-900 hover:text-white transition-all duration-300"
           >
             EXPLORE COMPLETE CATALOG
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

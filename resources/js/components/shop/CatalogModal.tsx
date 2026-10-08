@@ -73,9 +73,9 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
           <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-neutral-800 bg-neutral-900/95 px-4 py-3 backdrop-blur-sm sm:px-6 sm:py-3.5">
             {/* Title & Badge */}
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-500/20 bg-teal-500/15 text-teal-400">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-700 bg-neutral-800 text-white">
                 {viewMode === '3d' ? (
-                  <Sparkles size={20} className="animate-pulse text-teal-400" />
+                  <Sparkles size={20} className="animate-pulse text-white" />
                 ) : (
                   <BookOpen size={20} />
                 )}
@@ -85,7 +85,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                   <h3 className="truncate font-serif text-base font-bold tracking-wide text-white sm:text-lg">
                     {catalogTitle}
                   </h3>
-                  <span className="hidden items-center rounded-full border border-teal-500/30 bg-teal-500/20 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-teal-300 uppercase sm:inline-flex">
+                  <span className="hidden items-center rounded-full border border-neutral-700 bg-neutral-800 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-neutral-300 uppercase sm:inline-flex">
                     {viewMode === '3d' ? '3D Interactive' : 'PDF Viewer'}
                   </span>
                 </div>
@@ -104,7 +104,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                   onClick={() => setViewMode('3d')}
                   className={`flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
                     viewMode === '3d'
-                      ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md'
+                      ? 'bg-white text-black shadow-md'
                       : 'text-neutral-400 hover:bg-neutral-800/60 hover:text-neutral-200'
                   }`}
                   title="Tampilan 3D Flipbook Interaktif"
@@ -191,7 +191,7 @@ export const CatalogModal: React.FC<CatalogModalProps> = ({
                         href={pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                        className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-neutral-200"
                       >
                         <ExternalLink size={16} />
                         <span>Open / Download Catalog PDF</span>

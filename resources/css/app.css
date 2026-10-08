@@ -18,30 +18,30 @@
   --font-display:
     'Cormorant Garamond', 'Cinzel', Didot, 'Bodoni MT', Georgia, serif;
 
-  /* Primary Brand Bronze (derived from Turkish website #BB976D) */
-  --color-teal-50: #faf7f2;
-  --color-teal-100: #f0e8dd;
-  --color-teal-200: #e1d1be;
-  --color-teal-300: #d1b99e;
-  --color-teal-400: #c3a27e;
-  --color-teal-500: #bb976d; /* Signature Ronica Gold/Bronze */
-  --color-teal-600: #a68259;
-  --color-teal-700: #8b6c48;
-  --color-teal-800: #6e5538;
-  --color-teal-900: #503d28;
-  --color-teal-950: #2e2215;
+  /* Hasibuan Architectural Monochrome - Primary Noir / Charcoal */
+  --color-teal-50: #fafafa;
+  --color-teal-100: #f4f4f5;
+  --color-teal-200: #e4e4e7;
+  --color-teal-300: #d4d4d8;
+  --color-teal-400: #a1a1aa;
+  --color-teal-500: #171717; /* Signature Hasibuan Noir / Charcoal */
+  --color-teal-600: #0a0a0a; /* Pure Deep Black */
+  --color-teal-700: #18181b;
+  --color-teal-800: #27272a;
+  --color-teal-900: #111111;
+  --color-teal-950: #050505;
 
-  /* Accent Sand/Tan (coordinated secondary palette) */
-  --color-accent-50: #faf8f5;
-  --color-accent-100: #f5efeb;
-  --color-accent-200: #eae0d5;
-  --color-accent-300: #dfd0c0;
-  --color-accent-400: #d4c0ab;
-  --color-accent-500: #c5b7aa; /* Accent Warm Sand from design.md */
-  --color-accent-600: #b59e87;
-  --color-accent-700: #9c846c;
-  --color-accent-800: #7e6852;
-  --color-accent-900: #5e4d3c;
+  /* Accent Stone / Architectural Neutral */
+  --color-accent-50: #fafafa;
+  --color-accent-100: #f5f5f5;
+  --color-accent-200: #e5e5e5;
+  --color-accent-300: #d4d4d4;
+  --color-accent-400: #a3a3a3;
+  --color-accent-500: #737373; /* Architectural Slate / Stone */
+  --color-accent-600: #525252;
+  --color-accent-700: #404040;
+  --color-accent-800: #262626;
+  --color-accent-900: #171717;
 
   /* Neutral Colors */
   --color-neutral-50: #fafafa;
@@ -55,7 +55,7 @@
   --color-neutral-800: #1a1a1a; /* Neutral Dark (Text) */
   --color-neutral-900: #0d0d0d;
 
-  /* Legacy Aliases (mapped to Brand Colors) */
+  /* Legacy Aliases (mapped to Architectural Monochrome) */
   --color-terra-50: var(--color-neutral-50);
   --color-terra-100: var(--color-neutral-100);
   --color-terra-200: var(--color-neutral-200);
@@ -67,9 +67,9 @@
   --color-terra-800: var(--color-neutral-800);
   --color-terra-900: var(--color-neutral-900);
 
-  --color-wood-light: var(--color-teal-300);
-  --color-wood: var(--color-teal-500);
-  --color-wood-dark: var(--color-teal-700);
+  --color-wood-light: var(--color-neutral-300);
+  --color-wood: var(--color-neutral-800);
+  --color-wood-dark: var(--color-neutral-900);
 
   --color-sand-50: var(--color-neutral-50);
   --color-sand-100: var(--color-neutral-100);
@@ -186,7 +186,7 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: var(--color-teal-950); /* Darkest Teal */
+  --sidebar: var(--color-teal-950); /* Deep Noir */
   --sidebar-foreground: var(--color-teal-50);
   --sidebar-primary: var(--color-teal-500);
   --sidebar-primary-foreground: #ffffff;
@@ -197,6 +197,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     @apply border-border;
   }

@@ -7,6 +7,7 @@ import {
 import { SiteSettings } from '@/types';
 import { ApiCategory } from '@/types/shop';
 import { router, usePage } from '@inertiajs/react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
 import { toast, Toaster } from 'sonner';
 
@@ -41,6 +42,13 @@ export function ShopLayout({
 
   const whatsAppPhone = siteSettings?.contact_whatsapp || '';
 
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
   // Handle flash messages
   useEffect(() => {
     if (flash?.success) {
@@ -60,6 +68,12 @@ export function ShopLayout({
   return (
     <>
       <Toaster position="top-right" richColors />
+
+      {/* Top Architectural Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2.5px] bg-neutral-900 dark:bg-white z-[100] origin-left pointer-events-none"
+        style={{ scaleX }}
+      />
 
       {/* Custom Cursor - smooth following effect like realteakfurniture.com */}
       <CustomCursor />

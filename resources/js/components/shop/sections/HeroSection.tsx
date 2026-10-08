@@ -69,7 +69,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings }) => {
             {settings.title_highlight && (
               <>
                 <br />
-                <span className="font-medium text-accent-500">
+                <span className="font-medium text-neutral-300">
                   {settings.title_highlight}
                 </span>
               </>
@@ -85,7 +85,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ settings }) => {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/shop/products"
-              className="group inline-flex items-center gap-3 rounded-sm bg-white px-8 py-4 font-medium text-teal-500 shadow-lg transition-all duration-300 hover:bg-accent-500 hover:text-neutral-800"
+              className="group inline-flex items-center gap-3 rounded-sm bg-white px-8 py-4 font-medium text-black shadow-lg transition-all duration-300 hover:bg-neutral-200 hover:text-black"
             >
               {t('shop.home.explore_collection')}
               <ArrowRight

@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { SectionBgConfig } from '@/types/shop';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
@@ -24,15 +25,25 @@ export const RHManifestoSection: React.FC<RHManifestoSectionProps> = ({
       style={getSectionBgStyles(bgConfig)}
     >
       <SectionBgOverlay config={bgConfig} />
-      <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-        <span
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 max-w-3xl mx-auto space-y-6"
+      >
+        <motion.span
+          initial={{ opacity: 0, letterSpacing: '0.2em' }}
+          whileInView={{ opacity: 1, letterSpacing: '0.4em' }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            'text-[10px] md:text-xs tracking-[0.4em] uppercase font-light block',
+            'text-[10px] md:text-xs uppercase font-light block',
             isDark ? 'text-neutral-300' : 'text-neutral-500',
           )}
         >
           THE VITRUVIAN PRINCIPLES
-        </span>
+        </motion.span>
 
         <blockquote
           className={cn(
@@ -43,9 +54,13 @@ export const RHManifestoSection: React.FC<RHManifestoSectionProps> = ({
           “There are pieces that furnish a space, and pieces that define it.”
         </blockquote>
 
-        <div
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            'w-12 h-[1px] mx-auto my-4',
+            'w-12 h-[1px] mx-auto my-4 origin-center',
             isDark ? 'bg-neutral-500' : 'bg-neutral-400',
           )}
         />
@@ -58,7 +73,7 @@ export const RHManifestoSection: React.FC<RHManifestoSectionProps> = ({
         >
           Balance, Symmetry and Perfect Proportion. We curate collections conceived by master designers and brought to life by generational artisans in central Java.
         </p>
-      </div>
+      </motion.div>
     </section>
   );
 };

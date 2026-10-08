@@ -20,7 +20,7 @@
             border: 1px solid #e5e7eb;
         }
         .header {
-            background-color: #0d9488;
+            background-color: #111111;
             color: #ffffff;
             padding: 28px 24px;
             text-align: center;
@@ -49,8 +49,8 @@
             width: 140px;
         }
         .message-box {
-            background-color: #f9fafb;
-            border-left: 4px solid #0d9488;
+            background-color: #f5f5f5;
+            border-left: 4px solid #111111;
             padding: 16px;
             border-radius: 4px;
             font-size: 14px;
@@ -74,7 +74,7 @@
             <h1>🤝 New Dealer Partnership Inquiry</h1>
         </div>
         <div class="content">
-            <p style="font-size: 15px; margin-top: 0;">You have received a new business partnership inquiry from the Ronica website.</p>
+            <p style="font-size: 15px; margin-top: 0;">You have received a new business partnership inquiry from the Hasibuan Design website.</p>
             
             <table class="info-table">
                 <tr>
@@ -83,7 +83,7 @@
                 </tr>
                 <tr>
                     <td class="label">Email Address:</td>
-                    <td><a href="mailto:{{ $inquiry->email }}" style="color: #0d9488;">{{ $inquiry->email }}</a></td>
+                    <td><a href="mailto:{{ $inquiry->email }}" style="color: #111111;">{{ $inquiry->email }}</a></td>
                 </tr>
                 <tr>
                     <td class="label">Phone:</td>
@@ -101,7 +101,7 @@
             </div>
         </div>
         <div class="footer">
-            Ronica Outdoor Furniture • Automated Notification
+            Hasibuan Design • Automated Notification
         </div>
     </div>
 </body>

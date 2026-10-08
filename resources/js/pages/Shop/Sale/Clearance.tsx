@@ -99,11 +99,11 @@ export default function Clearance({
                 variants={itemVariants}
                 className="mb-4 flex items-center justify-center gap-3"
               >
-                <Tag size={40} className="text-accent-500" />
+                <Tag size={40} className="text-neutral-400" />
                 <h1 className="font-display text-4xl font-bold md:text-5xl">
                   CLEARANCE SALE
                 </h1>
-                <Tag size={40} className="text-accent-500" />
+                <Tag size={40} className="text-neutral-400" />
               </motion.div>
               <motion.p variants={itemVariants} className="text-xl opacity-90">
                 Stock Clearance! Special Prices on Limited Items
@@ -112,7 +112,7 @@ export default function Clearance({
                 variants={itemVariants}
                 className="mt-4 flex items-center justify-center gap-2 text-sm opacity-75"
               >
-                <Clock size={16} className="text-accent-500" />
+                <Clock size={16} className="text-neutral-400" />
                 <span>While stocks last</span>
               </motion.div>
             </div>
@@ -250,13 +250,13 @@ function ClearanceCard({ product }: { product: ApiProduct }) {
           CLEARANCE
         </span>
         {product.is_low_stock && (
-          <span className="absolute bottom-3 left-3 rounded-sm bg-accent-500 px-3 py-1 text-xs font-medium text-neutral-800">
+          <span className="absolute bottom-3 left-3 rounded-sm bg-neutral-900 px-3 py-1 text-xs font-medium text-white">
             Limited Stock!
           </span>
         )}
       </div>
       <div className="p-4">
-        <h3 className="mb-2 line-clamp-2 font-medium text-neutral-800 transition-colors group-hover:text-teal-500">
+        <h3 className="mb-2 line-clamp-2 font-medium text-neutral-800 transition-colors group-hover:text-black">
           {product.name}
         </h3>
         <div className="mb-2 flex items-center gap-1">
@@ -266,7 +266,7 @@ function ClearanceCard({ product }: { product: ApiProduct }) {
               size={14}
               className={
                 s <= Math.round(product.average_rating)
-                  ? 'fill-accent-500 text-accent-500'
+                  ? 'fill-neutral-800 text-neutral-800'
                   : 'text-neutral-200'
               }
             />

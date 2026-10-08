@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { SectionBgConfig } from '@/types/shop';
 import { Link } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { getSectionBgStyles, isDarkTheme, SectionBgOverlay } from './sectionBgHelper';
 
@@ -39,7 +40,13 @@ export const RHInteriorDesignSection: React.FC<RHInteriorDesignSectionProps> = (
       {/* Custom Image Overlay */}
       <SectionBgOverlay config={bgConfig} />
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 max-w-4xl mx-auto text-center space-y-8"
+      >
         <div className="space-y-4">
           <span
             className={cn(
@@ -82,7 +89,13 @@ export const RHInteriorDesignSection: React.FC<RHInteriorDesignSectionProps> = (
           From concept sketches to custom joinery and white-glove delivery, our dedicated design studio assists private homeowners, architects, and luxury hospitality developments across the globe.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4"
+        >
           <Link
             href="/shop/custom-order"
             className={cn(
@@ -105,8 +118,8 @@ export const RHInteriorDesignSection: React.FC<RHInteriorDesignSectionProps> = (
           >
             APPLY FOR TRADE PROGRAM
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

@@ -21,7 +21,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         .header {
-            background-color: #0d9488;
+            background-color: #111111;
             color: #ffffff;
             padding: 36px 32px;
             text-align: center;
@@ -35,7 +35,7 @@
         .header p {
             margin: 0;
             font-size: 15px;
-            color: #ccfbf1;
+            color: #a3a3a3;
         }
         .content {
             padding: 36px 32px;
@@ -43,17 +43,18 @@
             font-size: 15px;
         }
         .highlight-box {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
+            background-color: #f5f5f5;
+            border: 1px solid #e5e5e5;
             border-radius: 12px;
             padding: 20px;
             margin: 24px 0;
-            color: #166534;
+            color: #262626;
         }
         .highlight-box h3 {
             margin: 0 0 8px 0;
             font-size: 16px;
             font-weight: 600;
+            color: #111111;
         }
         .highlight-box ul {
             margin: 0;
@@ -65,13 +66,13 @@
         }
         .btn {
             display: inline-block;
-            background-color: #f59e0b;
+            background-color: #111111;
             color: #ffffff !important;
             font-weight: 600;
             font-size: 15px;
             text-decoration: none;
             padding: 14px 28px;
-            border-radius: 10px;
+            border-radius: 6px;
             margin: 16px 0;
             text-align: center;
         }
@@ -84,7 +85,7 @@
             border-top: 1px solid #e2e8f0;
         }
         .footer a {
-            color: #0d9488;
+            color: #111111;
             text-decoration: none;
         }
     </style>

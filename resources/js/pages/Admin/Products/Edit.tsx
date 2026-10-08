@@ -901,7 +901,7 @@ export default function EditProduct({
               <button
                 type="submit"
                 disabled={isSubmitting || processing}
-                className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50"
               >
                 {isSubmitting || processing ? (
                   <>

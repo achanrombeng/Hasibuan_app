@@ -1134,7 +1134,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
             <button
               type="submit"
               disabled={processing}
-              className="ml-auto inline-flex items-center gap-2 rounded-xl bg-[#a67c52] px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-[#8e6843] active:scale-[0.98] disabled:opacity-50"
+              className="ml-auto inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50"
             >
               <Save className="h-5 w-5" />
               {processing ? 'Saving...' : 'Save Settings'}
