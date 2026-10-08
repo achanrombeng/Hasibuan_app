@@ -43,6 +43,10 @@ export interface SiteSettings {
   admin_2_name?: string;
   admin_2_email?: string;
   admin_2_phone?: string;
+  show_admin_2?: boolean;
+  location_display_mode?: 'both' | 'showroom' | 'factory' | 'none';
+  show_showroom?: boolean;
+  show_factory?: boolean;
   marketing_1_name?: string;
   marketing_1_email?: string;
   marketing_1_phone?: string;

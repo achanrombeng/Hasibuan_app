@@ -87,24 +87,24 @@ Route::prefix('shop')->name('shop.')->group(function () {
                 $settings['about_story_p4'] ?? null,
                 $settings['about_story_p5'] ?? null,
             ]);
-            if (!empty($paragraphs)) {
+            if (! empty($paragraphs)) {
                 $storyContent = implode("\n\n", $paragraphs);
             }
         }
 
         $storyImages = json_decode($settings['about_story_images'] ?? '[]', true);
-        if (empty($storyImages) || !is_array($storyImages)) {
+        if (empty($storyImages) || ! is_array($storyImages)) {
             $storyImages = array_values(array_filter([
-                $settings['about_story_image_1'] ?? ($settings['about_story_image'] ?? '/images/about/about-banner-01.webp'),
-                $settings['about_story_image_2'] ?? '/images/about/about-banner-02.webp',
-                $settings['about_story_image_3'] ?? '/images/about/about-banner-03.webp',
+                $settings['about_story_image_1'] ?? ($settings['about_story_image'] ?? '/images/about/hasibuan-profile-1.webp'),
+                $settings['about_story_image_2'] ?? '/images/about/hasibuan-profile-2.webp',
+                $settings['about_story_image_3'] ?? '/images/about/hasibuan-workshop.jpg',
             ]));
         }
 
         return Inertia::render('Shop/About', [
             'aboutSettings' => [
-                'story_title' => $settings['about_story_title'] ?? 'Extending From Indonesia To The World',
-                'story_subtitle' => $settings['about_story_subtitle'] ?? 'Handicraft Story',
+                'story_title' => $settings['about_story_title'] ?? 'Company Profile',
+                'story_subtitle' => $settings['about_story_subtitle'] ?? 'Hasibuan Designs Furniture & Craftsmanship - Jepara, Indonesia',
                 'story_content' => $storyContent,
                 'story_images' => $storyImages,
             ],

@@ -41,6 +41,10 @@ class SettingsController extends Controller
                 'admin_2_name' => $settings['marketing_2_name'] ?? ($settings['admin_2_name'] ?? ''),
                 'admin_2_email' => $settings['marketing_2_email'] ?? ($settings['admin_2_email'] ?? ($settings['contact_email_2'] ?? '')),
                 'admin_2_phone' => $settings['marketing_2_phone'] ?? ($settings['admin_2_phone'] ?? ''),
+                'show_admin_2' => array_key_exists('show_admin_2', $settings) ? filter_var($settings['show_admin_2'], FILTER_VALIDATE_BOOLEAN) : true,
+                'location_display_mode' => $settings['location_display_mode'] ?? 'both',
+                'show_showroom' => array_key_exists('show_showroom', $settings) ? filter_var($settings['show_showroom'], FILTER_VALIDATE_BOOLEAN) : (($settings['location_display_mode'] ?? 'both') !== 'factory'),
+                'show_factory' => array_key_exists('show_factory', $settings) ? filter_var($settings['show_factory'], FILTER_VALIDATE_BOOLEAN) : (($settings['location_display_mode'] ?? 'both') !== 'showroom'),
                 'factory_name' => $settings['factory_name'] ?? '',
                 'factory_address' => $settings['factory_address'] ?? '',
                 'showroom_name' => $settings['showroom_name'] ?? '',
@@ -83,6 +87,10 @@ class SettingsController extends Controller
             'admin_2_name' => ['nullable', 'string', 'max:255'],
             'admin_2_email' => ['nullable', 'email', 'max:255'],
             'admin_2_phone' => ['nullable', 'string', 'max:50'],
+            'show_admin_2' => ['nullable', 'boolean'],
+            'location_display_mode' => ['nullable', 'string', 'in:both,showroom,factory,none'],
+            'show_showroom' => ['nullable', 'boolean'],
+            'show_factory' => ['nullable', 'boolean'],
             'factory_name' => ['nullable', 'string', 'max:255'],
             'factory_address' => ['nullable', 'string', 'max:500'],
             'showroom_name' => ['nullable', 'string', 'max:255'],
@@ -110,7 +118,7 @@ class SettingsController extends Controller
             $decoded = json_decode((string) $rawLinks, true);
             if (is_array($decoded)) {
                 $cleaned = array_values(array_filter($decoded, function ($item) {
-                    return !empty(trim($item['url'] ?? ''));
+                    return ! empty(trim($item['url'] ?? ''));
                 }));
                 $validated['social_links'] = json_encode($cleaned);
 
@@ -123,17 +131,27 @@ class SettingsController extends Controller
                 foreach ($cleaned as $item) {
                     $platform = strtolower($item['platform'] ?? '');
                     $url = trim($item['url'] ?? '');
-                    if ($platform === 'facebook' && empty($fb)) $fb = $url;
-                    if ($platform === 'instagram' && empty($ig)) $ig = $url;
-                    if ($platform === 'tiktok' && empty($tt)) $tt = $url;
-                    if ($platform === 'youtube' && empty($yt)) $yt = $url;
-                    if ($platform === 'linkedin' && empty($li)) $li = $url;
+                    if ($platform === 'facebook' && empty($fb)) {
+                        $fb = $url;
+                    }
+                    if ($platform === 'instagram' && empty($ig)) {
+                        $ig = $url;
+                    }
+                    if ($platform === 'tiktok' && empty($tt)) {
+                        $tt = $url;
+                    }
+                    if ($platform === 'youtube' && empty($yt)) {
+                        $yt = $url;
+                    }
+                    if ($platform === 'linkedin' && empty($li)) {
+                        $li = $url;
+                    }
                 }
                 $validated['facebook_url'] = $fb;
                 $validated['instagram_url'] = $ig;
                 $validated['tiktok_url'] = $tt;
                 $validated['linkedin_url'] = $li;
-                if (!empty($yt)) {
+                if (! empty($yt)) {
                     $validated['youtube_url'] = $yt;
                 }
             }
@@ -230,10 +248,48 @@ class SettingsController extends Controller
             $validated['admin_2_phone'] = $m2Phone;
         }
 
+        if ($request->has('show_admin_2')) {
+            $validated['show_admin_2'] = $request->boolean('show_admin_2');
+        }
+
+        if ($request->has('show_showroom')) {
+            $validated['show_showroom'] = $request->boolean('show_showroom');
+        }
+        if ($request->has('show_factory')) {
+            $validated['show_factory'] = $request->boolean('show_factory');
+        }
+
+        if ($request->filled('location_display_mode')) {
+            $locMode = (string) $request->input('location_display_mode');
+            $validated['location_display_mode'] = $locMode;
+            if ($locMode === 'showroom') {
+                $validated['show_showroom'] = true;
+                $validated['show_factory'] = false;
+            } elseif ($locMode === 'factory') {
+                $validated['show_showroom'] = false;
+                $validated['show_factory'] = true;
+            } elseif ($locMode === 'both') {
+                $validated['show_showroom'] = true;
+                $validated['show_factory'] = true;
+            }
+        } elseif (isset($validated['show_showroom']) || isset($validated['show_factory'])) {
+            $sShow = $validated['show_showroom'] ?? true;
+            $sFact = $validated['show_factory'] ?? true;
+            if ($sShow && $sFact) {
+                $validated['location_display_mode'] = 'both';
+            } elseif ($sShow) {
+                $validated['location_display_mode'] = 'showroom';
+            } elseif ($sFact) {
+                $validated['location_display_mode'] = 'factory';
+            } else {
+                $validated['location_display_mode'] = 'none';
+            }
+        }
+
         foreach ($validated as $key => $value) {
             Setting::updateOrCreate(
                 ['key' => $key],
-                ['value' => $value ?? '']
+                ['value' => is_bool($value) ? ($value ? '1' : '0') : ($value ?? '')]
             );
         }
 
@@ -360,7 +416,7 @@ class SettingsController extends Controller
                     'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop',
                 ]),
                 'craftsmanship_title_2' => $settings["craftsmanship_title_2_{$locale}"] ?? $settings['craftsmanship_title_2'] ?? 'GRADE-A CERTIFIED SUSTAINABLE TEAK',
-                'craftsmanship_desc_2' => $settings["craftsmanship_desc_2_{$locale}"] ?? $settings['craftsmanship_desc_2'] ?? "Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.",
+                'craftsmanship_desc_2' => $settings["craftsmanship_desc_2_{$locale}"] ?? $settings['craftsmanship_desc_2'] ?? 'Sourced exclusively from responsibly managed Indonesian plantations, our premium teak wood is rich in natural protective oils. It offers supreme structural density and resilience against weather elements, gracefully aging into an iconic silvery-grey patina over decades.',
                 'craftsmanship_images_2' => $settings['craftsmanship_images_2'] ?? json_encode([
                     'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1600&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
@@ -556,7 +612,7 @@ class SettingsController extends Controller
             foreach ($bgFiles as $secKey => $file) {
                 if ($file && $file->isValid()) {
                     $path = $file->store('settings/backgrounds', 'public');
-                    if (!isset($sectionBgs[$secKey])) {
+                    if (! isset($sectionBgs[$secKey])) {
                         $sectionBgs[$secKey] = [
                             'type' => 'image',
                             'color' => '#ffffff',
@@ -776,26 +832,26 @@ class SettingsController extends Controller
                 $settings['about_story_p4'] ?? null,
                 $settings['about_story_p5'] ?? null,
             ]);
-            if (!empty($paragraphs)) {
+            if (! empty($paragraphs)) {
                 $storyContent = implode("\n\n", $paragraphs);
             } else {
-                $storyContent = "Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.\n\nBringing together the tradition of Cirebon's hand knitting and Jepara's deep-rooted woodwork, Ronica brings two great craft cultures together under one roof. This combination reveals durable and aesthetic products that carry the trace of craftsmanship in each furniture. Each detail is the result of a design understanding that is shaped in the hands of the masters.\n\nOnly high-end materials suitable for outdoor conditions are used in Ronica. Perhutani-sourced teak wood, Rehau and Viro synthetic rattan, Sunproof, Ateja, Sunbrella and Agora fabrics; as well as QuickDry technology sponges are carefully selected for longevity and comfort. All materials are UV treated, proven with laboratory tests and supported by a three-year warranty from suppliers.\n\nToday, Ronica exports to more than 15 countries, including the USA, Europe, the Middle East and Australia. While offering fast delivery to its customers thanks to its Mersin warehouse in Turkey, it has become a reliable solution partner in the international arena with private hotel and housing projects in Maldives, Qatar, Australia and the USA.\n\nAs a family business, Ronica is always passionate about quality, sustainability and customer satisfaction. Each collection is prepared with nature-respecting materials and innovative designs. Ronica brings not only comfort but also a lasting elegance to the outdoor life.";
+                $storyContent = "Hasibuan Designs is a Jepara based company specialising in the wooden furniture and manufacturer of premium wood furniture such as Teak Solid Wood.\n\nEstablished in 2000, we focused our business in manufacturing and exporting handmade indoor furnitures and accessories home decoration. Since 2000 Hasibuan Designs Furniture has supply wooden furniture to customers from Norway, Miami, Brazil, UK, Germany, Taiwan, Mongolia, India, Malaysia, Singapore and Australia.\n\nWith staff and Employers around 150 peoples we commited to make sure that you are 100% happy with your experience with us. From sales through to delivery, we aim to provide a first class service that you will be delighted with.\n\nIf you would like advice on any aspect of choosing or caring for your Hasibuan Designs Furniture please get in touch. We love talking to customers, and providing advice and support on choosing the best pieces to suit your style of home.\n\nThe Hasibuan Designs Furniture range is built to last, and is always of excellent quality. Our furniture comes fully assembled after 8-12 weeks of careful construction and attention is made to the finest details. We use traditional construction methods, pin and dowel techniques, and dovetail joints for extra strength. Our products are made from solid timbers and we never use veneers.\n\nWe set competitive prices, and actively check and match these against similar quality products. All exclusive Hasibuan Designs products are hand made in Indonesia by local craftsmen. The workshop is located in Jepara, Central Java and with its exotic tropical surroundings; it is a great environment to work in. All work is carried out using perfected traditional methods.\n\nThe increase in popularity of Indonesian furniture has meant an improvement for to worked hard to create a sense of art in every pieces of our furniture. The wood used for much of our furniture is premium wood which coming from government controlled plantation, and therefore by definition eco friendly.";
             }
         }
 
         $storyImages = json_decode($settings['about_story_images'] ?? '[]', true);
-        if (empty($storyImages) || !is_array($storyImages)) {
+        if (empty($storyImages) || ! is_array($storyImages)) {
             $storyImages = array_values(array_filter([
-                $settings['about_story_image_1'] ?? ($settings['about_story_image'] ?? '/images/about/about-banner-01.webp'),
-                $settings['about_story_image_2'] ?? '/images/about/about-banner-02.webp',
-                $settings['about_story_image_3'] ?? '/images/about/about-banner-03.webp',
+                $settings['about_story_image_1'] ?? ($settings['about_story_image'] ?? '/images/about/hasibuan-profile-1.webp'),
+                $settings['about_story_image_2'] ?? '/images/about/hasibuan-profile-2.webp',
+                $settings['about_story_image_3'] ?? '/images/about/hasibuan-workshop.jpg',
             ]));
         }
 
         return Inertia::render('Admin/Settings/About', [
             'settings' => [
-                'about_story_title' => $settings['about_story_title'] ?? 'Extending From Indonesia To The World',
-                'about_story_subtitle' => $settings['about_story_subtitle'] ?? 'Handicraft Story',
+                'about_story_title' => $settings['about_story_title'] ?? 'Company Profile',
+                'about_story_subtitle' => $settings['about_story_subtitle'] ?? 'Hasibuan Designs Furniture & Craftsmanship - Jepara, Indonesia',
                 'about_story_content' => $storyContent,
                 'about_story_images' => $storyImages,
             ],
@@ -890,7 +946,7 @@ class SettingsController extends Controller
             'settings' => [
                 'footer_description' => $settings['footer_description'] ?? 'Minimalist furniture crafted from sustainable materials. Created for those who find luxury in simplicity.',
                 'footer_tagline' => $settings['footer_tagline'] ?? 'HASIBUAN DESIGN · THE CONTEMPORARY AND ART FINES FURNITURE',
-                'footer_copyright' => $settings['footer_copyright'] ?? '© ' . date('Y') . ' HASIBUAN DESIGN. ALL RIGHTS RESERVED. ARCHITECTURAL & INTERIOR DESIGN DESIGNS PROTECTED.',
+                'footer_copyright' => $settings['footer_copyright'] ?? '© '.date('Y').' HASIBUAN DESIGN. ALL RIGHTS RESERVED. ARCHITECTURAL & INTERIOR DESIGN DESIGNS PROTECTED.',
                 'footer_show_newsletter' => array_key_exists('footer_show_newsletter', $settings) ? filter_var($settings['footer_show_newsletter'], FILTER_VALIDATE_BOOLEAN) : true,
                 'footer_newsletter_badge' => $settings['footer_newsletter_badge'] ?? 'STAY CONNECTED',
                 'footer_newsletter_title' => $settings['footer_newsletter_title'] ?? 'BE THE FIRST TO KNOW',
@@ -984,7 +1040,7 @@ class SettingsController extends Controller
             $decoded = json_decode((string) $rawLinks, true);
             if (is_array($decoded)) {
                 $cleaned = array_values(array_filter($decoded, function ($item) {
-                    return !empty(trim($item['url'] ?? ''));
+                    return ! empty(trim($item['url'] ?? ''));
                 }));
                 $validated['social_links'] = json_encode($cleaned);
 
@@ -997,11 +1053,21 @@ class SettingsController extends Controller
                 foreach ($cleaned as $item) {
                     $platform = strtolower($item['platform'] ?? '');
                     $url = trim($item['url'] ?? '');
-                    if ($platform === 'facebook' && empty($fb)) $fb = $url;
-                    if ($platform === 'instagram' && empty($ig)) $ig = $url;
-                    if ($platform === 'tiktok' && empty($tt)) $tt = $url;
-                    if ($platform === 'youtube' && empty($yt)) $yt = $url;
-                    if ($platform === 'linkedin' && empty($li)) $li = $url;
+                    if ($platform === 'facebook' && empty($fb)) {
+                        $fb = $url;
+                    }
+                    if ($platform === 'instagram' && empty($ig)) {
+                        $ig = $url;
+                    }
+                    if ($platform === 'tiktok' && empty($tt)) {
+                        $tt = $url;
+                    }
+                    if ($platform === 'youtube' && empty($yt)) {
+                        $yt = $url;
+                    }
+                    if ($platform === 'linkedin' && empty($li)) {
+                        $li = $url;
+                    }
                 }
                 $validated['facebook_url'] = $fb;
                 $validated['instagram_url'] = $ig;

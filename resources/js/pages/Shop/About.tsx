@@ -4,8 +4,18 @@ import { ShopLayout } from '@/layouts/ShopLayout';
 import { SiteSettings } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Award,
+  ChevronLeft,
+  ChevronRight,
+  Globe,
+  Hammer,
+  ShieldCheck,
+  Trees,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface AboutProps {
   aboutSettings?: {
@@ -20,9 +30,9 @@ interface AboutProps {
 }
 
 export default function About({ aboutSettings }: AboutProps) {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'hasibuan_app';
+  const siteName = siteSettings?.site_name || 'Hasibuan Designs';
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -31,9 +41,11 @@ export default function About({ aboutSettings }: AboutProps) {
     aboutSettings?.story_images && aboutSettings.story_images.length > 0
       ? aboutSettings.story_images
       : [
-          aboutSettings?.story_image_1 || '/images/about/about-banner-01.webp',
-          aboutSettings?.story_image_2 || '/images/about/about-banner-02.webp',
-          aboutSettings?.story_image_3 || '/images/about/about-banner-03.webp',
+          aboutSettings?.story_image_1 ||
+            '/images/about/hasibuan-profile-1.webp',
+          aboutSettings?.story_image_2 ||
+            '/images/about/hasibuan-profile-2.webp',
+          aboutSettings?.story_image_3 || '/images/about/hasibuan-workshop.jpg',
         ]
   ).filter(Boolean) as string[];
 
@@ -56,26 +68,57 @@ export default function About({ aboutSettings }: AboutProps) {
     return () => clearInterval(interval);
   }, [isAutoPlaying, currentImageIndex, carouselImages.length]);
 
-  const storyTitle =
-    aboutSettings?.story_title || 'Extending From Indonesia To The World';
+  const storyTitle = aboutSettings?.story_title || 'Company Profile';
   const storySubtitle =
-    aboutSettings?.story_subtitle || 'Handicraft Story';
+    aboutSettings?.story_subtitle ||
+    'Hasibuan Designs Furniture & Craftsmanship - Jepara, Central Java, Indonesia';
 
-  const defaultContent = `Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.
+  const defaultContent = `Hasibuan Designs is a Jepara based company specialising in the wooden furniture and manufacturer of premium wood furniture such as Teak Solid Wood.
 
-Bringing together the tradition of Cirebon's hand knitting and Jepara's deep-rooted woodwork, Ronica brings two great craft cultures together under one roof. This combination reveals durable and aesthetic products that carry the trace of craftsmanship in each furniture. Each detail is the result of a design understanding that is shaped in the hands of the masters.
+Established in 2000, we focused our business in manufacturing and exporting handmade indoor furnitures and accessories home decoration. Since 2000 Hasibuan Designs Furniture has supply wooden furniture to customers from Norway, Miami, Brazil, UK, Germany, Taiwan, Mongolia, India, Malaysia, Singapore and Australia.
 
-Only high-end materials suitable for outdoor conditions are used in Ronica. Perhutani-sourced teak wood, Rehau and Viro synthetic rattan, Sunproof, Ateja, Sunbrella and Agora fabrics; as well as QuickDry technology sponges are carefully selected for longevity and comfort. All materials are UV treated, proven with laboratory tests and supported by a three-year warranty from suppliers.
+With staff and Employers around 150 peoples we commited to make sure that you are 100% happy with your experience with us. From sales through to delivery, we aim to provide a first class service that you will be delighted with.
 
-Today, Ronica exports to more than 15 countries, including the USA, Europe, the Middle East and Australia. While offering fast delivery to its customers thanks to its Mersin warehouse in Turkey, it has become a reliable solution partner in the international arena with private hotel and housing projects in Maldives, Qatar, Australia and the USA.
+If you would like advice on any aspect of choosing or caring for your Hasibuan Designs Furniture please get in touch. We love talking to customers, and providing advice and support on choosing the best pieces to suit your style of home.
 
-As a family business, Ronica is always passionate about quality, sustainability and customer satisfaction. Each collection is prepared with nature-respecting materials and innovative designs. Ronica brings not only comfort but also a lasting elegance to the outdoor life.`;
+The Hasibuan Designs Furniture range is built to last, and is always of excellent quality. Our furniture comes fully assembled after 8-12 weeks of careful construction and attention is made to the finest details. We use traditional construction methods, pin and dowel techniques, and dovetail joints for extra strength. Our products are made from solid timbers and we never use veneers.
+
+We set competitive prices, and actively check and match these against similar quality products. All exclusive Hasibuan Designs products are hand made in Indonesia by local craftsmen. The workshop is located in Jepara, Central Java and with its exotic tropical surroundings; it is a great environment to work in. All work is carried out using perfected traditional methods.
+
+The increase in popularity of Indonesian furniture has meant an improvement for to worked hard to create a sense of art in every pieces of our furniture. The wood used for much of our furniture is premium wood which coming from government controlled plantation, and therefore by definition eco friendly.`;
 
   const rawContent = aboutSettings?.story_content || defaultContent;
-  const paragraphs = rawContent
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+
+  const pillars = [
+    {
+      num: '01',
+      title: 'HERITAGE SINCE 2000',
+      subtitle: 'JEPARA, CENTRAL JAVA',
+      desc: 'Over 20 years established as a premier solid wood manufacturer, employing over 150 dedicated artisans and staff.',
+      icon: Award,
+    },
+    {
+      num: '02',
+      title: '100% SOLID TIMBERS',
+      subtitle: 'ZERO VENEERS USED',
+      desc: 'Handcrafted exclusively from certified solid teak timber harvested from government-controlled plantations.',
+      icon: Trees,
+    },
+    {
+      num: '03',
+      title: 'MASTER JOINERY',
+      subtitle: 'PIN, DOWEL & DOVETAIL',
+      desc: 'Built to last through 8–12 weeks of meticulous construction and traditional joinery techniques for supreme strength.',
+      icon: Hammer,
+    },
+    {
+      num: '04',
+      title: 'GLOBAL EXPORTS',
+      subtitle: 'WORLDWIDE REACH',
+      desc: 'Supplying clients across Norway, USA (Miami), Brazil, UK, Germany, Taiwan, Australia, and Southeast Asia.',
+      icon: Globe,
+    },
+  ];
 
   return (
     <>
@@ -84,38 +127,39 @@ As a family business, Ronica is always passionate about quality, sustainability 
         description={t('shop.about.seo_description', { siteName })}
         keywords={[
           'about us',
-          'about ronica',
-          'outdoor furniture',
-          'rattan furniture',
-          'teak wood indonesia',
-          'handicraft story',
+          'hasibuan designs',
+          'company profile',
+          'teak wood furniture',
+          'solid teak jepara',
+          'indonesian furniture export',
+          'svlk certified timber',
         ]}
       />
       <div className="bg-noise" />
       <ShopLayout>
         <main className="min-h-screen bg-white pb-24 select-none">
-          {/* Monumental Editorial Header - Black Luxury Banner */}
-          <div className="border-b border-neutral-900 bg-neutral-950 py-16 md:py-24 px-6 text-white">
-            <div className="mx-auto max-w-[1720px] text-center space-y-3">
-              <span className="text-[10px] md:text-xs tracking-[0.35em] uppercase font-light text-neutral-400">
-                ATELIER & CRAFTSMANSHIP
+          {/* Monumental Editorial Header - Black Luxury Banner (Above Image) */}
+          <div className="border-b border-neutral-900 bg-neutral-950 px-6 py-16 text-white md:py-24">
+            <div className="mx-auto max-w-[1720px] space-y-3 text-center">
+              <span className="block text-[10px] font-light tracking-[0.35em] text-neutral-400 uppercase md:text-xs">
+                COMPANY PROFILE &amp; ATELIER
               </span>
-              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-[0.06em] text-white uppercase">
+              <h1 className="font-serif text-3xl font-light tracking-[0.06em] text-white uppercase sm:text-4xl md:text-5xl">
                 {storyTitle}
               </h1>
-              <div className="w-12 h-[1px] bg-neutral-700 mx-auto mt-4" />
-              <p className="mx-auto max-w-2xl text-xs md:text-sm font-light text-neutral-300 tracking-wide pt-2">
-                {storySubtitle || 'Rooted in Indonesian heritage, refined for luxury architectural residences worldwide.'}
+              <div className="mx-auto mt-4 h-[1px] w-12 bg-neutral-700" />
+              <p className="mx-auto max-w-2xl pt-2 text-xs font-light tracking-wide text-neutral-300 md:text-sm">
+                {storySubtitle}
               </p>
             </div>
           </div>
 
-          {/* Main Content Section */}
-          <div className="mx-auto max-w-[1720px] px-6 sm:px-12 py-16 md:py-24">
-            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
-              {/* Left Column: Editorial Image Carousel */}
+          {/* SECTION 1: LANDSCAPE IMAGE CAROUSEL */}
+          <section className="border-b border-neutral-200/80 bg-neutral-50/50 py-6 sm:py-8">
+            <div className="mx-auto max-w-[1720px] px-4 sm:px-8 md:px-12">
+              {/* Landscape Main Showcase Frame */}
               <div
-                className="relative aspect-[4/5] w-full overflow-hidden border border-neutral-200/80 bg-neutral-100 lg:col-span-5"
+                className="relative aspect-[16/9] max-h-[580px] w-full overflow-hidden border border-neutral-200/90 bg-neutral-900 shadow-sm sm:aspect-[2/1] md:aspect-[2.4/1]"
                 onMouseEnter={() => setIsAutoPlaying(false)}
                 onMouseLeave={() => setIsAutoPlaying(true)}
               >
@@ -123,8 +167,8 @@ As a family business, Ronica is always passionate about quality, sustainability 
                   <motion.img
                     key={currentImageIndex}
                     src={carouselImages[currentImageIndex]}
-                    alt={`Atelier Craftsmanship ${currentImageIndex + 1}`}
-                    initial={{ opacity: 0, scale: 1.05 }}
+                    alt={`Hasibuan Designs Workshop ${currentImageIndex + 1}`}
+                    initial={{ opacity: 0, scale: 1.03 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -133,7 +177,7 @@ As a family business, Ronica is always passionate about quality, sustainability 
                 </AnimatePresence>
 
                 {/* Subtle Image Counter Badge */}
-                <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-xs px-3 py-1 text-[10px] tracking-[0.2em] uppercase font-light text-neutral-800 border border-neutral-200">
+                <div className="absolute top-4 left-4 z-10 border border-neutral-200 bg-white/90 px-3 py-1 text-[10px] font-light tracking-[0.2em] text-neutral-800 uppercase backdrop-blur-xs">
                   {currentImageIndex + 1} / {carouselImages.length}
                 </div>
 
@@ -143,22 +187,22 @@ As a family business, Ronica is always passionate about quality, sustainability 
                     <button
                       type="button"
                       onClick={handlePrev}
-                      className="absolute top-1/2 left-4 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center bg-white/90 text-neutral-900 border border-neutral-200 shadow-sm transition-all hover:bg-neutral-900 hover:text-white"
+                      className="absolute top-1/2 left-4 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center border border-neutral-200 bg-white/90 text-neutral-900 shadow-sm transition-all hover:bg-neutral-900 hover:text-white sm:h-12 sm:w-12"
                       aria-label="Previous image"
                     >
-                      <ChevronLeft size={18} strokeWidth={1.5} />
+                      <ChevronLeft size={20} strokeWidth={1.5} />
                     </button>
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="absolute top-1/2 right-4 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center bg-white/90 text-neutral-900 border border-neutral-200 shadow-sm transition-all hover:bg-neutral-900 hover:text-white"
+                      className="absolute top-1/2 right-4 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center border border-neutral-200 bg-white/90 text-neutral-900 shadow-sm transition-all hover:bg-neutral-900 hover:text-white sm:h-12 sm:w-12"
                       aria-label="Next image"
                     >
-                      <ChevronRight size={18} strokeWidth={1.5} />
+                      <ChevronRight size={20} strokeWidth={1.5} />
                     </button>
 
                     {/* Pagination Dots */}
-                    <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 bg-black/40 px-3 py-1.5 backdrop-blur-xs">
+                    <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 bg-black/40 px-3.5 py-1.5 backdrop-blur-xs">
                       {carouselImages.map((_, idx) => (
                         <button
                           key={idx}
@@ -166,8 +210,8 @@ As a family business, Ronica is always passionate about quality, sustainability 
                           onClick={() => setCurrentImageIndex(idx)}
                           className={`h-1.5 cursor-pointer transition-all ${
                             idx === currentImageIndex
-                              ? 'w-6 bg-white'
-                              : 'w-1.5 bg-white/50 hover:bg-white/80'
+                              ? 'w-7 bg-white'
+                              : 'w-2 bg-white/50 hover:bg-white/80'
                           }`}
                           aria-label={`Slide ${idx + 1}`}
                         />
@@ -176,81 +220,157 @@ As a family business, Ronica is always passionate about quality, sustainability 
                   </>
                 )}
               </div>
+            </div>
+          </section>
 
-              {/* Right Column: Editorial Narrative */}
-              <div className="flex flex-col justify-start lg:col-span-7 space-y-8">
-                <div className="space-y-3">
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block">
-                    THE ARCHITECTURAL MANIFESTO
+          {/* SECTION 2: EDITORIAL NARRATIVE (BELOW THE IMAGE) */}
+          <section className="mx-auto max-w-5xl px-6 py-12 sm:px-8 md:py-16">
+            {/* Architectural Subtitle Accent */}
+            <div className="space-y-3 text-center">
+              <span className="block text-[10px] font-light tracking-[0.3em] text-neutral-400 uppercase">
+                JEPARA SOLID TEAK CRAFTSMANSHIP
+              </span>
+              <h2 className="font-serif text-2xl font-light tracking-[0.04em] text-neutral-900 uppercase sm:text-3xl md:text-4xl">
+                PREMIUM SOLID TIMBERS, MASTER JOINERY &amp; WORLDWIDE EXPORT
+              </h2>
+              <div className="mx-auto mt-4 h-[1px] w-16 bg-neutral-300" />
+            </div>
+
+            {/* Narrative Content Rendered from Admin Markdown Input */}
+            <div className="prose prose-neutral mt-10 max-w-none text-neutral-700">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ node, ...props }) => (
+                    <p
+                      className="mb-6 text-sm leading-relaxed font-light tracking-wide text-neutral-700 sm:text-base"
+                      {...props}
+                    />
+                  ),
+                  strong: ({ node, ...props }) => (
+                    <strong
+                      className="font-semibold text-neutral-900"
+                      {...props}
+                    />
+                  ),
+                  em: ({ node, ...props }) => (
+                    <em className="text-neutral-800 italic" {...props} />
+                  ),
+                  h1: ({ node, ...props }) => (
+                    <h1
+                      className="mt-8 mb-4 font-serif text-2xl font-light text-neutral-900 uppercase sm:text-3xl"
+                      {...props}
+                    />
+                  ),
+                  h2: ({ node, ...props }) => (
+                    <h2
+                      className="mt-6 mb-3 font-serif text-xl font-light text-neutral-900 uppercase sm:text-2xl"
+                      {...props}
+                    />
+                  ),
+                  h3: ({ node, ...props }) => (
+                    <h3
+                      className="mt-4 mb-2 font-serif text-lg font-medium text-neutral-900 uppercase"
+                      {...props}
+                    />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul
+                      className="my-4 list-inside list-disc space-y-2 pl-2 text-neutral-700"
+                      {...props}
+                    />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol
+                      className="my-4 list-inside list-decimal space-y-2 pl-2 text-neutral-700"
+                      {...props}
+                    />
+                  ),
+                  li: ({ node, ...props }) => (
+                    <li
+                      className="leading-relaxed text-neutral-700"
+                      {...props}
+                    />
+                  ),
+                  blockquote: ({ node, ...props }) => (
+                    <blockquote
+                      className="my-4 border-l-2 border-neutral-300 pl-4 text-neutral-600 italic"
+                      {...props}
+                    />
+                  ),
+                }}
+              >
+                {rawContent}
+              </ReactMarkdown>
+            </div>
+
+            {/* Company Highlights & Pillars */}
+            <div className="mt-16 grid grid-cols-1 gap-6 border-t border-neutral-200/80 pt-12 sm:grid-cols-2">
+              {pillars.map((pillar) => {
+                const IconComponent = pillar.icon;
+                return (
+                  <div
+                    key={pillar.num}
+                    className="space-y-2 border border-neutral-100 bg-[#fafaf9] p-6 shadow-xs"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-light tracking-[0.25em] text-neutral-400 uppercase">
+                        {pillar.num} / {pillar.title}
+                      </span>
+                      <IconComponent size={18} className="text-neutral-500" />
+                    </div>
+                    <h4 className="font-serif text-base font-medium text-neutral-900 uppercase">
+                      {pillar.subtitle}
+                    </h4>
+                    <p className="text-xs leading-relaxed font-light text-neutral-500">
+                      {pillar.desc}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* SVLK Certificate Assurance Card */}
+            <div className="mt-10 flex flex-col items-center gap-6 border border-neutral-200/90 bg-[#fafaf9] p-6 sm:flex-row sm:p-8">
+              <div className="h-20 w-20 shrink-0 overflow-hidden border border-neutral-200 bg-white p-1.5 sm:h-24 sm:w-24">
+                <img
+                  src="/images/about/svlk-certificate.jpg"
+                  alt="SVLK Timber Legality Assurance"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div className="space-y-2 text-center sm:text-left">
+                <div className="flex items-center justify-center gap-2 sm:justify-start">
+                  <ShieldCheck size={18} className="text-emerald-700" />
+                  <span className="text-xs font-semibold tracking-[0.2em] text-neutral-900 uppercase">
+                    SVLK CERTIFIED TIMBER LEGALITY
                   </span>
-                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light tracking-[0.04em] uppercase text-neutral-900">
-                    HARMONY OF WOOD, WEAVE & TIMELESS PROPORTIONS
-                  </h2>
                 </div>
-
-                <div className="space-y-6 text-xs sm:text-sm leading-relaxed text-neutral-600 font-light tracking-wide">
-                  {paragraphs.map((paragraph, idx) => (
-                    <p key={idx} className="first-letter:text-3xl first-letter:font-serif first-letter:float-left first-letter:mr-2.5 first-letter:text-neutral-900">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-
-                {/* Atelier Pillars */}
-                <div className="pt-8 border-t border-neutral-200/80 grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
-                      01 / HERITAGE
-                    </span>
-                    <h4 className="font-serif text-sm uppercase text-neutral-900 font-medium">
-                      JEPARA & CIREBON
-                    </h4>
-                    <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
-                      Generations of master woodwork joined with intricate hand-knitted weaves.
-                    </p>
-                  </div>
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
-                      02 / MATERIALS
-                    </span>
-                    <h4 className="font-serif text-sm uppercase text-neutral-900 font-medium">
-                      GRADE-A PERHUTANI
-                    </h4>
-                    <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
-                      Sustainably harvested teak, Rehau fiber, and all-weather Sunbrella textiles.
-                    </p>
-                  </div>
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
-                      03 / GLOBAL REACH
-                    </span>
-                    <h4 className="font-serif text-sm uppercase text-neutral-900 font-medium">
-                      15+ COUNTRIES
-                    </h4>
-                    <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
-                      Fulfilling private estates, five-star resorts, and architectural projects worldwide.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="pt-6 flex flex-wrap items-center gap-4">
-                  <a
-                    href="/shop/products"
-                    className="px-8 py-3.5 bg-neutral-900 text-white text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-neutral-800 transition-colors"
-                  >
-                    EXPLORE COLLECTIONS
-                  </a>
-                  <a
-                    href="/shop/contact"
-                    className="px-8 py-3.5 border border-neutral-900 text-neutral-900 text-[11px] tracking-[0.25em] uppercase font-medium hover:bg-neutral-900 hover:text-white transition-colors"
-                  >
-                    CONTACT ATELIER
-                  </a>
-                </div>
+                <p className="text-xs leading-relaxed font-light text-neutral-600 sm:text-sm">
+                  Sistem Verifikasi Legalitas Kayu. 100% of our timbers are
+                  legally sourced from Indonesian government-controlled
+                  plantations (Perhutani), ensuring full traceability,
+                  sustainable forestry, and eco-friendly manufacturing.
+                </p>
               </div>
             </div>
-          </div>
+
+            {/* Action CTA Buttons */}
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-4 pt-4">
+              <a
+                href="/shop/products"
+                className="bg-neutral-900 px-8 py-3.5 text-[11px] font-medium tracking-[0.25em] text-white uppercase transition-colors hover:bg-neutral-800"
+              >
+                EXPLORE COLLECTIONS
+              </a>
+              <a
+                href="/shop/contact"
+                className="border border-neutral-900 px-8 py-3.5 text-[11px] font-medium tracking-[0.25em] text-neutral-900 uppercase transition-colors hover:bg-neutral-900 hover:text-white"
+              >
+                CONTACT US
+              </a>
+            </div>
+          </section>
         </main>
       </ShopLayout>
     </>

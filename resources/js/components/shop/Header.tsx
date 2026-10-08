@@ -8,14 +8,10 @@ import { ApiCategory, ApiProduct } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BookOpen,
   ChevronDown,
-  LayoutDashboard,
   Loader2,
-  LogOut,
   Menu,
   Search,
-  Settings,
   ShieldCheck,
   User,
   X,
@@ -187,15 +183,43 @@ export const Header: React.FC<HeaderProps> = ({
           href: `/shop/products?filter[category]=${c.slug}`,
         }))
       : [
-          { id: '1', name: 'LIVING', slug: 'chairs', href: '/shop/products?filter[category]=chairs' },
-          { id: '2', name: 'DINING', slug: 'dining-sets', href: '/shop/products?filter[category]=dining-sets' },
-          { id: '3', name: 'OUTDOOR', slug: 'collections', href: '/shop/products?filter[category]=collections' },
-          { id: '4', name: 'LOUNGERS', slug: 'sun-loungers', href: '/shop/products?filter[category]=sun-loungers' },
-          { id: '5', name: 'BAR SETS', slug: 'bar-sets', href: '/shop/products?filter[category]=bar-sets' },
-          { id: '6', name: 'NATURAL RATTAN', slug: 'natural-rattan', href: '/shop/products?filter[category]=natural-rattan' },
+          {
+            id: '1',
+            name: 'LIVING',
+            slug: 'chairs',
+            href: '/shop/products?filter[category]=chairs',
+          },
+          {
+            id: '2',
+            name: 'DINING',
+            slug: 'dining-sets',
+            href: '/shop/products?filter[category]=dining-sets',
+          },
+          {
+            id: '3',
+            name: 'OUTDOOR',
+            slug: 'collections',
+            href: '/shop/products?filter[category]=collections',
+          },
+          {
+            id: '4',
+            name: 'LOUNGERS',
+            slug: 'sun-loungers',
+            href: '/shop/products?filter[category]=sun-loungers',
+          },
+          {
+            id: '5',
+            name: 'BAR SETS',
+            slug: 'bar-sets',
+            href: '/shop/products?filter[category]=bar-sets',
+          },
+          {
+            id: '6',
+            name: 'NATURAL RATTAN',
+            slug: 'natural-rattan',
+            href: '/shop/products?filter[category]=natural-rattan',
+          },
         ];
-
-
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,20 +234,23 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white border-b border-neutral-200/80 transition-all select-none">
-        
+      <header className="sticky top-0 z-40 w-full border-b border-neutral-200/80 bg-white transition-all select-none">
         {/* BRAND IDENTITY BAR */}
-        <div className="px-4 sm:px-8 py-5 md:py-6">
-          <div className="max-w-[1720px] mx-auto flex items-center justify-between">
+        <div className="px-4 py-5 sm:px-8 md:py-6">
+          <div className="mx-auto flex max-w-[1720px] items-center justify-between">
             {/* Left: Search Trigger (Minimalist Text Button) */}
-            <div className="flex-1 flex items-center">
+            <div className="flex flex-1 items-center">
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                className="hidden md:flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase font-light text-neutral-700 hover:text-black transition-colors cursor-pointer group"
+                className="group hidden cursor-pointer items-center gap-2 text-[11px] font-light tracking-[0.25em] text-neutral-700 uppercase transition-colors hover:text-black md:flex"
                 aria-label="Search Collection"
               >
-                <Search size={14} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
+                <Search
+                  size={14}
+                  strokeWidth={1.5}
+                  className="transition-transform group-hover:scale-110"
+                />
                 <span>SEARCH</span>
               </button>
 
@@ -231,7 +258,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden p-1.5 text-neutral-800 hover:text-black"
+                className="p-1.5 text-neutral-800 hover:text-black md:hidden"
                 aria-label="Open Navigation"
               >
                 <Menu size={22} strokeWidth={1.5} />
@@ -243,39 +270,38 @@ export const Header: React.FC<HeaderProps> = ({
               <Link
                 href="/shop"
                 onClick={onLogoClick}
-                className="inline-flex flex-col items-center group cursor-pointer"
+                className="group inline-flex cursor-pointer flex-col items-center"
               >
                 <img
                   src={siteLogo || '/images/hasibuan-logo.png'}
                   alt={siteName}
-                  className="h-9 sm:h-11 md:h-12 w-auto object-contain transition-opacity group-hover:opacity-85"
+                  className="h-9 w-auto object-contain transition-opacity group-hover:opacity-85 sm:h-11 md:h-12"
                 />
               </Link>
             </div>
 
             {/* Right: Saved, Language Switcher, Admin Panel, Sign In / Account */}
-            <div className="flex-1 flex items-center justify-end gap-5 sm:gap-7">
+            <div className="flex flex-1 items-center justify-end gap-5 sm:gap-7">
               {/* Mobile Search Icon */}
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                className="md:hidden p-1.5 text-neutral-800"
+                className="p-1.5 text-neutral-800 md:hidden"
                 aria-label="Search"
               >
                 <Search size={18} strokeWidth={1.5} />
               </button>
 
-
               {/* Language Switcher */}
-              <div className="hidden sm:flex items-center">
-                <LanguageSwitcher className="p-0 text-[11px] tracking-[0.2em] font-light text-neutral-700 hover:text-black cursor-pointer" />
+              <div className="hidden items-center sm:flex">
+                <LanguageSwitcher className="cursor-pointer p-0 text-[11px] font-light tracking-[0.2em] text-neutral-700 hover:text-black" />
               </div>
 
               {/* Admin Panel Quick Access */}
               {user && isAdmin && (
                 <Link
                   href="/admin"
-                  className="hidden md:flex items-center gap-1 text-[10px] tracking-[0.2em] font-medium text-neutral-900 bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1 transition-colors"
+                  className="hidden items-center gap-1 bg-neutral-100 px-2.5 py-1 text-[10px] font-medium tracking-[0.2em] text-neutral-900 transition-colors hover:bg-neutral-200 md:flex"
                 >
                   <ShieldCheck size={12} className="text-amber-600" />
                   <span>ADMIN</span>
@@ -288,33 +314,33 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     type="button"
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-1.5 text-[11px] tracking-[0.25em] uppercase font-light text-neutral-700 hover:text-black transition-colors cursor-pointer"
+                    className="flex cursor-pointer items-center gap-1.5 text-[11px] font-light tracking-[0.25em] text-neutral-700 uppercase transition-colors hover:text-black"
                   >
                     <User size={13} strokeWidth={1.5} />
                     <span>{user.name.split(' ')[0]}</span>
                     <ChevronDown size={10} />
                   </button>
                   {userMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-white text-neutral-900 border border-neutral-200 shadow-xl py-2 z-50">
-                      <div className="px-4 py-2 border-b border-neutral-100 text-[11px] font-medium text-neutral-700">
+                    <div className="absolute top-full right-0 z-50 mt-2 w-48 border border-neutral-200 bg-white py-2 text-neutral-900 shadow-xl">
+                      <div className="border-b border-neutral-100 px-4 py-2 text-[11px] font-medium text-neutral-700">
                         {user.name}
                       </div>
                       <Link
                         href="/settings/profile"
-                        className="block px-4 py-2 text-[11px] hover:bg-neutral-50 text-neutral-700"
+                        className="block px-4 py-2 text-[11px] text-neutral-700 hover:bg-neutral-50"
                       >
                         ACCOUNT PROFILE
                       </Link>
                       <Link
                         href="/shop/wishlist"
-                        className="block px-4 py-2 text-[11px] hover:bg-neutral-50 text-neutral-700"
+                        className="block px-4 py-2 text-[11px] text-neutral-700 hover:bg-neutral-50"
                       >
                         SAVED PIECES ({wishlistCount})
                       </Link>
                       {isAdmin && (
                         <Link
                           href="/admin"
-                          className="block px-4 py-2 text-[11px] hover:bg-neutral-50 text-neutral-700 font-medium"
+                          className="block px-4 py-2 text-[11px] font-medium text-neutral-700 hover:bg-neutral-50"
                         >
                           ADMIN DASHBOARD
                         </Link>
@@ -325,7 +351,7 @@ export const Header: React.FC<HeaderProps> = ({
                           setUserMenuOpen(false);
                           setShowLogoutDialog(true);
                         }}
-                        className="w-full text-left px-4 py-2 text-[11px] hover:bg-neutral-50 text-neutral-500 hover:text-black border-t border-neutral-100 cursor-pointer"
+                        className="w-full cursor-pointer border-t border-neutral-100 px-4 py-2 text-left text-[11px] text-neutral-500 hover:bg-neutral-50 hover:text-black"
                       >
                         SIGN OUT
                       </button>
@@ -335,7 +361,7 @@ export const Header: React.FC<HeaderProps> = ({
               ) : (
                 <Link
                   href="/login"
-                  className="flex items-center gap-1.5 text-[11px] tracking-[0.25em] uppercase font-light text-neutral-700 hover:text-black transition-colors"
+                  className="flex items-center gap-1.5 text-[11px] font-light tracking-[0.25em] text-neutral-700 uppercase transition-colors hover:text-black"
                 >
                   <User size={13} strokeWidth={1.5} />
                   <span>SIGN IN</span>
@@ -346,9 +372,9 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* 3. LOWER PRIMARY NAVIGATION BAR */}
-        <nav className="hidden lg:block border-t border-neutral-200/80 bg-white">
-          <div className="max-w-[1720px] mx-auto px-8">
-            <div className="flex items-center justify-center gap-8 xl:gap-14 py-3.5 text-[11px] tracking-[0.25em] uppercase font-light text-neutral-800">
+        <nav className="hidden border-t border-neutral-200/80 bg-white lg:block">
+          <div className="mx-auto max-w-[1720px] px-8">
+            <div className="flex items-center justify-center gap-8 py-3.5 text-[11px] font-light tracking-[0.25em] text-neutral-800 uppercase xl:gap-14">
               {NAV_ITEMS.map((item) => {
                 const isActive =
                   item.href === '/shop'
@@ -359,16 +385,16 @@ export const Header: React.FC<HeaderProps> = ({
                   return (
                     <div
                       key={item.labelKey}
-                      className="relative group py-1"
+                      className="group relative py-1"
                       onMouseEnter={() => setActiveMegaCategory('products')}
                       onMouseLeave={() => setActiveMegaCategory(null)}
                     >
                       <Link
                         href={item.href}
-                        className={`transition-colors border-b-2 pb-1 inline-flex items-center gap-1.5 ${
+                        className={`inline-flex items-center gap-1.5 border-b-2 pb-1 transition-colors ${
                           isActive
-                            ? 'border-neutral-900 text-neutral-950 font-medium'
-                            : 'border-transparent text-neutral-800 hover:text-neutral-950 hover:border-neutral-900'
+                            ? 'border-neutral-900 font-medium text-neutral-950'
+                            : 'border-transparent text-neutral-800 hover:border-neutral-900 hover:text-neutral-950'
                         }`}
                       >
                         <span>{t(item.labelKey)}</span>
@@ -380,63 +406,36 @@ export const Header: React.FC<HeaderProps> = ({
 
                       {/* Products Mega-Menu Dropdown on Hover */}
                       {activeMegaCategory === 'products' && (
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-[760px] bg-white border border-neutral-200/90 shadow-2xl p-8 z-50 text-left">
-                          <div className="grid grid-cols-12 gap-8 items-start">
-                            {/* Categories Grid */}
-                            <div className="col-span-7 space-y-4">
-                              <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block border-b border-neutral-100 pb-2">
-                                {t('shop.header.categories') !== 'shop.header.categories'
-                                  ? t('shop.header.categories')
-                                  : 'CATEGORIES & COLLECTIONS'}
-                              </span>
-                              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] tracking-[0.18em] font-light text-neutral-700">
-                                {activeCategoriesList.map((cat: any) => (
-                                  <Link
-                                    key={cat.id || cat.slug || cat.name}
-                                    href={cat.href}
-                                    className="hover:text-black hover:translate-x-1 transition-all py-1"
-                                  >
-                                    {cat.name}
-                                  </Link>
-                                ))}
-                              </div>
-                              <div className="pt-3 border-t border-neutral-100">
+                        <div className="absolute top-full left-1/2 z-50 w-[480px] -translate-x-1/2 border border-neutral-200/90 bg-white p-7 text-left shadow-2xl">
+                          <div className="space-y-4">
+                            <span className="block border-b border-neutral-100 pb-2 text-[10px] font-light tracking-[0.3em] text-neutral-400 uppercase">
+                              {t('shop.header.categories') !==
+                              'shop.header.categories'
+                                ? t('shop.header.categories')
+                                : 'CATEGORIES & COLLECTIONS'}
+                            </span>
+                            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[11px] font-light tracking-[0.18em] text-neutral-700">
+                              {activeCategoriesList.map((cat: any) => (
                                 <Link
-                                  href="/shop/products"
-                                  className="text-[10px] tracking-[0.25em] font-medium text-neutral-900 uppercase border-b border-neutral-900 pb-0.5 hover:text-neutral-500 hover:border-neutral-500 transition-colors"
+                                  key={cat.id || cat.slug || cat.name}
+                                  href={cat.href}
+                                  className="py-1 transition-all hover:translate-x-1 hover:text-black"
                                 >
-                                  {t('shop.featured.view_all') !== 'shop.featured.view_all'
-                                    ? t('shop.featured.view_all')
-                                    : 'EXPLORE ALL PRODUCTS'} &rarr;
+                                  {cat.name}
                                 </Link>
-                              </div>
+                              ))}
                             </div>
-
-                            {/* Lookbook / Source Book Feature Column */}
-                            <div className="col-span-5 bg-neutral-50 p-4 border border-neutral-100">
-                              <div className="aspect-[4/3] w-full overflow-hidden bg-neutral-200 mb-3">
-                                <img
-                                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop"
-                                  alt="Catalog Feature"
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                              <span className="text-[9px] tracking-[0.25em] text-neutral-400 uppercase font-light block">
-                                SOURCE BOOK
-                              </span>
-                              <p className="font-serif text-sm tracking-wide text-neutral-900 uppercase mt-1">
-                                PRODUCT CATALOG
-                              </p>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setActiveMegaCategory(null);
-                                  setCatalogModalOpen(true);
-                                }}
-                                className="text-[10px] tracking-[0.2em] text-neutral-600 hover:text-black uppercase mt-2 block font-medium cursor-pointer"
+                            <div className="border-t border-neutral-100 pt-3">
+                              <Link
+                                href="/shop/products"
+                                className="border-b border-neutral-900 pb-0.5 text-[10px] font-medium tracking-[0.25em] text-neutral-900 uppercase transition-colors hover:border-neutral-500 hover:text-neutral-500"
                               >
-                                DISCOVER CATALOG &rarr;
-                              </button>
+                                {t('shop.featured.view_all') !==
+                                'shop.featured.view_all'
+                                  ? t('shop.featured.view_all')
+                                  : 'EXPLORE ALL PRODUCTS'}{' '}
+                                &rarr;
+                              </Link>
                             </div>
                           </div>
                         </div>
@@ -449,10 +448,10 @@ export const Header: React.FC<HeaderProps> = ({
                   <Link
                     key={item.labelKey}
                     href={item.href}
-                    className={`transition-colors border-b-2 pb-1 ${
+                    className={`border-b-2 pb-1 transition-colors ${
                       isActive
-                        ? 'border-neutral-900 text-neutral-950 font-medium'
-                        : 'border-transparent text-neutral-800 hover:text-neutral-950 hover:border-neutral-900'
+                        ? 'border-neutral-900 font-medium text-neutral-950'
+                        : 'border-transparent text-neutral-800 hover:border-neutral-900 hover:text-neutral-950'
                     }`}
                   >
                     {t(item.labelKey)}
@@ -467,25 +466,25 @@ export const Header: React.FC<HeaderProps> = ({
       {/* 4. HASIBUAN MINIMALIST SEARCH OVERLAY MODAL */}
       <AnimatePresence>
         {searchOpen && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 px-4 pt-16 backdrop-blur-sm sm:pt-24">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="w-full max-w-3xl bg-white border border-neutral-200 shadow-2xl p-6 sm:p-10 relative"
+              className="relative w-full max-w-3xl border border-neutral-200 bg-white p-6 shadow-2xl sm:p-10"
             >
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}
-                className="absolute top-6 right-6 text-neutral-400 hover:text-black transition-colors"
+                className="absolute top-6 right-6 text-neutral-400 transition-colors hover:text-black"
                 aria-label="Close search"
               >
                 <X size={20} strokeWidth={1.5} />
               </button>
 
               <form onSubmit={handleSearchSubmit} className="space-y-6">
-                <span className="text-[10px] tracking-[0.35em] uppercase text-neutral-400 font-light block">
+                <span className="block text-[10px] font-light tracking-[0.35em] text-neutral-400 uppercase">
                   SEARCH THE COLLECTION
                 </span>
 
@@ -496,17 +495,17 @@ export const Header: React.FC<HeaderProps> = ({
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="ENTER PRODUCT NAME, COLLECTION, OR MATERIAL..."
-                    className="w-full text-base sm:text-xl font-serif tracking-[0.06em] uppercase text-neutral-900 placeholder:text-neutral-300 placeholder:font-sans focus:outline-none bg-transparent pr-10"
+                    className="w-full bg-transparent pr-10 font-serif text-base tracking-[0.06em] text-neutral-900 uppercase placeholder:font-sans placeholder:text-neutral-300 focus:outline-none sm:text-xl"
                   />
                   {isSearching ? (
                     <Loader2
                       size={20}
-                      className="absolute right-2 top-2 animate-spin text-neutral-400"
+                      className="absolute top-2 right-2 animate-spin text-neutral-400"
                     />
                   ) : (
                     <button
                       type="submit"
-                      className="absolute right-2 top-1 text-neutral-900 hover:opacity-60"
+                      className="absolute top-1 right-2 text-neutral-900 hover:opacity-60"
                       aria-label="Submit"
                     >
                       <Search size={20} strokeWidth={1.5} />
@@ -516,33 +515,33 @@ export const Header: React.FC<HeaderProps> = ({
 
                 {/* Instant Search Results */}
                 {searchResults.length > 0 && (
-                  <div className="space-y-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
-                    <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light block">
+                  <div className="custom-scrollbar max-h-80 space-y-3 overflow-y-auto pr-2">
+                    <span className="block text-[10px] font-light tracking-[0.25em] text-neutral-400 uppercase">
                       MATCHING PIECES ({searchResults.length})
                     </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {searchResults.slice(0, 6).map((item) => (
                         <Link
                           key={item.id}
                           href={`/shop/products/${item.slug}`}
                           onClick={() => setSearchOpen(false)}
-                          className="flex items-center gap-3 p-2 bg-[#fafaf9] border border-neutral-200/60 hover:border-neutral-900 transition-colors"
+                          className="flex items-center gap-3 border border-neutral-200/60 bg-[#fafaf9] p-2 transition-colors hover:border-neutral-900"
                         >
-                          <div className="w-12 h-12 bg-white overflow-hidden shrink-0 border border-neutral-200">
+                          <div className="h-12 w-12 shrink-0 overflow-hidden border border-neutral-200 bg-white">
                             {item.primary_image?.image_url ? (
                               <img
                                 src={item.primary_image.image_url}
                                 alt={item.name}
-                                className="w-full h-full object-cover"
+                                className="h-full w-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full bg-neutral-100 flex items-center justify-center text-[8px] text-neutral-400">
+                              <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-[8px] text-neutral-400">
                                 Hasibuan
                               </div>
                             )}
                           </div>
                           <div className="overflow-hidden">
-                            <h5 className="font-serif text-xs uppercase tracking-wide text-neutral-900 truncate">
+                            <h5 className="truncate font-serif text-xs tracking-wide text-neutral-900 uppercase">
                               {item.name}
                             </h5>
                             <span className="text-[10px] tracking-wider text-neutral-500 uppercase">
@@ -556,20 +555,20 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
 
                 {hasSearched && searchResults.length === 0 && (
-                  <p className="text-xs text-neutral-500 tracking-wider uppercase font-light text-center py-4">
+                  <p className="py-4 text-center text-xs font-light tracking-wider text-neutral-500 uppercase">
                     NO PIECES FOUND MATCHING &ldquo;{searchQuery}&rdquo;
                   </p>
                 )}
 
                 {/* Quick Link Categories */}
-                <div className="pt-4 border-t border-neutral-100 flex flex-wrap items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-light text-neutral-600">
+                <div className="flex flex-wrap items-center gap-2 border-t border-neutral-100 pt-4 text-[10px] font-light tracking-[0.2em] text-neutral-600 uppercase">
                   <span className="text-neutral-400">POPULAR:</span>
                   {activeCategoriesList.slice(0, 5).map((cat: any) => (
                     <Link
                       key={cat.id}
                       href={cat.href}
                       onClick={() => setSearchOpen(false)}
-                      className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-900 hover:text-white transition-colors"
+                      className="bg-neutral-100 px-2.5 py-1 transition-colors hover:bg-neutral-900 hover:text-white"
                     >
                       {cat.name}
                     </Link>
@@ -600,10 +599,10 @@ export const Header: React.FC<HeaderProps> = ({
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto"
+              className="relative z-10 flex h-full w-full max-w-md flex-col overflow-y-auto bg-white shadow-2xl"
             >
               {/* Drawer Header */}
-              <div className="p-6 border-b border-neutral-200 flex items-center justify-between">
+              <div className="flex items-center justify-between border-b border-neutral-200 p-6">
                 <Link
                   href="/shop"
                   onClick={() => setMobileMenuOpen(false)}
@@ -625,10 +624,12 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
 
               {/* Drawer Links */}
-              <div className="p-6 space-y-6 flex-1">
+              <div className="flex-1 space-y-6 p-6">
                 <div className="space-y-4">
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block">
-                    {t('shop.header.menu') !== 'shop.header.menu' ? t('shop.header.menu') : 'NAVIGATION'}
+                  <span className="block text-[10px] font-light tracking-[0.3em] text-neutral-400 uppercase">
+                    {t('shop.header.menu') !== 'shop.header.menu'
+                      ? t('shop.header.menu')
+                      : 'NAVIGATION'}
                   </span>
                   <div className="space-y-3">
                     {NAV_ITEMS.map((item) => {
@@ -638,17 +639,17 @@ export const Header: React.FC<HeaderProps> = ({
                             <Link
                               href={item.href}
                               onClick={() => setMobileMenuOpen(false)}
-                              className="block font-serif text-lg tracking-[0.08em] uppercase text-neutral-900 hover:text-neutral-500"
+                              className="block font-serif text-lg tracking-[0.08em] text-neutral-900 uppercase hover:text-neutral-500"
                             >
                               {t(item.labelKey)}
                             </Link>
-                            <div className="pl-4 border-l border-neutral-200 space-y-2.5 py-1">
+                            <div className="space-y-2.5 border-l border-neutral-200 py-1 pl-4">
                               {activeCategoriesList.map((cat: any) => (
                                 <Link
                                   key={cat.id || cat.slug || cat.name}
                                   href={cat.href}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className="block text-xs tracking-[0.18em] uppercase text-neutral-600 hover:text-black"
+                                  className="block text-xs tracking-[0.18em] text-neutral-600 uppercase hover:text-black"
                                 >
                                   {cat.name}
                                 </Link>
@@ -656,7 +657,7 @@ export const Header: React.FC<HeaderProps> = ({
                               <Link
                                 href="/shop/products"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="block text-xs tracking-[0.18em] uppercase font-medium text-neutral-900 hover:text-neutral-500 pt-1"
+                                className="block pt-1 text-xs font-medium tracking-[0.18em] text-neutral-900 uppercase hover:text-neutral-500"
                               >
                                 ALL PRODUCTS &rarr;
                               </Link>
@@ -670,7 +671,7 @@ export const Header: React.FC<HeaderProps> = ({
                           key={item.labelKey}
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="block font-serif text-lg tracking-[0.08em] uppercase text-neutral-900 hover:text-neutral-500"
+                          className="block font-serif text-lg tracking-[0.08em] text-neutral-900 uppercase hover:text-neutral-500"
                         >
                           {t(item.labelKey)}
                         </Link>
@@ -679,42 +680,42 @@ export const Header: React.FC<HeaderProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-neutral-100 space-y-3">
-                  <span className="text-[10px] tracking-[0.3em] uppercase text-neutral-400 font-light block">
+                <div className="space-y-3 border-t border-neutral-100 pt-6">
+                  <span className="block text-[10px] font-light tracking-[0.3em] text-neutral-400 uppercase">
                     SERVICES & CLIENT SERVICES
                   </span>
                   <Link
                     href="/shop/about"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-xs tracking-[0.2em] uppercase text-neutral-700 hover:text-black"
+                    className="block text-xs tracking-[0.2em] text-neutral-700 uppercase hover:text-black"
                   >
                     GALLERIES & ARCHITECTURE
                   </Link>
                   <Link
                     href="/shop/custom-order"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-xs tracking-[0.2em] uppercase text-neutral-700 hover:text-black"
+                    className="block text-xs tracking-[0.2em] text-neutral-700 uppercase hover:text-black"
                   >
                     INTERIOR DESIGN ATELIER
                   </Link>
                   <Link
                     href="/shop/dealer"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-xs tracking-[0.2em] uppercase text-neutral-700 hover:text-black"
+                    className="block text-xs tracking-[0.2em] text-neutral-700 uppercase hover:text-black"
                   >
                     TRADE & B2B PROGRAM
                   </Link>
                   <Link
                     href="/shop/wishlist"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-xs tracking-[0.2em] uppercase text-neutral-700 hover:text-black"
+                    className="block text-xs tracking-[0.2em] text-neutral-700 uppercase hover:text-black"
                   >
                     SAVED PIECES ({wishlistCount})
                   </Link>
                   <Link
                     href="/shop/contact"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-xs tracking-[0.2em] uppercase text-neutral-700 hover:text-black"
+                    className="block text-xs tracking-[0.2em] text-neutral-700 uppercase hover:text-black"
                   >
                     CLIENT SERVICES / CONTACT
                   </Link>
@@ -722,9 +723,9 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
 
               {/* Drawer Footer */}
-              <div className="p-6 border-t border-neutral-200 bg-[#fafaf9] space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-neutral-200/80">
-                  <span className="text-[10px] tracking-[0.25em] uppercase text-neutral-400 font-light">
+              <div className="space-y-4 border-t border-neutral-200 bg-[#fafaf9] p-6">
+                <div className="flex items-center justify-between border-b border-neutral-200/80 pb-3">
+                  <span className="text-[10px] font-light tracking-[0.25em] text-neutral-400 uppercase">
                     LANGUAGE
                   </span>
                   <LanguageSwitcher className="p-0 text-xs font-medium" />
@@ -732,7 +733,9 @@ export const Header: React.FC<HeaderProps> = ({
 
                 {user ? (
                   <div className="flex items-center justify-between text-xs tracking-wider">
-                    <span className="font-medium text-neutral-900">{user.name}</span>
+                    <span className="font-medium text-neutral-900">
+                      {user.name}
+                    </span>
                     <button
                       type="button"
                       onClick={() => {
@@ -748,7 +751,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full py-3 text-center border border-neutral-900 text-[11px] tracking-[0.25em] uppercase font-medium text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors"
+                    className="block w-full border border-neutral-900 py-3 text-center text-[11px] font-medium tracking-[0.25em] text-neutral-900 uppercase transition-colors hover:bg-neutral-900 hover:text-white"
                   >
                     SIGN IN TO ACCOUNT
                   </Link>
@@ -770,14 +773,24 @@ export const Header: React.FC<HeaderProps> = ({
       <ConfirmDialog
         open={showLogoutDialog}
         onOpenChange={setShowLogoutDialog}
-        title={t('auth.logout.title') !== 'auth.logout.title' ? t('auth.logout.title') : 'Sign Out'}
+        title={
+          t('auth.logout.title') !== 'auth.logout.title'
+            ? t('auth.logout.title')
+            : 'Sign Out'
+        }
         description={
           t('auth.logout.description') !== 'auth.logout.description'
             ? t('auth.logout.description')
             : 'Are you sure you want to sign out of your account?'
         }
-        confirmText={t('auth.logout.confirm') !== 'auth.logout.confirm' ? t('auth.logout.confirm') : 'Sign Out'}
-        cancelText={t('common.cancel') !== 'common.cancel' ? t('common.cancel') : 'Cancel'}
+        confirmText={
+          t('auth.logout.confirm') !== 'auth.logout.confirm'
+            ? t('auth.logout.confirm')
+            : 'Sign Out'
+        }
+        cancelText={
+          t('common.cancel') !== 'common.cancel' ? t('common.cancel') : 'Cancel'
+        }
         variant="danger"
         onConfirm={() => router.post('/logout')}
       />

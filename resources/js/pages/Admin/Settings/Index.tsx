@@ -13,7 +13,10 @@ import {
   ArrowUp,
   BookOpen,
   Building2,
+  Check,
   ExternalLink,
+  Eye,
+  EyeOff,
   FileText,
   Globe,
   Loader2,
@@ -49,6 +52,10 @@ interface SettingsIndexProps {
     admin_2_name?: string;
     admin_2_email?: string;
     admin_2_phone?: string;
+    show_admin_2?: boolean;
+    location_display_mode?: 'both' | 'showroom' | 'factory' | 'none';
+    show_showroom?: boolean;
+    show_factory?: boolean;
     factory_name?: string;
     factory_address?: string;
     showroom_name?: string;
@@ -118,11 +125,11 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
     return items.length > 0
       ? items
       : [
-          { id: '1', platform: 'facebook', url: '' },
-          { id: '2', platform: 'instagram', url: '' },
-          { id: '3', platform: 'tiktok', url: '' },
-          { id: '4', platform: 'linkedin', url: '' },
-        ];
+        { id: '1', platform: 'facebook', url: '' },
+        { id: '2', platform: 'instagram', url: '' },
+        { id: '3', platform: 'tiktok', url: '' },
+        { id: '4', platform: 'linkedin', url: '' },
+      ];
   })();
 
   const [socialItems, setSocialItems] =
@@ -169,6 +176,16 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
       settings.contact_email_2 ??
       '',
     admin_2_phone: settings.marketing_2_phone ?? settings.admin_2_phone ?? '',
+    show_admin_2: settings.show_admin_2 ?? true,
+    location_display_mode: settings.location_display_mode ?? 'both',
+    show_showroom:
+      settings.show_showroom !== undefined
+        ? Boolean(settings.show_showroom)
+        : settings.location_display_mode !== 'factory',
+    show_factory:
+      settings.show_factory !== undefined
+        ? Boolean(settings.show_factory)
+        : settings.location_display_mode !== 'showroom',
     social_links: JSON.stringify(initialSocialLinks),
     catalog_title: settings.catalog_title || 'Ronica Product Catalogue 2026',
     catalog_pdf_file: null as File | null,
@@ -445,7 +462,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                               admin_1_name: val,
                             }));
                           }}
-                          placeholder="cth: Mr. Halit"
+                          placeholder="Admin Hasibuan"
                           className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                         />
                       </div>
@@ -471,7 +488,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                               contact_email: val,
                             }));
                           }}
-                          placeholder="info@ronica.com.tr"
+                          placeholder="Email"
                           className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                         />
                       </div>
@@ -510,27 +527,86 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                 </div>
 
                 {/* Admin 2 Card */}
-                <div className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-5 transition-all hover:border-neutral-300">
-                  <div className="mb-4 flex items-center justify-between">
+                <div
+                  className={`rounded-xl border p-5 transition-all ${data.show_admin_2
+                    ? 'border-neutral-200 bg-neutral-50/60 hover:border-neutral-300'
+                    : 'border-dashed border-amber-300 bg-amber-50/20'
+                    }`}
+                >
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-700 text-white shadow-xs">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-lg shadow-xs transition-colors ${data.show_admin_2
+                          ? 'bg-neutral-700 text-white'
+                          : 'bg-neutral-400 text-white'
+                          }`}
+                      >
                         <UserCheck className="h-4 w-4" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-neutral-900">
-                          Admin 2 (Cadangan / Opsional)
-                        </h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-semibold text-neutral-900">
+                            Admin 2 (Cadangan / Opsional)
+                          </h3>
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium transition-colors ${data.show_admin_2
+                              ? 'bg-neutral-200 text-neutral-700'
+                              : 'bg-amber-100 text-amber-800'
+                              }`}
+                          >
+                            {data.show_admin_2 ? 'Aktif' : 'Disembunyikan'}
+                          </span>
+                        </div>
                         <p className="text-[11px] text-neutral-500">
                           Kontak Admin 2 atau divisi customer service alternatif
                         </p>
                       </div>
                     </div>
-                    <span className="inline-flex items-center rounded-full bg-neutral-200 px-2.5 py-0.5 text-xs font-medium text-neutral-700">
-                      Opsional
-                    </span>
+
+                    {/* Show/Hide Toggle Buttons */}
+                    <div className="flex items-center gap-2">
+                      <div className="inline-flex items-center rounded-lg border border-neutral-200 bg-neutral-100 p-0.5 text-xs shadow-2xs">
+                        <button
+                          type="button"
+                          onClick={() => setData('show_admin_2', true)}
+                          className={`flex items-center gap-1.5 rounded-md px-3 py-1 font-medium transition-all ${data.show_admin_2
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'text-neutral-600 hover:text-neutral-900'
+                            }`}
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          Show
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setData('show_admin_2', false)}
+                          className={`flex items-center gap-1.5 rounded-md px-3 py-1 font-medium transition-all ${!data.show_admin_2
+                            ? 'bg-neutral-800 text-white shadow-xs'
+                            : 'text-neutral-600 hover:text-neutral-900'
+                            }`}
+                        >
+                          <EyeOff className="h-3.5 w-3.5" />
+                          Hide
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="space-y-4">
+                  {!data.show_admin_2 && (
+                    <div className="mb-4 flex items-center gap-2.5 rounded-lg border border-amber-200 bg-amber-50/90 px-3.5 py-2.5 text-xs text-amber-900">
+                      <EyeOff className="h-4 w-4 shrink-0 text-amber-600" />
+                      <span>
+                        <strong>Admin 2 disembunyikan:</strong> Halaman Kontak
+                        website hanya akan menampilkan Admin 1. Data Admin 2
+                        tetap tersimpan dan dapat dimunculkan kembali kapan
+                        saja.
+                      </span>
+                    </div>
+                  )}
+
+                  <div
+                    className={`space-y-4 transition-opacity ${!data.show_admin_2 ? 'opacity-80' : ''}`}
+                  >
                     <div>
                       <label className="mb-1.5 block text-xs font-medium text-neutral-700">
                         Nama Admin 2
@@ -576,7 +652,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                               contact_email_2: val,
                             }));
                           }}
-                          placeholder="sales@ronica.com.tr"
+                          placeholder="sales@hasibuan.com"
                           className="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                         />
                       </div>
@@ -616,111 +692,396 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
 
             {/* Lokasi Pabrik & Showroom */}
             <div className="border-t border-neutral-200/80 pt-6">
-              <div className="mb-4 flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-teal-600" />
-                <h3 className="text-sm font-semibold text-neutral-900">
-                  Lokasi Pabrik &amp; Showroom (Factory &amp; Showroom)
-                </h3>
+              <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white shadow-xs">
+                    <Building2 className="h-4.5 w-4.5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-neutral-900">
+                      Lokasi Pabrik &amp; Showroom (Factory &amp; Showroom)
+                    </h3>
+                    <p className="text-[11px] text-neutral-500">
+                      Pilih ingin menampilkan Showroom saja, Factory saja, atau
+                      keduanya di halaman website
+                    </p>
+                  </div>
+                </div>
+
+                {/* Segmented Preset Selector */}
+                <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-neutral-200 bg-neutral-100/90 p-1 text-xs">
+                  <span className="hidden px-2 text-[11px] font-medium text-neutral-500 sm:inline">
+                    Pilihan Tampilan:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setData((prev) => ({
+                        ...prev,
+                        location_display_mode: 'both',
+                        show_showroom: true,
+                        show_factory: true,
+                      }));
+                    }}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium transition-all ${data.show_showroom && data.show_factory
+                      ? 'bg-teal-700 font-semibold text-white shadow-xs'
+                      : 'bg-transparent text-neutral-600 hover:text-neutral-900'
+                      }`}
+                  >
+                    <Check
+                      className={`h-3.5 w-3.5 ${data.show_showroom && data.show_factory ? 'inline' : 'hidden'}`}
+                    />
+                    Keduanya
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setData((prev) => ({
+                        ...prev,
+                        location_display_mode: 'showroom',
+                        show_showroom: true,
+                        show_factory: false,
+                      }));
+                    }}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium transition-all ${data.show_showroom && !data.show_factory
+                      ? 'bg-teal-700 font-semibold text-white shadow-xs'
+                      : 'bg-transparent text-neutral-600 hover:text-neutral-900'
+                      }`}
+                  >
+                    <Store className="h-3.5 w-3.5" />
+                    Showroom Saja
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setData((prev) => ({
+                        ...prev,
+                        location_display_mode: 'factory',
+                        show_showroom: false,
+                        show_factory: true,
+                      }));
+                    }}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium transition-all ${!data.show_showroom && data.show_factory
+                      ? 'bg-teal-700 font-semibold text-white shadow-xs'
+                      : 'bg-transparent text-neutral-600 hover:text-neutral-900'
+                      }`}
+                  >
+                    <Building2 className="h-3.5 w-3.5" />
+                    Factory Saja
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Factory Name
-                  </label>
-                  <div className="relative">
-                    <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                    <input
-                      type="text"
-                      value={data.factory_name ?? ''}
-                      onChange={(e) => setData('factory_name', e.target.value)}
-                      placeholder="PT. Eren Outdoor Furniture"
-                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                    />
+              {/* Showroom & Factory Sub-Cards */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {/* Showroom Card */}
+                <div
+                  className={`rounded-xl border p-5 transition-all ${data.show_showroom
+                    ? 'border-neutral-200 bg-white shadow-2xs hover:border-neutral-300'
+                    : 'border-dashed border-amber-300 bg-amber-50/20'
+                    }`}
+                >
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-lg shadow-xs ${data.show_showroom
+                          ? 'bg-teal-700 text-white'
+                          : 'bg-neutral-400 text-white'
+                          }`}
+                      >
+                        <Store className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-sm font-semibold text-neutral-900">
+                            Showroom / Galeri Display
+                          </h4>
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${data.show_showroom
+                              ? 'bg-teal-100 text-teal-800'
+                              : 'bg-amber-100 text-amber-800'
+                              }`}
+                          >
+                            {data.show_showroom
+                              ? 'Ditampilkan'
+                              : 'Disembunyikan'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-neutral-500">
+                          Galeri pameran produk &amp; kunjungan klien
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="inline-flex items-center rounded-lg border border-neutral-200 bg-neutral-100 p-0.5 text-xs shadow-2xs">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setData((prev) => {
+                            const newShowroom = true;
+                            const newMode = prev.show_factory
+                              ? 'both'
+                              : 'showroom';
+                            return {
+                              ...prev,
+                              show_showroom: newShowroom,
+                              location_display_mode: newMode,
+                            };
+                          });
+                        }}
+                        className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-all ${data.show_showroom
+                          ? 'bg-emerald-600 text-white shadow-xs'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                          }`}
+                      >
+                        <Eye className="h-3 w-3" />
+                        Show
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setData((prev) => {
+                            const newShowroom = false;
+                            const newMode = prev.show_factory
+                              ? 'factory'
+                              : 'none';
+                            return {
+                              ...prev,
+                              show_showroom: newShowroom,
+                              location_display_mode: newMode,
+                            };
+                          });
+                        }}
+                        className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-all ${!data.show_showroom
+                          ? 'bg-neutral-800 text-white shadow-xs'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                          }`}
+                      >
+                        <EyeOff className="h-3 w-3" />
+                        Hide
+                      </button>
+                    </div>
+                  </div>
+
+                  {!data.show_showroom && (
+                    <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                      <EyeOff className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                      <span>Showroom disembunyikan dari halaman website.</span>
+                    </div>
+                  )}
+
+                  <div
+                    className={`space-y-4 transition-opacity ${!data.show_showroom ? 'opacity-75' : ''}`}
+                  >
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Showroom Name
+                      </label>
+                      <div className="relative">
+                        <Store className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.showroom_name ?? ''}
+                          onChange={(e) =>
+                            setData('showroom_name', e.target.value)
+                          }
+                          placeholder="Hasibuan Design"
+                          className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Showroom Address
+                      </label>
+                      <div className="relative">
+                        <Store className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.showroom_address ?? ''}
+                          onChange={(e) =>
+                            setData('showroom_address', e.target.value)
+                          }
+                          placeholder="Jepara, Indonesia"
+                          className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Showroom Google Maps Embed URL
+                      </label>
+                      <input
+                        type="text"
+                        value={data.maps_showroom_url ?? ''}
+                        onChange={(e) =>
+                          setData('maps_showroom_url', e.target.value)
+                        }
+                        placeholder="https://www.google.com/maps/embed?pb=..."
+                        className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                      />
+                      <p className="mt-1 text-[11px] text-neutral-500">
+                        URL iframe embed Google Maps lokasi Showroom
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Factory Address
-                  </label>
-                  <div className="relative">
-                    <Building2 className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                    <input
-                      type="text"
-                      value={data.factory_address ?? ''}
-                      onChange={(e) =>
-                        setData('factory_address', e.target.value)
-                      }
-                      placeholder="Cirebon, Indonesia"
-                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                    />
+
+                {/* Factory Card */}
+                <div
+                  className={`rounded-xl border p-5 transition-all ${data.show_factory
+                    ? 'border-neutral-200 bg-white shadow-2xs hover:border-neutral-300'
+                    : 'border-dashed border-amber-300 bg-amber-50/20'
+                    }`}
+                >
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-lg shadow-xs ${data.show_factory
+                          ? 'bg-neutral-800 text-white'
+                          : 'bg-neutral-400 text-white'
+                          }`}
+                      >
+                        <Building2 className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-sm font-semibold text-neutral-900">
+                            Pabrik / Manufacturing Atelier
+                          </h4>
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${data.show_factory
+                              ? 'bg-neutral-200 text-neutral-700'
+                              : 'bg-amber-100 text-amber-800'
+                              }`}
+                          >
+                            {data.show_factory
+                              ? 'Ditampilkan'
+                              : 'Disembunyikan'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-neutral-500">
+                          Fasilitas produksi &amp; workshop furnitur
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="inline-flex items-center rounded-lg border border-neutral-200 bg-neutral-100 p-0.5 text-xs shadow-2xs">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setData((prev) => {
+                            const newFactory = true;
+                            const newMode = prev.show_showroom
+                              ? 'both'
+                              : 'factory';
+                            return {
+                              ...prev,
+                              show_factory: newFactory,
+                              location_display_mode: newMode,
+                            };
+                          });
+                        }}
+                        className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-all ${data.show_factory
+                          ? 'bg-emerald-600 text-white shadow-xs'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                          }`}
+                      >
+                        <Eye className="h-3 w-3" />
+                        Show
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setData((prev) => {
+                            const newFactory = false;
+                            const newMode = prev.show_showroom
+                              ? 'showroom'
+                              : 'none';
+                            return {
+                              ...prev,
+                              show_factory: newFactory,
+                              location_display_mode: newMode,
+                            };
+                          });
+                        }}
+                        className={`flex items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-all ${!data.show_factory
+                          ? 'bg-neutral-800 text-white shadow-xs'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                          }`}
+                      >
+                        <EyeOff className="h-3 w-3" />
+                        Hide
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Showroom Name
-                  </label>
-                  <div className="relative">
-                    <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                    <input
-                      type="text"
-                      value={data.showroom_name ?? ''}
-                      onChange={(e) => setData('showroom_name', e.target.value)}
-                      placeholder="Ronica Furniture"
-                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                    />
+
+                  {!data.show_factory && (
+                    <div className="mb-4 flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                      <EyeOff className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                      <span>Pabrik disembunyikan dari halaman website.</span>
+                    </div>
+                  )}
+
+                  <div
+                    className={`space-y-4 transition-opacity ${!data.show_factory ? 'opacity-75' : ''}`}
+                  >
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Factory Name
+                      </label>
+                      <div className="relative">
+                        <Building2 className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.factory_name ?? ''}
+                          onChange={(e) =>
+                            setData('factory_name', e.target.value)
+                          }
+                          placeholder="PT. Hasibuan Furniture"
+                          className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Factory Address
+                      </label>
+                      <div className="relative">
+                        <Building2 className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                        <input
+                          type="text"
+                          value={data.factory_address ?? ''}
+                          onChange={(e) =>
+                            setData('factory_address', e.target.value)
+                          }
+                          placeholder="Jepara, Indonesia"
+                          className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 py-2.5 pr-4 pl-9 text-sm text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-1.5 block text-xs font-medium text-neutral-700">
+                        Factory Google Maps Embed URL (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={data.maps_factory_url ?? ''}
+                        onChange={(e) =>
+                          setData('maps_factory_url', e.target.value)
+                        }
+                        placeholder="https://www.google.com/maps/embed?pb=..."
+                        className="w-full rounded-lg border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+                      />
+                      <p className="mt-1 text-[11px] text-neutral-500">
+                        URL iframe embed Google Maps lokasi Pabrik
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Showroom Address
-                  </label>
-                  <div className="relative">
-                    <Store className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-neutral-400" />
-                    <input
-                      type="text"
-                      value={data.showroom_address ?? ''}
-                      onChange={(e) =>
-                        setData('showroom_address', e.target.value)
-                      }
-                      placeholder="Jepara, Indonesia"
-                      className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-3 pr-4 pl-10 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Showroom Google Maps Embed URL
-                  </label>
-                  <input
-                    type="text"
-                    value={data.maps_showroom_url ?? ''}
-                    onChange={(e) =>
-                      setData('maps_showroom_url', e.target.value)
-                    }
-                    placeholder="https://www.google.com/maps/embed?pb=..."
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                  <p className="mt-1 text-xs text-neutral-500">
-                    Google Maps iframe embed URL for Showroom location
-                  </p>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-neutral-700">
-                    Factory Google Maps Embed URL (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={data.maps_factory_url ?? ''}
-                    onChange={(e) =>
-                      setData('maps_factory_url', e.target.value)
-                    }
-                    placeholder="https://www.google.com/maps/embed?pb=..."
-                    className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3 text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
-                  />
-                  <p className="mt-1 text-xs text-neutral-500">
-                    Google Maps iframe embed URL for Factory location
-                  </p>
                 </div>
               </div>
             </div>
@@ -957,11 +1318,10 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                         key={p}
                         type="button"
                         onClick={() => handleAddSocial(p)}
-                        className={`inline-flex items-center gap-1 rounded-md px-2 py-1 transition-all ${
-                          isAlreadyAdded
-                            ? 'bg-neutral-100 text-neutral-400 hover:bg-neutral-200 hover:text-neutral-600'
-                            : 'bg-neutral-100 text-neutral-700 hover:bg-teal-50 hover:text-teal-700'
-                        }`}
+                        className={`inline-flex items-center gap-1 rounded-md px-2 py-1 transition-all ${isAlreadyAdded
+                          ? 'bg-neutral-100 text-neutral-400 hover:bg-neutral-200 hover:text-neutral-600'
+                          : 'bg-neutral-100 text-neutral-700 hover:bg-teal-50 hover:text-teal-700'
+                          }`}
                       >
                         <PlatformIcon platform={p} className="h-3 w-3" />+{' '}
                         {preset?.name}
@@ -1000,7 +1360,7 @@ export default function SettingsIndex({ settings }: SettingsIndexProps) {
                   type="text"
                   value={data.catalog_title}
                   onChange={(e) => setData('catalog_title', e.target.value)}
-                  placeholder="e.g. Ronica Product Catalogue 2026"
+                  placeholder="e.g. Hasibuan Furniture Catalogue 2026"
                   className="w-full rounded-lg border border-neutral-200 bg-white px-4 py-2.5 text-xs text-neutral-900 transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
                 />
                 <p className="mt-1 text-[11px] text-neutral-500">

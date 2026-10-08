@@ -46,9 +46,9 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
     settings.about_story_images && settings.about_story_images.length > 0
       ? settings.about_story_images
       : [
-          '/images/about/about-banner-01.webp',
-          '/images/about/about-banner-02.webp',
-          '/images/about/about-banner-03.webp',
+          '/images/about/hasibuan-profile-1.webp',
+          '/images/about/hasibuan-profile-2.webp',
+          '/images/about/hasibuan-workshop.jpg',
         ]
   ).map((url, idx) => ({
     id: `existing-${idx}-${url}`,
@@ -60,20 +60,25 @@ export default function AboutSettings({ settings }: AboutSettingsProps) {
 
   const defaultContent =
     settings.about_story_content ||
-    `Founded in 2016, in Cirebon, Indonesia, Ronica is the representative of elegance produced by hand in outdoor furniture. The brand, which has specialized in the production of high-quality rattan, rope and aluminum furniture since the day it was founded, moved to its new state-of-the-art factory in 2021 and expanded its production range to include A-class teak wood. Teak is sourced from the most exclusive teak region of Indonesia, Perhutani Blora, and achieves a unique quality by processing and baking in Ronica's own facilities.
+    `Hasibuan Designs is a Jepara based company specialising in the wooden furniture and manufacturer of premium wood furniture such as Teak Solid Wood.
 
-Bringing together the tradition of Cirebon's hand knitting and Jepara's deep-rooted woodwork, Ronica brings two great craft cultures together under one roof. This combination reveals durable and aesthetic products that carry the trace of craftsmanship in each furniture. Each detail is the result of a design understanding that is shaped in the hands of the masters.
+Established in 2000, we focused our business in manufacturing and exporting handmade indoor furnitures and accessories home decoration. Since 2000 Hasibuan Designs Furniture has supply wooden furniture to customers from Norway, Miami, Brazil, UK, Germany, Taiwan, Mongolia, India, Malaysia, Singapore and Australia.
 
-Only high-end materials suitable for outdoor conditions are used in Ronica. Perhutani-sourced teak wood, Rehau and Viro synthetic rattan, Sunproof, Ateja, Sunbrella and Agora fabrics; as well as QuickDry technology sponges are carefully selected for longevity and comfort. All materials are UV treated, proven with laboratory tests and supported by a three-year warranty from suppliers.
+With staff and Employers around 150 peoples we commited to make sure that you are 100% happy with your experience with us. From sales through to delivery, we aim to provide a first class service that you will be delighted with.
 
-Today, Ronica exports to more than 15 countries, including the USA, Europe, the Middle East and Australia. While offering fast delivery to its customers thanks to its Mersin warehouse in Turkey, it has become a reliable solution partner in the international arena with private hotel and housing projects in Maldives, Qatar, Australia and the USA.
+If you would like advice on any aspect of choosing or caring for your Hasibuan Designs Furniture please get in touch. We love talking to customers, and providing advice and support on choosing the best pieces to suit your style of home.
 
-As a family business, Ronica is always passionate about quality, sustainability and customer satisfaction. Each collection is prepared with nature-respecting materials and innovative designs. Ronica brings not only comfort but also a lasting elegance to the outdoor life.`;
+The Hasibuan Designs Furniture range is built to last, and is always of excellent quality. Our furniture comes fully assembled after 8-12 weeks of careful construction and attention is made to the finest details. We use traditional construction methods, pin and dowel techniques, and dovetail joints for extra strength. Our products are made from solid timbers and we never use veneers.
+
+We set competitive prices, and actively check and match these against similar quality products. All exclusive Hasibuan Designs products are hand made in Indonesia by local craftsmen. The workshop is located in Jepara, Central Java and with its exotic tropical surroundings; it is a great environment to work in. All work is carried out using perfected traditional methods.
+
+The increase in popularity of Indonesian furniture has meant an improvement for to worked hard to create a sense of art in every pieces of our furniture. The wood used for much of our furniture is premium wood which coming from government controlled plantation, and therefore by definition eco friendly.`;
 
   const { data, setData, errors } = useForm({
-    about_story_title:
-      settings.about_story_title || 'Extending From Indonesia To The World',
-    about_story_subtitle: settings.about_story_subtitle || 'Handicraft Story',
+    about_story_title: settings.about_story_title || 'Company Profile',
+    about_story_subtitle:
+      settings.about_story_subtitle ||
+      'Hasibuan Designs Furniture & Craftsmanship - Jepara, Indonesia',
     about_story_content: defaultContent,
   });
 
