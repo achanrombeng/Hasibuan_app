@@ -315,6 +315,14 @@ export default function ShowProduct({ product }: ShowProductProps) {
                     {product.status.label}
                   </span>
                 </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-terra-600">Featured Product</span>
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${product.is_featured ? 'bg-amber-100 text-amber-800' : 'bg-terra-100 text-terra-600'}`}
+                  >
+                    {product.is_featured ? 'Yes' : 'No'}
+                  </span>
+                </div>
               </div>
             </div>
 

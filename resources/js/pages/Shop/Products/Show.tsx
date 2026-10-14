@@ -7,31 +7,30 @@ import {
   ProductCard,
   ProductImagePlaceholder,
   saveToRecentlyViewed,
-  ShareModal,
 } from '@/components/shop';
 import { ShopLayout } from '@/layouts/ShopLayout';
+import { cn } from '@/lib/utils';
 import { SharedData, SiteSettings } from '@/types';
 import { ApiProduct, ProductImage, ProductReview } from '@/types/shop';
 import { Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { toast } from 'sonner';
 import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Heart,
-  Home,
-  Info,
-  Layers,
+  Maximize2,
   MessageCircle,
-  Ruler,
+  Minus,
+  Plus,
+  Sparkles,
   Star,
+  Truck,
   X,
-  ZoomIn,
 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 interface Props {
   product: ApiProduct;
@@ -45,68 +44,23 @@ export default function ProductShow({
   userReview,
 }: Props) {
   const { siteSettings } = usePage<{ siteSettings?: SiteSettings }>().props;
-  const siteName = siteSettings?.site_name || 'hasibuan_app';
-  const [quantity, setQuantity] = useState(1);
+  const siteName = siteSettings?.site_name || 'Ronica Furniture';
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(
-    product.is_wishlisted || false,
-  );
-  const [isShareOpen, setIsShareOpen] = useState(false);
-  // Update wishlist state when product changes
-  useEffect(() => {
-    setIsWishlisted(product.is_wishlisted || false);
-  }, [product.id, product.is_wishlisted]);
 
-  // Save to recently viewed on mount
   useEffect(() => {
     saveToRecentlyViewed(product);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id]);
 
   const images = product.images?.length ? product.images : [];
 
-  const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
-
-  const handleWishlistToggle = () => {
-    const { auth } = usePage<SharedData>().props;
-    if (!auth.user) {
-      router.visit('/login');
-      return;
-    }
-
-    setIsTogglingWishlist(true);
-
-    router.post(
-      `/shop/wishlist/${product.id}`,
-      {},
-      {
-        preserveScroll: true,
-        onSuccess: () => {
-          const newStatus = !isWishlisted;
-          setIsWishlisted(newStatus);
-          if (newStatus) {
-            toast.success('Product added to wishlist!');
-          } else {
-            toast.info('Product removed from wishlist');
-          }
-        },
-        onError: () => {
-          toast.error('Failed to update wishlist');
-        },
-        onFinish: () => {
-          setIsTogglingWishlist(false);
-        },
-      },
-    );
-  };
-
-  // SEO Data
   const productUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/shop/products/${product.slug}`
       : `/shop/products/${product.slug}`;
   const productImages = images.map((img) => img.image_url);
+
   const breadcrumbItems = [
     {
       name: 'Home',
@@ -138,13 +92,12 @@ export default function ProductShow({
 
   return (
     <>
-      {/* SEO */}
       <SEOHead
         title={product.name}
         description={
           product.short_description ||
           product.description?.replace(/<[^>]*>/g, '').substring(0, 160) ||
-          `Discover ${product.name} by ${siteName}. Premium outdoor & teak furniture.`
+          `Discover ${product.name} by ${siteName}. Handcrafted solid teak furniture.`
         }
         keywords={
           [
@@ -152,7 +105,7 @@ export default function ProductShow({
               ? product.meta_keywords.split(',').map((k: string) => k.trim())
               : []),
             product.name,
-            product.category?.name || 'furnitur',
+            product.category?.name || 'furniture',
             product.sku,
           ].filter(Boolean) as string[]
         }
@@ -189,57 +142,52 @@ export default function ProductShow({
         }}
       />
       <BreadcrumbStructuredData items={breadcrumbItems} />
-      <div className="bg-noise" />
-      <ShopLayout showFooter={true} showWhatsApp={false}>
-        <main className="min-h-screen bg-neutral-50/50 pt-6 pb-20">
-          <div className="mx-auto max-w-[1400px] px-4 sm:px-6 md:px-12">
-            {/* Modern Breadcrumb */}
-            <Breadcrumb product={product} />
 
-            {/* Top Hero Section: Image Gallery & Main Summary */}
-            <div className="mb-14 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-14">
-              {/* Gallery Column (7 cols on LG) */}
-              <div className="lg:col-span-7">
-                <ImageGallery
+      <ShopLayout showFooter={true} showWhatsApp={false}>
+        <div className="min-h-screen bg-[#fcfcfb] text-neutral-900 selection:bg-neutral-900 selection:text-white">
+          {/* Subtle Top Border Line */}
+          <div className="h-[1px] w-full bg-neutral-200/60" />
+
+          {/* Main Container */}
+          <div className="mx-auto max-w-[1780px] px-4 pt-6 pb-24 sm:px-8 md:px-12 lg:px-16">
+            {/* RH Architectural Breadcrumb & Back */}
+            <RHBreadcrumb product={product} />
+
+            {/* RH Main Hero Section: Left Gallery & Right Configurator Rail */}
+            <div className="mt-6 mb-20 grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-20">
+              {/* Left Column: RH Multi-View Gallery (7 cols on LG, 8 cols on XL) */}
+              <div className="lg:col-span-7 xl:col-span-8">
+                <RHGallery
                   images={images}
                   selectedIndex={selectedImageIndex}
                   setSelectedIndex={setSelectedImageIndex}
                   onZoom={() => setIsZoomed(true)}
                   product={product}
-                  isWishlisted={isWishlisted}
-                  onWishlist={handleWishlistToggle}
-                  isTogglingWishlist={isTogglingWishlist}
                 />
               </div>
 
-              {/* Summary Column (5 cols on LG) */}
-              <div className="lg:col-span-5">
-                <ProductInfoSummary
-                  product={product}
-                  onShare={() => setIsShareOpen(true)}
-                  isWishlisted={isWishlisted}
-                  onWishlist={handleWishlistToggle}
-                  isTogglingWishlist={isTogglingWishlist}
-                />
+              {/* Right Column: RH Stately Sticky Rail (5 cols on LG, 4 cols on XL) */}
+              <div className="lg:sticky lg:top-24 lg:col-span-5 xl:col-span-4">
+                <RHProductSummary product={product} />
               </div>
             </div>
 
             {/* Collection Bundle / Linked Products Section */}
             {product.linked_products && product.linked_products.length > 0 && (
-              <CollectionBundleSection
+              <RHCollectionBundleSection
                 linkedProducts={product.linked_products}
                 collectionName={product.name}
               />
             )}
 
-            {/* Full-width Product Details & Tabs Section */}
-            <div className="mb-16">
-              <ProductDetailTabs product={product} />
+            {/* RH Stately Accordions: Details, Dimensions, Care, Delivery */}
+            <div className="mb-24 border-t border-neutral-200/80 pt-16">
+              <RHEditorialAccordions product={product} />
             </div>
 
             {/* Customer Reviews Section */}
             {product.reviews && product.reviews.length > 0 && (
-              <CustomerReviews
+              <RHCustomerReviews
                 reviews={product.reviews}
                 averageRating={product.average_rating}
                 reviewCount={product.review_count}
@@ -249,37 +197,31 @@ export default function ProductShow({
               />
             )}
 
-            {/* Related Products Section */}
+            {/* Related Products / Complementary Pieces */}
             {relatedProducts.length > 0 && (
-              <RelatedProducts products={relatedProducts} />
+              <RHRelatedProducts products={relatedProducts} />
             )}
           </div>
-        </main>
+        </div>
 
-        <ZoomModal
+        {/* RH Fullscreen Editorial Lightbox */}
+        <RHZoomModal
           isOpen={isZoomed}
           onClose={() => setIsZoomed(false)}
           images={images}
           currentIndex={selectedImageIndex}
           setCurrentIndex={setSelectedImageIndex}
-        />
-
-        {/* Share Modal */}
-        <ShareModal
-          isOpen={isShareOpen}
-          onClose={() => setIsShareOpen(false)}
-          url={`/shop/products/${product.slug}`}
-          title={product.name}
-          description={product.short_description || undefined}
-          imageUrl={images[0]?.image_url}
+          productTitle={product.name}
         />
       </ShopLayout>
     </>
   );
 }
 
-// ==================== Breadcrumb & Header Controls ====================
-function Breadcrumb({ product }: { product: ApiProduct }) {
+// ============================================================================
+// 1. RH BREADCRUMB
+// ============================================================================
+function RHBreadcrumb({ product }: { product: ApiProduct }) {
   const handleBack = () => {
     if (typeof window !== 'undefined' && window.history.length > 1) {
       window.history.back();
@@ -289,533 +231,722 @@ function Breadcrumb({ product }: { product: ApiProduct }) {
   };
 
   return (
-    <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-      <nav className="flex flex-wrap items-center gap-2 text-xs font-medium text-neutral-500">
+    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200/60 pb-5">
+      <nav className="flex flex-wrap items-center gap-2 text-[10px] sm:text-[11px] font-light tracking-[0.25em] uppercase text-neutral-400">
         <Link
           href="/shop"
-          className="flex items-center gap-1 transition-colors hover:text-teal-700"
+          className="transition-colors hover:text-neutral-900"
         >
-          <Home size={13} className="text-neutral-400" />
-          <span>Home</span>
+          Home
         </Link>
         <span className="text-neutral-300">/</span>
         <Link
           href="/shop/products"
-          className="transition-colors hover:text-teal-700"
+          className="transition-colors hover:text-neutral-900"
         >
-          Products
+          Catalog
         </Link>
         {product.category && (
           <>
             <span className="text-neutral-300">/</span>
             <Link
               href={`/shop/products?filter[category]=${product.category.slug}`}
-              className="transition-colors hover:text-teal-700"
+              className="transition-colors hover:text-neutral-900"
             >
               {product.category.name}
             </Link>
           </>
         )}
         <span className="text-neutral-300">/</span>
-        <span className="max-w-[280px] truncate font-semibold text-neutral-900">
+        <span className="max-w-[320px] truncate font-normal text-neutral-800">
           {product.name}
         </span>
       </nav>
 
-      {/* Back Button on Top Right */}
       <button
         type="button"
         onClick={handleBack}
-        className="group inline-flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-200/90 bg-white px-4 py-2 text-xs font-semibold text-neutral-700 shadow-xs transition-all duration-200 hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-900 active:scale-95"
+        className="group inline-flex cursor-pointer items-center gap-2 text-[11px] font-light tracking-[0.2em] uppercase text-neutral-500 transition-colors hover:text-neutral-950"
       >
         <ArrowLeft
-          size={14}
-          className="text-neutral-500 transition-transform duration-200 group-hover:-translate-x-1 group-hover:text-neutral-900"
+          size={13}
+          className="transition-transform duration-200 group-hover:-translate-x-1"
         />
-        <span>Back</span>
+        <span>Return to Collection</span>
       </button>
     </div>
   );
 }
 
-// ==================== Image Gallery ====================
-interface ImageGalleryProps {
+// ============================================================================
+// 2. RH GALLERY (High-Res Showcase & Multi-Angle Thumbnails)
+// ============================================================================
+interface RHGalleryProps {
   images: ProductImage[];
   selectedIndex: number;
   setSelectedIndex: (i: number) => void;
   onZoom: () => void;
   product: ApiProduct;
-  isWishlisted: boolean;
-  onWishlist: () => void;
-  isTogglingWishlist: boolean;
 }
 
-function ImageGallery({
+function RHGallery({
   images,
   selectedIndex,
   setSelectedIndex,
   onZoom,
   product,
-  isWishlisted,
-  onWishlist,
-  isTogglingWishlist,
-}: ImageGalleryProps) {
+}: RHGalleryProps) {
   const hasImages = images && images.length > 0;
 
   return (
-    <div className="space-y-4 lg:sticky lg:top-28">
-      {/* Main Image Showcase Card */}
-      <div
-        className={`group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl border border-neutral-200/80 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md sm:aspect-[16/11] ${hasImages ? 'cursor-zoom-in' : ''}`}
-        onClick={hasImages ? onZoom : undefined}
-      >
-        {hasImages ? (
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={selectedIndex}
-              src={images[selectedIndex]?.image_url}
-              alt={images[selectedIndex]?.alt_text || product.name}
-              className="h-full w-full object-scale-down transition-transform duration-500 group-hover:scale-105"
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-            />
-          </AnimatePresence>
-        ) : (
-          <ProductImagePlaceholder
-            name={product.name}
-            sku={product.sku}
-            category={product.category?.name}
-            size="xl"
-          />
-        )}
-
-        {/* Top Action Overlay: Wishlist & Image Badge */}
-        <div className="pointer-events-none absolute top-4 right-4 left-4 flex items-center justify-between">
-          {hasImages ? (
-            <span className="pointer-events-auto rounded-full border border-neutral-100 bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-700 shadow-xs backdrop-blur-md">
-              {selectedIndex + 1} / {images.length}
-            </span>
-          ) : (
-            <span />
-          )}
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onWishlist();
-            }}
-            disabled={isTogglingWishlist}
-            className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-110 active:scale-95 ${
-              isWishlisted
-                ? 'bg-red-500 text-white'
-                : 'bg-white/90 text-neutral-600 hover:bg-white hover:text-red-500'
-            }`}
-            title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
-          >
-            <Heart size={18} className={isWishlisted ? 'fill-white' : ''} />
-          </button>
-        </div>
-
-        {/* Bottom Zoom Button Badge */}
-        {hasImages && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onZoom();
-            }}
-            className="absolute right-4 bottom-4 flex items-center gap-1.5 rounded-xl bg-neutral-900/80 px-3.5 py-2 text-xs font-medium text-white shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-neutral-900 active:scale-95"
-          >
-            <ZoomIn size={15} />
-            <span>Zoom</span>
-          </button>
-        )}
-
-        {/* Next / Prev Image Arrows */}
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedIndex(
-                  selectedIndex > 0 ? selectedIndex - 1 : images.length - 1,
-                );
-              }}
-              className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/90 p-3 text-neutral-800 opacity-0 shadow-md backdrop-blur-md transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-white active:scale-95"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedIndex(
-                  selectedIndex < images.length - 1 ? selectedIndex + 1 : 0,
-                );
-              }}
-              className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/90 p-3 text-neutral-800 opacity-0 shadow-md backdrop-blur-md transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-white active:scale-95"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </>
-        )}
-      </div>
-
-      {/* Thumbnails Carousel */}
+    <div className="flex flex-col-reverse gap-4 md:flex-row md:items-start md:gap-6">
+      {/* Left Vertical Thumbnail Strip (Desktop) */}
       {images.length > 1 && (
-        <div className="no-scrollbar flex gap-3 overflow-x-auto py-1">
+        <div className="no-scrollbar flex flex-row gap-3 overflow-x-auto md:w-24 md:flex-col md:overflow-visible">
           {images.map((img, idx) => (
             <button
               key={img.id || idx}
+              type="button"
               onClick={() => setSelectedIndex(idx)}
-              className={`relative flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 bg-white p-1.5 transition-all duration-200 ${
+              className={cn(
+                'group relative aspect-square w-20 flex-shrink-0 cursor-pointer overflow-hidden border bg-white p-2 transition-all duration-200 md:w-full',
                 idx === selectedIndex
-                  ? 'scale-102 border-teal-600 shadow-sm ring-2 ring-teal-600/20'
-                  : 'border-neutral-200/80 opacity-70 hover:border-neutral-400 hover:opacity-100'
-              }`}
+                  ? 'border-neutral-950 shadow-xs ring-1 ring-neutral-950'
+                  : 'border-neutral-200/80 opacity-70 hover:border-neutral-400 hover:opacity-100',
+              )}
             >
               <img
                 src={img.image_url}
                 alt=""
-                className="h-full w-full object-scale-down"
+                className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
+              <span className="absolute right-1 bottom-1 font-mono text-[9px] tracking-wider text-neutral-400">
+                0{idx + 1}
+              </span>
             </button>
           ))}
         </div>
       )}
+
+      {/* Main Large Exhibition Frame */}
+      <div className="relative flex-1">
+        <div
+          className={cn(
+            'group relative flex aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] xl:aspect-[16/12] w-full items-center justify-center overflow-hidden border border-neutral-200/90 bg-white p-6 sm:p-10 shadow-xs transition-all duration-300',
+            hasImages ? 'cursor-zoom-in' : '',
+          )}
+          onClick={hasImages ? onZoom : undefined}
+        >
+          {hasImages ? (
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={selectedIndex}
+                src={images[selectedIndex]?.image_url}
+                alt={images[selectedIndex]?.alt_text || product.name}
+                className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            </AnimatePresence>
+          ) : (
+            <ProductImagePlaceholder
+              name={product.name}
+              sku={product.sku}
+              category={product.category?.name}
+              size="xl"
+            />
+          )}
+
+          {/* Top Indicators: Image Counter & Provenance Badge */}
+          <div className="pointer-events-none absolute top-4 right-4 left-4 flex items-center justify-between">
+            <span className="inline-flex items-center gap-1.5 border border-neutral-200 bg-white/95 px-3 py-1 font-mono text-[10px] tracking-[0.2em] uppercase text-neutral-700 backdrop-blur-sm">
+              <Sparkles size={11} className="text-neutral-500" />
+              <span>
+                {product.is_featured
+                  ? 'Featured Product'
+                  : product.material || product.category?.name || 'Handcrafted Design'}
+              </span>
+            </span>
+
+            {hasImages && (
+              <span className="border border-neutral-200 bg-white/95 px-3 py-1 font-mono text-[10px] tracking-[0.2em] text-neutral-600 backdrop-blur-sm">
+                0{selectedIndex + 1} / 0{images.length}
+              </span>
+            )}
+          </div>
+
+          {/* Bottom Zoom Trigger */}
+          {hasImages && (
+            <div className="pointer-events-none absolute right-4 bottom-4 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onZoom();
+                }}
+                className="pointer-events-auto inline-flex items-center gap-2 border border-neutral-200 bg-white/95 px-3.5 py-1.5 text-[10px] font-light tracking-[0.25em] uppercase text-neutral-800 shadow-xs backdrop-blur-sm transition-all duration-200 hover:border-neutral-900 hover:bg-neutral-950 hover:text-white"
+              >
+                <Maximize2 size={12} />
+                <span>Expand View</span>
+              </button>
+            </div>
+          )}
+
+          {/* Slide Navigation Chevrons */}
+          {images.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedIndex(
+                    selectedIndex > 0 ? selectedIndex - 1 : images.length - 1,
+                  );
+                }}
+                className="absolute top-1/2 left-3 -translate-y-1/2 border border-neutral-200 bg-white/90 p-2.5 text-neutral-700 opacity-0 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover:opacity-100 hover:border-neutral-900 hover:bg-neutral-950 hover:text-white"
+                aria-label="Previous photograph"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedIndex(
+                    selectedIndex < images.length - 1 ? selectedIndex + 1 : 0,
+                  );
+                }}
+                className="absolute top-1/2 right-3 -translate-y-1/2 border border-neutral-200 bg-white/90 p-2.5 text-neutral-700 opacity-0 shadow-sm backdrop-blur-sm transition-all duration-200 group-hover:opacity-100 hover:border-neutral-900 hover:bg-neutral-950 hover:text-white"
+                aria-label="Next photograph"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Photographic Caption / Angle Indicator */}
+        {hasImages && images[selectedIndex]?.alt_text && (
+          <p className="mt-3 text-center font-mono text-[11px] tracking-wider text-neutral-400 uppercase">
+            {images[selectedIndex]?.alt_text}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
 
-// ==================== Product Info Summary (Right Column) ====================
-interface ProductInfoSummaryProps {
+// ============================================================================
+// 3. RH PRODUCT SUMMARY (Right Rail: Stately Serif Title & Concierge Hub)
+// ============================================================================
+interface RHProductSummaryProps {
   product: ApiProduct;
-  onShare: () => void;
-  isWishlisted: boolean;
-  onWishlist: () => void;
-  isTogglingWishlist: boolean;
 }
 
-function ProductInfoSummary({
-  product,
-  onShare,
-  isWishlisted,
-  onWishlist,
-  isTogglingWishlist,
-}: ProductInfoSummaryProps) {
+function RHProductSummary({ product }: RHProductSummaryProps) {
   const { siteSettings } = usePage<SharedData>().props;
   const whatsappNumber = siteSettings?.contact_whatsapp || '6281234567890';
-  const waText = `Hello Ronica Outdoor Furniture, I am interested in the product *${product.name}* (SKU: ${product.sku || '-'}). Please provide ordering information and full catalog.`;
+  const waText = `Hello Ronica / Hasibuan Design, I am inquiring about the piece *${product.name}* (Item #${product.sku || '-'}). Please share specification sheets, trade pricing, and production lead times.`;
   const waUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`;
 
+  const length = product.dimensions?.length ?? product.length;
+  const width = product.dimensions?.width ?? product.width;
+  const height = product.dimensions?.height ?? product.height;
+
+  // Dynamic Swatch Texture based on color/material
+  const getSwatchGradient = (color?: string | null, material?: string | null) => {
+    const text = `${color || ''} ${material || ''}`.toLowerCase();
+    if (text.includes('black') || text.includes('hitam') || text.includes('charcoal')) {
+      return 'radial-gradient(circle, #333333 20%, #111111 80%)';
+    }
+    if (text.includes('white') || text.includes('putih')) {
+      return 'radial-gradient(circle, #ffffff 20%, #e0e0e0 80%)';
+    }
+    if (text.includes('rattan') || text.includes('rotan')) {
+      return 'radial-gradient(circle, #ebd6be 20%, #cca984 80%)';
+    }
+    if (text.includes('walnut') || text.includes('dark brown') || text.includes('coklat')) {
+      return 'radial-gradient(circle, #6a4b35 20%, #3a2517 80%)';
+    }
+    return 'radial-gradient(circle, #e3ba8f 20%, #c49666 80%)';
+  };
+
   return (
-    <div className="flex flex-col space-y-6 rounded-3xl border border-neutral-200/70 bg-white p-6 shadow-xs sm:p-8">
-      {/* Header badges: Category, SKU & Availability */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 border-b border-neutral-100 pb-5">
-        <div className="flex flex-wrap items-center gap-2">
-          {product.category ? (
-            <Link
-              href={`/shop/products?filter[category]=${product.category.slug}`}
-              className="inline-flex items-center gap-1.5 rounded-full border border-teal-200/80 bg-teal-50 px-3.5 py-1 text-xs font-semibold tracking-wider text-teal-800 uppercase transition-colors hover:bg-teal-100"
-            >
-              {product.category.name}
-            </Link>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-3.5 py-1 text-xs font-medium text-neutral-600">
-              Outdoor Furniture
-            </span>
-          )}
+    <div className="flex flex-col space-y-6 border border-neutral-200/90 bg-white p-7 sm:p-9 shadow-xs">
+      {/* 1. Collection Header & Model Identity */}
+      <div className="space-y-2 border-b border-neutral-200/70 pb-5">
+        <div className="flex items-center justify-between text-[10px] font-light tracking-[0.3em] uppercase text-neutral-400">
+          <span>
+            {product.category?.name || 'Exclusive Living Collection'}
+          </span>
+          {product.sku && <span>ITEM # {product.sku}</span>}
         </div>
 
-        {product.sku && (
-          <span className="rounded-md bg-neutral-100/90 px-2.5 py-1 font-mono text-xs font-medium tracking-wider text-neutral-500">
-            SKU: {product.sku}
-          </span>
-        )}
-      </div>
-
-      {/* Product Title */}
-      <div>
-        <h1 className="font-display text-2xl leading-tight font-bold tracking-tight text-neutral-900 sm:text-3xl lg:text-4xl">
+        {/* Stately Serif Title */}
+        <h1 className="font-serif text-3xl sm:text-4xl lg:text-[38px] font-light tracking-[0.04em] uppercase text-neutral-900 leading-[1.14]">
           {product.name}
         </h1>
-        <p className="mt-2 text-xs font-medium text-neutral-400">
-          Premium Quality Outdoor &amp; Teak Furniture
+
+        <p className="text-[11px] font-light tracking-[0.2em] uppercase text-neutral-500">
+          {product.material
+            ? `Handcrafted • ${product.material}`
+            : product.category?.name
+              ? `Handcrafted • ${product.category.name}`
+              : 'Handcrafted Quality & Provenance'}
         </p>
+
+        {/* In Stock & Ready to Ship Banner */}
+        <div className="mt-3 flex items-center gap-2 pt-1">
+          <span className="relative flex h-2 w-2">
+            <span
+              className={cn(
+                'absolute inline-flex h-full w-full animate-ping rounded-full opacity-75',
+                product.is_in_stock === false ? 'bg-amber-400' : 'bg-emerald-400',
+              )}
+            />
+            <span
+              className={cn(
+                'relative inline-flex h-2 w-2 rounded-full',
+                product.is_in_stock === false ? 'bg-amber-600' : 'bg-emerald-600',
+              )}
+            />
+          </span>
+          <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-neutral-800">
+            {product.is_in_stock === false
+              ? 'Out of Stock • Made to Order Inquiries Welcome'
+              : 'In Stock & Ready for Immediate Delivery'}
+          </span>
+        </div>
       </div>
 
-      {/* Short Description */}
+      {/* 2. Short Narrative Description */}
       {product.short_description && (
-        <p className="text-sm leading-relaxed font-normal text-neutral-600">
+        <p className="text-xs sm:text-sm leading-relaxed font-light text-neutral-600">
           {product.short_description}
         </p>
       )}
 
-      {/* Quick Material & Color Chips */}
-      {(product.material || product.color) && (
-        <div className="flex flex-wrap gap-2 pt-1">
-          {product.material && (
-            <div className="inline-flex items-center gap-2 rounded-xl border border-neutral-200/70 bg-neutral-50/80 px-3.5 py-2 text-xs font-medium text-neutral-700">
-              <span className="text-[10px] tracking-wider text-neutral-400 uppercase">
-                Material
-              </span>
-              <span className="font-semibold text-neutral-900">
-                {product.material}
-              </span>
-            </div>
-          )}
-          {product.color && (
-            <div className="inline-flex items-center gap-2 rounded-xl border border-neutral-200/70 bg-neutral-50/80 px-3.5 py-2 text-xs font-medium text-neutral-700">
-              <span className="text-[10px] tracking-wider text-neutral-400 uppercase">
-                Color
-              </span>
-              <span className="font-semibold text-neutral-900">
-                {product.color}
-              </span>
-            </div>
-          )}
+      {/* 3. Finish / Material Selector Card */}
+      <div className="space-y-2 border-t border-neutral-200/60 pt-4">
+        <div className="flex items-center justify-between text-[11px] tracking-[0.15em] uppercase">
+          <span className="font-light text-neutral-500">Finish / Texture:</span>
+          <span className="font-medium text-neutral-900">
+            {product.color || 'Natural Finish'}
+          </span>
         </div>
-      )}
 
-      {/* Linked Collection Bundle Info Link */}
-      {product.linked_products && product.linked_products.length > 0 && (
-        <a
-          href="#collection-items"
-          className="flex items-center justify-between rounded-2xl border border-teal-200 bg-teal-50/80 p-3.5 text-xs font-medium text-teal-900 transition-colors hover:bg-teal-100/80"
-        >
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-teal-600 text-white">
-              <Layers size={14} />
+        <div className="flex items-center gap-3 pt-1">
+          <div className="group relative flex w-full items-center gap-3 border border-neutral-950 bg-neutral-50/70 p-3 transition-all">
+            {/* Dynamic Swatch Preview */}
+            <div
+              className="h-8 w-8 shrink-0 border border-neutral-300 bg-cover bg-center shadow-2xs"
+              style={{
+                backgroundImage: getSwatchGradient(product.color, product.material),
+              }}
+            />
+            <div className="flex-1 text-left">
+              <span className="block text-[11px] font-medium tracking-wider text-neutral-900 uppercase">
+                {product.color || 'Natural Finish'}
+              </span>
+              <span className="block text-[10px] font-light text-neutral-500">
+                {product.material || 'Solid Architectural Timber'}
+              </span>
+            </div>
+            <Check size={14} className="text-neutral-950 shrink-0" />
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Dimensions Selector Card */}
+      <div className="space-y-2 border-t border-neutral-200/60 pt-4">
+        <div className="flex items-center justify-between text-[11px] tracking-[0.15em] uppercase">
+          <span className="font-light text-neutral-500">Scale &amp; Proportions:</span>
+          <span className="font-medium text-neutral-900 font-mono text-[11px]">
+            {length && width && height
+              ? `${length}L × ${width}W × ${height}H cm`
+              : 'Standard Scale'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 pt-1 text-center font-mono text-[11px]">
+          <div className="border border-neutral-200 bg-neutral-50/50 p-2.5">
+            <span className="block text-[9px] tracking-wider text-neutral-400 uppercase">
+              Length (P)
             </span>
-            <span>
-              This collection includes{' '}
-              <strong>
-                {product.linked_products.length} integrated products
-              </strong>
+            <span className="font-semibold text-neutral-900">
+              {length ? `${length} cm` : '-'}
             </span>
           </div>
-          <span className="font-semibold text-teal-700 underline">
-            View All ↓
-          </span>
-        </a>
-      )}
+          <div className="border border-neutral-200 bg-neutral-50/50 p-2.5">
+            <span className="block text-[9px] tracking-wider text-neutral-400 uppercase">
+              Width (L)
+            </span>
+            <span className="font-semibold text-neutral-900">
+              {width ? `${width} cm` : '-'}
+            </span>
+          </div>
+          <div className="border border-neutral-200 bg-neutral-50/50 p-2.5">
+            <span className="block text-[9px] tracking-wider text-neutral-400 uppercase">
+              Height (T)
+            </span>
+            <span className="font-semibold text-neutral-900">
+              {height ? `${height} cm` : '-'}
+            </span>
+          </div>
+        </div>
+      </div>
 
-      {/* Primary Action Button: WhatsApp Inquiry */}
-      <div className="space-y-3 pt-2">
+      {/* 5. Signature Action Button & Concierge */}
+      <div className="space-y-3 border-t border-neutral-200/60 pt-5">
         <a
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-teal-700 px-6 py-4 text-base font-semibold text-white shadow-md transition-all duration-300 hover:bg-teal-800 hover:shadow-lg active:scale-[0.99]"
+          className="group flex w-full items-center justify-center gap-3 border border-neutral-950 bg-neutral-950 py-4 px-6 text-center text-xs font-light tracking-[0.25em] uppercase text-white transition-all duration-300 hover:bg-neutral-800 active:scale-[0.99]"
         >
-          <MessageCircle className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
-          <span>Consultation &amp; Order via WhatsApp</span>
+          <MessageCircle size={15} />
+          <span>Inquire with Design Concierge</span>
         </a>
+
+        <p className="text-center text-[10px] leading-relaxed text-neutral-400">
+          Our interior consultants are available for custom dimensions,
+          commercial hospitality quotes, and worldwide freight schedules.
+        </p>
       </div>
     </div>
   );
 }
 
-// ==================== Full-Width Product Details & Tabs Section ====================
-function ProductDetailTabs({ product }: { product: ApiProduct }) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'specs'>('overview');
+// ============================================================================
+// 4. RH EDITORIAL ACCORDIONS (Details, Dimensions, Care, Delivery)
+// ============================================================================
+function RHEditorialAccordions({ product }: { product: ApiProduct }) {
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    details: true,
+    dimensions: true,
+    care: false,
+    delivery: false,
+  });
+
+  const toggle = (key: string) => {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const length = product.dimensions?.length ?? product.length;
   const width = product.dimensions?.width ?? product.width;
   const height = product.dimensions?.height ?? product.height;
 
   const specList: { label: string; value: string }[] = [];
-
-  if (product.weight) {
-    specList.push({ label: 'Total Weight', value: `${product.weight} kg` });
-  }
-  if (length) {
-    specList.push({ label: 'Length', value: `${length} cm` });
-  }
-  if (width) {
-    specList.push({ label: 'Width', value: `${width} cm` });
-  }
-  if (height) {
-    specList.push({ label: 'Height', value: `${height} cm` });
-  }
-  if (product.material) {
-    specList.push({ label: 'Main Material', value: product.material });
-  }
-  if (product.color) {
-    specList.push({ label: 'Color / Finish', value: product.color });
-  }
   if (product.sku) {
-    specList.push({ label: 'Product Code (SKU)', value: product.sku });
+    specList.push({ label: 'Item Number (SKU)', value: product.sku });
   }
+
+  // Additional Specifications from Form
   if (product.specifications) {
     if (Array.isArray(product.specifications)) {
       product.specifications.forEach((item: any) => {
         if (item && typeof item === 'object' && item.key && item.value) {
-          const k = String(item.key);
-          const v = String(item.value);
-          if (
-            !specList.some((s) => s.label.toLowerCase() === k.toLowerCase())
-          ) {
-            specList.push({ label: k, value: v });
-          }
+          specList.push({
+            label: String(item.key),
+            value: String(item.value),
+          });
         }
       });
     } else if (typeof product.specifications === 'object') {
-      Object.entries(product.specifications).forEach(([key, value]) => {
-        if (value) {
-          const v =
-            typeof value === 'object' && value !== null
-              ? String((value as any).value || '')
-              : String(value);
-          if (
-            v &&
-            !specList.some((s) => s.label.toLowerCase() === key.toLowerCase())
-          ) {
-            specList.push({ label: key, value: v });
-          }
+      Object.entries(product.specifications).forEach(([k, v]) => {
+        if (v) {
+          specList.push({
+            label: k,
+            value: typeof v === 'object' ? String((v as any).value || '') : String(v),
+          });
         }
       });
     }
   }
 
+  // Fallbacks if not already covered in specifications
+  const hasMaterial = specList.some((s) => /material|kayu|bahan/i.test(s.label));
+  if (!hasMaterial && product.material) {
+    specList.push({ label: 'Primary Material', value: product.material });
+  }
+
+  const hasColor = specList.some((s) => /color|warna|finish/i.test(s.label));
+  if (!hasColor && product.color) {
+    specList.push({ label: 'Finish / Color', value: product.color });
+  }
+
+
+
   return (
-    <div className="overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-xs">
-      {/* Tab Navigation Header */}
-      <div className="flex flex-wrap border-b border-neutral-200/80 bg-neutral-50/70 px-4 pt-3 sm:px-8">
+    <div className="space-y-0 divide-y divide-neutral-200/80 border-b border-neutral-200/80">
+      {/* 01. DETAILS & CRAFTSMANSHIP */}
+      <div className="py-6 sm:py-8">
         <button
-          onClick={() => setActiveTab('overview')}
-          className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${
-            activeTab === 'overview'
-              ? 'rounded-t-xl border-teal-600 bg-white text-teal-800 shadow-2xs'
-              : 'border-transparent text-neutral-500 hover:text-neutral-800'
-          }`}
+          type="button"
+          onClick={() => toggle('details')}
+          className="flex w-full cursor-pointer items-center justify-between text-left"
         >
-          <Info size={16} />
-          <span>Description &amp; Benefits</span>
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs tracking-widest text-neutral-400">
+              01
+            </span>
+            <h3 className="font-serif text-xl sm:text-2xl font-light tracking-[0.06em] uppercase text-neutral-900">
+              Details &amp; Craftsmanship
+            </h3>
+          </div>
+          <span className="border border-neutral-200 p-1 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900">
+            {openSections.details ? <Minus size={14} /> : <Plus size={14} />}
+          </span>
         </button>
 
-        <button
-          onClick={() => setActiveTab('specs')}
-          className={`flex items-center gap-2 border-b-2 px-5 py-4 text-sm font-semibold transition-all ${
-            activeTab === 'specs'
-              ? 'rounded-t-xl border-teal-600 bg-white text-teal-800 shadow-2xs'
-              : 'border-transparent text-neutral-500 hover:text-neutral-800'
-          }`}
-        >
-          <Ruler size={16} />
-          <span>Specification &amp; Dimension</span>
-        </button>
+        <AnimatePresence>
+          {openSections.details && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="pt-6 sm:pt-8">
+                <div className="max-w-4xl space-y-4 text-xs sm:text-sm leading-relaxed font-light text-neutral-700">
+                  {product.description ? (
+                    <div
+                      className="prose prose-neutral max-w-none whitespace-pre-line text-neutral-700"
+                      dangerouslySetInnerHTML={{
+                        __html: product.description,
+                      }}
+                    />
+                  ) : (
+                    <p>
+                      {product.short_description ||
+                        `Meticulously handcrafted from premium ${product.material || 'timber'}. Designed with an enduring architectural presence, every contour is finished by master artisans using time-honored techniques.`}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Tab Body Content */}
-      <div className="p-6 sm:p-10">
-        {/* Tab 1: Deskripsi & Keunggulan */}
-        {activeTab === 'overview' && (
-          <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-8"
-          >
-            {/* Rich HTML Description */}
-            {product.description ? (
-              <div
-                className="prose prose-neutral max-w-none text-sm leading-relaxed whitespace-pre-line text-neutral-700 sm:text-base"
-                dangerouslySetInnerHTML={{
-                  __html: product.description,
-                }}
-              />
-            ) : (
-              <p className="leading-relaxed text-neutral-600">
-                {product.short_description ||
-                  `The ${product.name} is crafted from export-grade solid teak wood with precision joinery and high weather resistance.`}
-              </p>
-            )}
-          </motion.div>
-        )}
+      {/* 02. DIMENSIONS & SPECIFICATIONS */}
+      <div className="py-6 sm:py-8">
+        <button
+          type="button"
+          onClick={() => toggle('dimensions')}
+          className="flex w-full cursor-pointer items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs tracking-widest text-neutral-400">
+              02
+            </span>
+            <h3 className="font-serif text-xl sm:text-2xl font-light tracking-[0.06em] uppercase text-neutral-900">
+              Dimensions &amp; Specifications
+            </h3>
+          </div>
+          <span className="border border-neutral-200 p-1 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900">
+            {openSections.dimensions ? <Minus size={14} /> : <Plus size={14} />}
+          </span>
+        </button>
 
-        {/* Tab 2: Spesifikasi & Dimensi */}
-        {activeTab === 'specs' && (
-          <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-8"
-          >
-            {/* Dimension Summary Cards */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                <span className="block text-[10px] font-semibold text-neutral-400 uppercase">
-                  Length
-                </span>
-                <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
-                  {length ? `${length} cm` : '-'}
-                </span>
-              </div>
-              <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                <span className="block text-[10px] font-semibold text-neutral-400 uppercase">
-                  Width
-                </span>
-                <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
-                  {width ? `${width} cm` : '-'}
-                </span>
-              </div>
-              <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                <span className="block text-[10px] font-semibold text-neutral-400 uppercase">
-                  Height
-                </span>
-                <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
-                  {height ? `${height} cm` : '-'}
-                </span>
-              </div>
-              <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 text-center">
-                <span className="block text-[10px] font-semibold text-neutral-400 uppercase">
-                  Weight
-                </span>
-                <span className="mt-1 block font-display text-xl font-bold text-neutral-900">
-                  {product.weight ? `${product.weight} kg` : '-'}
-                </span>
-              </div>
-            </div>
+        <AnimatePresence>
+          {openSections.dimensions && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-6 pt-6 sm:pt-8">
+                {/* 4-Item Dimension Header Grid */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 font-mono text-xs">
+                  <div className="border border-neutral-200 bg-white p-4 text-center">
+                    <span className="block text-[10px] tracking-widest text-neutral-400 uppercase">
+                      Length (Panjang)
+                    </span>
+                    <span className="mt-1 block font-serif text-xl font-normal text-neutral-900">
+                      {length ? `${length} cm` : '-'}
+                    </span>
+                  </div>
+                  <div className="border border-neutral-200 bg-white p-4 text-center">
+                    <span className="block text-[10px] tracking-widest text-neutral-400 uppercase">
+                      Width (Lebar)
+                    </span>
+                    <span className="mt-1 block font-serif text-xl font-normal text-neutral-900">
+                      {width ? `${width} cm` : '-'}
+                    </span>
+                  </div>
+                  <div className="border border-neutral-200 bg-white p-4 text-center">
+                    <span className="block text-[10px] tracking-widest text-neutral-400 uppercase">
+                      Height (Tinggi)
+                    </span>
+                    <span className="mt-1 block font-serif text-xl font-normal text-neutral-900">
+                      {height ? `${height} cm` : '-'}
+                    </span>
+                  </div>
+                  <div className="border border-neutral-200 bg-white p-4 text-center">
+                    <span className="block text-[10px] tracking-widest text-neutral-400 uppercase">
+                      Net Weight (Berat)
+                    </span>
+                    <span className="mt-1 block font-serif text-xl font-normal text-neutral-900">
+                      {product.weight ? `${product.weight} kg` : '-'}
+                    </span>
+                  </div>
+                </div>
 
-            {/* Complete Specifications Grid */}
-            {specList.length > 0 ? (
-              <div className="overflow-hidden rounded-2xl border border-neutral-200/80 shadow-2xs">
-                <table className="w-full text-left text-sm">
-                  <tbody className="divide-y divide-neutral-200/70">
-                    {specList.map((spec, idx) => (
-                      <tr
-                        key={idx}
-                        className={
-                          idx % 2 === 0 ? 'bg-white' : 'bg-neutral-50/50'
-                        }
-                      >
-                        <td className="w-1/3 border-r border-neutral-200/70 px-5 py-3.5 font-medium text-neutral-600">
-                          {spec.label}
-                        </td>
-                        <td className="px-5 py-3.5 font-semibold text-neutral-900">
-                          {spec.value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {/* Complete Specifications Table */}
+                {specList.length > 0 && (
+                  <div className="overflow-hidden border border-neutral-200/80 bg-white">
+                    <table className="w-full text-left text-xs">
+                      <tbody className="divide-y divide-neutral-200/70">
+                        {specList.map((spec, idx) => (
+                          <tr
+                            key={idx}
+                            className={
+                              idx % 2 === 0 ? 'bg-white' : 'bg-neutral-50/40'
+                            }
+                          >
+                            <td className="w-1/3 border-r border-neutral-200/70 px-5 py-3 font-light tracking-wide text-neutral-500 uppercase">
+                              {spec.label}
+                            </td>
+                            <td className="px-5 py-3 font-medium text-neutral-900">
+                              {spec.value}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
-            ) : (
-              <p className="text-sm text-neutral-500">
-                Detailed specifications for this product are available upon
-                consultation.
-              </p>
-            )}
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* 03. CARE & ENDURING BEAUTY */}
+      <div className="py-6 sm:py-8">
+        <button
+          type="button"
+          onClick={() => toggle('care')}
+          className="flex w-full cursor-pointer items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs tracking-widest text-neutral-400">
+              03
+            </span>
+            <h3 className="font-serif text-xl sm:text-2xl font-light tracking-[0.06em] uppercase text-neutral-900">
+              Care &amp; Enduring Maintenance
+            </h3>
+          </div>
+          <span className="border border-neutral-200 p-1 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900">
+            {openSections.care ? <Minus size={14} /> : <Plus size={14} />}
+          </span>
+        </button>
+
+        <AnimatePresence>
+          {openSections.care && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-1 gap-6 pt-6 sm:pt-8 md:grid-cols-3 text-xs leading-relaxed font-light text-neutral-600">
+                <div className="border border-neutral-200/80 bg-white p-5">
+                  <h4 className="font-semibold tracking-wider text-neutral-900 uppercase">
+                    Daily Dusting &amp; Wipe
+                  </h4>
+                  <p className="mt-2 text-neutral-500">
+                    Gently wipe along the grain with a clean, lint-free microfiber
+                    cloth. Avoid harsh abrasive cleaners or petroleum solvents.
+                  </p>
+                </div>
+                <div className="border border-neutral-200/80 bg-white p-5">
+                  <h4 className="font-semibold tracking-wider text-neutral-900 uppercase">
+                    Material Preservation
+                  </h4>
+                  <p className="mt-2 text-neutral-500">
+                    Crafted with {product.material || 'premium materials'}. Over time,
+                    natural materials gracefully deepen in character, embodying authentic
+                    organic warmth.
+                  </p>
+                </div>
+                <div className="border border-neutral-200/80 bg-white p-5">
+                  <h4 className="font-semibold tracking-wider text-neutral-900 uppercase">
+                    Climate Conditioning
+                  </h4>
+                  <p className="mt-2 text-neutral-500">
+                    Position away from direct continuous heating radiators to
+                    maintain optimal equilibrium moisture content throughout the
+                    year.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* 04. WHITE GLOVE DELIVERY & PACKAGING */}
+      <div className="py-6 sm:py-8">
+        <button
+          type="button"
+          onClick={() => toggle('delivery')}
+          className="flex w-full cursor-pointer items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs tracking-widest text-neutral-400">
+              04
+            </span>
+            <h3 className="font-serif text-xl sm:text-2xl font-light tracking-[0.06em] uppercase text-neutral-900">
+              Delivery &amp; Crated Packaging
+            </h3>
+          </div>
+          <span className="border border-neutral-200 p-1 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900">
+            {openSections.delivery ? <Minus size={14} /> : <Plus size={14} />}
+          </span>
+        </button>
+
+        <AnimatePresence>
+          {openSections.delivery && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="pt-6 sm:pt-8 space-y-4 text-xs leading-relaxed font-light text-neutral-600">
+                <div className="flex items-start gap-3">
+                  <Truck size={18} className="mt-0.5 text-neutral-900 shrink-0" />
+                  <div>
+                    <h4 className="font-semibold tracking-wider text-neutral-900 uppercase">
+                      Fully Assembled Crated Freight Delivery
+                    </h4>
+                    <p className="mt-1 text-neutral-500">
+                      Shipped in custom shock-absorbing export wooden crates to safeguard corners and surfaces during transit. Arrives fully assembled and ready for placement.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 }
 
-// ==================== Collection / Included Products Section ====================
-function CollectionBundleSection({
+// ============================================================================
+// 5. RH INTEGRATED COLLECTION BUNDLE
+// ============================================================================
+function RHCollectionBundleSection({
   linkedProducts,
   collectionName,
 }: {
@@ -825,30 +956,18 @@ function CollectionBundleSection({
   if (!linkedProducts || linkedProducts.length === 0) return null;
 
   return (
-    <section
-      id="collection-items"
-      className="mb-16 rounded-3xl border border-teal-200/80 bg-gradient-to-br from-teal-50/40 via-white to-sand-50/50 p-6 shadow-sm sm:p-10"
-    >
-      <div className="mb-8 flex flex-col justify-between gap-4 border-b border-teal-100 pb-5 sm:flex-row sm:items-end">
-        <div>
-          <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-teal-100/70 px-3.5 py-1 text-xs font-semibold tracking-wider text-teal-800 uppercase">
-            <Layers size={14} />
-            <span>
-              Integrated Collection &bull; {linkedProducts.length} Items
-            </span>
-          </div>
-          <h2 className="font-serif text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">
-            Products in This Collection
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm text-neutral-600">
-            The{' '}
-            <span className="font-semibold text-neutral-900">
-              {collectionName}
-            </span>{' '}
-            collection consists of the following products. Click on any product
-            to view its detailed specifications and full gallery.
-          </p>
-        </div>
+    <section id="collection-items" className="mb-20 border-t border-neutral-200/80 pt-16">
+      <div className="mb-10 text-center max-w-2xl mx-auto space-y-2">
+        <span className="text-[10px] font-light tracking-[0.35em] uppercase text-neutral-400">
+          The Curated Suite
+        </span>
+        <h2 className="font-serif text-2xl sm:text-3xl font-light tracking-[0.06em] uppercase text-neutral-900">
+          Pieces in the {collectionName}
+        </h2>
+        <p className="text-xs font-light text-neutral-500">
+          Each piece shares harmonious architectural profiles, proportioned to
+          create a cohesive interior dialogue.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -859,18 +978,17 @@ function CollectionBundleSection({
           return (
             <div
               key={item.id || idx}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-teal-400 hover:shadow-xl"
+              className="group flex flex-col border border-neutral-200/90 bg-white transition-all duration-300 hover:border-neutral-950"
             >
-              {/* Product Thumbnail */}
               <Link
                 href={`/shop/products/${item.slug}`}
-                className="relative flex aspect-4/3 w-full items-center justify-center overflow-hidden bg-neutral-50 p-3"
+                className="relative aspect-4/3 w-full overflow-hidden bg-neutral-50 p-4"
               >
                 {imgUrl ? (
                   <img
                     src={imgUrl}
                     alt={item.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <ProductImagePlaceholder
@@ -880,30 +998,21 @@ function CollectionBundleSection({
                     size="sm"
                   />
                 )}
-                {item.category && (
-                  <span className="absolute top-3 left-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[11px] font-medium text-white shadow-xs backdrop-blur-sm">
-                    {item.category.name}
-                  </span>
-                )}
-                <span className="absolute right-3 bottom-3 flex h-7 w-7 items-center justify-center rounded-full bg-teal-600 text-white opacity-0 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:opacity-100">
-                  <ArrowRight size={14} />
-                </span>
               </Link>
 
-              {/* Product Info */}
-              <div className="flex flex-1 flex-col justify-between p-5">
+              <div className="p-5 flex flex-1 flex-col justify-between">
                 <div>
-                  <p className="font-mono text-[11px] tracking-wider text-neutral-400 uppercase">
-                    SKU: {item.sku || '-'}
-                  </p>
+                  <span className="font-mono text-[9px] tracking-wider text-neutral-400 uppercase">
+                    ITEM #{item.sku || '-'}
+                  </span>
                   <Link
                     href={`/shop/products/${item.slug}`}
-                    className="mt-1 line-clamp-2 block font-serif text-base font-bold text-neutral-900 transition-colors hover:text-teal-600"
+                    className="mt-1 block font-serif text-base font-normal uppercase tracking-wide text-neutral-900 transition-colors hover:text-neutral-600"
                   >
                     {item.name}
                   </Link>
                   {item.material && (
-                    <p className="mt-1 line-clamp-1 text-xs text-neutral-500">
+                    <p className="mt-1 text-[11px] font-light text-neutral-500">
                       {item.material}
                     </p>
                   )}
@@ -912,13 +1021,10 @@ function CollectionBundleSection({
                 <div className="mt-4 border-t border-neutral-100 pt-3">
                   <Link
                     href={`/shop/products/${item.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 group-hover:underline hover:text-teal-900"
+                    className="inline-flex items-center gap-1 text-[10px] font-light tracking-[0.2em] uppercase text-neutral-900 hover:underline"
                   >
-                    <span>View Product Details</span>
-                    <ArrowRight
-                      size={13}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
+                    <span>View Specifications</span>
+                    <ArrowRight size={11} />
                   </Link>
                 </div>
               </div>
@@ -930,20 +1036,25 @@ function CollectionBundleSection({
   );
 }
 
-// ==================== Related Products ====================
-function RelatedProducts({ products }: { products: ApiProduct[] }) {
+// ============================================================================
+// 6. RH RELATED PRODUCTS (Companion Furniture)
+// ============================================================================
+function RHRelatedProducts({ products }: { products: ApiProduct[] }) {
   return (
-    <section className="mb-14">
-      <div className="mb-8 flex items-center justify-between border-b border-neutral-200/80 pb-4">
-        <div>
-          <h2 className="font-display text-2xl font-bold tracking-tight text-neutral-900">
-            Related Products
-          </h2>
-          <p className="mt-1 text-xs text-neutral-500">
-            Complementary product selection that matches your home.
-          </p>
-        </div>
+    <section className="mb-20 border-t border-neutral-200/80 pt-16">
+      <div className="mb-10 text-center max-w-2xl mx-auto space-y-2">
+        <span className="text-[10px] font-light tracking-[0.35em] uppercase text-neutral-400">
+          Curated Harmonies
+        </span>
+        <h2 className="font-serif text-2xl sm:text-3xl font-light tracking-[0.06em] uppercase text-neutral-900">
+          Complementary Pieces
+        </h2>
+        <p className="text-xs font-light text-neutral-500">
+          Discover architectural pairings designed to enrich your space with
+          enduring teak craftsmanship.
+        </p>
       </div>
+
       <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
@@ -953,8 +1064,10 @@ function RelatedProducts({ products }: { products: ApiProduct[] }) {
   );
 }
 
-// ==================== Customer Reviews ====================
-function CustomerReviews({
+// ============================================================================
+// 7. RH CUSTOMER REVIEWS (Editorial Testimonials)
+// ============================================================================
+function RHCustomerReviews({
   reviews,
   averageRating,
   reviewCount,
@@ -992,107 +1105,96 @@ function CustomerReviews({
   });
 
   return (
-    <section className="mb-16 rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-xs sm:p-10">
-      <h2 className="mb-8 font-display text-2xl font-bold tracking-tight text-neutral-900">
-        Customer Reviews
-      </h2>
-      <div className="grid gap-8 md:grid-cols-3">
-        {/* Rating Summary Card */}
-        <div className="rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-6 text-center">
-          <div className="mb-4">
-            <div className="font-display text-5xl font-bold text-neutral-900">
-              {Number(averageRating || 0).toFixed(1)}
-            </div>
-            <div className="mt-2 flex justify-center gap-1">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  size={18}
-                  className={
-                    s <= Math.round(averageRating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-neutral-200'
-                  }
-                />
-              ))}
-            </div>
-            <p className="mt-2 text-xs font-medium text-neutral-500">
-              {reviewCount} verified reviews
-            </p>
-          </div>
+    <section className="mb-20 border-t border-neutral-200/80 pt-16">
+      <div className="mb-10 text-center max-w-2xl mx-auto space-y-2">
+        <span className="text-[10px] font-light tracking-[0.35em] uppercase text-neutral-400">
+          Patron Experiences
+        </span>
+        <h2 className="font-serif text-2xl sm:text-3xl font-light tracking-[0.06em] uppercase text-neutral-900">
+          Client Reflections
+        </h2>
+      </div>
 
-          <div className="space-y-2 border-t border-neutral-200/60 pt-4">
-            {ratingCounts.map(({ rating, count, percentage }) => (
-              <div key={rating} className="flex items-center gap-2 text-xs">
-                <span className="w-3 font-medium text-neutral-600">
+      <div className="grid gap-10 md:grid-cols-3">
+        {/* Rating Summary Column */}
+        <div className="border border-neutral-200/90 bg-white p-6 sm:p-8 text-center space-y-4">
+          <span className="font-serif text-5xl font-light text-neutral-900">
+            {averageRating ? averageRating.toFixed(1) : '5.0'}
+          </span>
+          <div className="flex justify-center gap-1">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star
+                key={s}
+                size={16}
+                className={
+                  s <= Math.round(averageRating || 5)
+                    ? 'fill-neutral-950 text-neutral-950'
+                    : 'text-neutral-200'
+                }
+              />
+            ))}
+          </div>
+          <p className="text-[11px] font-light tracking-widest text-neutral-400 uppercase">
+            Based on {reviewCount} reflections
+          </p>
+
+          <div className="mt-6 space-y-2 text-xs">
+            {ratingCounts.map(({ rating, percentage, count }) => (
+              <div key={rating} className="flex items-center gap-2">
+                <span className="w-4 font-mono text-[10px] text-neutral-400">
                   {rating}
                 </span>
-                <Star size={12} className="fill-amber-400 text-amber-400" />
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-200/70">
+                <div className="h-1 flex-1 bg-neutral-100 overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-amber-400"
+                    className="h-full bg-neutral-950"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
-                <span className="w-6 text-right font-mono text-neutral-500">
+                <span className="w-5 text-right font-mono text-[10px] text-neutral-400">
                   {count}
                 </span>
               </div>
             ))}
           </div>
 
-          <ReviewForm productId={productId} existingReview={userReview} />
+          <RHReviewForm productId={productId} existingReview={userReview} />
         </div>
 
         {/* Reviews List */}
-        <div className="space-y-6 md:col-span-2">
-          {reviews.slice(0, 5).map((review) => (
+        <div className="space-y-4 md:col-span-2">
+          {reviews.map((rev) => (
             <div
-              key={review.id}
-              className="border-b border-neutral-100 pb-6 last:border-0"
+              key={rev.id}
+              className="border border-neutral-200/80 bg-white p-6 space-y-3"
             >
-              <div className="mb-3 flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 text-sm font-semibold text-teal-800">
-                    {review.user?.name?.charAt(0).toUpperCase() || 'P'}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-neutral-900">
-                      {review.user?.name || 'Customer'}
-                    </p>
-                    <div className="mt-0.5 flex gap-0.5">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star
-                          key={s}
-                          size={13}
-                          className={
-                            s <= review.rating
-                              ? 'fill-amber-400 text-amber-400'
-                              : 'text-neutral-200'
-                          }
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <span className="text-xs text-neutral-400">
-                  {new Date(review.created_at).toLocaleDateString('en-US', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
+              <div className="flex items-center justify-between">
+                <span className="font-serif text-base font-normal uppercase text-neutral-900">
+                  {rev.user?.name || 'Verified Patron'}
                 </span>
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      size={13}
+                      className={
+                        s <= rev.rating
+                          ? 'fill-neutral-950 text-neutral-950'
+                          : 'text-neutral-200'
+                      }
+                    />
+                  ))}
+                </div>
               </div>
-              {review.title && (
-                <p className="mb-1 text-sm font-semibold text-neutral-900">
-                  {review.title}
-                </p>
-              )}
-              {review.comment && (
-                <p className="text-sm leading-relaxed text-neutral-600">
-                  {review.comment}
-                </p>
-              )}
+              <p className="text-xs sm:text-sm font-light leading-relaxed text-neutral-700">
+                &ldquo;{rev.comment}&rdquo;
+              </p>
+              <span className="block font-mono text-[10px] text-neutral-400">
+                {new Date(rev.created_at).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
             </div>
           ))}
         </div>
@@ -1101,73 +1203,10 @@ function CustomerReviews({
   );
 }
 
-// ==================== Zoom Modal ====================
-interface ZoomModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  images: ProductImage[];
-  currentIndex: number;
-  setCurrentIndex: (i: number) => void;
-}
-
-function ZoomModal({
-  isOpen,
-  onClose,
-  images,
-  currentIndex,
-  setCurrentIndex,
-}: ZoomModalProps) {
-  if (!isOpen) return null;
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
-        onClick={onClose}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 rounded-full bg-white/10 p-3 text-white transition-all hover:bg-white/20"
-        >
-          <X size={24} />
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setCurrentIndex(
-              currentIndex > 0 ? currentIndex - 1 : images.length - 1,
-            );
-          }}
-          className="absolute left-6 rounded-full bg-white/10 p-3 text-white transition-all hover:bg-white/20"
-        >
-          <ChevronLeft size={32} />
-        </button>
-        <img
-          src={images[currentIndex]?.image_url}
-          alt=""
-          className="max-h-[85vh] max-w-[85vw] rounded-2xl bg-white object-contain p-4 shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        />
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setCurrentIndex(
-              currentIndex < images.length - 1 ? currentIndex + 1 : 0,
-            );
-          }}
-          className="absolute right-6 rounded-full bg-white/10 p-3 text-white transition-all hover:bg-white/20"
-        >
-          <ChevronRight size={32} />
-        </button>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
-// ==================== Review Form ====================
-function ReviewForm({
+// ============================================================================
+// 8. REVIEW FORM (Subtle Architectural)
+// ============================================================================
+function RHReviewForm({
   productId,
   existingReview,
 }: {
@@ -1194,137 +1233,210 @@ function ReviewForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
-      setMessage({
-        type: 'error',
-        text: 'Please select a star rating.',
-      });
+      setMessage({ type: 'error', text: 'Please select a star rating.' });
       return;
     }
 
     setIsSubmitting(true);
     setMessage(null);
 
-    if (existingReview) {
-      router.put(
-        `/shop/products/${productId}/reviews`,
-        { product_id: productId, rating, comment },
-        {
-          preserveScroll: true,
-          onSuccess: () => {
-            setMessage({
-              type: 'success',
-              text: 'Your review has been updated successfully!',
-            });
-          },
-          onError: (errors) => {
-            setMessage({
-              type: 'error',
-              text: Object.values(errors)[0] || 'Failed to update review.',
-            });
-          },
-          onFinish: () => setIsSubmitting(false),
-        },
-      );
-    } else {
-      router.post(
-        `/shop/products/${productId}/reviews`,
-        { product_id: productId, rating, comment },
-        {
-          preserveScroll: true,
-          onSuccess: () => {
-            setMessage({
-              type: 'success',
-              text: 'Your review has been submitted successfully!',
-            });
+    const endpoint = `/shop/products/${productId}/reviews`;
+    const method = existingReview ? 'put' : 'post';
+
+    router[method](
+      endpoint,
+      { product_id: productId, rating, comment },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          setMessage({
+            type: 'success',
+            text: 'Your reflection has been submitted with gratitude.',
+          });
+          if (!existingReview) {
             setRating(0);
             setComment('');
-          },
-          onError: (errors) => {
-            setMessage({
-              type: 'error',
-              text: Object.values(errors)[0] || 'Failed to submit review.',
-            });
-          },
-          onFinish: () => setIsSubmitting(false),
+          }
         },
-      );
-    }
+        onError: (errs) => {
+          setMessage({
+            type: 'error',
+            text: Object.values(errs)[0] || 'Unable to record review.',
+          });
+        },
+        onFinish: () => setIsSubmitting(false),
+      },
+    );
   };
 
   if (!auth.user) {
     return (
-      <div className="mt-6 rounded-xl bg-neutral-100/80 p-4 text-center text-xs">
-        <p className="mb-2 text-neutral-600">
-          Log in to leave a product review.
-        </p>
+      <div className="mt-6 border-t border-neutral-200/60 pt-4 text-center text-xs font-light text-neutral-500">
+        <p className="mb-2">Sign in to share your experience with this design.</p>
         <Link
           href="/login"
-          className="inline-block rounded-lg bg-teal-700 px-4 py-1.5 font-semibold text-white transition-colors hover:bg-teal-800"
+          className="inline-block border border-neutral-950 px-4 py-2 text-[10px] font-medium tracking-[0.2em] uppercase text-neutral-950 transition-colors hover:bg-neutral-950 hover:text-white"
         >
-          Log In
+          Sign In
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="mt-6 border-t border-neutral-200/60 pt-4 text-left">
-      <h4 className="mb-2 text-xs font-bold tracking-wider text-neutral-800 uppercase">
-        {existingReview ? 'Edit Your Review' : 'Write a Review'}
+    <div className="mt-6 border-t border-neutral-200/60 pt-4 text-left space-y-3">
+      <h4 className="text-[10px] font-semibold tracking-widest text-neutral-900 uppercase">
+        {existingReview ? 'Update Reflection' : 'Write a Reflection'}
       </h4>
       {message && (
         <div
-          className={`mb-3 rounded-lg p-2.5 text-xs font-medium ${
+          className={`p-2.5 text-[11px] ${
             message.type === 'success'
-              ? 'bg-green-50 text-green-700'
-              : 'bg-red-50 text-red-700'
+              ? 'bg-emerald-50 text-emerald-800'
+              : 'bg-rose-50 text-rose-800'
           }`}
         >
           {message.text}
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setRating(s)}
-                onMouseEnter={() => setHoverRating(s)}
-                onMouseLeave={() => setHoverRating(0)}
-                className="transition-transform hover:scale-110"
-              >
-                <Star
-                  size={18}
-                  className={`${
-                    s <= (hoverRating || rating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-neutral-300'
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
+        <div className="flex justify-center gap-1">
+          {[1, 2, 3, 4, 5].map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setRating(s)}
+              onMouseEnter={() => setHoverRating(s)}
+              onMouseLeave={() => setHoverRating(0)}
+              className="cursor-pointer transition-transform hover:scale-110"
+            >
+              <Star
+                size={18}
+                className={
+                  s <= (hoverRating || rating)
+                    ? 'fill-neutral-950 text-neutral-950'
+                    : 'text-neutral-200'
+                }
+              />
+            </button>
+          ))}
         </div>
-        <div>
-          <textarea
-            rows={3}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="w-full rounded-xl border border-neutral-200/80 p-2.5 text-xs focus:border-teal-600 focus:ring-teal-600"
-            placeholder="Share your experience with this product..."
-            required
-          />
-        </div>
+        <textarea
+          rows={3}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          className="w-full border border-neutral-200 p-2.5 text-xs text-neutral-900 focus:border-neutral-950 focus:outline-hidden"
+          placeholder="Reflect on the craftsmanship and utility..."
+          required
+        />
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl bg-teal-700 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-teal-800 disabled:opacity-50"
+          className="w-full border border-neutral-950 bg-neutral-950 py-2.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white transition-colors hover:bg-neutral-800 disabled:opacity-50"
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Review'}
+          {isSubmitting ? 'Recording...' : 'Submit Reflection'}
         </button>
       </form>
     </div>
+  );
+}
+
+// ============================================================================
+// 9. RH FULLSCREEN EDITORIAL LIGHTBOX
+// ============================================================================
+interface RHZoomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  images: ProductImage[];
+  currentIndex: number;
+  setCurrentIndex: (i: number) => void;
+  productTitle: string;
+}
+
+function RHZoomModal({
+  isOpen,
+  onClose,
+  images,
+  currentIndex,
+  setCurrentIndex,
+  productTitle,
+}: RHZoomModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 md:p-8 backdrop-blur-md"
+        onClick={onClose}
+      >
+        {/* Top Header Bar */}
+        <div className="absolute top-6 right-6 left-6 flex items-center justify-between text-white/70">
+          <div className="font-serif text-sm tracking-[0.2em] uppercase text-white">
+            {productTitle} &bull;{' '}
+            <span className="font-mono text-xs text-white/50">
+              0{currentIndex + 1} of 0{images.length}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-black"
+            aria-label="Close exhibition view"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Previous Image Chevron */}
+        {images.length > 1 && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex(
+                currentIndex > 0 ? currentIndex - 1 : images.length - 1,
+              );
+            }}
+            className="absolute left-6 z-10 flex h-12 w-12 items-center justify-center border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-black"
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={22} />
+          </button>
+        )}
+
+        {/* High-Res Center Image */}
+        <div
+          className="relative max-h-[85vh] max-w-[85vw] flex items-center justify-center bg-white p-4 sm:p-8"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <img
+            src={images[currentIndex]?.image_url}
+            alt=""
+            className="max-h-[75vh] max-w-[75vw] object-contain"
+          />
+        </div>
+
+        {/* Next Image Chevron */}
+        {images.length > 1 && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex(
+                currentIndex < images.length - 1 ? currentIndex + 1 : 0,
+              );
+            }}
+            className="absolute right-6 z-10 flex h-12 w-12 items-center justify-center border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-black"
+            aria-label="Next image"
+          >
+            <ChevronRight size={22} />
+          </button>
+        )}
+      </motion.div>
+    </AnimatePresence>
   );
 }

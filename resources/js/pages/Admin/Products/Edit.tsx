@@ -784,30 +784,47 @@ export default function EditProduct({
             <h2 className="mb-4 text-lg font-semibold text-terra-900">
               Publishing Status
             </h2>
-            <div>
-              <label className={labelClass}>Product Publication Status</label>
-              <Combobox
-                options={statuses
-                  .filter((s) => ['active', 'draft'].includes(s.value))
-                  .map((s) => ({
-                    value: s.value,
-                    label: s.name,
-                  }))}
-                value={data.status}
-                onChange={(val) => setData('status', val)}
-                placeholder="Select status"
-                searchPlaceholder="Search status..."
-                emptyText="No status found."
-              />
-              {existingImages.length + newImages.length === 0 && (
-                <p className="mt-2 flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-                  <Info className="h-4 w-4 shrink-0 text-amber-500" />
-                  <span>
-                    Products without photos will automatically be saved as{' '}
-                    <strong>Draft</strong>.
-                  </span>
-                </p>
-              )}
+            <div className="space-y-4">
+              <div>
+                <label className={labelClass}>Product Publication Status</label>
+                <Combobox
+                  options={statuses
+                    .filter((s) => ['active', 'draft'].includes(s.value))
+                    .map((s) => ({
+                      value: s.value,
+                      label: s.name,
+                    }))}
+                  value={data.status}
+                  onChange={(val) => setData('status', val)}
+                  placeholder="Select status"
+                  searchPlaceholder="Search status..."
+                  emptyText="No status found."
+                />
+                {existingImages.length + newImages.length === 0 && (
+                  <p className="mt-2 flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                    <Info className="h-4 w-4 shrink-0 text-amber-500" />
+                    <span>
+                      Products without photos will automatically be saved as{' '}
+                      <strong>Draft</strong>.
+                    </span>
+                  </p>
+                )}
+              </div>
+
+              <div className="border-t border-terra-100 pt-4 space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={data.is_featured}
+                    onChange={(e) => setData('is_featured', e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-terra-300 text-wood focus:ring-wood"
+                  />
+                  <div>
+                    <span className="text-sm font-medium text-terra-900">Featured Product</span>
+                    <p className="text-xs text-terra-500">Display prominent FEATURED badge and priority placement in catalogs.</p>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
 
